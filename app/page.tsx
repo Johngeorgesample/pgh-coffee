@@ -1,5 +1,5 @@
 import ShopCard from '@/components/ShopCard';
-import CoffeeShops from '@/data/coffee_shops';
+import CoffeeShops from '@/data/coffee_shops.json';
 
 export default function Home() {
   console.log(CoffeeShops)
