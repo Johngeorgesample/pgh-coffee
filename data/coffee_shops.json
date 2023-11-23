@@ -1,8 +1,32 @@
 [
   {
     "name": "Commonplace Coffee",
+    "neighborhood": "Garfield",
+    "address": "5467 Penn Ave, Pittsburgh, PA 15206",
+    "website": "https://commonplacecoffee.com/"
+  },
+  {
+    "name": "Commonplace Coffee",
     "neighborhood": "Mexican War Streets",
     "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
+    "website": "https://commonplacecoffee.com/"
+  },
+  {
+    "name": "Commonplace Coffee",
+    "neighborhood": "Point Breeze",
+    "address": "7514 Thomas Boulevard, Suite 100, Pittsburgh, PA 15208",
+    "website": "https://commonplacecoffee.com/"
+  },
+  {
+    "name": "commonplace coffee",
+    "neighborhood": "Southside",
+    "address": "428 S. 27th Street, Pittsburgh, PA 15203",
+    "website": "https://commonplacecoffee.com/"
+  },
+  {
+    "name": "commonplace coffee",
+    "neighborhood": "Squirrel Hill",
+    "address": "5827 Forbes Ave, Pittsburgh, PA 15217",
     "website": "https://commonplacecoffee.com/"
   },
 ]
