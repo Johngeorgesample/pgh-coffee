@@ -1,5 +1,6 @@
-import ShopCard from '@/app/components/ShopCard';
-import CoffeeShops from '@/data/coffee_shops.json';
+import ShopCard from '@/app/components/ShopCard'
+import CoffeeShops from '@/data/coffee_shops.json'
+import Footer from '@/app/components/Footer'
 
 export default function Home() {
   return (
@@ -16,9 +17,7 @@ export default function Home() {
           )}
         </div>
 
-          <footer className="mt-4 p-4 w-full bg-gray-200">
-            <p className="text-center">Made with ❤️ and ☕ by <a className="underline" href="https://www.johngeorgesample.com/" target="_blank">John-George Sample</a></p>
-          </footer>
+          <Footer />
       </div>
     </main>
   )
