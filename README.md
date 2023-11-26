@@ -10,6 +10,7 @@ The data source is a curated collection of information about coffee shops in Pit
 
 * Name of the coffee shop
 * Address
+* Website
 
 <!--
 * Contact details (phone, email)
@@ -19,9 +20,10 @@ The data source is a curated collection of information about coffee shops in Pit
 -->
 
 2. **Next.js Web Application**
-The Next.js app provides a user-friendly interface to explore the coffee shop data. Key features include:
+The Next.js app provides a user-friendly interface to explore the coffee shop data.
 
 <!--
+Key features include:
 * Interactive map displaying the location of each coffee shop
 * Search functionality to find coffee shops based on name, location, or specialties
 * Detailed profiles for each coffee shop, including contact information and reviews
