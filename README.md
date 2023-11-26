@@ -5,7 +5,8 @@ https://pgh.coffee/
 This repository contains a comprehensive data source of all the coffee shops in Pittsburgh, along with a Next.js application to display and explore this information. Whether you're a local resident looking for a new coffee spot or a visitor seeking the best cafes in the city, this project has you covered.
 
 ## Features
-1. **Coffee Shop Data Source**
+
+### 1. Coffee Shop Data Source
 The data source is a curated collection of information about coffee shops in Pittsburgh, including:
 
 * Name of the coffee shop
@@ -19,7 +20,8 @@ The data source is a curated collection of information about coffee shops in Pit
 * Customer reviews and ratings
 -->
 
-2. **Next.js Web Application**
+### 2. Next.js Web Application
+
 The Next.js app provides a user-friendly interface to explore the coffee shop data.
 
 <!--
