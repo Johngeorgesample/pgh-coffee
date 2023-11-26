@@ -87,19 +87,19 @@
     "name": "Creative Coffee & Supply",
     "neighborhood": "Downtown",
     "website": "https://crtv.coffee/",
-    "address": "309 Smithfield Street\nPittsburgh, PA 15222"
+    "address": "309 Smithfield St\nPittsburgh, PA 15222"
   },
   {
     "name": "De Fer Coffee & Tea",
     "neighborhood": "Downtown",
     "website": "https://www.defer.coffee/",
-    "address": "435 Market Street\nPittsburgh, PA 15222"
+    "address": "435 Market St\nPittsburgh, PA 15222"
   },
   {
-    "name": "Gasoline Street Coffee",
+    "name": "Gasoline St Coffee",
     "neighborhood": "Downtown",
     "website": "https://www.gasolinestreetcoffee.com/",
-    "address": "643 First Avenue, Pittsburgh, PA 15219"
+    "address": "643 First Ave, Pittsburgh, PA 15219"
   },
   {
     "name": "La Prima",
@@ -177,7 +177,7 @@
     "name": "Hazelwood Cafe",
     "neighborhood": "Hazelwood",
     "website": "https://hazelwood.cafe/",
-    "address": "5017 Second Avenue, Pittsburgh, PA 15207"
+    "address": "5017 Second Ave, Pittsburgh, PA 15207"
   },
   {
     "name": "Tazza D'Oro",
@@ -213,7 +213,7 @@
     "name": "Field Day",
     "neighborhood": "Lower Lawrenceville",
     "website": "https://www.fieldday.life/",
-    "address": "3706 Butler St., Pittsburgh, PA 15201"
+    "address": "3706 Butler St, Pittsburgh, PA 15201"
   },
   {
     "name": "Inkwell",
@@ -321,13 +321,13 @@
     "name": "Commonplace Coffee",
     "neighborhood": "Southside Flats",
     "website": "https://commonplacecoffee.com/",
-    "address": "428 S. 27th Street Pittsburgh, PA 15203"
+    "address": "428 S. 27th St Pittsburgh, PA 15203"
   },
   {
     "name": "Big Dog Coffee",
     "neighborhood": "Southside Flats",
     "website": "https://www.bigdogcoffeeshop.com/",
-    "address": "2717 Sarah Street Pittsburgh, PA 15203"
+    "address": "2717 Sarah St Pittsburgh, PA 15203"
   },
   {
     "name": "Delanie's Coffee",
@@ -363,7 +363,7 @@
     "name": "De Fer Coffee & Tea",
     "neighborhood": "Strip District",
     "website": "https://www.defer.coffee/",
-    "address": "2002 Smallman Street\nPittsburgh, PA 15222"
+    "address": "2002 Smallman St\nPittsburgh, PA 15222"
   },
   {
     "name": "James Cafe",
@@ -405,7 +405,7 @@
     "name": "Redhawk Coffee",
     "neighborhood": "West Oakland",
     "website": "https://redhawkcoffee.com/",
-    "address": "20 Meyran Avenue,\nPittsburgh, PA 15213"
+    "address": "20 Meyran Ave,\nPittsburgh, PA 15213"
   },
   {
     "name": "Ka-Fair",
