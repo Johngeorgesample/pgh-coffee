@@ -20,7 +20,7 @@ The data source is a curated collection of information about coffee shops in Pit
 * Customer reviews and ratings
 -->
 
-You can find the data source [here](https://github.com/Johngeorgesample/pgh-coffee/blob/main/data/coffee_shops.json)
+You can find the data source [here](https://github.com/Johngeorgesample/pgh-coffee/blob/main/data/coffee_shops.json).
 
 ### 2. Next.js Web Application
 
