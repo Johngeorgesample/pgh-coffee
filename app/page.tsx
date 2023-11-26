@@ -1,4 +1,4 @@
-import ShopCard from '@/components/ShopCard';
+import ShopCard from '@/app/components/ShopCard';
 import CoffeeShops from '@/data/coffee_shops.json';
 
 export default function Home() {
