@@ -14,6 +14,7 @@ The data source is a curated collection of information about coffee shops in Pit
 * Website
 
 <!--
+* Roaster
 * Contact details (phone, email)
 * Operating hours
 * Specialties/menu highlights
