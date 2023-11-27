@@ -4,7 +4,7 @@ import Footer from '@/app/components/Footer'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
       <div className="flex flex-col items-center mt-2">
         <h1 className="text-4xl pb-6"> pgh.coffee </h1>
         <h3 className="text-center">A guide to every coffee shop in Pittsburgh, PA</h3>
