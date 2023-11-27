@@ -95,7 +95,7 @@
   },
   {
     "name": "Central Oakland",
-    "value": "Foo"
+    "value": "central_oakland"
 
   },
   {
@@ -120,7 +120,7 @@
   },
   {
     "name": "Duquesne Heights",
-    "value": "Foo"
+    "value": "duquesne_heights"
 
   },
   {
@@ -151,36 +151,6 @@
   {
     "name": "Esplen",
     "value": "esplen"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
-
-  },
-  {
-    "name": "Foo",
-    "value": "Foo"
 
   },
   {
