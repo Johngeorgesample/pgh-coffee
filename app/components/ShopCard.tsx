@@ -15,11 +15,13 @@ type TShop = {
 export default function ShopCard(props: IProps) {
   return (
     <div className="group rounded overflow-hidden shadow-md hover:bg-gray-100">
+      {/* <a className="" href={props.shop.website} target="_blank"> */}
         <div className="px-6 py-4">
           <p className="font-bold text-xl mb-1 group-hover:underline">{props.shop.name}</p>
-          <p className="w-fit text-gray-700 border border-transparent  hover:border-black hover:border-dashed hover:cursor-pointer" onClick={() => props.onShopClick(props.shop.neighborhood)}>{props.shop.neighborhood}</p>
+          <button className="w-fit text-gray-700 border border-transparent hover:border-black hover:border-dashed hover:cursor-pointer" onClick={() => props.onShopClick(props.shop.neighborhood)}>{props.shop.neighborhood}</button>
           <address className="text-gray-700">{props.shop.address}</address>
         </div>
+      {/* </a> */}
   </div>
   )
 }

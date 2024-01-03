@@ -6,7 +6,16 @@ import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
 
 export default function Home() {
-  const [neighborhoodFilter, setNeighborhoodFilter] = useState(null)
+  const [filter, setFilter] = useState('')
+
+  const handleFormChange = (e: any) => {
+    setFilter(e.target.value)
+  }
+
+  const meetsFilterCriteria = (shop: any) => {
+    const shopCardText = `${shop.neighborhood.toLowerCase()} ${shop.name.toLowerCase()}`
+    return shopCardText.includes(filter.toLowerCase())
+  }
 
   return (
     <>
@@ -17,14 +26,16 @@ export default function Home() {
           <hr className="my-4 w-1/2 m-auto" />
         </div>
 
-        { neighborhoodFilter && <button onClick={() => setNeighborhoodFilter(null)}>Clear filter</button> }
+          <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
+            <p className="inline text-gray-500">🔎</p>
+            <input className="inline h-12 outline-none text-gray-500 bg-transparent" onChange={handleFormChange} placeholder="Search for a shop" value={filter}/>
+            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>×</button>
+          </div>
+
         <div className="grid grid-cols-3 gap-4 px-4">
           {CoffeeShops.map((shop) => {
-            if (neighborhoodFilter && shop.neighborhood === neighborhoodFilter) {
-              return <ShopCard key={shop.address} shop={shop} onShopClick={(shopName: any) => setNeighborhoodFilter(shopName)}/>
-            }
-            if (!neighborhoodFilter) {
-              return <ShopCard key={shop.address} shop={shop} onShopClick={(shopName: any) => setNeighborhoodFilter(shopName)}/>
+            if (meetsFilterCriteria(shop)) {
+              return <ShopCard key={shop.address} shop={shop} onShopClick={(shopName: any) => setFilter(shopName)} />
             }
           }
           )}
