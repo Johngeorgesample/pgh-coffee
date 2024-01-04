@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <>
-      <main className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center">
+      <main className="flex min-h-[calc(100vh-72px)] flex-col items-center">
         <div className="flex justify-center items-center flex-col absolute top-0 h-56">
           <div className="flex flex-col items-center mt-2">
             <h1 className="text-4xl pb-6">pgh.coffee</h1>
