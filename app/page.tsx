@@ -20,24 +20,26 @@ export default function Home() {
   return (
     <>
       <main className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center">
-        <div className="flex flex-col items-center mt-2">
-          <h1 className="text-4xl pb-6">pgh.coffee</h1>
-          <h3 className="text-center">A guide to every coffee shop in Pittsburgh, PA</h3>
-          <hr className="my-4 w-1/2 m-auto" />
+        <div className="flex justify-center items-center flex-col fixed top-0 h-56">
+          <div className="flex flex-col items-center mt-2">
+            <h1 className="text-4xl pb-6">pgh.coffee</h1>
+            <h3 className="text-center">A guide to every coffee shop in Pittsburgh, PA</h3>
+            <hr className="my-4 w-1/2 m-auto" />
+          </div>
+
+          <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
+            <p className="inline text-gray-500">🔎</p>
+            <input
+              className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
+              onChange={handleFormChange}
+              placeholder="Search for a shop"
+              value={filter}
+            />
+            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>×</button>
+          </div>
         </div>
 
-        <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
-          <p className="inline text-gray-500">🔎</p>
-          <input
-            className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
-            onChange={handleFormChange}
-            placeholder="Search for a shop"
-            value={filter}
-          />
-          <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>×</button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4 px-4">
+        <div className="grid grid-cols-3 gap-4 px-4 mt-56">
           {CoffeeShops.map((shop) => {
             if (meetsFilterCriteria(shop)) {
               return (
