@@ -8,6 +8,9 @@ import Footer from '@/app/components/Footer'
 export default function Home() {
   const [filter, setFilter] = useState('')
 
+  const coffeeShops = [...CoffeeShops]
+  coffeeShops.sort((a, b) => a.neighborhood.localeCompare(b.neighborhood))
+
   const handleFormChange = (e: any) => {
     setFilter(e.target.value)
   }
@@ -40,7 +43,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-3 gap-4 px-4 mt-56">
-          {CoffeeShops.map((shop) => {
+          {coffeeShops.map((shop) => {
             if (meetsFilterCriteria(shop)) {
               return (
                 <ShopCard
