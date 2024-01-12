@@ -4,6 +4,7 @@ import { useState } from 'react'
 import ShopCard from '@/app/components/ShopCard'
 import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 export default function Home() {
   const [filter, setFilter] = useState('')
@@ -31,7 +32,9 @@ export default function Home() {
           </div>
 
           <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
-            <p className="inline text-gray-500">🔎</p>
+            <p className="inline text-gray-500">
+              <MagnifyingGlassIcon className="h-4 w-4" aria-hidden="true" />
+            </p>
             <input
               className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
               onChange={handleFormChange}
