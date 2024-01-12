@@ -3,6 +3,8 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import PanelHeader from './PanelHeader'
+import PanelContent from './PanelContent'
 
 interface IProps {
   shop: TShop
@@ -16,6 +18,7 @@ type TShop = {
   neighborhood: string, // @TODO should this be a union type?
   address: string,
   website: string, // @TODO how can I verify a URL is valid? Is that a fool's errand?
+  value: any,
 }
 
 export default function ShopPanel(props: IProps) {
@@ -35,30 +38,10 @@ export default function ShopPanel(props: IProps) {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                    <div className="px-4 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                          {props.shop.name}
-                        </Dialog.Title>
-                        <div className="ml-3 flex h-7 items-center">
-                          <button
-                            type="button"
-                            className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() => props.emitClose()}
-                          >
-                            <span className="absolute -inset-2.5" />
-                            <span className="sr-only">Close panel</span>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      <p>{props.shop.neighborhood}</p>
-                      <p>{props.shop.address}</p>
-                    </div>
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                    <PanelHeader shop={props.shop} emitClose={props.emitClose} />
+                    <PanelContent shop={props.shop} />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
