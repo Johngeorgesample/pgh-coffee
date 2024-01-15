@@ -6,6 +6,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import PanelHeader from './PanelHeader'
 import PanelContent from './PanelContent'
+import PanelFooter from './PanelFooter'
 
 interface IProps {
   shop: TShop
@@ -34,6 +35,7 @@ export default function ShopPanel(props: IProps) {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <PanelHeader shop={props.shop} emitClose={props.emitClose} />
                     <PanelContent shop={props.shop} />
+                    <PanelFooter shop={props.shop} />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
