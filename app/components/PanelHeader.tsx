@@ -14,8 +14,8 @@ export default function PanelHeader(props: IProps) {
     <div className="">
       {/* <div className="h-56 relative bg-red-100 bg-[url('https://images.unsplash.com/photo-1516197370049-569c4eaba1d6')] bg-cover bg-center"> */}
       <div className="h-56 relative bg-yellow-100 bg-cover bg-center" style={props.shop.value && props.shop.value.photo && {backgroundImage: `url('${props.shop.value.photo}')`}}>
-        <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-md flex items-center justify-between">
-          <Dialog.Title className="text-4xl text-gray-900">
+        <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
+          <Dialog.Title className="text-3xl text-gray-900">
             {props.shop.name}
           </Dialog.Title>
           <div className="ml-3 flex h-7 items-center">
