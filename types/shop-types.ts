@@ -5,5 +5,5 @@ export interface TShop {
   neighborhood: TNeighborhood,
   address: string,
   website: string, // @TODO how can I verify a URL is valid? Is that a fool's errand?
-  value: any,
+  value?: any,
 }
