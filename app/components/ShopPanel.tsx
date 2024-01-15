@@ -2,7 +2,6 @@
 
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import PanelHeader from './PanelHeader'
 import PanelContent from './PanelContent'
