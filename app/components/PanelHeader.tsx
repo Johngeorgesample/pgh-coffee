@@ -2,19 +2,11 @@
 
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { TShop } from '@/types/shop-types'
 
 interface IProps {
   shop: TShop
   emitClose: Function
-}
-
-// @TODO extract this somewhere higher to avoid duplication
-type TShop = {
-  name: string,
-  neighborhood: string, // @TODO should this be a union type?
-  address: string,
-  website: string, // @TODO how can I verify a URL is valid? Is that a fool's errand?
-  value: any,
 }
 
 export default function PanelHeader(props: IProps) {
