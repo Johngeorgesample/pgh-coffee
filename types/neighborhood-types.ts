@@ -87,4 +87,4 @@ export type TNeighborhood =
 'West End' |
 'West Oakland' |
 'Westwood' |
-'Windgap' |
+'Windgap'
