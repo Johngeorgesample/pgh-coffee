@@ -1,26 +1,5 @@
 [
   {
-    "name": "1 Test Cafe",
-    "neighborhood": "Allentown",
-    "website": "https://www.johngeorgesample.com",
-    "address": "3605 Wick Pl, Pittsburgh, PA 15217",
-    "value": {
-      "amenities": {
-        "Public bathroom": true,
-        "Wi-Fi": true,
-        "On-site parking": true,
-        "Bike parking": true,
-        "Water station": true,
-        "Outdoor seating": true,
-        "Pet friendly": true,
-        "foo": false
-      },
-      "photo": "https://images.unsplash.com/photo-1572982270699-473dfa34d7e7",
-      "roaster": "",
-      "syrup": ""
-    }
-  },
-  {
     "name": "61C Cafe",
     "neighborhood": "Squirrel Hill South",
     "website": "https://61ccafe.com/",
