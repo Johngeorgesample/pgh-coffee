@@ -12,8 +12,7 @@ interface IProps {
 export default function PanelHeader(props: IProps) {
   return (
     <div className="">
-      {/* <div className="h-56 relative bg-red-100 bg-[url('https://images.unsplash.com/photo-1516197370049-569c4eaba1d6')] bg-cover bg-center"> */}
-      <div className="h-56 relative bg-yellow-100 bg-cover bg-center" style={props.shop.value && props.shop.value.photo && {backgroundImage: `url('${props.shop.value.photo}')`}}>
+      <div className="h-56 relative bg-yellow-200 bg-cover bg-center" style={props.shop.value && props.shop.value.photo && {backgroundImage: `url('${props.shop.value.photo}')`}}>
         <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
           <Dialog.Title className="text-3xl text-gray-900">
             {props.shop.name}
