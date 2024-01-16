@@ -32,9 +32,9 @@ export default function Home() {
           </div>
 
           <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
-            <p className="inline text-gray-500">
-              <MagnifyingGlassIcon className="h-4 w-4" aria-hidden="true" />
-            </p>
+            <span className="inline text-gray-500" aria-hidden="true">
+              <MagnifyingGlassIcon className="h-4 w-4" />
+            </span>
             <input
               className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
               onChange={handleFormChange}
