@@ -88,7 +88,10 @@
     "neighborhood": "North Point Breeze",
     "website": "https://commonplacecoffee.com/",
     "address": "7514 Thomas Blvd suite 100, Pittsburgh, PA 15208",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/north_point_breeze/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
@@ -109,14 +112,20 @@
     "neighborhood": "Central Lawrenceville",
     "website": "http://www.constellationcoffeepgh.com/",
     "address": "4059 Penn Ave, Pittsburgh, PA 15224",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/central_lawrenceville/constellation.jpg"
+    }
   },
   {
     "name": "Convive",
     "neighborhood": "Central Lawrenceville",
     "website": "https://www.convivecoffee.com/",
     "address": "4032 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/central_lawrenceville/convive.jpg"
+    }
   },
   {
     "name": "Convive",
@@ -151,7 +160,10 @@
     "neighborhood": "Strip District",
     "website": "https://www.defer.coffee/",
     "address": "2002 Smallman St\nPittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/strip_district/de_fer.jpg"
+    }
   },
   {
     "name": "De Fer Coffee & Tea",
@@ -200,7 +212,10 @@
     "neighborhood": "Lower Lawrenceville",
     "website": "https://www.fieldday.life/",
     "address": "3706 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/lower_lawrenceville/field_day.jpg"
+    }
   },
   {
     "name": "Gasoline Street Coffee",
@@ -242,14 +257,20 @@
     "neighborhood": "Central Lawrenceville",
     "website": "",
     "address": "4419 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/central_lawrenceville/inkwell.jpg"
+    }
   },
   {
     "name": "James Cafe",
     "neighborhood": "Strip District",
     "website": "https://thejamescafe.com/",
     "address": "2550 Smallman St, Pittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/strip_district/james_cafe.jpg"
+    }
   },
   {
     "name": "Jitters Cafe",
@@ -431,14 +452,20 @@
     "neighborhood": "Bloomfield",
     "website": "https://www.tracebloomfield.com/",
     "address": "4312 Main St, Pittsburgh, PA 15224",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/bloomfield/trace.jpg"
+    }
   },
   {
     "name": "White Whale Bookstore",
     "neighborhood": "Bloomfield",
     "website": "https://whitewhalebookstore.com/",
     "address": "4754 Liberty Ave, Pittsburgh, PA 15224",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/bloomfield/white_whale.jpg"
+    }
   },
   {
     "name": "Yinz Coffee",
