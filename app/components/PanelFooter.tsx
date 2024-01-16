@@ -1,5 +1,7 @@
 'use client'
 
+import { TShop } from '@/types/shop-types'
+
 interface IProps {
   shop: TShop
 }
