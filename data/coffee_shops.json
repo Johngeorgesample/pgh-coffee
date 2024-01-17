@@ -81,7 +81,10 @@
     "neighborhood": "Mexican War Streets",
     "website": "https://commonplacecoffee.com/",
     "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/mexican_war_streets/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
