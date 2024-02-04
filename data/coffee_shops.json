@@ -25,7 +25,10 @@
     "neighborhood": "Shadyside",
     "website": "http://arriviste.coffee/",
     "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/shadyside/arriviste.jpeg"
+    }
   },
   {
     "name": "Big Dog Coffee",
@@ -101,7 +104,10 @@
     "neighborhood": "Southside Flats",
     "website": "https://commonplacecoffee.com/",
     "address": "428 S. 27th St Pittsburgh, PA 15203",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/southside_flats/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
@@ -173,7 +179,10 @@
     "neighborhood": "Troy Hill",
     "website": "https://www.defer.coffee/",
     "address": "1800 Rialto St\nPittsburgh, PA 15212",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/troy_hill/de_fer.jpeg"
+    }
   },
   {
     "name": "Delanie's Coffee",
