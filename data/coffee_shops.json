@@ -312,7 +312,10 @@
     "neighborhood": "Strip District",
     "website": "https://laprima.com/",
     "address": "205 21st St, Pittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/strip_district/la_prima.jpg"
+    }
   },
   {
     "name": "LV Coffee Project",
