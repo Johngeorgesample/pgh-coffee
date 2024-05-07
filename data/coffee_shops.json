@@ -21,6 +21,13 @@
     "roaster": ""
   },
   {
+    "name": "Annex PGH",
+    "neighborhood": "East Allegheny",
+    "website": "https://www.annexpgh.com/",
+    "address": "522 E. Ohio St Pittsburgh, PA 15212",
+    "roaster": ""
+  },
+  {
     "name": "Arriviste Coffee",
     "neighborhood": "Shadyside",
     "website": "http://arriviste.coffee/",
@@ -441,13 +448,6 @@
     "neighborhood": "South Point Breeze",
     "website": "",
     "address": "7113 Reynolds St, Pittsburgh, PA 15208",
-    "roaster": ""
-  },
-  {
-    "name": "Annex PGH",
-    "neighborhood": "East Allegheny",
-    "website": "https://www.annexpgh.com/",
-    "address": "522 E. Ohio St Pittsburgh, PA 15212",
     "roaster": ""
   },
   {
