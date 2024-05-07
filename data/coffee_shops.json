@@ -157,6 +157,13 @@
   },
   {
     "name": "De Fer Coffee & Tea",
+    "neighborhood": "Southside Flats",
+    "website": "https://www.defer.coffee/",
+    "address": "339 McKean St, Pittsburgh, PA 15219",
+    "roaster": ""
+  },
+  {
+    "name": "De Fer Coffee & Tea",
     "neighborhood": "Strip District",
     "website": "https://www.defer.coffee/",
     "address": "2002 Smallman St\nPittsburgh, PA 15222",
