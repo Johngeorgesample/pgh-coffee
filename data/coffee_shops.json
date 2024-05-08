@@ -39,7 +39,10 @@
     "neighborhood": "South Side Flats",
     "website": "https://www.bigdogcoffeeshop.com/",
     "address": "2717 Sarah St Pittsburgh, PA 15203",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/south_side_flats/big_dog_coffee.jpg"
+    }
   },
   {
     "name": "Café102",
@@ -81,14 +84,20 @@
     "neighborhood": "Garfield",
     "website": "https://commonplacecoffee.com/",
     "address": "5467 Penn Ave,\nPittsburgh, PA 15206",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/garfield/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
     "neighborhood": "Mexican War Streets",
     "website": "https://commonplacecoffee.com/",
     "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/mexican_war_streets/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
@@ -105,14 +114,20 @@
     "neighborhood": "South Side Flats",
     "website": "https://commonplacecoffee.com/",
     "address": "428 S. 27th St Pittsburgh, PA 15203",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/south_side_flats/commonplace.jpg"
+    }
   },
   {
     "name": "Commonplace Coffee",
     "neighborhood": "Squirrel Hill North",
     "website": "https://commonplacecoffee.com/",
     "address": "5827 Forbes Ave, Pittsburgh, PA 15217",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/squirrel_hill_north/commonplace.jpg"
+    }
   },
   {
     "name": "Constellation Coffee",
@@ -198,7 +213,10 @@
     "neighborhood": "South Side Flats",
     "website": "http://www.delaniescoffee.com/",
     "address": "1737 E Carson St, Pittsburgh, PA 15203",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/south_side_flats/delanies_coffee.jpg"
+    }
   },
   {
     "name": "Divvy Coffee & Buns",
