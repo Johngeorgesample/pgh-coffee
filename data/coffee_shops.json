@@ -337,7 +337,10 @@
     "neighborhood": "Larimer",
     "website": "https://klvncoffee.com/",
     "address": "6600 Hamilton Ave Fl 1, Pittsburgh, PA 15206",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/larimer/klvn.jpg"
+    }
   },
   {
     "name": "La Prima",
