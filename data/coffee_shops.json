@@ -403,6 +403,13 @@
   },
   {
     "name": "Redhawk Coffee",
+    "neighborhood": "Uptown",
+    "website": "https://redhawkcoffee.com/",
+    "address": "1715 Fifth Ave, Pittsburgh, PA 15219",
+    "roaster": ""
+  },
+  {
+    "name": "Redhawk Coffee",
     "neighborhood": "West Oakland",
     "website": "https://redhawkcoffee.com/",
     "address": "20 Meyran Ave,\nPittsburgh, PA 15213",
