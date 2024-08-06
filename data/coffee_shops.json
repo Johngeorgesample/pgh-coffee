@@ -406,7 +406,10 @@
     "neighborhood": "Strip District",
     "website": "",
     "address": "1812 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/strip_district/novaria.jpg"
+    }
   },
   {
     "name": "Prestogeorge Coffee & Tea",
