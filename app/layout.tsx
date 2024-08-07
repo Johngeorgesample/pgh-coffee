@@ -1,3 +1,4 @@
+import PlausibleProvider from 'next-plausible'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* <Nav /> */}
+      <head>
+        <PlausibleProvider domain="pgh.coffee" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   )
