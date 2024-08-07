@@ -20,12 +20,12 @@ export default function ShopCard(props: IProps) {
 
   const handleCardClick = () => {
     setIsOpen(true)
-    plausible('CardClick')
+    plausible('CardClick', { props: {} })
   }
 
   const handleNeighborhoodClick = () => {
     props.onShopClick(props.shop.neighborhood)
-    plausible('NeighborhoodClick')
+    plausible('NeighborhoodClick', { props: {} })
   }
 
   return (
