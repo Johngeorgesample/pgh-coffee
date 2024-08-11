@@ -26,7 +26,7 @@ export default function ShopCard(props: IProps) {
   const handleNeighborhoodClick = () => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
-    params.set('neigborhood', props.shop.neighborhood.toLowerCase())
+    params.set('neighborhood', props.shop.neighborhood.toLowerCase())
     url.search = params.toString()
     history.replaceState({}, '', url.toString())
 

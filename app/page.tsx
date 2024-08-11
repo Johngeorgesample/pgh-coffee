@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import ShopCard from '@/app/components/ShopCard'
 import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
@@ -8,6 +8,14 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 export default function Home() {
   const [filter, setFilter] = useState('')
+
+  const handleQueryString = useMemo(() => {
+    const params = new URLSearchParams(window.location.search)
+    const myParam = params.get('neighborhood')
+    if (myParam) {
+      setFilter(myParam)
+    }
+  }, [])
 
   const coffeeShops = [...CoffeeShops]
   coffeeShops.sort((a, b) => a.neighborhood.localeCompare(b.neighborhood))
