@@ -24,6 +24,15 @@ export default function Home() {
     setFilter(e.target.value)
   }
 
+  const handleFilterClear = () => {
+    setFilter('')
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('neighborhood')
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
+  }
+
   const meetsFilterCriteria = (shop: any) => {
     const shopCardText = `${shop.neighborhood.toLowerCase()} ${shop.name.toLowerCase()}`
     return shopCardText.includes(filter.toLowerCase())
@@ -49,7 +58,7 @@ export default function Home() {
               placeholder="Search for a shop"
               value={filter}
             />
-            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>
+            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
               ×
             </button>
           </div>
