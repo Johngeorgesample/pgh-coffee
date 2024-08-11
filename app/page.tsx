@@ -10,10 +10,12 @@ export default function Home() {
   const [filter, setFilter] = useState('')
 
   const handleQueryString = useMemo(() => {
-    const params = new URLSearchParams(window.location.search)
-    const myParam = params.get('neighborhood')
-    if (myParam) {
-      setFilter(myParam)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const myParam = params.get('neighborhood')
+      if (myParam) {
+        setFilter(myParam)
+      }
     }
   }, [])
 
@@ -26,11 +28,13 @@ export default function Home() {
 
   const handleFilterClear = () => {
     setFilter('')
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.delete('neighborhood')
-    url.search = params.toString()
-    history.replaceState({}, '', url.toString())
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      const params = new URLSearchParams(url.search)
+      params.delete('neighborhood')
+      url.search = params.toString()
+      history.replaceState({}, '', url.toString())
+    }
   }
 
   const meetsFilterCriteria = (shop: any) => {

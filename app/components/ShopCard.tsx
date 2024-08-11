@@ -24,11 +24,13 @@ export default function ShopCard(props: IProps) {
   }
 
   const handleNeighborhoodClick = () => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.set('neighborhood', props.shop.neighborhood.toLowerCase())
-    url.search = params.toString()
-    history.replaceState({}, '', url.toString())
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      const params = new URLSearchParams(url.search)
+      params.set('neighborhood', props.shop.neighborhood.toLowerCase())
+      url.search = params.toString()
+      history.replaceState({}, '', url.toString())
+    }
 
     props.onShopClick(props.shop.neighborhood)
     plausible('NeighborhoodClick', { props: {} })
