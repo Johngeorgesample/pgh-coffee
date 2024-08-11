@@ -41,25 +41,21 @@ export default function Home() {
               placeholder="Search for a shop"
               value={filter}
             />
-            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>×</button>
+            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>
+              ×
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4 px-4 mt-56">
-          {coffeeShops.map((shop) => {
+          {coffeeShops.map(shop => {
             if (meetsFilterCriteria(shop)) {
-              return (
-                <ShopCard
-                  key={shop.address}
-                  onShopClick={(shopName: any) => setFilter(shopName)}
-                  shop={shop}
-                />
-              )
+              return <ShopCard key={shop.address} onShopClick={(shopName: any) => setFilter(shopName)} shop={shop} />
             }
           })}
         </div>
       </main>
-    <Footer />
+      <Footer />
     </>
   )
 }

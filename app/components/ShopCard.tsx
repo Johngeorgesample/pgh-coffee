@@ -31,18 +31,21 @@ export default function ShopCard(props: IProps) {
   return (
     <>
       <div className="relative rounded overflow-hidden shadow-md">
-          <div className="px-6 py-4">
-            <button className="font-medium text-xl mb-1 text-left block hover:underline" onClick={handleCardClick}>{props.shop.name}</button>
-            <button className="w-fit mb-1 text-left text-gray-700 border border-transparent hover:border-black hover:border-dashed hover:cursor-pointer" onClick={handleNeighborhoodClick}>{props.shop.neighborhood}</button>
-            <address className="text-gray-700">{props.shop.address}</address>
-          </div>
-    </div>
+        <div className="px-6 py-4">
+          <button className="font-medium text-xl mb-1 text-left block hover:underline" onClick={handleCardClick}>
+            {props.shop.name}
+          </button>
+          <button
+            className="w-fit mb-1 text-left text-gray-700 border border-transparent hover:border-black hover:border-dashed hover:cursor-pointer"
+            onClick={handleNeighborhoodClick}
+          >
+            {props.shop.neighborhood}
+          </button>
+          <address className="text-gray-700">{props.shop.address}</address>
+        </div>
+      </div>
 
-    <ShopPanel
-      shop={props.shop}
-      panelIsOpen={isOpen}
-      emitClose={handleClose}
-    />
-  </>
+      <ShopPanel shop={props.shop} panelIsOpen={isOpen} emitClose={handleClose} />
+    </>
   )
 }
