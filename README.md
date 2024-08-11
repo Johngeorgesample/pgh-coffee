@@ -7,11 +7,12 @@ This repository contains a comprehensive data source of all the coffee shops in 
 ## Features
 
 ### 1. Coffee Shop Data Source
+
 The data source is a curated collection of information about coffee shops in Pittsburgh, including:
 
-* Name of the coffee shop
-* Address
-* Website
+- Name of the coffee shop
+- Address
+- Website
 
 <!--
 * Roaster
@@ -36,8 +37,8 @@ Key features include:
 * Responsive design for a seamless experience on desktop and mobile devices
 -->
 
-
 ## Getting Started
+
 Follow these steps to get started with the project:
 
 1. **Clone the Repository:**
@@ -58,9 +59,11 @@ npm install
 ```
 npm run dev
 ```
+
 The app will be accessible at http://localhost:3000.
 
 ## Contribution Guidelines
+
 Contributions are welcome! If you discover a new coffee shop or have updates to existing information, please follow these guidelines:
 
 1. Fork the repository.
@@ -68,7 +71,9 @@ Contributions are welcome! If you discover a new coffee shop or have updates to 
 3. Create a pull request with a clear description of your changes.
 
 ## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-* Special thanks to the Pittsburgh coffee community for their support and contributions to the data source.
+
+- Special thanks to the Pittsburgh coffee community for their support and contributions to the data source.

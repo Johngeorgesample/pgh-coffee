@@ -13,7 +13,16 @@ export default function PanelFooter(props: IProps) {
       <div className="text-sm mb-2 text-center">
         <p className="text-gray-500">Is this information incorrect?</p>
         <p className="text-gray-500">
-        <a className="italic underline" href="https://github.com/Johngeorgesample/pgh-coffee/issues/new">File an issue</a> or <a className="italic underline" href={`mailto:johngeorgesample@gmail.com?subject=Issue with ${props.shop.name}`}>email me</a>
+          <a className="italic underline" href="https://github.com/Johngeorgesample/pgh-coffee/issues/new">
+            File an issue
+          </a>{' '}
+          or{' '}
+          <a
+            className="italic underline"
+            href={`mailto:johngeorgesample@gmail.com?subject=Issue with ${props.shop.name}`}
+          >
+            email me
+          </a>
         </p>
       </div>
     </>
