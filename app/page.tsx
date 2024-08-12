@@ -1,19 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import ShopCard from '@/app/components/ShopCard'
 import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
-export default function Home() {
+export default function Home({ searchParams }: { searchParams: any }) {
   const [filter, setFilter] = useState('')
+
+  const handleQueryString = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const myParam = params.get('neighborhood')
+      if (myParam) {
+        setFilter(myParam)
+      }
+    } else {
+      if (searchParams) {
+        setFilter(searchParams.neighborhood)
+      }
+    }
+  }, [])
 
   const coffeeShops = [...CoffeeShops]
   coffeeShops.sort((a, b) => a.neighborhood.localeCompare(b.neighborhood))
 
   const handleFormChange = (e: any) => {
     setFilter(e.target.value)
+  }
+
+  const handleFilterClear = () => {
+    setFilter('')
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      const params = new URLSearchParams(url.search)
+      params.delete('neighborhood')
+      url.search = params.toString()
+      history.replaceState({}, '', url.toString())
+    }
   }
 
   const meetsFilterCriteria = (shop: any) => {
@@ -41,7 +66,7 @@ export default function Home() {
               placeholder="Search for a shop"
               value={filter}
             />
-            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={() => setFilter('')}>
+            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
               ×
             </button>
           </div>
