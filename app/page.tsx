@@ -6,7 +6,7 @@ import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
-export default function Home() {
+export default function Home({searchParams}) {
   const [filter, setFilter] = useState('')
 
   const handleQueryString = useMemo(() => {
@@ -15,6 +15,11 @@ export default function Home() {
       const myParam = params.get('neighborhood')
       if (myParam) {
         setFilter(myParam)
+      }
+    }
+    if (typeof window === 'undefined') {
+      if (searchParams) {
+          setFilter(searchParams.neighborhood)
       }
     }
   }, [])
