@@ -6,7 +6,7 @@ import CoffeeShops from '@/data/coffee_shops.json'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
-export default function Home({searchParams}) {
+export default function Home({searchParams}: {searchParams: any}) {
   const [filter, setFilter] = useState('')
 
   const handleQueryString = useMemo(() => {
