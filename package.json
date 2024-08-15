@@ -11,10 +11,13 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@types/mapbox-gl": "^3.4.0",
+    "mapbox-gl": "^3.6.0",
     "next": "^14.2.3",
     "next-plausible": "^3.12.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-map-gl": "^7.1.7"
   },
   "devDependencies": {
     "@types/node": "^20",
