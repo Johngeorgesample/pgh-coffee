@@ -458,7 +458,10 @@
     "neighborhood": "Strip District",
     "website": "https://solunapgh.com/",
     "address": "1601 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/strip_district/soluna.jpg"
+    }
   },
   {
     "name": "Stance Coffee",
@@ -493,7 +496,10 @@
     "neighborhood": "Shadyside",
     "website": "https://coffeetree.store/",
     "address": "5524 Walnut St, Pittsburgh, PA 15232",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/shadyside/coffee_tree_roasters.jpg"
+    }
   },
   {
     "name": "The Espresso Bar",
