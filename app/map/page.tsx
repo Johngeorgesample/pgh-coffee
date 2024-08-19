@@ -1,12 +1,11 @@
 'use client'
 import { useRef, useState } from 'react'
+import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import Toggle from '@/app/components/Toggle'
-import Map, { Source, Layer } from 'react-map-gl'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
-
-import shopGeoJSON from '../../data/coffee_shops_geojson'
+import shopGeoJSON from '@/data/coffee_shops_geojson'
 
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
@@ -21,12 +20,10 @@ export default function Mappy() {
     })
 
     if (features.length) {
-      console.log(features[0].properties)
       setIsOpen(true)
       setCurrentShop(features[0].properties)
     }
   }
-
 
   const handleClose = () => {
     setIsOpen(false)
@@ -58,6 +55,7 @@ export default function Mappy() {
               paint={{
                 'circle-radius': 10,
                 'circle-color': '#007cbf',
+                // 'circle-color': '#FDE047',
               }}
             />
           </Source>
