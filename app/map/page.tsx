@@ -1,23 +1,35 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Footer from '@/app/components/Footer'
+import Toggle from '@/app/components/Toggle'
 import Map, { Source, Layer } from 'react-map-gl'
+import { TShop } from '@/types/shop-types'
+import ShopPanel from '@/app/components/ShopPanel'
 
-import shopGeoJSON from '../../data/coffe_shops_geojson'
+import shopGeoJSON from '../../data/coffee_shops_geojson'
 
 export default function Mappy() {
+  let [isOpen, setIsOpen] = useState(false)
+  let [currentShop, setCurrentShop] = useState({} as TShop)
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
   const handleMapClick = event => {
-    const map = mapRef.current.getMap()
+    const map = mapRef.current?.getMap()
     const features = map.queryRenderedFeatures(event.point, {
       layers: [layerId],
     })
 
     if (features.length) {
       console.log(features[0].properties)
+      setIsOpen(true)
+      setCurrentShop(features[0].properties)
     }
+  }
+
+
+  const handleClose = () => {
+    setIsOpen(false)
   }
 
   return (
@@ -26,6 +38,8 @@ export default function Mappy() {
         <div className="flex justify-center items-center flex-col absolute top-0 h-56">
           <h1>map</h1>
         </div>
+
+        <Toggle />
         <Map
           mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
           initialViewState={{
@@ -50,6 +64,7 @@ export default function Mappy() {
         </Map>
       </main>
       <Footer />
+      <ShopPanel shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
     </>
   )
 }
