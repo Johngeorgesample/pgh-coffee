@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.18",
+    "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.1",
     "@types/mapbox-gl": "^3.4.0",
     "mapbox-gl": "^3.6.0",
