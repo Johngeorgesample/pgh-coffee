@@ -7,14 +7,14 @@ export default function Example() {
   const [enabled, setEnabled] = useState(true)
 
   return (
-    <Field className="flex items-center">
+    <Field className="absolute right-0 top-0 bg-white-100 p-4 z-10 flex items-center">
       <Label as="span" className="mr-3 text-sm">
         <span className="font-medium text-gray-900">List</span>{' '}
       </Label>
       <Switch
         checked={enabled}
         onChange={setEnabled}
-        className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+        className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 data-[checked]:bg-yellow-300"
       >
         <span
           aria-hidden="true"
