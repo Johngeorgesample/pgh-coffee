@@ -1,37 +1,12 @@
 'use client'
-import { useCallback, useRef } from 'react'
+import { useRef } from 'react'
 import Footer from '@/app/components/Footer'
-import type { FeatureCollection } from 'geojson'
 import Map, { Source, Layer } from 'react-map-gl'
+
+import shopGeoJSON from '../../data/coffe_shops_geojson'
 
 export default function Mappy() {
   const mapRef = useRef(null)
-  const geojson: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [-79.97357483740181, 40.45710759784333],
-        },
-        properties: {
-          title: 'Niche.com',
-        },
-      },
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [-79.96497154370446, 40.46603536017457],
-        },
-        properties: {
-          title: 'Espresso a Mano',
-        },
-      },
-    ],
-  }
-
   const layerId = 'myPoint'
 
   const handleMapClick = event => {
@@ -41,7 +16,7 @@ export default function Mappy() {
     })
 
     if (features.length) {
-      console.log(features[0].properties.title)
+      console.log(features[0].properties)
     }
   }
 
@@ -52,7 +27,6 @@ export default function Mappy() {
           <h1>map</h1>
         </div>
         <Map
-
           mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
           initialViewState={{
             longitude: -79.99585,
@@ -63,7 +37,7 @@ export default function Mappy() {
           onClick={handleMapClick}
           ref={mapRef} // add this
         >
-          <Source id="my-data" type="geojson" data={geojson}>
+          <Source id="my-data" type="geojson" data={shopGeoJSON}>
             <Layer
               id={layerId}
               type="circle"
