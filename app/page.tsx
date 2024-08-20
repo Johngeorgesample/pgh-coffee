@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import ShopCard from '@/app/components/ShopCard'
-import CoffeeShops from '@/data/coffee_shops.json'
+import CoffeeShops from '@/data/coffee_shops_geojson.json'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
@@ -24,8 +24,8 @@ export default function Home({ searchParams }: { searchParams: any }) {
     }
   }, [])
 
-  const coffeeShops = [...CoffeeShops]
-  coffeeShops.sort((a, b) => a.neighborhood.localeCompare(b.neighborhood))
+  const coffeeShops = [...CoffeeShops.features]
+  coffeeShops.sort((a, b) => a.properties.neighborhood.localeCompare(b.properties.neighborhood))
 
   const handleFormChange = (e: any) => {
     setFilter(e.target.value)
@@ -72,8 +72,8 @@ export default function Home({ searchParams }: { searchParams: any }) {
 
         <div className="grid-cols-3 gap-4 px-4 mt-56 block md:grid">
           {coffeeShops.map(shop => {
-            if (meetsFilterCriteria(shop) || !filter) {
-              return <ShopCard key={shop.address} onShopClick={(shopName: any) => setFilter(shopName)} shop={shop} />
+            if (meetsFilterCriteria(shop.properties) || !filter) {
+              return <ShopCard key={shop.properties.address} onShopClick={(shopName: any) => setFilter(shopName)} shop={shop.properties} />
             }
           })}
         </div>

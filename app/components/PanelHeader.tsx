@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 
 interface IProps {
-  shop: TShop
+  shop: any //TShop
   emitClose: Function
 }
 
