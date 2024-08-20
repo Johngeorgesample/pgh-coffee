@@ -1,8 +1,8 @@
 'use client'
+
 import { useRef, useState } from 'react'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
-import Toggle from '@/app/components/Toggle'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops_geojson'
@@ -10,6 +10,7 @@ import shopGeoJSON from '@/data/coffee_shops_geojson'
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
   let [currentShop, setCurrentShop] = useState({} as TShop)
+
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
@@ -31,12 +32,7 @@ export default function Mappy() {
 
   return (
     <>
-      <main className="flex min-h-[calc(100vh-72px)] flex-col items-center">
-        <div className="flex justify-center items-center flex-col absolute top-0 h-56">
-          <h1>map</h1>
-        </div>
-
-        <Toggle />
+      <main className="min-h-[calc(100vh-72px)]">
         <Map
           mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
           initialViewState={{
@@ -46,7 +42,7 @@ export default function Mappy() {
           }}
           mapStyle="mapbox://styles/mapbox/streets-v9"
           onClick={handleMapClick}
-          ref={mapRef} // add this
+          ref={mapRef}
         >
           <Source id="my-data" type="geojson" data={shopGeoJSON}>
             <Layer

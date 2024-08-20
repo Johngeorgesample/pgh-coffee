@@ -53,7 +53,6 @@ export default function Home({ searchParams }: { searchParams: any }) {
     <>
       <main className="flex min-h-[calc(100vh-72px)] flex-col items-center">
         <div className="flex justify-center items-center flex-col absolute top-0 h-56">
-
           <Header />
           <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
             <span className="inline text-gray-500" aria-hidden="true">
