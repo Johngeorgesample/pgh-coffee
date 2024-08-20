@@ -70,7 +70,7 @@ export default function Home({ searchParams }: { searchParams: any }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 px-4 mt-56">
+        <div className="grid-cols-3 gap-4 px-4 mt-56 block md:grid">
           {coffeeShops.map(shop => {
             if (meetsFilterCriteria(shop) || !filter) {
               return <ShopCard key={shop.address} onShopClick={(shopName: any) => setFilter(shopName)} shop={shop} />
