@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Field, Label, Switch } from '@headlessui/react'
 
-export default function Example() {
-  const [enabled, setEnabled] = useState(true)
+interface TProps {
+  mapIsEnabled: boolean
+}
+
+export default function Toggle(props: TProps) {
+  const [enabled, setEnabled] = useState(props.mapIsEnabled)
 
   return (
     <Field className="absolute right-0 top-0 bg-white-100 p-4 z-10 flex items-center">
