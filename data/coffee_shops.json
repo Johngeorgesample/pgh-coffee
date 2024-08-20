@@ -11,7 +11,10 @@
     "neighborhood": "Lower Lawrenceville",
     "website": "https://abolitioncoffee.com/",
     "address": "3410 Penn Ave, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/lower_lawrenceville/abolition.jpg"
+    }
   },
   {
     "name": "Allegheny Coffee & Tea Exchange",
@@ -244,7 +247,10 @@
     "neighborhood": "Lower Lawrenceville",
     "website": "https://espressoamano.com/",
     "address": "3623 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/lower_lawrenceville/espresso_a_mano.jpg"
+    }
   },
   {
     "name": "Espresso A Mano",
@@ -361,7 +367,10 @@
     "neighborhood": "Downtown",
     "website": "https://laprima.com/",
     "address": "1100 Smallman St, Pittsburgh, PA 15222",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/downtown/la_prima.jpg"
+    }
   },
   {
     "name": "La Prima",
@@ -475,6 +484,13 @@
     "neighborhood": "Highland Park",
     "website": "https://tazzadoro.net/",
     "address": "1125 N Highland Ave, Pittsburgh, PA 15206",
+    "roaster": ""
+  },
+  {
+    "name": "Tazza D'Oro",
+    "neighborhood": "Oakland",
+    "website": "https://tazzadoro.net/",
+    "address": "125 Lytton Ave, Pittsburgh, PA 15213",
     "roaster": ""
   },
   {
