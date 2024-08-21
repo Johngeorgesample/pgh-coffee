@@ -5,7 +5,7 @@ import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
-import shopGeoJSON from '@/data/coffee_shops_geojson'
+import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
