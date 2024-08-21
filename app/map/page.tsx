@@ -14,7 +14,8 @@ export default function Mappy() {
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
-  const handleMapClick = event => {
+  const handleMapClick = (event: any) => {
+    // @ts-ignore-next-line
     const map = mapRef.current?.getMap()
     const features = map.queryRenderedFeatures(event.point, {
       layers: [layerId],
