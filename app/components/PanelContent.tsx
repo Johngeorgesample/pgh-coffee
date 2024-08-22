@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import {TNeighborhood} from '@/types/neighborhood-types'
@@ -13,7 +13,6 @@ interface IProps {
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
-  const [ list, setList ] = useState([])
 
   const amenities = props.shop?.value?.amenities
   const massagedAmenities = []
@@ -26,28 +25,18 @@ export default function PanelContent(props: IProps) {
     }
   }
 
-  const localList = []
-
-  const getListOfShopsInSameNieghborhood = (neighborhood: TNeighborhood) => {
+  const getListOfShopsInSameNieghborhood = (shop: any) => {
     const shops = shopGeoJSON.features
 
-    shops.map(shop => {
-      if (shop.properties.neighborhood === neighborhood) {
-        localList.push(shop)
+    return shops.filter(s => {
+      if (shop.address !== s.properties.address) {
+        return s.properties.neighborhood === shop.neighborhood
       }
     })
-    setList(localList)
-
-    console.log(list)
   }
 
-  useEffect(() => {
-    getListOfShopsInSameNieghborhood(props.shop.neighborhood as TNeighborhood)
-  }, [])
-
   const handleClick = () => {
-    // console.log(props.shop)
-    // getListOfShopsInSameNieghborhood(props.shop.neighborhood as TNeighborhood)
+    console.log(getListOfShopsInSameNieghborhood(props.shop.neighborhood as TNeighborhood))
   }
 
 
@@ -81,8 +70,7 @@ export default function PanelContent(props: IProps) {
         </>
       )}
 
-      <NearbyShops shops={list} />
-
+      <NearbyShops shops={getListOfShopsInSameNieghborhood(props.shop)} />
     </div>
   )
 }
