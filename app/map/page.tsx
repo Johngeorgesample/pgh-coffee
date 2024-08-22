@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
@@ -11,6 +11,7 @@ import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
   let [currentShop, setCurrentShop] = useState({} as TShop)
+  let [currentFeature, setCurrentFeature] = useState({})
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -25,8 +26,20 @@ export default function Mappy() {
     if (features.length) {
       setIsOpen(true)
       setCurrentShop(features[0].properties)
+      setCurrentFeature(features[0])
+      // https://stackoverflow.com/questions/60838755/how-to-center-marker-on-mapbox-gl-js-map-on-click
     }
   }
+
+  // centers map on currentFeature
+  useEffect(() => {
+    if (mapRef.current && currentFeature) {
+        mapRef.current?.setCenter({
+          lat: currentFeature.geometry.coordinates[1],
+          lng: currentFeature.geometry.coordinates[0],
+        })
+    }
+  }, [currentFeature])
 
   const handleClose = () => {
     setIsOpen(false)
@@ -43,7 +56,7 @@ export default function Mappy() {
             latitude: 40.440742,
             zoom: 12,
           }}
-          mapStyle="mapbox://styles/mapbox/streets-v9"
+          mapStyle="mapbox://styles/mapbox/dark-v9"
           onClick={handleMapClick}
           ref={mapRef}
         >
@@ -53,8 +66,8 @@ export default function Mappy() {
               type="circle"
               paint={{
                 'circle-radius': 10,
-                'circle-color': '#007cbf',
-                // 'circle-color': '#FDE047',
+                // 'circle-color': '#007cbf',
+                'circle-color': '#FDE047',
               }}
             />
           </Source>
