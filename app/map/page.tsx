@@ -32,11 +32,31 @@ export default function Mappy() {
   }
 
   // centers map on currentFeature
+  // useEffect(() => {
+  //   if (mapRef.current && currentFeature) {
+  //       console.log(mapRef.current)
+  //       mapRef.current?.setCenter({
+  //         lat: currentFeature.geometry.coordinates[1],
+  //         lng: currentFeature.geometry.coordinates[0],
+  //       })
+  //   }
+  // }, [currentFeature])
+
+
+  // slowly pan to currentFeature (not centered)
   useEffect(() => {
     if (mapRef.current && currentFeature) {
-        mapRef.current?.setCenter({
-          lat: currentFeature.geometry.coordinates[1],
-          lng: currentFeature.geometry.coordinates[0],
+        const target = {
+            center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
+            zoom: mapRef.current?.getZoom(),
+            bearing: 0,
+            pitch: 0
+        }
+
+        mapRef.current?.flyTo({
+          ...target,
+          duration: 1000,
+          essential: true
         })
     }
   }, [currentFeature])
