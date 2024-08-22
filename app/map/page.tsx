@@ -33,18 +33,14 @@ export default function Mappy() {
   // slowly pan to currentFeature (not centered)
   useEffect(() => {
     if (mapRef.current && currentFeature) {
-      const target = {
+      // @ts-ignore-next-line
+      mapRef.current.flyTo({
         // @ts-ignore-next-line
         center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
         // @ts-ignore-next-line
         zoom: mapRef.current?.getZoom(),
         bearing: 0,
         pitch: 0,
-      }
-
-      // @ts-ignore-next-line
-      mapRef.current.flyTo({
-        ...target,
         duration: 1000,
         essential: true,
       })
