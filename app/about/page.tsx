@@ -24,6 +24,13 @@ export default function About() {
           laoreet, dolor tellus scelerisque lectus, et condimentum metus odio sit amet lorem. Vestibulum scelerisque
           magna quis neque lobortis interdum. Sed erat ipsum, accumsan rhoncus vehicula a, suscipit non urna.
         </p>
+
+
+        <p className="mb-5">
+          Humble begginings as a spreadsheet
+          Pittsburgh coffee scene is really good
+          Home barista
+        </p>
       </div>
     </>
   )
