@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
-import Header from '@/app/components/Header'
+import Header2 from '@/app/components/Header2'
 import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
@@ -27,40 +27,27 @@ export default function Mappy() {
       setIsOpen(true)
       setCurrentShop(features[0].properties)
       setCurrentFeature(features[0])
-      // https://stackoverflow.com/questions/60838755/how-to-center-marker-on-mapbox-gl-js-map-on-click
     }
   }
-
-  // centers map on currentFeature
-  // useEffect(() => {
-  //   if (mapRef.current && currentFeature) {
-  //       console.log(mapRef.current)
-  //       mapRef.current?.setCenter({
-  //         lat: currentFeature.geometry.coordinates[1],
-  //         lng: currentFeature.geometry.coordinates[0],
-  //       })
-  //   }
-  // }, [currentFeature])
-
 
   // slowly pan to currentFeature (not centered)
   useEffect(() => {
     if (mapRef.current && currentFeature) {
-        const target = {
-            // @ts-ignore-next-line
-            center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
-            // @ts-ignore-next-line
-            zoom: mapRef.current?.getZoom(),
-            bearing: 0,
-            pitch: 0
-        }
-
+      const target = {
         // @ts-ignore-next-line
-        mapRef.current?.flyTo({
-          ...target,
-          duration: 1000,
-          essential: true
-        })
+        center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
+        // @ts-ignore-next-line
+        zoom: mapRef.current?.getZoom(),
+        bearing: 0,
+        pitch: 0,
+      }
+
+      // @ts-ignore-next-line
+      mapRef.current.flyTo({
+        ...target,
+        duration: 1000,
+        essential: true,
+      })
     }
   }, [currentFeature])
 
@@ -71,7 +58,7 @@ export default function Mappy() {
   return (
     <>
       <main>
-        <Header />
+        <Header2 />
         <Map
           mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
           initialViewState={{
@@ -79,7 +66,7 @@ export default function Mappy() {
             latitude: 40.440742,
             zoom: 12,
           }}
-          mapStyle="mapbox://styles/mapbox/dark-v9"
+          mapStyle="mapbox://styles/mapbox/dark-v11"
           onClick={handleMapClick}
           ref={mapRef}
         >
