@@ -62,6 +62,7 @@ export default function Mappy() {
             latitude: 40.440742,
             zoom: 12,
           }}
+          cursor='pointer'
           mapStyle="mapbox://styles/mapbox/dark-v11"
           onClick={handleMapClick}
           ref={mapRef}
