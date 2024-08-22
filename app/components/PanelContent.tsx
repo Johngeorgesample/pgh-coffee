@@ -1,7 +1,11 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
+import {TNeighborhood} from '@/types/neighborhood-types'
+import shopGeoJSON from '@/data/coffee_shops_geojson.json'
+import NearbyShops from './NearbyShops'
 
 interface IProps {
   shop: TShop
@@ -9,6 +13,8 @@ interface IProps {
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
+  const [ list, setList ] = useState([])
+
   const amenities = props.shop?.value?.amenities
   const massagedAmenities = []
 
@@ -19,6 +25,31 @@ export default function PanelContent(props: IProps) {
       }
     }
   }
+
+  const localList = []
+
+  const getListOfShopsInSameNieghborhood = (neighborhood: TNeighborhood) => {
+    const shops = shopGeoJSON.features
+
+    shops.map(shop => {
+      if (shop.properties.neighborhood === neighborhood) {
+        localList.push(shop)
+      }
+    })
+    setList(localList)
+
+    console.log(list)
+  }
+
+  useEffect(() => {
+    getListOfShopsInSameNieghborhood(props.shop.neighborhood as TNeighborhood)
+  }, [])
+
+  const handleClick = () => {
+    // console.log(props.shop)
+    // getListOfShopsInSameNieghborhood(props.shop.neighborhood as TNeighborhood)
+  }
+
 
   return (
     <div className="relative mt-6 flex-1 px-4 sm:px-6">
@@ -33,7 +64,7 @@ export default function PanelContent(props: IProps) {
         </a>
       )}
       <address className="mt-1 text-sm text-gray-900">{props.shop.address}</address>
-      <p className="mt-1 text-sm text-gray-900">{props.shop.neighborhood}</p>
+      <button onClick={handleClick} className="mt-1 text-sm text-gray-900">{props.shop.neighborhood}</button>
 
       {massagedAmenities.length > 0 && (
         <>
@@ -49,6 +80,9 @@ export default function PanelContent(props: IProps) {
           </ul>
         </>
       )}
+
+      <NearbyShops shops={list} />
+
     </div>
   )
 }
