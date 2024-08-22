@@ -25,6 +25,8 @@ export default function PanelContent(props: IProps) {
     }
   }
 
+  // naively use neighborhood as a proxy for distance
+  // @TODO calculate distance between shops using lat/long
   const getListOfShopsInSameNieghborhood = (shop: any) => {
     const shops = shopGeoJSON.features
 
@@ -41,6 +43,7 @@ export default function PanelContent(props: IProps) {
 
 
   return (
+    <>
     <div className="relative mt-6 flex-1 px-4 sm:px-6">
       {props.shop.website && (
         <a
@@ -70,7 +73,8 @@ export default function PanelContent(props: IProps) {
         </>
       )}
 
-      <NearbyShops shops={getListOfShopsInSameNieghborhood(props.shop)} />
     </div>
+      {getListOfShopsInSameNieghborhood(props.shop).length > 0 && <NearbyShops shops={getListOfShopsInSameNieghborhood(props.shop)} />}
+  </>
   )
 }
