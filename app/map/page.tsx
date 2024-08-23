@@ -10,7 +10,7 @@ import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
-  let [currentShop, setCurrentShop] = useState({} as TShop)
+  let [currentShop, setCurrentShop] = useState({})
   let [currentFeature, setCurrentFeature] = useState({})
 
   const mapRef = useRef(null)
@@ -25,7 +25,7 @@ export default function Mappy() {
 
     if (features.length) {
       setIsOpen(true)
-      setCurrentShop(features[0].properties)
+      setCurrentShop(features[0])
       setCurrentFeature(features[0])
     }
   }
