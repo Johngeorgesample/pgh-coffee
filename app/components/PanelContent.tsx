@@ -36,9 +36,9 @@ export default function PanelContent(props: IProps) {
           </a>
         )}
         <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
-        <button className="mt-1 text-sm text-gray-900">
+        <p className="mt-1 text-sm text-gray-900">
           {props.shop.properties.neighborhood}
-        </button>
+        </p>
 
         {massagedAmenities.length > 0 && (
           <>
