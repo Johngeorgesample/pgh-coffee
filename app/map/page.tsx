@@ -51,6 +51,12 @@ export default function Mappy() {
     setIsOpen(false)
   }
 
+
+const woohoo = (shopFromShopPanel) => {
+    setCurrentFeature(shopFromShopPanel)
+    setCurrentShop(shopFromShopPanel)
+}
+
   return (
     <>
       <main>
@@ -81,7 +87,7 @@ export default function Mappy() {
         </Map>
       </main>
       <Footer />
-      <ShopPanel shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
+      <ShopPanel foobar={woohoo} shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
     </>
   )
 }

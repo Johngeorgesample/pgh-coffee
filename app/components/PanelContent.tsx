@@ -6,6 +6,7 @@ import { TNeighborhood } from '@/types/neighborhood-types'
 import NearbyShops from './NearbyShops'
 
 interface IProps {
+  bar: any
   shop: any //TShop
 }
 
@@ -55,7 +56,7 @@ export default function PanelContent(props: IProps) {
           </>
         )}
       </div>
-      {<NearbyShops shop={props.shop} />}
+      {<NearbyShops shop={props.shop} handleClick={props.bar} />}
     </>
   )
 }

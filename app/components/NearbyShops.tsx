@@ -2,7 +2,8 @@ import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 import haversineDistance from 'haversine-distance'
 
 interface IProps {
-  shop: any
+  handleClick: any
+  onClick: any
 }
 export default function NearbyShops(props: IProps) {
   const shopsAreClose = (shopA: any, shopB: any) => {
@@ -30,14 +31,25 @@ export default function NearbyShops(props: IProps) {
       <ul>
         {nearbyList.map((shop: any) => {
           return (
-            <div key={shop.properties.address} className="relative rounded overflow-hidden shadow-md">
-              <div className="px-6 py-4">
-                <p className="font-medium text-xl mb-1 text-left block hover:underline">{shop.properties.name}</p>
-                <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
-                  {shop.properties.neighborhood}
-                </p>
-                <address className="text-gray-700">{shop.properties.address}</address>
-                <p>{Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters away</p>
+            <div key={shop.properties.address} className="relative rounded overflow-hidden shadow-md" onClick={() => props.handleClick(shop)}>
+              <div className=" py-4">
+                  <div
+                    className="h-36 relative bg-yellow-200 bg-cover bg-center"
+                    style={
+                      shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }
+                    }
+                  />
+                <div className="px-6 py-2">
+                  <p className="font-medium text-xl mb-1 text-left block hover:underline">{shop.properties.name}</p>
+                  <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
+                    {shop.properties.neighborhood}
+                  </p>
+                  <address className="text-gray-700">{shop.properties.address}</address>
+                  <p>
+                    {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
+                    away
+                  </p>
+                </div>
               </div>
             </div>
           )
