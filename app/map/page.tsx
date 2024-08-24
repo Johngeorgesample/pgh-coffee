@@ -12,6 +12,7 @@ export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
   let [currentShop, setCurrentShop] = useState({})
   let [currentFeature, setCurrentFeature] = useState({})
+  let [dataSet, setDataSet] = useState(shopGeoJSON)
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -29,6 +30,26 @@ export default function Mappy() {
       setCurrentFeature(features[0])
     }
   }
+
+  useEffect(() => {
+    const newData = {
+      ...dataSet,
+      features: dataSet.features.map(f => {
+        const isSelected =
+          f.properties.name === currentShop.properties?.name &&
+          f.properties.neighborhood === currentShop.properties.neighborhood
+        return {
+          ...f,
+          properties: {
+            ...f.properties,
+            selected: isSelected,
+          },
+        }
+      }),
+    }
+
+    setDataSet(newData)
+  }, [currentShop])
 
   // slowly pan to currentFeature (not centered)
   useEffect(() => {
@@ -51,11 +72,27 @@ export default function Mappy() {
     setIsOpen(false)
   }
 
-
-const woohoo = (shopFromShopPanel) => {
+  const woohoo = (shopFromShopPanel: any) => {
     setCurrentFeature(shopFromShopPanel)
     setCurrentShop(shopFromShopPanel)
-}
+    document.getElementById('ball')?.scrollIntoView({ behavior: 'smooth' })
+
+  }
+
+  const layerStyle = {
+    id: 'myPoint',
+    type: 'circle',
+    paint: {
+      'circle-color': [
+        'case',
+        ['boolean', ['get', 'selected'], false],
+        'white', // Color for the selected feature
+        '#FDE047', // Default color
+      ],
+      'circle-radius': 8,
+      'circle-opacity': 0.8,
+    },
+  }
 
   return (
     <>
@@ -68,21 +105,13 @@ const woohoo = (shopFromShopPanel) => {
             latitude: 40.440742,
             zoom: 12,
           }}
-          cursor='pointer'
+          cursor="pointer"
           mapStyle="mapbox://styles/mapbox/dark-v11"
           onClick={handleMapClick}
           ref={mapRef}
         >
-          <Source id="my-data" type="geojson" data={shopGeoJSON}>
-            <Layer
-              id={layerId}
-              type="circle"
-              paint={{
-                'circle-radius': 10,
-                // 'circle-color': '#007cbf',
-                'circle-color': '#FDE047',
-              }}
-            />
+          <Source id="my-data" type="geojson" data={dataSet}>
+            <Layer {...layerStyle} />
           </Source>
         </Map>
       </main>
