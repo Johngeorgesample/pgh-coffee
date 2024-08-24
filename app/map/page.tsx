@@ -36,8 +36,7 @@ export default function Mappy() {
       ...dataSet,
       features: dataSet.features.map(f => {
         const isSelected =
-          f.properties.name === currentShop.properties?.name &&
-          f.properties.neighborhood === currentShop.properties.neighborhood
+          f.properties.address === currentShop.properties.address
         return {
           ...f,
           properties: {
