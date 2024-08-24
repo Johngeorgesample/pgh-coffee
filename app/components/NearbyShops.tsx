@@ -29,7 +29,7 @@ export default function NearbyShops(props: IProps) {
     })
   }
 
-  nearbyList = sortShopsByDistance(nearbyList, props.shop.geometry.coordinates)
+  const sortedList = sortShopsByDistance(nearbyList, props.shop.geometry.coordinates)
 
   if (nearbyList.length === 0) {
     return null
@@ -40,7 +40,7 @@ export default function NearbyShops(props: IProps) {
       <hr className="w-1/2 m-auto mt-2 mb-2" />
       <p>Checkout these nearby shops!</p>
       <ul>
-        {nearbyList.map((shop: any) => {
+        {sortedList.map((shop: any) => {
           return (
             <div
               key={shop.properties.address}
