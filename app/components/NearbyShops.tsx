@@ -18,7 +18,18 @@ export default function NearbyShops(props: IProps) {
         shopsAreClose(s.geometry.coordinates, props.shop.geometry.coordinates),
     )
   }
-  const nearbyList = getNearbyShopsByDistance()
+
+  let nearbyList = getNearbyShopsByDistance()
+
+  const sortShopsByDistance = (shops: any[], referenceCoordinates: any) => {
+    return nearbyList.sort((shopA, shopB) => {
+      const distanceA = haversineDistance(referenceCoordinates, shopA.geometry.coordinates)
+      const distanceB = haversineDistance(referenceCoordinates, shopB.geometry.coordinates)
+      return distanceA - distanceB
+    })
+  }
+
+  nearbyList = sortShopsByDistance(nearbyList, props.shop.geometry.coordinates)
 
   if (nearbyList.length === 0) {
     return null
@@ -31,20 +42,22 @@ export default function NearbyShops(props: IProps) {
       <ul>
         {nearbyList.map((shop: any) => {
           return (
-            <div key={shop.properties.address} className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer" onClick={() => props.handleClick(shop)}>
+            <div
+              key={shop.properties.address}
+              className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
+              onClick={() => props.handleClick(shop)}
+            >
               <div className="">
-                  <div
-                    className="h-36 relative bg-yellow-200 bg-cover bg-center"
-                    style={
-                      shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }
-                    }
-                  />
+                <div
+                  className="h-36 relative bg-yellow-200 bg-cover bg-center"
+                  style={shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }}
+                />
                 <div className="px-6 py-2">
                   <p className="font-medium text-xl mb-1 text-left block">{shop.properties.name}</p>
                   <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
                     {shop.properties.neighborhood}
                   </p>
-                  { /*<address className="text-gray-700">{shop.properties.address}</address> */}
+                  {/*<address className="text-gray-700">{shop.properties.address}</address> */}
                   <p>
                     {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
                     away
