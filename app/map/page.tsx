@@ -69,6 +69,7 @@ export default function Mappy() {
 
   const handleClose = () => {
     setIsOpen(false)
+    setDataSet(shopGeoJSON)
   }
 
   const woohoo = (shopFromShopPanel: any) => {
