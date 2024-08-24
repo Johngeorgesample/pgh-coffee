@@ -90,7 +90,6 @@ export default function Mappy() {
         '#FDE047', // Default color
       ],
       'circle-radius': 8,
-      'circle-opacity': 0.8,
     },
   }
 
