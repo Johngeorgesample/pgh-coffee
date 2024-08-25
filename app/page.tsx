@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
-import Header2 from '@/app/components/Header2'
+import Nav from '@/app/components/Nav'
 import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
@@ -78,7 +78,7 @@ export default function Mappy() {
   return (
     <>
       <main>
-        <Header2 />
+        <Nav />
         <Map
           mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
           initialViewState={{
