@@ -1,3 +1,5 @@
+
+import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops.json'
 import haversineDistance from 'haversine-distance'
@@ -7,6 +9,7 @@ interface IProps {
   shop: TShop
 }
 export default function NearbyShops(props: IProps) {
+  const plausible = usePlausible()
   const shopsAreClose = (shopA: any, shopB: any) => {
     return haversineDistance(shopA, shopB) < 1000
   }
@@ -34,6 +37,11 @@ export default function NearbyShops(props: IProps) {
 
   const sortedList = sortShopsByDistance(nearbyList, props.shop.geometry.coordinates)
 
+  const handleCardClick = (shop: TShop) => {
+      props.handleClick(shop)
+      plausible('NearbyCardClick', { props: {} })
+  }
+
   if (nearbyList.length === 0) {
     return null
   }
@@ -48,7 +56,7 @@ export default function NearbyShops(props: IProps) {
             <div
               key={shop.properties.address}
               className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
-              onClick={() => props.handleClick(shop)}
+              onClick={() => handleCardClick(shop)}
             >
               <div className="">
                 <div

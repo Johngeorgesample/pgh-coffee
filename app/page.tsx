@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
@@ -9,6 +10,7 @@ import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops.json'
 
 export default function Mappy() {
+  const plausible = usePlausible()
   let [isOpen, setIsOpen] = useState(false)
   let [currentShop, setCurrentShop] = useState({} as TShop)
   let [dataSet, setDataSet] = useState(shopGeoJSON as any)
@@ -26,6 +28,7 @@ export default function Mappy() {
     if (features.length) {
       setIsOpen(true)
       setCurrentShop(features[0])
+      plausible('FeaturePointClick', { props: {} })
     }
   }
 
