@@ -35,7 +35,10 @@
     "neighborhood": "Shadyside",
     "website": "http://arriviste.coffee/",
     "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/shadyside/arriviste.jpg"
+    }
   },
   {
     "name": "Big Dog Coffee",
@@ -59,7 +62,10 @@
     "neighborhood": "Upper Lawrenceville",
     "website": "https://www.caffedamorepgh.com/",
     "address": "5308 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/upper_lawrenceville/caffe_damore.jpg"
+    }
   },
   {
     "name": "California Coffee Bar",
@@ -223,7 +229,10 @@
     "neighborhood": "Troy Hill",
     "website": "https://www.defer.coffee/",
     "address": "1800 Rialto St\nPittsburgh, PA 15212",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/troy_hill/de_fer.jpg"
+    }
   },
   {
     "name": "Delanie's Coffee",
@@ -309,7 +318,10 @@
     "neighborhood": "Lower Lawrenceville",
     "website": "https://ineffablecaphe.com/",
     "address": "3920 Penn Ave, Pittsburgh, PA 15224",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/central_lawrenceville/ineffable_caphe.jpg"
+    }
   },
   {
     "name": "Inkwell",
@@ -394,14 +406,20 @@
     "neighborhood": "East Liberty",
     "website": "https://margauxpgh.com/",
     "address": "5947 Penn Ave, Pittsburgh, PA 15206",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/east_liberty/margaux.jpg"
+    }
   },
   {
     "name": "Mechanic Coffee",
     "neighborhood": "Shadyside",
     "website": "https://www.mechaniccoffee.com/",
     "address": "5830 Ellsworth Ave, Pittsburgh, PA 15232",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/east_liberty/margaux.jpg"
+    }
   },
   {
     "name": "Nicholas Coffee & Tea Co.",
@@ -446,7 +464,10 @@
     "neighborhood": "East Liberty",
     "website": "https://redstartroasters.com/",
     "address": "224 N Euclid Ave, Pittsburgh, PA 15206",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/east_liberty/redstart_roasters.jpg"
+    }
   },
   {
     "name": "Rock 'n' Joe",
@@ -563,7 +584,10 @@
     "neighborhood": "Bloomfield",
     "website": "https://www.yinzcoffee.com/",
     "address": "4525 Liberty Ave, Pittsburgh, PA 15224",
-    "roaster": ""
+    "roaster": "",
+    "value": {
+      "photo": "../shop_photos/bloomfield/yinz_coffee.jpg"
+    }
   },
   {
     "name": "Yinz Coffee",
