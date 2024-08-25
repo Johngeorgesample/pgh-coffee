@@ -24,7 +24,9 @@ export default function NearbyShops(props: IProps) {
 
   const sortShopsByDistance = (shops: any[], referenceCoordinates: any) => {
     return nearbyList.sort((shopA, shopB) => {
+      // @ts-ignore-next-line
       const distanceA = haversineDistance(referenceCoordinates, shopA.geometry.coordinates)
+      // @ts-ignore-next-line
       const distanceB = haversineDistance(referenceCoordinates, shopB.geometry.coordinates)
       return distanceA - distanceB
     })
