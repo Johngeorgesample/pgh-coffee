@@ -10,8 +10,7 @@ import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
-  let [currentShop, setCurrentShop] = useState({})
-  let [currentFeature, setCurrentFeature] = useState({})
+  let [currentShop, setCurrentShop] = useState({} as TShop)
   let [dataSet, setDataSet] = useState(shopGeoJSON)
 
   const mapRef = useRef(null)
@@ -27,7 +26,6 @@ export default function Mappy() {
     if (features.length) {
       setIsOpen(true)
       setCurrentShop(features[0])
-      setCurrentFeature(features[0])
     }
   }
 
@@ -50,13 +48,13 @@ export default function Mappy() {
     setDataSet(newData)
   }, [currentShop])
 
-  // slowly pan to currentFeature (not centered)
+  // slowly pan to currentShop (not centered)
   useEffect(() => {
-    if (mapRef.current && currentFeature) {
+    if (mapRef.current && currentShop) {
       // @ts-ignore-next-line
       mapRef.current.flyTo({
         // @ts-ignore-next-line
-        center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
+        center: [currentShop.geometry.coordinates[0], currentShop.geometry.coordinates[1]],
         // @ts-ignore-next-line
         zoom: mapRef.current?.getZoom(),
         bearing: 0,
@@ -65,7 +63,7 @@ export default function Mappy() {
         essential: true,
       })
     }
-  }, [currentFeature])
+  }, [currentShop])
 
   const handleClose = () => {
     setIsOpen(false)
@@ -73,7 +71,6 @@ export default function Mappy() {
   }
 
   const woohoo = (shopFromShopPanel: any) => {
-    setCurrentFeature(shopFromShopPanel)
     setCurrentShop(shopFromShopPanel)
     document.getElementById('ball')?.scrollIntoView({ behavior: 'smooth' })
 
