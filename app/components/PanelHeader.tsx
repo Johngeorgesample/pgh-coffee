@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 
 interface IProps {
-  shop: any //TShop
+  shop: TShop
   emitClose: Function
 }
 
@@ -14,7 +14,7 @@ export default function PanelHeader(props: IProps) {
     <div className="" id="ball">
       <div
         className="h-56 relative bg-yellow-200 bg-cover bg-center"
-        style={props.shop.properties && props.shop.properties.photo && { backgroundImage: `url('${props.shop.properties.photo}')` }}
+        style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
       >
         <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
           <Dialog.Title className="text-3xl text-gray-900">{props.shop.properties.name}</Dialog.Title>

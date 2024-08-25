@@ -3,7 +3,7 @@
 import { TShop } from '@/types/shop-types'
 
 interface IProps {
-  shop: any //TShop
+  shop: TShop
 }
 
 export default function PanelFooter(props: IProps) {

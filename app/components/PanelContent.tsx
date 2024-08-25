@@ -7,22 +7,11 @@ import NearbyShops from './NearbyShops'
 
 interface IProps {
   bar: any
-  shop: any //TShop
+  shop: TShop
 }
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
-  const amenities = props.shop.properties?.value?.amenities
-  const massagedAmenities = []
-
-  if (amenities) {
-    for (let [key, value] of Object.entries(amenities)) {
-      if (value) {
-        massagedAmenities.push(key)
-      }
-    }
-  }
-
   return (
     <>
       <div className="relative mt-6 flex-1 px-4 sm:px-6">
@@ -40,21 +29,6 @@ export default function PanelContent(props: IProps) {
         <p className="mt-1 text-sm text-gray-900">
           {props.shop.properties.neighborhood}
         </p>
-
-        {massagedAmenities.length > 0 && (
-          <>
-            <p className="mt-1 text-sm text-gray-900">Amenities</p>
-            <ul>
-              {massagedAmenities.map(amenity => {
-                return (
-                  <li key={amenity} className="mt-1 ml-6 list-disc text-sm text-gray-900">
-                    {amenity}
-                  </li>
-                )
-              })}
-            </ul>
-          </>
-        )}
       </div>
       {<NearbyShops shop={props.shop} handleClick={props.bar} />}
     </>

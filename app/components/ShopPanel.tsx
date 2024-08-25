@@ -8,7 +8,7 @@ import PanelContent from './PanelContent'
 import PanelFooter from './PanelFooter'
 
 interface IProps {
-  shop: any //TShop
+  shop: TShop
   panelIsOpen: boolean
   emitClose: Function
   foobar: any
