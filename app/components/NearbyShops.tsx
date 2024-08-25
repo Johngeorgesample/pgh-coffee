@@ -1,5 +1,5 @@
 import { TShop } from '@/types/shop-types'
-import shopGeoJSON from '@/data/coffee_shops_geojson.json'
+import shopGeoJSON from '@/data/coffee_shops.json'
 import haversineDistance from 'haversine-distance'
 
 interface IProps {

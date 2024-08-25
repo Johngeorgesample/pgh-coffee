@@ -6,7 +6,7 @@ import Footer from '@/app/components/Footer'
 import { TShop } from '@/types/shop-types'
 import Nav from '@/app/components/Nav'
 import ShopPanel from '@/app/components/ShopPanel'
-import shopGeoJSON from '@/data/coffee_shops_geojson.json'
+import shopGeoJSON from '@/data/coffee_shops.json'
 
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
