@@ -1019,7 +1019,8 @@
         "neighborhood": "Bloomfield",
         "website": "https://www.yinzcoffee.com/",
         "address": "4525 Liberty Ave, Pittsburgh, PA 15224",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/bloomfield/yinz_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
