@@ -1,8 +1,8 @@
-import Header2 from '@/app/components/Header2'
+import Nav from '@/app/components/Nav'
 export default function About() {
   return (
     <>
-      <Header2 />
+      <Nav />
       <div className="max-w-4xl mx-auto px-6 md:px-8">
         <p className="mb-5 mt-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ac tincidunt ante. Cras a dui lacinia, suscipit
