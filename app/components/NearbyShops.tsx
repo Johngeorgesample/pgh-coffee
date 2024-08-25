@@ -38,7 +38,7 @@ export default function NearbyShops(props: IProps) {
   return (
     <section className="relative mt-6 flex-1 px-4 sm:px-6">
       <hr className="w-1/2 m-auto mt-2 mb-2" />
-      <p>Checkout these nearby shops!</p>
+      <p className="mb-2 text-gray-700">Nearby shops</p>
       <ul>
         {sortedList.map((shop: any) => {
           return (
@@ -53,12 +53,12 @@ export default function NearbyShops(props: IProps) {
                   style={shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }}
                 />
                 <div className="px-6 py-2">
-                  <p className="font-medium text-xl mb-1 text-left block">{shop.properties.name}</p>
+                  <p className="font-medium text-xl text-left block">{shop.properties.name}</p>
                   <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
                     {shop.properties.neighborhood}
                   </p>
                   {/*<address className="text-gray-700">{shop.properties.address}</address> */}
-                  <p>
+                  <p className="italic text-sm text-gray-700">
                     {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
                     away
                   </p>
