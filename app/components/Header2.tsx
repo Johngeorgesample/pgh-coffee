@@ -17,7 +17,7 @@ export default function Header2() {
   return (
     <div className="bg-yellow-300 flex items-center py-2 px-2 gap-3">
       <span className="flex flex-1 gap-3">
-        <a className="flex" href="/map">
+        <a className="flex" href="/">
           <img
             className="h-12"
             src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Keystone_state_symbol_Pennsylvania.svg"

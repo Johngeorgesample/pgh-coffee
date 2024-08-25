@@ -1,84 +1,121 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import ShopCard from '@/app/components/ShopCard'
-import CoffeeShops from '@/data/coffee_shops_geojson.json'
-import Header from '@/app/components/Header'
+import { useRef, useEffect, useState } from 'react'
+import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { TShop } from '@/types/shop-types'
+import Header2 from '@/app/components/Header2'
+import ShopPanel from '@/app/components/ShopPanel'
+import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 
-export default function Home({ searchParams }: { searchParams: any }) {
-  const [filter, setFilter] = useState('')
+export default function Mappy() {
+  let [isOpen, setIsOpen] = useState(false)
+  let [currentShop, setCurrentShop] = useState({})
+  let [currentFeature, setCurrentFeature] = useState({})
+  let [dataSet, setDataSet] = useState(shopGeoJSON)
 
-  useMemo(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const myParam = params.get('neighborhood')
-      if (myParam) {
-        setFilter(myParam)
-      }
-    } else {
-      if (searchParams) {
-        setFilter(searchParams.neighborhood)
-      }
-    }
-  }, [])
+  const mapRef = useRef(null)
+  const layerId = 'myPoint'
 
-  const coffeeShops = [...CoffeeShops.features]
-  coffeeShops.sort((a, b) => a.properties.neighborhood.localeCompare(b.properties.neighborhood))
+  const handleMapClick = (event: any) => {
+    // @ts-ignore-next-line
+    const map = mapRef.current?.getMap()
+    const features = map.queryRenderedFeatures(event.point, {
+      layers: [layerId],
+    })
 
-  const handleFormChange = (e: any) => {
-    setFilter(e.target.value)
-  }
-
-  const handleFilterClear = () => {
-    setFilter('')
-    if (typeof window !== 'undefined') {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('neighborhood')
-      url.search = params.toString()
-      history.replaceState({}, '', url.toString())
+    if (features.length) {
+      setIsOpen(true)
+      setCurrentShop(features[0])
+      setCurrentFeature(features[0])
     }
   }
 
-  const meetsFilterCriteria = (shop: any) => {
-    if (filter) {
-      const shopCardText = `${shop.neighborhood.toLowerCase()} ${shop.name.toLowerCase()}`
-      return shopCardText.includes(filter.toLowerCase())
+  useEffect(() => {
+    const newData = {
+      ...dataSet,
+      features: dataSet.features.map(f => {
+        const isSelected =
+          f.properties.address === currentShop.properties?.address
+        return {
+          ...f,
+          properties: {
+            ...f.properties,
+            selected: isSelected,
+          },
+        }
+      }),
     }
+
+    setDataSet(newData)
+  }, [currentShop])
+
+  // slowly pan to currentFeature (not centered)
+  useEffect(() => {
+    if (mapRef.current && currentFeature) {
+      // @ts-ignore-next-line
+      mapRef.current.flyTo({
+        // @ts-ignore-next-line
+        center: [currentFeature.geometry.coordinates[0], currentFeature.geometry.coordinates[1]],
+        // @ts-ignore-next-line
+        zoom: mapRef.current?.getZoom(),
+        bearing: 0,
+        pitch: 0,
+        duration: 1000,
+        essential: true,
+      })
+    }
+  }, [currentFeature])
+
+  const handleClose = () => {
+    setIsOpen(false)
+    setDataSet(shopGeoJSON)
+  }
+
+  const woohoo = (shopFromShopPanel: any) => {
+    setCurrentFeature(shopFromShopPanel)
+    setCurrentShop(shopFromShopPanel)
+    document.getElementById('ball')?.scrollIntoView({ behavior: 'smooth' })
+
+  }
+
+  const layerStyle = {
+    id: 'myPoint',
+    type: 'circle',
+    paint: {
+      'circle-color': [
+        'case',
+        ['boolean', ['get', 'selected'], false],
+        'white', // Color for the selected feature
+        '#FDE047', // Default color
+      ],
+      'circle-radius': 8,
+    },
   }
 
   return (
     <>
-      <main className="flex min-h-[calc(100vh-72px)] flex-col items-center">
-        <div className="flex justify-center items-center flex-col absolute top-0 h-56">
-          <Header />
-          <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
-            <span className="inline text-gray-500" aria-hidden="true">
-              <MagnifyingGlassIcon className="h-4 w-4" />
-            </span>
-            <input
-              className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
-              onChange={handleFormChange}
-              placeholder="Search for a shop"
-              value={filter}
-            />
-            <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
-              ×
-            </button>
-          </div>
-        </div>
-
-        <div className="grid-cols-3 gap-4 px-4 pb-4 mt-56 block md:grid">
-          {coffeeShops.map(shop => {
-            if (meetsFilterCriteria(shop.properties) || !filter) {
-              return <ShopCard key={shop.properties.address} onShopClick={(shopName: any) => setFilter(shopName)} shop={shop.properties} />
-            }
-          })}
-        </div>
+      <main>
+        <Header2 />
+        <Map
+          mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
+          initialViewState={{
+            longitude: -79.99585,
+            latitude: 40.440742,
+            zoom: 12,
+          }}
+          cursor="pointer"
+          mapStyle="mapbox://styles/mapbox/dark-v11"
+          onClick={handleMapClick}
+          ref={mapRef}
+        >
+          <Source id="my-data" type="geojson" data={dataSet}>
+            <Layer {...layerStyle} />
+          </Source>
+        </Map>
       </main>
       <Footer />
+      <ShopPanel foobar={woohoo} shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
     </>
   )
 }
