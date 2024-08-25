@@ -46,7 +46,7 @@ export default function Mappy() {
     }
 
     setDataSet(newData)
-  }, [currentShop])
+  }, [currentShop, dataSet])
 
   // slowly pan to currentShop (not centered)
   useEffect(() => {
@@ -76,20 +76,6 @@ export default function Mappy() {
 
   }
 
-  const layerStyle = {
-    id: 'myPoint',
-    type: 'circle',
-    paint: {
-      'circle-color': [
-        'case',
-        ['boolean', ['get', 'selected'], false],
-        'white', // Color for the selected feature
-        '#FDE047', // Default color
-      ],
-      'circle-radius': 8,
-    },
-  }
-
   return (
     <>
       <main>
@@ -107,7 +93,19 @@ export default function Mappy() {
           ref={mapRef}
         >
           <Source id="my-data" type="geojson" data={dataSet}>
-            <Layer {...layerStyle} />
+            <Layer 
+              id='myPoint'
+              type='circle'
+              paint={{
+                'circle-color': [
+                  'case',
+                  ['boolean', ['get', 'selected'], false],
+                  'white', // Color for the selected feature
+                  '#FDE047', // Default color
+                ],
+                'circle-radius': 8,
+              }}
+            />
           </Source>
         </Map>
       </main>
