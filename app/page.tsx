@@ -11,7 +11,7 @@ import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 export default function Mappy() {
   let [isOpen, setIsOpen] = useState(false)
   let [currentShop, setCurrentShop] = useState({} as TShop)
-  let [dataSet, setDataSet] = useState(shopGeoJSON)
+  let [dataSet, setDataSet] = useState(shopGeoJSON as any)
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -32,7 +32,7 @@ export default function Mappy() {
   useEffect(() => {
     const newData = {
       ...dataSet,
-      features: dataSet.features.map(f => {
+      features: dataSet.features.map((f: TShop) => {
         const isSelected =
           f.properties.address === currentShop.properties?.address
         return {
@@ -44,9 +44,8 @@ export default function Mappy() {
         }
       }),
     }
-
     setDataSet(newData)
-  }, [currentShop, dataSet])
+  }, [currentShop])
 
   // slowly pan to currentShop (not centered)
   useEffect(() => {

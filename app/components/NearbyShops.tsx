@@ -1,9 +1,10 @@
+import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops_geojson.json'
 import haversineDistance from 'haversine-distance'
 
 interface IProps {
   handleClick: any
-  shop: any
+  shop: TShop
 }
 export default function NearbyShops(props: IProps) {
   const shopsAreClose = (shopA: any, shopB: any) => {

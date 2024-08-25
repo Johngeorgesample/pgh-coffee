@@ -14,6 +14,6 @@ export interface TShop {
   }
   geometry: {
     type: string,
-    photo: [number, number]
+    coordinates: [number, number]
   }
 }
