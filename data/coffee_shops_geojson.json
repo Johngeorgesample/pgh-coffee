@@ -65,7 +65,8 @@
         "neighborhood": "Shadyside",
         "website": "http://arriviste.coffee/",
         "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/shadyside/arriviste.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -108,7 +109,8 @@
         "neighborhood": "Upper Lawrenceville",
         "website": "https://www.caffedamorepgh.com/",
         "address": "5308 Butler St, Pittsburgh, PA 15201",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/upper_lawrenceville/caffe_damore.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -396,7 +398,8 @@
         "neighborhood": "Troy Hill",
         "website": "https://www.defer.coffee/",
         "address": "1800 Rialto St, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/troy_hill/de_fer.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -553,7 +556,8 @@
         "neighborhood": "Lower Lawrenceville",
         "website": "https://ineffablecaphe.com/",
         "address": "3920 Penn Ave, Pittsburgh, PA 15224",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/ineffable_caphe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -621,11 +625,12 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Kalibur Coffee",
+        "name": "Kaibur Coffee",
         "neighborhood": "Polish Hill",
         "website": "https://www.kaiburcoffee.com/",
         "address": "3138 Dobson St, Pittsburgh, PA 15219",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/polish_hill/kaibur_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -698,7 +703,8 @@
         "neighborhood": "East Liberty",
         "website": "https://margauxpgh.com/",
         "address": "5947 Penn Ave, Pittsburgh, PA 15206",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_liberty/margaux.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -712,7 +718,8 @@
         "neighborhood": "Shadyside",
         "website": "https://www.mechaniccoffee.com/",
         "address": "5830 Ellsworth Ave, Pittsburgh, PA 15232",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_liberty/margaux.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -797,7 +804,8 @@
         "neighborhood": "East Liberty",
         "website": "https://redstartroasters.com/",
         "address": "224 N Euclid Ave, Pittsburgh, PA 15206",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_liberty/redstart_roasters.jpg"
       },
       "geometry": {
         "type": "Point",
