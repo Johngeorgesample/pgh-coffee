@@ -190,6 +190,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "COLOMBINO Coffee",
+        "neighborhood": "Allegheny West",
+        "website": "https://www.colombino.com/",
+        "address": "926 Western Ave, Pittsburgh, PA 15233",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.017712, 40.451955]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Commonplace Coffee",
         "neighborhood": "Garfield",
         "website": "https://commonplacecoffee.com/",
