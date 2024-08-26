@@ -17,6 +17,11 @@ export default function About() {
         <h3 className="text-xl mb-2">FAQ</h3>
 
         <QAndA
+          question="You&apos;re missing ${my_favorite_coffee_shop}"
+          answer="I&apos;m focusing on shops in city proper right now."
+        />
+
+        <QAndA
           question="I&apos;d like to help! How can I contribute?"
           answer="Pull requests are welcome."
         />
