@@ -9,7 +9,7 @@ export default function About() {
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
         <h1 className="text-2xl text-bold mb-2">About</h1>
         <p className="mb-5">
-        This project&apos;s first iteration was a spreadsheet. I tracked what coffee shops I had been to, where I still needed to visit, and general thoughts on my experience. Then I had the thought every developer has had - &quot;what if I turn the niche thing I care about into a side project?&quot; This site is the result of that thought.
+        This project&apos;s first iteration was a spreadsheet. I tracked what coffee shops I had been to, where I still needed to visit, and general thoughts on my experience. Then I had the thought every developer has had - &quot;what if I turn the niche thing I care about into a side project?&quot;
         </p>
       </div>
 
