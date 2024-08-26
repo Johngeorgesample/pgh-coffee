@@ -1,4 +1,3 @@
-
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops.json'
@@ -38,8 +37,8 @@ export default function NearbyShops(props: IProps) {
   const sortedList = sortShopsByDistance(nearbyList, props.shop.geometry.coordinates)
 
   const handleCardClick = (shop: TShop) => {
-      props.handleClick(shop)
-      plausible('NearbyCardClick', { props: {} })
+    props.handleClick(shop)
+    plausible('NearbyCardClick', { props: {} })
   }
 
   if (nearbyList.length === 0) {
@@ -53,29 +52,27 @@ export default function NearbyShops(props: IProps) {
       <ul>
         {sortedList.map((shop: any) => {
           return (
-            <div
+            <li
               key={shop.properties.address}
               className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
               onClick={() => handleCardClick(shop)}
             >
-              <div className="">
-                <div
-                  className="h-36 relative bg-yellow-200 bg-cover bg-center"
-                  style={shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }}
-                />
-                <div className="px-6 py-2">
-                  <p className="font-medium text-xl text-left block">{shop.properties.name}</p>
-                  <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
-                    {shop.properties.neighborhood}
-                  </p>
-                  {/*<address className="text-gray-700">{shop.properties.address}</address> */}
-                  <p className="italic text-sm text-gray-700">
-                    {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
-                    away
-                  </p>
-                </div>
+              <div
+                className="h-36 relative bg-yellow-200 bg-cover bg-center"
+                style={shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }}
+              />
+              <div className="px-6 py-2">
+                <p className="font-medium text-xl text-left block">{shop.properties.name}</p>
+                <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
+                  {shop.properties.neighborhood}
+                </p>
+                {/*<address className="text-gray-700">{shop.properties.address}</address> */}
+                <p className="italic text-sm text-gray-700">
+                  {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
+                  away
+                </p>
               </div>
-            </div>
+            </li>
           )
         })}
       </ul>
