@@ -11,13 +11,13 @@ interface IProps {
 
 export default function PanelHeader(props: IProps) {
   return (
-    <div className="">
+    <div className="" id="ball">
       <div
         className="h-56 relative bg-yellow-200 bg-cover bg-center"
-        style={props.shop.value && props.shop.value.photo && { backgroundImage: `url('${props.shop.value.photo}')` }}
+        style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
       >
         <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
-          <Dialog.Title className="text-3xl text-gray-900">{props.shop.name}</Dialog.Title>
+          <Dialog.Title className="text-3xl text-gray-900">{props.shop.properties.name}</Dialog.Title>
           <div className="ml-3 flex h-7 items-center">
             <button
               type="button"

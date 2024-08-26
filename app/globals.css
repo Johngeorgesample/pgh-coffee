@@ -19,3 +19,13 @@
 body {
   @apply bg-gray-50;
 }
+
+.mapboxgl-ctrl,
+.mapboxgl-ctrl-attrib,
+.mapboxgl-ctrl-attrib-inner {
+  display: none;
+}
+
+.mapboxgl-canvas {
+  height: calc(100vh - 64px - 56px) !important;
+}

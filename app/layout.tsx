@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'PGH Coffee',
-  description: 'Coffee shops in the steel city',
+  description: 'Coffee shops in Pittsburgh, PA',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,634 +1,1115 @@
-[
-  {
-    "name": "61C Cafe",
-    "neighborhood": "Squirrel Hill South",
-    "website": "https://61ccafe.com/",
-    "address": "1839 Murray Ave, Pittsburgh, PA 15217",
-    "roaster": ""
-  },
-  {
-    "name": "Abolition Coffee",
-    "neighborhood": "Lower Lawrenceville",
-    "website": "https://abolitioncoffee.com/",
-    "address": "3410 Penn Ave, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/lower_lawrenceville/abolition.jpg"
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "61C Cafe",
+        "neighborhood": "Squirrel Hill South",
+        "website": "https://61ccafe.com/",
+        "address": "1839 Murray Ave, Pittsburgh, PA 15217",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9227263333333, 40.436172]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Abolition Coffee",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://abolitioncoffee.com/",
+        "address": "3410 Penn Ave, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/lower_lawrenceville/abolition.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.96677875, 40.4627605]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Allegheny Coffee & Tea Exchange",
+        "neighborhood": "Strip District",
+        "website": "https://www.alleghenycoffee.com/",
+        "address": "2005 Penn Ave, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.98394, 40.451308]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Annex PGH",
+        "neighborhood": "East Allegheny",
+        "website": "https://www.annexpgh.com/",
+        "address": "522 E. Ohio St Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9999455, 40.45382025]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arriviste Coffee",
+        "neighborhood": "Shadyside",
+        "website": "http://arriviste.coffee/",
+        "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
+        "roaster": "",
+        "photo": "../shop_photos/shadyside/arriviste.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9312406, 40.455366]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Big Dog Coffee",
+        "neighborhood": "South Side Flats",
+        "website": "https://www.bigdogcoffeeshop.com/",
+        "address": "2717 Sarah St Pittsburgh, PA 15203",
+        "roaster": "",
+        "photo": "../shop_photos/south_side_flats/big_dog_coffee.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9666765, 40.425983]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Café102",
+        "neighborhood": "Central Lawrenceville",
+        "website": "https://cafe102pgh.com/",
+        "address": "4314 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.95994525, 40.47097425]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Caffe d'Amore",
+        "neighborhood": "Upper Lawrenceville",
+        "website": "https://www.caffedamorepgh.com/",
+        "address": "5308 Butler St, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/upper_lawrenceville/caffe_damore.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.952097, 40.4822436666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "California Coffee Bar",
+        "neighborhood": "Brighton Heights",
+        "website": "https://california-coffee.square.site/",
+        "address": "3619 California Ave, Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.04155325, 40.480711]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cares CommuniTEA Cafe",
+        "neighborhood": "Crawford-Roberts",
+        "website": "https://carescommunitea.shopsettings.com/",
+        "address": "1836 Centre Ave, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.98208, 40.442398]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Centred Coffee & Wellness",
+        "neighborhood": "Shadyside",
+        "website": "https://www.centredcoffee.com/",
+        "address": "6015 Stevenson Pl, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.92431425, 40.459854]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Centred Coffee & Wellness",
+        "neighborhood": "Shadyside",
+        "website": "https://www.centredcoffee.com/",
+        "address": "5408 Centre Ave, Pittsburgh, PA 15232",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9380385, 40.4559255]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CFP Cafe",
+        "neighborhood": "Chateau",
+        "website": "https://cfpcafe.com/",
+        "address": "1501 Preble Ave, Pittsburgh, PA 15233",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0324240625, 40.454396]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonplace Coffee",
+        "neighborhood": "Garfield",
+        "website": "https://commonplacecoffee.com/",
+        "address": "5467 Penn Ave, Pittsburgh, PA 15206",
+        "roaster": "",
+        "photo": "../shop_photos/garfield/commonplace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.933486, 40.46463]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonplace Coffee",
+        "neighborhood": "Mexican War Streets",
+        "website": "https://commonplacecoffee.com/",
+        "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
+        "roaster": "",
+        "photo": "../shop_photos/mexican_war_streets/commonplace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.01478775, 40.45703325]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonplace Coffee",
+        "neighborhood": "North Point Breeze",
+        "website": "https://commonplacecoffee.com/",
+        "address": "7514 Thomas Blvd suite 100, Pittsburgh, PA 15208",
+        "roaster": "",
+        "photo": "../shop_photos/north_point_breeze/commonplace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.895444, 40.44878625]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonplace Coffee",
+        "neighborhood": "South Side Flats",
+        "website": "https://commonplacecoffee.com/",
+        "address": "428 S. 27th St Pittsburgh, PA 15203",
+        "roaster": "",
+        "photo": "../shop_photos/south_side_flats/commonplace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9661808, 40.428269]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonplace Coffee",
+        "neighborhood": "Squirrel Hill North",
+        "website": "https://commonplacecoffee.com/",
+        "address": "5827 Forbes Ave, Pittsburgh, PA 15217",
+        "roaster": "",
+        "photo": "../shop_photos/squirrel_hill_north/commonplace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9218943333333, 40.438252]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Constellation Coffee",
+        "neighborhood": "Central Lawrenceville",
+        "website": "http://www.constellationcoffeepgh.com/",
+        "address": "4059 Penn Ave, Pittsburgh, PA 15224",
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/constellation.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9557522, 40.4657444]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Convive",
+        "neighborhood": "Central Lawrenceville",
+        "website": "https://www.convivecoffee.com/",
+        "address": "4032 Butler St, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/convive.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9612735, 40.46930325]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Convive",
+        "neighborhood": "North Shore",
+        "website": "https://www.convivecoffee.com/",
+        "address": "225 N Shore Dr Suite 100, Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.00789625, 40.4462734166667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Creative Coffee & Supply",
+        "neighborhood": "Downtown",
+        "website": "https://crtv.coffee/",
+        "address": "309 Smithfield St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9999484285714, 40.4385172857143]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+      "name": "Cup-Ka-Joe",
+      "neighborhood": "South Side Flats",
+      "website": "https://www.cupkajoe.com/",
+      "address": "31 S 27th St, Pittsburgh, PA 15203",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.96742925, 40.425939]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "De Fer Coffee & Tea",
+        "neighborhood": "Downtown",
+        "website": "https://www.defer.coffee/",
+        "address": "435 Market St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0024207777778, 40.4411837777778]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "De Fer Coffee & Tea",
+        "neighborhood": "South Oakland",
+        "website": "https://www.defer.coffee/",
+        "address": "350 Technology Dr, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.961681, 40.431125]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "De Fer Coffee & Tea",
+        "neighborhood": "South Side Flats",
+        "website": "https://www.defer.coffee/",
+        "address": "339 McKean St, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.997188, 40.430034]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "De Fer Coffee & Tea",
+        "neighborhood": "Strip District",
+        "website": "https://www.defer.coffee/",
+        "address": "2002 Smallman St, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/de_fer.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9843555, 40.451661]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "De Fer Coffee & Tea",
+        "neighborhood": "Troy Hill",
+        "website": "https://www.defer.coffee/",
+        "address": "1800 Rialto St, Pittsburgh, PA 15212",
+        "roaster": "",
+        "photo": "../shop_photos/troy_hill/de_fer.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9823008, 40.466755]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Delanie's Coffee",
+        "neighborhood": "South Side Flats",
+        "website": "http://www.delaniescoffee.com/",
+        "address": "1737 E Carson St, Pittsburgh, PA 15203",
+        "roaster": "",
+        "photo": "../shop_photos/south_side_flats/delanies_coffee.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.98074625, 40.42898975]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Divvy Coffee & Buns",
+        "neighborhood": "Central Oakland",
+        "website": "https://divvycoffeebuns.com/",
+        "address": "3714 Forbes Ave, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.95695325, 40.4412805]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Espresso A Mano",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://espressoamano.com/",
+        "address": "3623 Butler St, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/lower_lawrenceville/espresso_a_mano.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.96512525, 40.466097]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Espresso A Mano",
+        "neighborhood": "Squirrel Hill North",
+        "website": "https://espressoamano.com/",
+        "address": "6520 Wilkins Ave, Pittsburgh, PA 15217",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.91686, 40.444332]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Everyday Cafe",
+        "neighborhood": "Homewood South",
+        "website": "https://www.everydaycafepgh.com/",
+        "address": "532 N Homewood Ave, Pittsburgh, PA 15208",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.8981293333333, 40.4533426666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Field Day",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://www.fieldday.life/",
+        "address": "3706 Butler St, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/lower_lawrenceville/field_day.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9644278, 40.4663732]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gasoline Street Coffee",
+        "neighborhood": "Downtown",
+        "website": "https://www.gasolinestreetcoffee.com/",
+        "address": "643 First Ave, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9953826666667, 40.4355673333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grim Wizard Coffee",
+        "neighborhood": "Allentown",
+        "website": "https://www.grimwizard.com/",
+        "address": "1206 Arlington Ave, Pittsburgh, PA 15210",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9924076, 40.4215238]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hazelwood Cafe",
+        "neighborhood": "Hazelwood",
+        "website": "https://hazelwood.cafe/",
+        "address": "5017 Second Ave, Pittsburgh, PA 15207",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.94324825, 40.40800175]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hilltop Coffee",
+        "neighborhood": "Arlington",
+        "website": "https://www.hilltopcoffeepgh.com/",
+        "address": "2400 Arlington Ave, Pittsburgh, PA 15210",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9728471666667, 40.4172895]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ineffable Cà Phê",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://ineffablecaphe.com/",
+        "address": "3920 Penn Ave, Pittsburgh, PA 15224",
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/ineffable_caphe.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9592916666667, 40.4647026666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Inkwell",
+        "neighborhood": "Central Lawrenceville",
+        "website": "",
+        "address": "4419 Butler St, Pittsburgh, PA 15201",
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/inkwell.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9596355, 40.472108]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "James Cafe",
+        "neighborhood": "Strip District",
+        "website": "https://thejamescafe.com/",
+        "address": "2550 Smallman St, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/james_cafe.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9797323260234, 40.454837]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jitters Cafe",
+        "neighborhood": "Shadyside",
+        "website": "https://jitterspgh.com/",
+        "address": "5541 Walnut St, Pittsburgh, PA 15232",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9324156666667, 40.4518135333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ka-Fair",
+        "neighborhood": "Morningside",
+        "website": "https://kafaircakery.wixsite.com/kafair",
+        "address": "1806 Chislett St, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9253955, 40.4855015]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kaibur Coffee",
+        "neighborhood": "Polish Hill",
+        "website": "https://www.kaiburcoffee.com/",
+        "address": "3138 Dobson St, Pittsburgh, PA 15219",
+        "roaster": "",
+        "photo": "../shop_photos/polish_hill/kaibur_coffee.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9658586851852, 40.4574625]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "KLVN",
+        "neighborhood": "Larimer",
+        "website": "https://klvncoffee.com/",
+        "address": "6600 Hamilton Ave Fl 1, Pittsburgh, PA 15206",
+        "roaster": "",
+        "photo": "../shop_photos/larimer/klvn.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.91077325, 40.457706]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "La Prima",
+        "neighborhood": "Downtown",
+        "website": "https://laprima.com/",
+        "address": "1100 Smallman St, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/downtown/la_prima.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.993351, 40.44557]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "La Prima",
+        "neighborhood": "Strip District",
+        "website": "https://laprima.com/",
+        "address": "205 21st St, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/la_prima.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.982803, 40.4516103333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LV Coffee Project",
+        "neighborhood": "East Liberty",
+        "website": "https://tolve.co/",
+        "address": "124 S Highland Ave, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.925297047619, 40.460369]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Margaux",
+        "neighborhood": "East Liberty",
+        "website": "https://margauxpgh.com/",
+        "address": "5947 Penn Ave, Pittsburgh, PA 15206",
+        "roaster": "",
+        "photo": "../shop_photos/east_liberty/margaux.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9251315576923, 40.461814]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mechanic Coffee",
+        "neighborhood": "Shadyside",
+        "website": "https://www.mechaniccoffee.com/",
+        "address": "5830 Ellsworth Ave, Pittsburgh, PA 15232",
+        "roaster": "",
+        "photo": "../shop_photos/shadyside/mechanic_coffee.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9301880833333, 40.4563034583333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nicholas Coffee & Tea Co.",
+        "neighborhood": "Downtown",
+        "website": "https://www.nicholascoffee.us/",
+        "address": "23 Market Square, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0029983423077, 40.441247]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Novaria Coffee Co.",
+        "neighborhood": "Strip District",
+        "website": "",
+        "address": "1812 Penn Ave, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/novaria.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9844796666667, 40.4505278333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Prestogeorge Coffee & Tea",
+        "neighborhood": "Strip District",
+        "website": "https://prestogeorge.com/",
+        "address": "1719 Penn Ave, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.98573025, 40.4502135]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+      "name": "Redhawk Coffee",
+      "neighborhood": "Bluff",
+      "website": "https://redhawkcoffee.com/",
+      "address": "1715 Fifth Ave, Pittsburgh, PA 15219",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.981956, 40.4385695]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+      "name": "Redhawk Coffee",
+      "neighborhood": "West Oakland",
+      "website": "https://redhawkcoffee.com/",
+      "address": "20 Meyran Ave, Pittsburgh, PA 15213",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.956612, 40.439220]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Redstart Roasters",
+        "neighborhood": "East Liberty",
+        "website": "https://redstartroasters.com/",
+        "address": "224 N Euclid Ave, Pittsburgh, PA 15206",
+        "roaster": "",
+        "photo": "../shop_photos/east_liberty/redstart_roasters.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9268134, 40.4636694]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rock 'n' Joe",
+        "neighborhood": "Downtown",
+        "website": "https://www.rocknjoe.com/",
+        "address": "524 Penn Ave, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0028888333333, 40.4424126666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sidecar Coffee and Bake Shop",
+        "neighborhood": "North Oakland",
+        "website": "https://sidecar412.com/",
+        "address": "200 N Craig St, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9506323333333, 40.449966]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Soluna Coffee & Mezcal",
+        "neighborhood": "Strip District",
+        "website": "https://solunapgh.com/",
+        "address": "1601 Penn Ave, Pittsburgh, PA 15222",
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/soluna.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.987481, 40.4490258333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stance Coffee",
+        "neighborhood": "Downtown",
+        "website": "https://www.omnihotels.com/stance-coffee",
+        "address": "530 William Penn Pl, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9967284285714, 40.4405742857143]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tazza D'Oro",
+        "neighborhood": "Highland Park",
+        "website": "https://tazzadoro.net/",
+        "address": "1125 N Highland Ave, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9188465, 40.47488875]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tazza D'Oro",
+        "neighborhood": "North Oakland",
+        "website": "https://tazzadoro.net/",
+        "address": "125 Lytton Ave, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.954857, 40.445151]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Abbey",
+        "neighborhood": "Central Lawrenceville",
+        "website": "https://theabbeyonbutlerstreet.com/",
+        "address": "4635 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.958386, 40.47379975]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Coffee Tree Roasters",
+        "neighborhood": "Downtown",
+        "website": "https://coffeetree.store/",
+        "address": "611 William Penn Pl, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9966986666667, 40.4414815555556]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Coffee Tree Roasters",
+        "neighborhood": "Shadyside",
+        "website": "https://coffeetree.store/",
+        "address": "5524 Walnut St, Pittsburgh, PA 15232",
+        "roaster": "",
+        "photo": "../shop_photos/shadyside/coffee_tree_roasters.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9327755, 40.4512755]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Espresso Bar",
+        "neighborhood": "South Point Breeze",
+        "website": "",
+        "address": "7113 Reynolds St, Pittsburgh, PA 15208",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9048142934783, 40.4471385]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Garden Cafe",
+        "neighborhood": "East Allegheny",
+        "website": "https://gardencafepgh.com/",
+        "address": "1022 Chestnut St, Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.995266, 40.4576433333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Government Center",
+        "neighborhood": "East Allegheny",
+        "website": "https://www.thegovernmentcenter.com/",
+        "address": "715 East St, Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.998244, 40.4545935]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Trace Brewing",
+        "neighborhood": "Bloomfield",
+        "website": "https://www.tracebloomfield.com/",
+        "address": "4312 Main St, Pittsburgh, PA 15224",
+        "roaster": "",
+        "photo": "../shop_photos/bloomfield/trace.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.953365, 40.464065]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "White Whale Bookstore",
+        "neighborhood": "Bloomfield",
+        "website": "https://whitewhalebookstore.com/",
+        "address": "4754 Liberty Ave, Pittsburgh, PA 15224",
+        "roaster": "",
+        "photo": "../shop_photos/bloomfield/white_whale.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.948291, 40.461019]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "Bloomfield",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "4525 Liberty Ave, Pittsburgh, PA 15224",
+        "roaster": "",
+        "photo": "../shop_photos/bloomfield/yinz_coffee.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9508645, 40.4628821666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "Central Northside",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "2 E North Ave, Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.006508, 40.4557046]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "Downtown",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "11 Stanwix St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0062284444444, 40.4390466666667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "Downtown",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "420 Fort Duquesne Blvd, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0055124285714, 40.44285]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "Friendship",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "5607 Baum Blvd, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9353453333333, 40.458132]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "North Oakland",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "4400 Forbes Ave, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.9501274285714, 40.443277]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yinz Coffee",
+        "neighborhood": "South Shore",
+        "website": "https://www.yinzcoffee.com/",
+        "address": "222 W Station Square Dr, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.004435, 40.4337496666667]
+      }
     }
-  },
-  {
-    "name": "Allegheny Coffee & Tea Exchange",
-    "neighborhood": "Strip District",
-    "website": "https://www.alleghenycoffee.com/",
-    "address": "2005 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Annex PGH",
-    "neighborhood": "East Allegheny",
-    "website": "https://www.annexpgh.com/",
-    "address": "522 E. Ohio St Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "Arriviste Coffee",
-    "neighborhood": "Shadyside",
-    "website": "http://arriviste.coffee/",
-    "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/shadyside/arriviste.jpg"
-    }
-  },
-  {
-    "name": "Big Dog Coffee",
-    "neighborhood": "South Side Flats",
-    "website": "https://www.bigdogcoffeeshop.com/",
-    "address": "2717 Sarah St Pittsburgh, PA 15203",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/south_side_flats/big_dog_coffee.jpg"
-    }
-  },
-  {
-    "name": "Café102",
-    "neighborhood": "Central Lawrenceville",
-    "website": "https://cafe102pgh.com/",
-    "address": "4314 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
-  },
-  {
-    "name": "Caffe d'Amore",
-    "neighborhood": "Upper Lawrenceville",
-    "website": "https://www.caffedamorepgh.com/",
-    "address": "5308 Butler St, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/upper_lawrenceville/caffe_damore.jpg"
-    }
-  },
-  {
-    "name": "California Coffee Bar",
-    "neighborhood": "Brighton Heights",
-    "website": "https://california-coffee.square.site/",
-    "address": "3619 California Ave, Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "Cares CommuniTEA Cafe",
-    "neighborhood": "Crawford-Roberts",
-    "website": "https://carescommunitea.shopsettings.com/",
-    "address": "1836 Centre Ave, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "Centred Coffee & Wellness",
-    "neighborhood": "Shadyside",
-    "website": "https://www.centredcoffee.com/",
-    "address": "6015 Stevenson Pl, Pittsburgh, PA 15206",
-    "roaster": ""
-  },
-  {
-    "name": "Centred Coffee & Wellness",
-    "neighborhood": "Shadyside",
-    "website": "https://www.centredcoffee.com/",
-    "address": "5408 Centre Ave, Pittsburgh, PA 15232",
-    "roaster": ""
-  },
-  {
-    "name": "CFP Cafe",
-    "neighborhood": "Chateau",
-    "website": "https://cfpcafe.com/",
-    "address": "1501 Preble Ave, Pittsburgh, PA 15233",
-    "roaster": ""
-  },
-  {
-    "name": "Commonplace Coffee",
-    "neighborhood": "Garfield",
-    "website": "https://commonplacecoffee.com/",
-    "address": "5467 Penn Ave,\nPittsburgh, PA 15206",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/garfield/commonplace.jpg"
-    }
-  },
-  {
-    "name": "Commonplace Coffee",
-    "neighborhood": "Mexican War Streets",
-    "website": "https://commonplacecoffee.com/",
-    "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/mexican_war_streets/commonplace.jpg"
-    }
-  },
-  {
-    "name": "Commonplace Coffee",
-    "neighborhood": "North Point Breeze",
-    "website": "https://commonplacecoffee.com/",
-    "address": "7514 Thomas Blvd suite 100, Pittsburgh, PA 15208",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/north_point_breeze/commonplace.jpg"
-    }
-  },
-  {
-    "name": "Commonplace Coffee",
-    "neighborhood": "South Side Flats",
-    "website": "https://commonplacecoffee.com/",
-    "address": "428 S. 27th St Pittsburgh, PA 15203",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/south_side_flats/commonplace.jpg"
-    }
-  },
-  {
-    "name": "Commonplace Coffee",
-    "neighborhood": "Squirrel Hill North",
-    "website": "https://commonplacecoffee.com/",
-    "address": "5827 Forbes Ave, Pittsburgh, PA 15217",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/squirrel_hill_north/commonplace.jpg"
-    }
-  },
-  {
-    "name": "Constellation Coffee",
-    "neighborhood": "Central Lawrenceville",
-    "website": "http://www.constellationcoffeepgh.com/",
-    "address": "4059 Penn Ave, Pittsburgh, PA 15224",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/central_lawrenceville/constellation.jpg"
-    }
-  },
-  {
-    "name": "Convive",
-    "neighborhood": "Central Lawrenceville",
-    "website": "https://www.convivecoffee.com/",
-    "address": "4032 Butler St, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/central_lawrenceville/convive.jpg"
-    }
-  },
-  {
-    "name": "Convive",
-    "neighborhood": "North Shore",
-    "website": "https://www.convivecoffee.com/",
-    "address": "225 N Shore Dr Suite 100, Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "Creative Coffee & Supply",
-    "neighborhood": "Downtown",
-    "website": "https://crtv.coffee/",
-    "address": "309 Smithfield St\nPittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Cup-Ka-Joe",
-    "neighborhood": "South Side Flats",
-    "website": "https://www.cupkajoe.com/",
-    "address": "31 S 27th St, Pittsburgh, PA 15203",
-    "roaster": ""
-  },
-  {
-    "name": "De Fer Coffee & Tea",
-    "neighborhood": "Downtown",
-    "website": "https://www.defer.coffee/",
-    "address": "435 Market St\nPittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "De Fer Coffee & Tea",
-    "neighborhood": "South Oakland",
-    "website": "https://www.defer.coffee/",
-    "address": "350 Technology Dr.\nPittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "De Fer Coffee & Tea",
-    "neighborhood": "South Side Flats",
-    "website": "https://www.defer.coffee/",
-    "address": "339 McKean St, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "De Fer Coffee & Tea",
-    "neighborhood": "Strip District",
-    "website": "https://www.defer.coffee/",
-    "address": "2002 Smallman St\nPittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/strip_district/de_fer.jpg"
-    }
-  },
-  {
-    "name": "De Fer Coffee & Tea",
-    "neighborhood": "Troy Hill",
-    "website": "https://www.defer.coffee/",
-    "address": "1800 Rialto St\nPittsburgh, PA 15212",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/troy_hill/de_fer.jpg"
-    }
-  },
-  {
-    "name": "Delanie's Coffee",
-    "neighborhood": "South Side Flats",
-    "website": "http://www.delaniescoffee.com/",
-    "address": "1737 E Carson St, Pittsburgh, PA 15203",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/south_side_flats/delanies_coffee.jpg"
-    }
-  },
-  {
-    "name": "Divvy Coffee & Buns",
-    "neighborhood": "Central Oakland",
-    "website": "https://divvycoffeebuns.com/",
-    "address": "3714 Forbes Ave, Pittsburgh, PA 15213",
-    "roaster": ""
-  },
-  {
-    "name": "Espresso A Mano",
-    "neighborhood": "Lower Lawrenceville",
-    "website": "https://espressoamano.com/",
-    "address": "3623 Butler St, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/lower_lawrenceville/espresso_a_mano.jpg"
-    }
-  },
-  {
-    "name": "Espresso A Mano",
-    "neighborhood": "Squirrel Hill North",
-    "website": "https://espressoamano.com/",
-    "address": "6520 Wilkins Ave, Pittsburgh, PA 15217",
-    "roaster": ""
-  },
-  {
-    "name": "Everyday Cafe",
-    "neighborhood": "Homewood South",
-    "website": "https://www.everydaycafepgh.com/",
-    "address": "532 N Homewood Ave, Pittsburgh, PA 15208",
-    "roaster": ""
-  },
-  {
-    "name": "Field Day",
-    "neighborhood": "Lower Lawrenceville",
-    "website": "https://www.fieldday.life/",
-    "address": "3706 Butler St, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/lower_lawrenceville/field_day.jpg"
-    }
-  },
-  {
-    "name": "Gasoline Street Coffee",
-    "neighborhood": "Downtown",
-    "website": "https://www.gasolinestreetcoffee.com/",
-    "address": "643 First Ave, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "Grim Wizard Coffee",
-    "neighborhood": "Allentown",
-    "website": "https://www.grimwizard.com/",
-    "address": "1206 Arlington Ave, Pittsburgh, PA 15210",
-    "roaster": ""
-  },
-  {
-    "name": "Hazelwood Cafe",
-    "neighborhood": "Hazelwood",
-    "website": "https://hazelwood.cafe/",
-    "address": "5017 Second Ave, Pittsburgh, PA 15207",
-    "roaster": ""
-  },
-  {
-    "name": "Hilltop Coffee",
-    "neighborhood": "Arlington",
-    "website": "https://www.hilltopcoffeepgh.com/",
-    "address": "2400 Arlington Ave, Pittsburgh, PA 15210",
-    "roaster": ""
-  },
-  {
-    "name": "Ineffable Cà Phê",
-    "neighborhood": "Lower Lawrenceville",
-    "website": "https://ineffablecaphe.com/",
-    "address": "3920 Penn Ave, Pittsburgh, PA 15224",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/central_lawrenceville/ineffable_caphe.jpg"
-    }
-  },
-  {
-    "name": "Inkwell",
-    "neighborhood": "Central Lawrenceville",
-    "website": "",
-    "address": "4419 Butler St, Pittsburgh, PA 15201",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/central_lawrenceville/inkwell.jpg"
-    }
-  },
-  {
-    "name": "James Cafe",
-    "neighborhood": "Strip District",
-    "website": "https://thejamescafe.com/",
-    "address": "2550 Smallman St, Pittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/strip_district/james_cafe.jpg"
-    }
-  },
-  {
-    "name": "Jitters Cafe",
-    "neighborhood": "Shadyside",
-    "website": "https://jitterspgh.com/",
-    "address": "5541 Walnut St, Pittsburgh, PA 15232",
-    "roaster": ""
-  },
-  {
-    "name": "Ka-Fair",
-    "neighborhood": "Morningside",
-    "website": "https://kafaircakery.wixsite.com/kafair",
-    "address": "1806 Chislett St, Pittsburgh, PA 15206",
-    "roaster": ""
-  },
-  {
-    "name": "Kalibur Coffee",
-    "neighborhood": "Polish Hill",
-    "website": "https://www.kaiburcoffee.com/",
-    "address": "3138 Dobson St, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "KLVN",
-    "neighborhood": "Larimer",
-    "website": "https://klvncoffee.com/",
-    "address": "6600 Hamilton Ave Fl 1, Pittsburgh, PA 15206",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/larimer/klvn.jpg"
-    }
-  },
-  {
-    "name": "La Prima",
-    "neighborhood": "Downtown",
-    "website": "https://laprima.com/",
-    "address": "1100 Smallman St, Pittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/downtown/la_prima.jpg"
-    }
-  },
-  {
-    "name": "La Prima",
-    "neighborhood": "Strip District",
-    "website": "https://laprima.com/",
-    "address": "205 21st St, Pittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/strip_district/la_prima.jpg"
-    }
-  },
-  {
-    "name": "LV Coffee Project",
-    "neighborhood": "East Liberty",
-    "website": "https://tolve.co/",
-    "address": "124 S Highland Ave, Pittsburgh, PA 15206",
-    "roaster": ""
-  },
-  {
-    "name": "Margaux",
-    "neighborhood": "East Liberty",
-    "website": "https://margauxpgh.com/",
-    "address": "5947 Penn Ave, Pittsburgh, PA 15206",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/east_liberty/margaux.jpg"
-    }
-  },
-  {
-    "name": "Mechanic Coffee",
-    "neighborhood": "Shadyside",
-    "website": "https://www.mechaniccoffee.com/",
-    "address": "5830 Ellsworth Ave, Pittsburgh, PA 15232",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/east_liberty/margaux.jpg"
-    }
-  },
-  {
-    "name": "Nicholas Coffee & Tea Co.",
-    "neighborhood": "Downtown",
-    "website": "https://www.nicholascoffee.us/",
-    "address": "23 Market Square, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Novaria Coffee Co.",
-    "neighborhood": "Strip District",
-    "website": "",
-    "address": "1812 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/strip_district/novaria.jpg"
-    }
-  },
-  {
-    "name": "Prestogeorge Coffee & Tea",
-    "neighborhood": "Strip District",
-    "website": "https://prestogeorge.com/",
-    "address": "1719 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Redhawk Coffee",
-    "neighborhood": "Bluff",
-    "website": "https://redhawkcoffee.com/",
-    "address": "1715 Fifth Ave, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "Redhawk Coffee",
-    "neighborhood": "West Oakland",
-    "website": "https://redhawkcoffee.com/",
-    "address": "20 Meyran Ave,\nPittsburgh, PA 15213",
-    "roaster": ""
-  },
-  {
-    "name": "Redstart Roasters",
-    "neighborhood": "East Liberty",
-    "website": "https://redstartroasters.com/",
-    "address": "224 N Euclid Ave, Pittsburgh, PA 15206",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/east_liberty/redstart_roasters.jpg"
-    }
-  },
-  {
-    "name": "Rock 'n' Joe",
-    "neighborhood": "Downtown",
-    "website": "https://www.rocknjoe.com/",
-    "address": "524 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Sidecar Coffee and Bake Shop",
-    "neighborhood": "North Oakland",
-    "website": "https://sidecar412.com/",
-    "address": "200 N Craig St, Pittsburgh, PA 15213",
-    "roaster": ""
-  },
-  {
-    "name": "Soluna Coffee & Mezcal",
-    "neighborhood": "Strip District",
-    "website": "https://solunapgh.com/",
-    "address": "1601 Penn Ave, Pittsburgh, PA 15222",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/strip_district/soluna.jpg"
-    }
-  },
-  {
-    "name": "Stance Coffee",
-    "neighborhood": "Downtown",
-    "website": "https://www.omnihotels.com/stance-coffee",
-    "address": "530 William Penn Pl, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "Tazza D'Oro",
-    "neighborhood": "Highland Park",
-    "website": "https://tazzadoro.net/",
-    "address": "1125 N Highland Ave, Pittsburgh, PA 15206",
-    "roaster": ""
-  },
-  {
-    "name": "Tazza D'Oro",
-    "neighborhood": "Oakland",
-    "website": "https://tazzadoro.net/",
-    "address": "125 Lytton Ave, Pittsburgh, PA 15213",
-    "roaster": ""
-  },
-  {
-    "name": "The Abbey",
-    "neighborhood": "Central Lawrenceville",
-    "website": "https://theabbeyonbutlerstreet.com/",
-    "address": "4635 Butler St, Pittsburgh, PA 15201",
-    "roaster": ""
-  },
-  {
-    "name": "The Coffee Tree Roasters",
-    "neighborhood": "Downtown",
-    "website": "https://coffeetree.store/",
-    "address": "611 William Penn Pl, Pittsburgh, PA 15219",
-    "roaster": ""
-  },
-  {
-    "name": "The Coffee Tree Roasters",
-    "neighborhood": "Shadyside",
-    "website": "https://coffeetree.store/",
-    "address": "5524 Walnut St, Pittsburgh, PA 15232",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/shadyside/coffee_tree_roasters.jpg"
-    }
-  },
-  {
-    "name": "The Espresso Bar",
-    "neighborhood": "South Point Breeze",
-    "website": "",
-    "address": "7113 Reynolds St, Pittsburgh, PA 15208",
-    "roaster": ""
-  },
-  {
-    "name": "The Garden Cafe",
-    "neighborhood": "East Allegheny",
-    "website": "https://gardencafepgh.com/",
-    "address": "1022 Chestnut St, Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "The Government Center",
-    "neighborhood": "East Allegheny",
-    "website": "https://www.thegovernmentcenter.com/",
-    "address": "715 East St, Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "Trace Brewing",
-    "neighborhood": "Bloomfield",
-    "website": "https://www.tracebloomfield.com/",
-    "address": "4312 Main St, Pittsburgh, PA 15224",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/bloomfield/trace.jpg"
-    }
-  },
-  {
-    "name": "White Whale Bookstore",
-    "neighborhood": "Bloomfield",
-    "website": "https://whitewhalebookstore.com/",
-    "address": "4754 Liberty Ave, Pittsburgh, PA 15224",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/bloomfield/white_whale.jpg"
-    }
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "Bloomfield",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "4525 Liberty Ave, Pittsburgh, PA 15224",
-    "roaster": "",
-    "value": {
-      "photo": "../shop_photos/bloomfield/yinz_coffee.jpg"
-    }
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "Central Northside",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "2 E North Ave, Pittsburgh, PA 15212",
-    "roaster": ""
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "Downtown",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "11 Stanwix St, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "Downtown",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "420 Fort Duquesne Blvd, Pittsburgh, PA 15222",
-    "roaster": ""
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "Friendship",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "5607 Baum Blvd, Pittsburgh, PA 15206",
-    "roaster": ""
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "North Oakland",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "4400 Forbes Ave, Pittsburgh, PA 15213",
-    "roaster": ""
-  },
-  {
-    "name": "Yinz Coffee",
-    "neighborhood": "South Shore",
-    "website": "https://www.yinzcoffee.com/",
-    "address": "222 W Station Square Dr, Pittsburgh, PA 15219",
-    "roaster": ""
-  }
-]
+  ]
+}

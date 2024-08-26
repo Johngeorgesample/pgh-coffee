@@ -19,7 +19,7 @@ export default function PanelFooter(props: IProps) {
           or{' '}
           <a
             className="italic underline"
-            href={`mailto:johngeorgesample@gmail.com?subject=Issue with ${props.shop.name}`}
+            href={`mailto:johngeorgesample@gmail.com?subject=Issue with ${props.shop.properties.name}`}
           >
             email me
           </a>
