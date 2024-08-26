@@ -15,8 +15,8 @@ export default function Nav() {
   }
 
   return (
-    <div className="bg-yellow-300 flex items-center py-2 px-8 gap-3">
-      <span className="flex flex-1 gap-3">
+    <div className="bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
+      <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
         <a className="flex" href="/">
           <img
             className="h-12"
