@@ -18,11 +18,13 @@ export default function Nav() {
     <div className="bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
       <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
         <a className="flex" href="/">
-          <img
-            className="h-12"
-            src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Keystone_state_symbol_Pennsylvania.svg"
-            alt=""
-          />
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 250 250">
+            <path
+              fill="#000000"
+              stroke="none"
+              d="M34.94,10.53 l21.81,48.63 h-51.62 l60.37,180.31 h119 l60.37,-180.31 h-51.62 l21.81,-48.63 z"
+            />
+          </svg>
           <h1 className="flex items-center text-4xl">pgh.coffee</h1>
         </a>
       </span>
