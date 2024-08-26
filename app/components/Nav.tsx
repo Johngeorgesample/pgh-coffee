@@ -38,7 +38,7 @@ export default function Nav() {
           </svg>
           <span className="text-2xl">GitHub</span>
         </a>
-        <a className="text-2xl" href="/about">
+        <a className="text-2xl" href="https://github.com/Johngeorgesample/pgh-coffee">
           About
         </a>
       </div>
