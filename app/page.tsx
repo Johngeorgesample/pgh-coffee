@@ -72,7 +72,7 @@ export default function Mappy() {
     setDataSet(shopGeoJSON)
   }
 
-  const woohoo = (shopFromShopPanel: any) => {
+  const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
     setCurrentShop(shopFromShopPanel)
     document.getElementById('ball')?.scrollIntoView({ behavior: 'smooth' })
 
@@ -112,7 +112,7 @@ export default function Mappy() {
         </Map>
       </main>
       <Footer />
-      <ShopPanel foobar={woohoo} shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
+      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop} panelIsOpen={isOpen} emitClose={handleClose} />
     </>
   )
 }

@@ -11,7 +11,7 @@ interface IProps {
   shop: TShop
   panelIsOpen: boolean
   emitClose: Function
-  foobar: any
+  handlePanelContentClick: (shop: TShop) => void
 }
 
 export default function ShopPanel(props: IProps) {
@@ -34,7 +34,7 @@ export default function ShopPanel(props: IProps) {
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <PanelHeader shop={props.shop} emitClose={props.emitClose} />
-                    <PanelContent bar={props.foobar} shop={props.shop} />
+                    <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
                     <PanelFooter shop={props.shop} />
                   </div>
                 </Dialog.Panel>

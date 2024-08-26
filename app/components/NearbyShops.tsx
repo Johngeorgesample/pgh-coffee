@@ -4,7 +4,7 @@ import shopGeoJSON from '@/data/coffee_shops.json'
 import haversineDistance from 'haversine-distance'
 
 interface IProps {
-  handleClick: any
+  handleClick: (shop: TShop) => void
   shop: TShop
 }
 export default function NearbyShops(props: IProps) {
