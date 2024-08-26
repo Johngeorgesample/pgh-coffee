@@ -42,7 +42,7 @@ export default function About() {
         />
 
       <p className="font-bold">How can I support your work?</p>
-      <p>You can buy me a cortado if you see me around Pittsburgh. Otherwise, you can buy me a digital coffee! <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample">https://buymeacoffee.com/johngeorgesample</a></p>
+      <p>You can buy me a cortado if you see me around Pittsburgh. Otherwise, you can <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample" target="_blank">buy me a digital coffee</a>!</p>
 
       </div>
     </>
