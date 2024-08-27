@@ -837,6 +837,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "kat's coffeehouse",
+        "neighborhood": "Treesdale",
+        "website": "https://www.katscoffeehouse.co/s/shop",
+        "address": "617 Warrendale Rd suite e, Gibsonia, PA 15044",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.020502, 40.668746]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "KLVN",
         "neighborhood": "Larimer",
         "website": "https://klvncoffee.com/",
@@ -1319,6 +1333,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.953365, 40.464065]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tú y Yo Café",
+        "neighborhood": "Indiana",
+        "website": "",
+        "address": "3447 Harts Run Rd, Glenshaw, PA 15116",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.914108, 40.550529]
       }
     },
     {
