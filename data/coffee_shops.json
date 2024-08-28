@@ -259,6 +259,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Bitty & Beau's",
+        "neighborhood": "Strip District",
+        "website": "https://www.bittyandbeauscoffee.com/location/pittsburgh",
+        "address": "1920 Smallman St Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.984850, 40.451590]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Café102",
         "neighborhood": "Central Lawrenceville",
         "website": "https://cafe102pgh.com/",
