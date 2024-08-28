@@ -1321,6 +1321,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Reginald's Coffee",
+        "neighborhood": "Bethel Park",
+        "website": "http://www.reginaldscoffee.com/",
+        "address": "2600 South Park Rd, Bethel Park, PA 15102",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.028665, 40.329072]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Rock 'n' Joe",
         "neighborhood": "Downtown",
         "website": "https://www.rocknjoe.com/",
