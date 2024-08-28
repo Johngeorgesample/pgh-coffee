@@ -911,6 +911,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Latte Lane Coffee Co.",
+        "neighborhood": "",
+        "website": "http://lattelanepgh.com/",
+        "address": "1320 Pittsburgh St, Cheswick, PA 15024",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.801654, 40.540805]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "LV Coffee Project",
         "neighborhood": "East Liberty",
         "website": "https://tolve.co/",
@@ -955,6 +969,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Mechanic Coffee",
+        "neighborhood": "Verona",
+        "website": "https://www.mechaniccoffee.com/",
+        "address": "707 E Railroad Ave, Verona, PA 15147",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.844095, 40.505179]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Mediterra Cafe",
         "neighborhood": "Sewickley",
         "website": "http://www.mediterracafe.com/",
@@ -964,6 +992,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.180876, 40.540378]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Moonbeam Café",
+        "neighborhood": "Oakmont",
+        "website": "",
+        "address": "636 Allegheny River Blvd, Oakmont, PA 15139",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.84225, 40.520115]
       }
     },
     {
