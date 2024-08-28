@@ -861,6 +861,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Happenstance Cafe",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://happenstancecafe.com/",
+        "address": "3832 Penn Ave, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.960253, 40.464641]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Hazelwood Cafe",
         "neighborhood": "Hazelwood",
         "website": "https://hazelwood.cafe/",
