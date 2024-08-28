@@ -18,7 +18,7 @@ export default function About() {
 
         <QAndA
           question="You&apos;re missing ${my_favorite_coffee_shop}"
-          answer="I&apos;m focusing on shops in city proper right now."
+          answer="I&apos;m actively working on adding shops in Allegheny county."
         />
 
         <QAndA

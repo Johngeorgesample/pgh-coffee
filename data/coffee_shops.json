@@ -18,6 +18,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "ABC Coffee Company",
+        "neighborhood": "Aspinwall",
+        "website": "https://aspinwallbeansncream.com/",
+        "address": "16 Brilliant Ave, Aspinwall, PA 15215",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.90078, 40.489422]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Abolition Coffee",
         "neighborhood": "Lower Lawrenceville",
         "website": "https://abolitioncoffee.com/",
@@ -33,6 +47,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Adesso Cafe",
+        "neighborhood": "Sewickley",
+        "website": "https://adessocafe.com/",
+        "address": "441 1/2 Walnut St, Sewickley, PA 15143",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.18198, 40.541]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Allegheny Coffee & Tea Exchange",
         "neighborhood": "Strip District",
         "website": "https://www.alleghenycoffee.com/",
@@ -42,6 +70,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.98394, 40.451308]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Anchor & Anvil Coffee Bar",
+        "neighborhood": "Ben Avon",
+        "website": "http://anchoranvilcoffee.com/",
+        "address": "7221 Church Ave, Ben Avon, PA 15202",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.084884, 40.508831]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Anchor & Anvil Coffee Bar",
+        "neighborhood": "Coraopolis",
+        "website": "http://anchoranvilcoffee.com/",
+        "address": "1032 5th Ave, Coraopolis, PA 15108",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.163201, 40.516781]
       }
     },
     {
@@ -76,6 +132,76 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "BeanThru",
+        "neighborhood": "Bellevue",
+        "website": "http://www.beanthru.com/",
+        "address": "4221 Ohio River Blvd Pittsburgh, PA 15202",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.054883, 40.486537]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BeanThru",
+        "neighborhood": "Shaler",
+        "website": "http://www.beanthru.com/",
+        "address": "1921 William Flinn Hwy Glenshaw, PA 15116",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.96431, 40.541742]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BeanThru",
+        "neighborhood": "Central Northside",
+        "website": "http://www.beanthru.com/",
+        "address": "320 E. North Ave Pittsburgh, PA 15212",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.003508, 40.457039]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BeanThru",
+        "neighborhood": "Wexford",
+        "website": "http://www.beanthru.com/",
+        "address": "12311 Perry Highway Wexford, PA 15090",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.063932, 40.635553]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bellevue Beans",
+        "neighborhood": "Bellevue",
+        "website": "",
+        "address": "569 Lincoln Ave, Bellevue, PA 15202",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.057955, 40.496592]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Big Dog Coffee",
         "neighborhood": "South Side Flats",
         "website": "https://www.bigdogcoffeeshop.com/",
@@ -100,6 +226,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.95994525, 40.47097425]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cafe Conmigo",
+        "neighborhood": "Wexford",
+        "website": "https://cafeconmigo.com/",
+        "address": "10 N Meadow Dr Suite 4, Wexford, PA 15090",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.05503483, 40.61247343]
       }
     },
     {
@@ -185,6 +325,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.0324240625, 40.454396]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coffee Village",
+        "neighborhood": "Sewickley",
+        "website": "http://www.coffeevillagepgh.com/",
+        "address": "417 Walnut St, Sewickley, PA 15143",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.182621, 40.540646]
       }
     },
     {
@@ -304,6 +458,21 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9612735, 40.46930325]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Convive",
+        "neighborhood": "McCandless",
+        "website": "https://www.convivecoffee.com/",
+        "address": "751 Providence Blvd, Pittsburgh, PA 15237",
+        "roaster": "",
+        "photo": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.020928, 40.570134]
       }
     },
     {
@@ -524,6 +693,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Generoasta Coffee & Cafe",
+        "neighborhood": "Warrendale",
+        "website": "http://www.generoastacoffee.com/",
+        "address": "901 Warrendale Village Dr, Warrendale, PA 15086",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.091627, 40.655693]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Grim Wizard Coffee",
         "neighborhood": "Allentown",
         "website": "https://www.grimwizard.com/",
@@ -654,6 +837,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "kat's coffeehouse",
+        "neighborhood": "Treesdale",
+        "website": "https://www.katscoffeehouse.co/s/shop",
+        "address": "617 Warrendale Rd suite e, Gibsonia, PA 15044",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.020502, 40.668746]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "KLVN",
         "neighborhood": "Larimer",
         "website": "https://klvncoffee.com/",
@@ -664,6 +861,21 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.91077325, 40.457706]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Koala Coffee & Tea House",
+        "neighborhood": "McCandless",
+        "website": "https://koalacoffeeandtea.com/coffee",
+        "address": "Upstairs Level, 820 W Ingomar Rd, Pittsburgh, PA 15237",
+        "roaster": "",
+        "photo": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.057383, 40.581948]
       }
     },
     {
@@ -694,6 +906,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.982803, 40.4516103333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Latte Lane Coffee Co.",
+        "neighborhood": "Cheswick",
+        "website": "http://lattelanepgh.com/",
+        "address": "1320 Pittsburgh St, Cheswick, PA 15024",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.801654, 40.540805]
       }
     },
     {
@@ -743,6 +969,48 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Mechanic Coffee",
+        "neighborhood": "Verona",
+        "website": "https://www.mechaniccoffee.com/",
+        "address": "707 E Railroad Ave, Verona, PA 15147",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.844095, 40.505179]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mediterra Cafe",
+        "neighborhood": "Sewickley",
+        "website": "http://www.mediterracafe.com/",
+        "address": "430 Beaver St, Sewickley, PA 15143",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.180876, 40.540378]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Moonbeam Café",
+        "neighborhood": "Oakmont",
+        "website": "",
+        "address": "636 Allegheny River Blvd, Oakmont, PA 15139",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.84225, 40.520115]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Nicholas Coffee & Tea Co.",
         "neighborhood": "Downtown",
         "website": "https://www.nicholascoffee.us/",
@@ -772,6 +1040,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Press House Coffee",
+        "neighborhood": "Sewickley",
+        "website": "https://presshousecoffee.com/",
+        "address": "505 Broad St, Sewickley, PA 15143",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.18016995, 40.5405078]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Prestogeorge Coffee & Tea",
         "neighborhood": "Strip District",
         "website": "https://prestogeorge.com/",
@@ -786,6 +1068,20 @@
     {
       "type": "Feature",
       "properties": {
+      "name": "Queen Beans Cafe",
+      "neighborhood": "Coraopolis",
+      "website": "Queen Beans Cafe",
+      "address": "900 5th Ave, Coraopolis, PA 15108",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.166671, 40.518194]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
       "name": "Redhawk Coffee",
       "neighborhood": "Bluff",
       "website": "https://redhawkcoffee.com/",
@@ -795,6 +1091,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.981956, 40.4385695]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+      "name": "Redhawk Coffee",
+      "neighborhood": "Sharpsburg",
+      "website": "https://redhawkcoffee.com/",
+      "address": "1019 N Canal St, Pittsburgh, PA 15215",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.931878, 40.494671]
       }
     },
     {
@@ -843,6 +1153,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Ruckus Cafe",
+        "neighborhood": "Shaler",
+        "website": "https://ruckuscafe.square.site/",
+        "address": "1707 Babcock Blvd, Pittsburgh, PA 15209",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.981052, 40.500522]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Sidecar Coffee and Bake Shop",
         "neighborhood": "North Oakland",
         "website": "https://sidecar412.com/",
@@ -881,6 +1205,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9967284285714, 40.4405742857143]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Station No. 5",
+        "neighborhood": "Bradford Woods",
+        "website": "http://www.stationno5.com/",
+        "address": "185 Bradford Rd Suite #1 Suite #1, Bradford Woods, PA 15015",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.081371, 40.638022]
       }
     },
     {
@@ -928,6 +1266,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "The Black Canary",
+        "neighborhood": "Blawnox",
+        "website": "http://theblackcanary.com/",
+        "address": "276 Freeport Rd, Pittsburgh, PA 15238",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.862363, 40.493021]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "The Coffee Tree Roasters",
         "neighborhood": "Downtown",
         "website": "https://coffeetree.store/",
@@ -952,6 +1304,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9327755, 40.4512755]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Coffee Tree Roasters",
+        "neighborhood": "O'Hara",
+        "website": "https://coffeetree.store/",
+        "address": "48 Fox Chapel Rd, Pittsburgh, PA 15238",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.882691, 40.488487]
       }
     },
     {
@@ -1009,6 +1375,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.953365, 40.464065]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tú y Yo Café",
+        "neighborhood": "Indiana Township",
+        "website": "",
+        "address": "3447 Harts Run Rd, Glenshaw, PA 15116",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.914108, 40.550529]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vibrant Sunshine Juicery Cafe",
+        "neighborhood": "Aspinwall",
+        "website": "https://www.vibrantsunshine.com/",
+        "address": "103 Delafield Rd, Pittsburgh, PA 15215",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.897903, 40.488233]
       }
     },
     {
