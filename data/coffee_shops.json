@@ -833,6 +833,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Georgie's Corner Cafe",
+        "neighborhood": "Shadyside",
+        "website": "https://www.georgiescornercafe.com/",
+        "address": "5743 Walnut St, Pittsburgh, PA 15232",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.929002, 40.452785]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Grim Wizard Coffee",
         "neighborhood": "Allentown",
         "website": "https://www.grimwizard.com/",
