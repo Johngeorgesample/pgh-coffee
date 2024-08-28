@@ -18,6 +18,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "61B Cafe",
+        "neighborhood": "Regent Square",
+        "website": "",
+        "address": "1108 S Braddock Ave, Pittsburgh, PA 15218",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.893948, 40.432417]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "802 Bean Company",
         "neighborhood": "Brookline",
         "website": "https://802beancompany.com/menu/",
@@ -613,6 +627,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.96742925, 40.425939]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+      "name": "Curbside on the Run",
+      "neighborhood": "",
+      "website": "http://curbsideontherun.com/",
+      "address": "1101 Powers Run Rd, Pittsburgh, PA 15238",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.85592, 40.509891]
       }
     },
     {
