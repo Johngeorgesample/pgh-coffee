@@ -245,6 +245,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Café 412",
+        "neighborhood": "West End",
+        "website": "",
+        "address": "400 S Main St, Pittsburgh, PA 15220",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.033115, 40.441712]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Cafe Americano", 
         "neighborhood": "Castle Shannon",
         "website": "",
@@ -311,6 +325,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.98208, 40.442398]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Carnegie Coffee Company",
+        "neighborhood": "Carnegie",
+        "website": "",
+        "address": "132 E Main St, Carnegie, PA 15106",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.086106, 40.407602]
       }
     },
     {
@@ -395,6 +423,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.017712, 40.451955]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "COLOMBINO Coffee",
+        "neighborhood": "Bethel Park",
+        "website": "https://www.colombino.com/",
+        "address": "3400 South Park Rd, Bethel Park, PA 15102",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.057628, 40.322018]
       }
     },
     {
@@ -730,6 +772,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9644278, 40.4663732]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fig Tree Coffee",
+        "neighborhood": "Crafton",
+        "website": "https://www.figtreecoffeepgh.com/",
+        "address": "1931 Crafton Blvd, Pittsburgh, PA 15205",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.069415, 40.43137]
       }
     },
     {
@@ -1429,6 +1485,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.049493, 40.388582]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Coffee Tree Roasters",
+        "neighborhood": "Pleasant Hills",
+        "website": "https://coffeetree.store/",
+        "address": "10 Old Clairton Rd, Pittsburgh, PA 15236",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.965654, 40.33989]
       }
     },
     {
