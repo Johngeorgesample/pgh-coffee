@@ -1065,6 +1065,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "LaBella Bean",
+        "neighborhood": "Bridgeville",
+        "website": "https://www.labellabean.com/menus",
+        "address": "609 Washington Ave, Bridgeville, PA 15017",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.11268, 40.356968]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Latte Lane Coffee Co.",
         "neighborhood": "Cheswick",
         "website": "http://lattelanepgh.com/",
