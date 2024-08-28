@@ -18,6 +18,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "802 Bean Company",
+        "neighborhood": "Brookline",
+        "website": "https://802beancompany.com/menu/",
+        "address": "802 Brookline Blvd, Pittsburgh, PA 15226",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.020088, 40.393494]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "ABC Coffee Company",
         "neighborhood": "Aspinwall",
         "website": "https://aspinwallbeansncream.com/",
@@ -231,6 +245,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Cafe Americano", 
+        "neighborhood": "Castle Shannon",
+        "website": "",
+        "address": "300 Mt Lebanon Blvd, Pittsburgh, PA 15234",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.034625, 40.36875]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Cafe Conmigo",
         "neighborhood": "Wexford",
         "website": "https://cafeconmigo.com/",
@@ -325,6 +353,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.0324240625, 40.454396]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coffee, Etc.",
+        "neighborhood": "Castle Shannon",
+        "website": "",
+        "address": "3754 Willow Ave, Castle Shannon, PA 15234",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.023797, 40.365657]
       }
     },
     {
@@ -616,6 +658,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.95695325, 40.4412805]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Espresso A Mano",
+        "neighborhood": "Dormont",
+        "website": "https://espressoamano.com/",
+        "address": "1412 Potomac Ave, Pittsburgh, PA 15216",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.03444, 40.395421]
       }
     },
     {
@@ -984,6 +1040,20 @@
       "type": "Feature",
       "properties": {
         "name": "Mediterra Cafe",
+        "neighborhood": "Mt. Lebanon",
+        "website": "http://www.mediterracafe.com/",
+        "address": "292 Beverly Rd, Pittsburgh, PA 15216",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.049572, 40.389082]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mediterra Cafe",
         "neighborhood": "Sewickley",
         "website": "http://www.mediterracafe.com/",
         "address": "430 Beaver St, Sewickley, PA 15143",
@@ -992,6 +1062,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.180876, 40.540378]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mel's Petit Café",
+        "neighborhood": "Mt. Lebanon",
+        "website": "https://melspetitcafe.square.site/",
+        "address": "431 Cochran Rd, Pittsburgh, PA 15228",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.052592, 40.384099]
       }
     },
     {
@@ -1006,6 +1090,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.84225, 40.520115]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Needle & Bean",
+        "neighborhood": "Mt. Lebanon",
+        "website": "https://needle-bean.webflow.io/",
+        "address": "320 Castle Shannon Blvd, Pittsburgh, PA 15234",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.036889, 40.375969]
       }
     },
     {
@@ -1035,6 +1133,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9844796666667, 40.4505278333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orbis Caffe",
+        "neighborhood": "Mt. Lebanon",
+        "website": "https://www.orbiscaffe.com/",
+        "address": "675 Washington Road Pittsburgh, PA 15228",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.044118, 40.381096]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Potomac Station Coffeehouse",
+        "neighborhood": "Dormont",
+        "website": "https://potomacstation.square.site/",
+        "address": "1607 Potomac Ave, Pittsburgh, PA 15216",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.036444, 40.397518]
       }
     },
     {
@@ -1295,6 +1421,20 @@
       "type": "Feature",
       "properties": {
         "name": "The Coffee Tree Roasters",
+        "neighborhood": "Mt. Lebanon",
+        "website": "https://coffeetree.store/",
+        "address": "299 Beverly Rd, Pittsburgh, PA 15216",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.049493, 40.388582]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Coffee Tree Roasters",
         "neighborhood": "Shadyside",
         "website": "https://coffeetree.store/",
         "address": "5524 Walnut St, Pittsburgh, PA 15232",
@@ -1389,6 +1529,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.914108, 40.550529]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Uptown Coffee",
+        "neighborhood": "Mt. Lebanon",
+        "website": "https://uptowncoffeepgh.com/menu/",
+        "address": "723 Washington Rd, Mt Lebanon, PA 15228",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.044842, 40.37947]
       }
     },
     {
