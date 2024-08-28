@@ -1137,6 +1137,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Mediterra Cafe",
+        "neighborhood": "Upper Lawrenceville",
+        "website": "http://www.mediterracafe.com/",
+        "address": "5202 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.954167, 40.480457]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Mel's Petit Café",
         "neighborhood": "Mt. Lebanon",
         "website": "https://melspetitcafe.square.site/",
@@ -1485,6 +1499,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.862363, 40.493021]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Butterwood Bake Consortium",
+        "neighborhood": "Upper Lawrenceville",
+        "website": "https://www.thebutterwoodbakeconsortium.com/shop",
+        "address": "5222 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.953789, 40.48092]
       }
     },
     {
