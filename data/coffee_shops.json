@@ -1377,6 +1377,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Rockin' Cat",
+        "neighborhood": "Bellevue",
+        "website": "https://rockincat.com/",
+        "address": "567 Lincoln Ave, Bellevue, PA 15202",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.057923, 40.496477]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Ruckus Cafe",
         "neighborhood": "Shaler",
         "website": "https://ruckuscafe.square.site/",
