@@ -1407,12 +1407,12 @@
       "name": "Redhawk Coffee",
       "neighborhood": "West Oakland",
       "website": "https://redhawkcoffee.com/",
-      "address": "20 Meyran Ave, Pittsburgh, PA 15213",
+      "address": "120 Meyran Ave, Pittsburgh, PA 15213",
       "roaster": ""
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.956612, 40.439220]
+        "coordinates": [-79.958637, 40.440659]
       }
     },
     {
