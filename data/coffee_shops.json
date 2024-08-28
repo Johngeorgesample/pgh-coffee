@@ -287,7 +287,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Cafe Americano", 
+        "name": "Cafe Americano",
         "neighborhood": "Castle Shannon",
         "website": "",
         "address": "300 Mt Lebanon Blvd, Pittsburgh, PA 15234",
@@ -1882,6 +1882,21 @@
         "type": "Point",
         "coordinates": [-80.004435, 40.4337496666667]
       }
+    },
+    {
+      "type": "Feature",
+      "properties":{
+        "name": "Parisi Cafe",
+        "neighborhood": "Swissvale",
+        "website":"https://www.parisicafepittsburgh.com/",
+        "address": "7107 Harrison Ave, Swissvale, PA 15218",
+        "roaster": ""
+      },
+      "geometry":{
+        "type":"Point",
+        "coordinates":[-79.8992489, 40.4221095]
+      }
     }
+
   ]
 }
