@@ -131,6 +131,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Anthos Bakery & Café",
+        "neighborhood": "Castle Shannon",
+        "website": "http://anthosbakery.com/",
+        "address": "3803 Willow Ave, Castle Shannon, PA 15234",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.025139, 40.365576]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Arriviste Coffee",
         "neighborhood": "Shadyside",
         "website": "http://arriviste.coffee/",
