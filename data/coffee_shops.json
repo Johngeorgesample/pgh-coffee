@@ -18,6 +18,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "61B Cafe",
+        "neighborhood": "Regent Square",
+        "website": "",
+        "address": "1108 S Braddock Ave, Pittsburgh, PA 15218",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.893948, 40.432417]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "802 Bean Company",
         "neighborhood": "Brookline",
         "website": "https://802beancompany.com/menu/",
@@ -618,6 +632,20 @@
     {
       "type": "Feature",
       "properties": {
+      "name": "Curbside on the Run",
+      "neighborhood": "",
+      "website": "http://curbsideontherun.com/",
+      "address": "1101 Powers Run Rd, Pittsburgh, PA 15238",
+      "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.85592, 40.509891]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "De Fer Coffee & Tea",
         "neighborhood": "Downtown",
         "website": "https://www.defer.coffee/",
@@ -861,6 +889,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Happenstance Cafe",
+        "neighborhood": "Lower Lawrenceville",
+        "website": "https://happenstancecafe.com/",
+        "address": "3832 Penn Ave, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.960253, 40.464641]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Hazelwood Cafe",
         "neighborhood": "Hazelwood",
         "website": "https://hazelwood.cafe/",
@@ -1046,6 +1088,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.982803, 40.4516103333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LaBella Bean",
+        "neighborhood": "Bridgeville",
+        "website": "https://www.labellabean.com/menus",
+        "address": "609 Washington Ave, Bridgeville, PA 15017",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.11268, 40.356968]
       }
     },
     {
