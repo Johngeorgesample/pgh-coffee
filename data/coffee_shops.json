@@ -912,7 +912,7 @@
       "type": "Feature",
       "properties": {
         "name": "Latte Lane Coffee Co.",
-        "neighborhood": "",
+        "neighborhood": "Cheswick",
         "website": "http://lattelanepgh.com/",
         "address": "1320 Pittsburgh St, Cheswick, PA 15024",
         "roaster": ""
