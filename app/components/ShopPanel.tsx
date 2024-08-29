@@ -6,6 +6,7 @@ import { TShop } from '@/types/shop-types'
 import PanelHeader from './PanelHeader'
 import PanelContent from './PanelContent'
 import PanelFooter from './PanelFooter'
+import ShopSearch from './ShopSearch'
 
 interface IProps {
   shop: TShop
@@ -32,11 +33,15 @@ export default function ShopPanel(props: IProps) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                    <PanelHeader shop={props.shop} emitClose={props.emitClose} />
-                    <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
-                    <PanelFooter shop={props.shop} />
-                  </div>
+                  {props.shop.properties ? (
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                      <PanelHeader shop={props.shop} emitClose={props.emitClose} />
+                      <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
+                      <PanelFooter shop={props.shop} />
+                    </div>
+                  ) : (
+                  <ShopSearch handleResultClick={props.handlePanelContentClick}/>
+                  )}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
