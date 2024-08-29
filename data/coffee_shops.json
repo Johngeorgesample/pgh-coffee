@@ -1135,6 +1135,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Lemon Tree PGH",
+        "neighborhood": "Millvale",
+        "website": "http://lemontreepgh.square.site/",
+        "address": "142 Grant Ave, Millvale, PA 15209",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.970612, 40.478719]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "LV Coffee Project",
         "neighborhood": "East Liberty",
         "website": "https://tolve.co/",
