@@ -1591,7 +1591,8 @@
         "neighborhood": "Shaler",
         "website": "https://ruckuscafe.square.site/",
         "address": "1707 Babcock Blvd, Pittsburgh, PA 15209",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/shaler/ruckus.jpg"
       },
       "geometry": {
         "type": "Point",
