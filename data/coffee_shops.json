@@ -990,6 +990,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Java Jeffrey Coffee",
+        "neighborhood": "West Mifflin",
+        "website": "http://www.javajeffrey.coffee/",
+        "address": "100 Bettis Rd Ste 2, Dravosburg, PA 15034",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.896064, 40.356538]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Jitters Cafe",
         "neighborhood": "Shadyside",
         "website": "https://jitterspgh.com/",
