@@ -273,6 +273,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Brother Andre's Cafe",
+        "neighborhood": "",
+        "website": "https://brotherandres.org/",
+        "address": "164 Washington Pl, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.990851, 40.439923]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Café102",
         "neighborhood": "Central Lawrenceville",
         "website": "https://cafe102pgh.com/",
