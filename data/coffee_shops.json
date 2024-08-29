@@ -1191,6 +1191,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Long Play Café",
+        "neighborhood": "Upper Lawrenceville",
+        "website": "https://www.longplaycafe.com/",
+        "address": "5262 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.952752, 40.481762]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "LV Coffee Project",
         "neighborhood": "East Liberty",
         "website": "https://tolve.co/",
