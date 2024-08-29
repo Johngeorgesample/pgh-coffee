@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops.json'
@@ -8,6 +8,7 @@ interface IProps {
 }
 
 export default function ShopSearch(props: IProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
   let [filter, setFilter] = useState('')
 
   const meetsFilterCriteria = (shop: any) => {
@@ -26,6 +27,10 @@ export default function ShopSearch(props: IProps) {
     setFilter('')
   }
 
+  useEffect(() => {
+    inputRef?.current?.focus()
+  }, [])
+
   return (
     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
       <div className="flex justify-center flex-col mt-4 mx-4 sm:mx-6 ">
@@ -34,14 +39,17 @@ export default function ShopSearch(props: IProps) {
             <MagnifyingGlassIcon className="h-4 w-4" />
           </span>
           <input
+            ref={inputRef}
             className="inline flex-1 outline-none h-6 active:outline text-gray-500 bg-transparent"
             onChange={e => setFilter(e.target.value)}
             placeholder="Search for a shop"
             value={filter}
           />
-          {filter && <button className="inline ml-2 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
-            ×
-          </button>}
+          {filter && (
+            <button className="inline ml-2 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
+              ×
+            </button>
+          )}
         </div>
       </div>
 
