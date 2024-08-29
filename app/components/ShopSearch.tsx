@@ -29,23 +29,19 @@ export default function ShopSearch(props: IProps) {
   return (
     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
       <div className="flex justify-center flex-col mt-4 mx-4 sm:mx-6 ">
-        <h3 className="font-bold text-xl">Search</h3>
-        <p className="text-sm">
-        Search for shops by name or neighborhood
-        </p>
-        <div className="my-2 border rounded-lg px-2 w-64 flex items-center justify-between">
+        <div className="my-2 border rounded-lg px-2 w-full flex items-center gap-2">
           <span className="inline text-gray-500" aria-hidden="true">
             <MagnifyingGlassIcon className="h-4 w-4" />
           </span>
           <input
-            className="inline h-12 outline-none active:outline text-gray-500 bg-transparent"
+            className="inline flex-1 outline-none h-6 active:outline text-gray-500 bg-transparent"
             onChange={e => setFilter(e.target.value)}
             placeholder="Search for a shop"
             value={filter}
           />
-          <button className="inline ml-2 p-1 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
+          {filter && <button className="inline ml-2 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
             ×
-          </button>
+          </button>}
         </div>
       </div>
 
