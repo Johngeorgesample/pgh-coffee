@@ -13,11 +13,19 @@ export default function NearbyShops(props: IProps) {
     return haversineDistance(shopA, shopB) < 1000
   }
 
+  const isSameShop = (shopA: TShop, shopB: TShop) => {
+        if (shopA.properties.address === shopB.properties.address ) {
+          return shopA.properties.name === shopB.properties.name
+        }
+        return false
+  }
+
   const getNearbyShopsByDistance = () => {
     const shops = shopGeoJSON.features
     return shops.filter(
       s =>
-        s.properties.address !== props.shop.properties.address &&
+        // @ts-ignore-next-line
+        !isSameShop(s, props.shop) &&
         shopsAreClose(s.geometry.coordinates, props.shop.geometry.coordinates),
     )
   }
@@ -53,7 +61,7 @@ export default function NearbyShops(props: IProps) {
         {sortedList.map((shop: any) => {
           return (
             <li
-              key={shop.properties.address}
+              key={shop.properties.name + shop.properties.address}
               className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
               onClick={() => handleCardClick(shop)}
             >
