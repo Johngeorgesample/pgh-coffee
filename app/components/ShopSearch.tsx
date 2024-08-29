@@ -45,6 +45,15 @@ export default function ShopSearch(props: IProps) {
         </div>
       </div>
 
+      <div className="flex mx-8">
+        <button className="text-xs select-none border-2 rounded px-1 py-1 text-gray-600 border-blue-200 w-fit mr-2">
+          Open late
+        </button>
+        <button className="text-xs select-none border-2 rounded px-1 py-1 text-gray-600 border-blue-200 w-fit">
+          Onsite parking
+        </button>
+      </div>
+
       <ul className="relative mt-6 flex-1 px-4 sm:px-6">
         {shopGeoJSON.features.map((shop: any) => {
           if (meetsFilterCriteria(shop) || !filter) {
