@@ -244,6 +244,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Biddle's Escape",
+        "neighborhood": "Wilkinsburg",
+        "website": "http://biddlesescape.com/",
+        "address": "401 Biddle Ave, Pittsburgh, PA 15221",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.892116, 40.43815]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Big Dog Coffee",
         "neighborhood": "South Side Flats",
         "website": "https://www.bigdogcoffeeshop.com/",
@@ -268,6 +282,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.984850, 40.451590]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Brother Andre's Cafe",
+        "neighborhood": "",
+        "website": "https://brotherandres.org/",
+        "address": "164 Washington Pl, Pittsburgh, PA 15219",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.990851, 40.439923]
       }
     },
     {
@@ -437,6 +465,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.023797, 40.365657]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coffee Village",
+        "neighborhood": "Downtown",
+        "website": "http://www.coffeevillagepgh.com/",
+        "address": "801 Liberty Ave, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.998838, 40.442977]
       }
     },
     {
@@ -613,6 +655,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.00789625, 40.4462734166667]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coop De Ville",
+        "neighborhood": "Strip District",
+        "website": "https://coopdevillepgh.com/coffee-bar/",
+        "address": "2305 Smallman St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.982261, 40.453934]
       }
     },
     {
@@ -990,6 +1046,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Java Jeffrey Coffee",
+        "neighborhood": "West Mifflin",
+        "website": "http://www.javajeffrey.coffee/",
+        "address": "100 Bettis Rd Ste 2, Dravosburg, PA 15034",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.896064, 40.356538]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Jitters Cafe",
         "neighborhood": "Shadyside",
         "website": "https://jitterspgh.com/",
@@ -1130,6 +1200,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.801654, 40.540805]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lemon Tree PGH",
+        "neighborhood": "Millvale",
+        "website": "http://lemontreepgh.square.site/",
+        "address": "142 Grant Ave, Millvale, PA 15209",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.970612, 40.478719]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Long Play Café",
+        "neighborhood": "Upper Lawrenceville",
+        "website": "https://www.longplaycafe.com/",
+        "address": "5262 Butler St, Pittsburgh, PA 15201",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.952752, 40.481762]
       }
     },
     {
@@ -1315,6 +1413,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-80.044118, 40.381096]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties":{
+        "name": "Parisi Cafe",
+        "neighborhood": "Swissvale",
+        "website":"https://www.parisicafepittsburgh.com/",
+        "address": "7107 Harrison Ave, Swissvale, PA 15218",
+        "roaster": ""
+      },
+      "geometry":{
+        "type":"Point",
+        "coordinates":[-79.8992489, 40.4221095]
       }
     },
     {
@@ -1546,6 +1658,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Steel Cup Coffee Roasters",
+        "neighborhood": "New Kensington",
+        "website": "https://steelcupcoffee.com/",
+        "address": "507 10th St, New Kensington, PA 15068",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.765305, 40.566985]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Tazza D'Oro",
         "neighborhood": "Highland Park",
         "website": "https://tazzadoro.net/",
@@ -1611,6 +1737,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.953789, 40.48092]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Cafe Carnegie",
+        "neighborhood": "North Oakland",
+        "website": "https://thecafecarnegie.com/",
+        "address": "4400 Forbes Ave, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.950127, 40.443277]
       }
     },
     {
@@ -1772,6 +1912,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Vault Coffeehouse",
+        "neighborhood": "Pitcairn",
+        "website": "",
+        "address": "550 Broadway Blvd, Pitcairn, PA 15140",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.776699, 40.402164]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Vibrant Sunshine Juicery Cafe",
         "neighborhood": "Aspinwall",
         "website": "https://www.vibrantsunshine.com/",
@@ -1896,21 +2050,6 @@
         "type": "Point",
         "coordinates": [-80.004435, 40.4337496666667]
       }
-    },
-    {
-      "type": "Feature",
-      "properties":{
-        "name": "Parisi Cafe",
-        "neighborhood": "Swissvale",
-        "website":"https://www.parisicafepittsburgh.com/",
-        "address": "7107 Harrison Ave, Swissvale, PA 15218",
-        "roaster": ""
-      },
-      "geometry":{
-        "type":"Point",
-        "coordinates":[-79.8992489, 40.4221095]
-      }
     }
-
   ]
 }
