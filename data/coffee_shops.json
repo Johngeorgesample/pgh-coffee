@@ -1630,6 +1630,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Steel Cup Coffee Roasters",
+        "neighborhood": "New Kensington",
+        "website": "H68M+QV New Kensington, Pennsylvania",
+        "address": "507 10th St, New Kensington, PA 15068",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.765305, 40.566985]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Tazza D'Oro",
         "neighborhood": "Highland Park",
         "website": "https://tazzadoro.net/",
