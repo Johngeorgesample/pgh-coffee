@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import Nav from '@/app/components/Nav'
 import ShopPanel from '@/app/components/ShopPanel'
@@ -124,8 +125,11 @@ export default function Mappy() {
             />
           </Source>
         </Map>
-        <button className="absolute top-24 right-12 bg-white rounded px-2 py-4" onClick={handleSearchClick}>
-          Search
+        <button
+          className="absolute bottom-24 right-12 bg-yellow-300 rounded-full h-16 w-16 flex justify-center items-center"
+          onClick={handleSearchClick}
+        >
+          <MagnifyingGlassIcon className="h-8 w-8" />
         </button>
       </main>
       <Footer />

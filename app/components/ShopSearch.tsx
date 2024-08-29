@@ -28,8 +28,12 @@ export default function ShopSearch(props: IProps) {
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-      <div className="flex justify-center items-center flex-col">
-        <div className="mb-2 border rounded-lg px-2 w-64 flex items-center justify-between">
+      <div className="flex justify-center flex-col mt-4 mx-4 sm:mx-6 ">
+        <h3 className="font-bold text-xl">Search</h3>
+        <p className="text-sm">
+        Search for shops by name or neighborhood
+        </p>
+        <div className="my-2 border rounded-lg px-2 w-64 flex items-center justify-between">
           <span className="inline text-gray-500" aria-hidden="true">
             <MagnifyingGlassIcon className="h-4 w-4" />
           </span>
@@ -43,15 +47,6 @@ export default function ShopSearch(props: IProps) {
             ×
           </button>
         </div>
-      </div>
-
-      <div className="flex mx-8">
-        <button className="text-xs select-none border-2 rounded px-1 py-1 text-gray-600 border-blue-200 w-fit mr-2">
-          Open late
-        </button>
-        <button className="text-xs select-none border-2 rounded px-1 py-1 text-gray-600 border-blue-200 w-fit">
-          Onsite parking
-        </button>
       </div>
 
       <ul className="relative mt-6 flex-1 px-4 sm:px-6">
