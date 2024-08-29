@@ -1728,6 +1728,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "The Cafe Carnegie",
+        "neighborhood": "North Oakland",
+        "website": "https://thecafecarnegie.com/",
+        "address": "4400 Forbes Ave, Pittsburgh, PA 15213",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.950127, 40.443277]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "The Coffee Tree Roasters",
         "neighborhood": "Downtown",
         "website": "https://coffeetree.store/",
