@@ -660,6 +660,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Coop De Ville",
+        "neighborhood": "Strip District",
+        "website": "https://coopdevillepgh.com/coffee-bar/",
+        "address": "2305 Smallman St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.982261, 40.453934]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Creative Coffee & Supply",
         "neighborhood": "Downtown",
         "website": "https://crtv.coffee/",
