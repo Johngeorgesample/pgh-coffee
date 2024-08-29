@@ -1870,6 +1870,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Vault Coffeehouse",
+        "neighborhood": "Pitcairn",
+        "website": "",
+        "address": "550 Broadway Blvd, Pitcairn, PA 15140",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.776699, 40.402164]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Vibrant Sunshine Juicery Cafe",
         "neighborhood": "Aspinwall",
         "website": "https://www.vibrantsunshine.com/",
