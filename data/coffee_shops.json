@@ -244,6 +244,20 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "Biddle's Escape",
+        "neighborhood": "Wilkinsburg",
+        "website": "http://biddlesescape.com/",
+        "address": "401 Biddle Ave, Pittsburgh, PA 15221",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.892116, 40.43815]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Big Dog Coffee",
         "neighborhood": "South Side Flats",
         "website": "https://www.bigdogcoffeeshop.com/",
