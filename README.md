@@ -1,9 +1,8 @@
 ## Overview
 
-https://pgh.coffee/
+<https://pgh.coffee/>
 
 ![image](https://github.com/user-attachments/assets/430aa991-3758-4866-9f01-629556b00413)
-
 
 This repository contains a comprehensive data source of all the coffee shops in Pittsburgh, along with a Next.js application to display and explore this information. Whether you're a local resident looking for a new coffee spot or a visitor seeking the best cafes in the city, this project has you covered.
 
@@ -57,13 +56,18 @@ cd pgh-coffee
 npm install
 ```
 
-3. **Run the Next.js App:**
+3. **Get Mapbox Access Token**
+
+- Visit [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/) and create an access token with all Public scopes checked.
+- Duplicate `.env.example` as `.env` and enter your Mapbox Access Token.
+
+4. **Run the Next.js App:**
 
 ```
 npm run dev
 ```
 
-The app will be accessible at http://localhost:3000.
+The app will be accessible at <http://localhost:3000>.
 
 ## Contribution Guidelines
 
