@@ -38,7 +38,7 @@ export default function About() {
 
         <QAndA
           question="Where do the photos come from?"
-          answer="Every photo has been taken by me (so far) to ensure there isn&apos;t copyright infringement."
+          answer="Almost every photo has been taken by me to ensure there isn&apos;t copyright infringement."
         />
 
       <p className="font-bold">How can I support your work?</p>
