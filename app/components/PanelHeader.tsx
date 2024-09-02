@@ -11,7 +11,7 @@ interface IProps {
 
 export default function PanelHeader(props: IProps) {
   return (
-    <div className="" id="ball">
+    <div className="" id="header">
       <div
         className="h-56 relative bg-yellow-200 bg-cover bg-center"
         style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}

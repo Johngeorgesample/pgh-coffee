@@ -90,7 +90,7 @@ export default function Mappy() {
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
     setCurrentShop(shopFromShopPanel)
-    document.getElementById('ball')?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
