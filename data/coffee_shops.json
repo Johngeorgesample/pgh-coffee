@@ -192,7 +192,8 @@
         "neighborhood": "Shaler",
         "website": "http://www.beanthru.com/",
         "address": "1921 William Flinn Hwy Glenshaw, PA 15116",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/shaler/beanthru.jpg"
       },
       "geometry": {
         "type": "Point",
