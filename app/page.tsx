@@ -126,7 +126,7 @@ export default function Mappy() {
           </Source>
         </Map>
         <button
-          className="absolute bottom-24 right-12 bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
+          className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
           onClick={handleSearchClick}
         >
           <MagnifyingGlassIcon className="h-8 w-8" />
