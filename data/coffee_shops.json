@@ -347,7 +347,8 @@
         "neighborhood": "Wexford",
         "website": "https://cafeconmigo.com/",
         "address": "10 N Meadow Dr Suite 4, Wexford, PA 15090",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/wexford/cafe_conmigo.jpg"
       },
       "geometry": {
         "type": "Point",
