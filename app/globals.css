@@ -26,6 +26,6 @@ body {
   display: none;
 }
 
-.mapboxgl-canvas {
-  height: calc(100vh - 64px - 56px) !important;
+.mapboxgl-canvas-container {
+  height: calc(100vh - 64px - 56px);
 }
