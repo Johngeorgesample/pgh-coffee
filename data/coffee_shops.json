@@ -448,7 +448,8 @@
         "neighborhood": "Chateau",
         "website": "https://cfpcafe.com/",
         "address": "1501 Preble Ave, Pittsburgh, PA 15233",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/chateau/cfp_cafe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -504,7 +505,8 @@
         "neighborhood": "Allegheny West",
         "website": "https://www.colombino.com/",
         "address": "926 Western Ave, Pittsburgh, PA 15233",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/allegheny_west/colombino.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1508,7 +1510,8 @@
       "neighborhood": "Sharpsburg",
       "website": "https://redhawkcoffee.com/",
       "address": "1019 N Canal St, Pittsburgh, PA 15215",
-      "roaster": ""
+      "roaster": "",
+        "photo": "../shop_photos/sharpsburg/redhawk.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1707,7 +1710,8 @@
         "neighborhood": "Central Lawrenceville",
         "website": "https://theabbeyonbutlerstreet.com/",
         "address": "4635 Butler St, Pittsburgh, PA 15201",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/central_lawrenceville/abbey.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1848,7 +1852,9 @@
         "neighborhood": "East Allegheny",
         "website": "https://gardencafepgh.com/",
         "address": "1022 Chestnut St, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_allegheny/garden_cafe.jpg"
+
       },
       "geometry": {
         "type": "Point",
@@ -1862,7 +1868,8 @@
         "neighborhood": "East Allegheny",
         "website": "https://www.thegovernmentcenter.com/",
         "address": "715 East St, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_allegheny/the_government_center.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1977,7 +1984,8 @@
         "neighborhood": "Central Northside",
         "website": "https://www.yinzcoffee.com/",
         "address": "2 E North Ave, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/central_northside/yinz_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
