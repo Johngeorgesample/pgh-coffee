@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Field, Label, Radio, RadioGroup } from '@headlessui/react'
 import { useState } from 'react'
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
@@ -17,6 +18,12 @@ export default function DistanceUnitsDialog(props: IProps) {
     localStorage.setItem('distanceUnits', selected)
     props.handleClose()
   }
+
+  useEffect(() => {
+    if (units) {
+      setSelected(units)
+    }
+  }, [props.isOpen])
 
   return (
     <Dialog open={props.isOpen} onClose={() => props.handleClose(false)} className="relative z-50">
