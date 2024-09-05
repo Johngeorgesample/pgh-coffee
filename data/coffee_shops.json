@@ -640,7 +640,7 @@
         "website": "https://www.convivecoffee.com/",
         "address": "751 Providence Blvd, Pittsburgh, PA 15237",
         "roaster": "",
-        "photo": ""
+        "photo": "../shop_photos/mccandless/convive.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -715,20 +715,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.85592, 40.509891]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "De Fer Coffee & Tea",
-        "neighborhood": "Downtown",
-        "website": "https://www.defer.coffee/",
-        "address": "435 Market St, Pittsburgh, PA 15222",
-        "roaster": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-80.0024207777778, 40.4411837777778]
       }
     },
     {
@@ -1682,7 +1668,8 @@
         "neighborhood": "Highland Park",
         "website": "https://tazzadoro.net/",
         "address": "1125 N Highland Ave, Pittsburgh, PA 15206",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/highland_park/tazza_doro.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1730,6 +1717,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.862363, 40.493021]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Boredom Set",
+        "neighborhood": "Downtown",
+        "website": "https://www.theboredomset.com/",
+        "address": "435 Market St, Pittsburgh, PA 15222",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.0024207777778, 40.4411837777778]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Boredom Set",
+        "neighborhood": "Shadyside",
+        "website": "https://www.theboredomset.com/",
+        "address": "5518 Walnut St, Pittsburgh, PA 15232",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.932962, 40.451157]
       }
     },
     {
