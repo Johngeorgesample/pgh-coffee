@@ -8,9 +8,11 @@ interface IProps {
   isOpen: boolean
 }
 
+
+export const DISTANCE_UNITS = { Meters: 'Meters', Miles: 'Miles' }
+
 export default function DistanceUnitsDialog(props: IProps) {
   // @TODO use obj w/ value-label for
-  const distanceUnits = ['meters', 'miles']
   const units = localStorage.getItem('distanceUnits')
   let [selected, setSelected] = useState(units ?? '')
 
@@ -34,7 +36,7 @@ export default function DistanceUnitsDialog(props: IProps) {
           <Description>Used to show how close nearby shops are.</Description>
 
           <RadioGroup value={selected} onChange={setSelected} aria-label="Server size">
-            {distanceUnits.map(unit => (
+            {Object.values(DISTANCE_UNITS).map(unit => (
               <Field key={unit} className="flex items-center gap-2">
                 <Radio
                   value={unit}

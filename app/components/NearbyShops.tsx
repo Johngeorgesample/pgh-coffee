@@ -2,6 +2,7 @@ import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops.json'
 import haversineDistance from 'haversine-distance'
+import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
 interface IProps {
   handleClick: (shop: TShop) => void
@@ -53,9 +54,7 @@ export default function NearbyShops(props: IProps) {
   const getDistance = (shopACoord: any, shopBCoord: any) => {
     const meters = Math.round(haversineDistance(shopACoord, shopBCoord))
     const miles = Math.round((haversineDistance(shopACoord, shopBCoord) * 0.000621371 + Number.EPSILON) * 100) / 100
-
-    // @TODO constant here
-    return units === 'miles' ? miles : meters
+    return units === DISTANCE_UNITS.Miles ? miles : meters
   }
 
   if (nearbyList.length === 0) {
@@ -85,7 +84,7 @@ export default function NearbyShops(props: IProps) {
                 </p>
                 {/*<address className="text-gray-700">{shop.properties.address}</address> */}
                 <p className="italic text-sm text-gray-700">
-                  {getDistance(shop.geometry.coordinates, props.shop.geometry.coordinates)} {units} away
+                  {getDistance(shop.geometry.coordinates, props.shop.geometry.coordinates)} {units?.toLowerCase()} away
                 </p>
               </div>
             </li>
