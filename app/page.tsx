@@ -72,8 +72,11 @@ export default function Mappy() {
 
   const handleClose = () => {
     setIsOpen(false)
-    setDataSet(shopGeoJSON)
-    setCurrentShop({} as TShop)
+
+    setTimeout(() => {
+      setCurrentShop({} as TShop)
+      setDataSet(shopGeoJSON)
+    }, 700)
   }
 
   const handleSearchClick = () => {
