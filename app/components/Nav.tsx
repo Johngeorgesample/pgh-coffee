@@ -15,7 +15,7 @@ export default function Nav() {
   }
 
   return (
-    <div className="bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
+    <nav className="bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
       <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
         <a className="flex" href="/">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 250 250">
@@ -67,6 +67,6 @@ export default function Nav() {
           </a>
         </div>
       </div>
-    </div>
+    </nav>
   )
 }
