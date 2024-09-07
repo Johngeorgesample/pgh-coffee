@@ -10,27 +10,28 @@ interface IProps {
   onUnitChange: (newUnit: string) => void
 }
 
-
 export const DISTANCE_UNITS = { Meters: 'Meters', Miles: 'Miles' }
 
 export default function DistanceUnitsDialog(props: IProps) {
   const [selected, setSelected] = useState(props.currentUnit)
+
+  useEffect(() => {
+    if (props.isOpen) {
+      setSelected(props.currentUnit)
+    }
+  }, [props.isOpen, props.currentUnit])
 
   const handleSave = () => {
     props.onUnitChange(selected)
     props.handleClose()
   }
 
-  useEffect(() => {
-    setSelected(props.currentUnit)
-  }, [props.currentUnit])
-
   const handleUnitChange = (unit: string) => {
     setSelected(unit)
   }
 
   return (
-    <Dialog open={props.isOpen} onClose={() => props.handleClose()} className="relative z-10">
+    <Dialog open={props.isOpen} onClose={props.handleClose} className="relative z-10">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
