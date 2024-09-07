@@ -12,6 +12,9 @@ export default function Settings() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setUnitFromLocalStorage(window.localStorage.getItem('distanceUnits'))
+      if (!window.localStorage.getItem('distanceUnits')) {
+        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
+      }
       setIsLoading(false)
     }
   }, [])
