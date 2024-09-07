@@ -4,40 +4,34 @@ import { useEffect, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 interface IProps {
-  handleClose: any
+  currentUnit: string
+  handleClose: () => void
   isOpen: boolean
+  onUnitChange: (newUnit: string) => void
 }
+
 
 export const DISTANCE_UNITS = { Meters: 'Meters', Miles: 'Miles' }
 
 export default function DistanceUnitsDialog(props: IProps) {
-  let unitFromLocalStorage: string | null
-  if (typeof window !== 'undefined') {
-    unitFromLocalStorage = window.localStorage.getItem('distanceUnits')
-  }
-  let [selected, setSelected] = useState(unitFromLocalStorage ?? DISTANCE_UNITS.Miles)
+  const [selected, setSelected] = useState(props.currentUnit)
 
   const handleSave = () => {
     window.localStorage.setItem('distanceUnits', selected)
+    props.onUnitChange(selected)
     props.handleClose()
   }
 
-console.log(selected)
   useEffect(() => {
-    if (unitFromLocalStorage) {
-      setSelected(unitFromLocalStorage)
-    }
-  }, [props.isOpen, unitFromLocalStorage])
+    setSelected(props.currentUnit)
+  }, [props.currentUnit])
 
   const handleUnitChange = (unit: string) => {
-    if (unit) {
-      console.log(unit)
-      setSelected(unit)
-    }
+    setSelected(unit)
   }
 
   return (
-    <Dialog open={props.isOpen} onClose={() => props.handleClose(false)} className="relative z-10">
+    <Dialog open={props.isOpen} onClose={() => props.handleClose()} className="relative z-10">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -65,7 +59,7 @@ console.log(selected)
                 {Object.values(DISTANCE_UNITS).map(unit => (
                   <div key={unit} className="flex items-center">
                     <input
-                      defaultChecked={unit === selected}
+                      checked={unit === selected}
                       id={unit}
                       name="distance-unit"
                       type="radio"
@@ -82,15 +76,14 @@ console.log(selected)
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button
                 type="button"
-                onClick={() => handleSave()}
+                onClick={handleSave}
                 className="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:ml-3 sm:w-auto"
               >
                 Save
               </button>
               <button
                 type="button"
-                data-autofocus
-                onClick={() => props.handleClose()}
+                onClick={props.handleClose}
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
               >
                 Cancel

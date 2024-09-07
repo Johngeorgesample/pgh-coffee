@@ -1,19 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Nav from '@/app/components/Nav'
 import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
+
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
+  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  let unitFromLocalStorage
-  if (typeof window !== 'undefined') {
-    if (window.localStorage.getItem('distanceUnits')) {
-      unitFromLocalStorage = window.localStorage.getItem('distanceUnits')
-    } else {
-      window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
-      unitFromLocalStorage = window.localStorage.getItem('distanceUnits')
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      let unit = window.localStorage.getItem('distanceUnits')
+      if (!unit) {
+        unit = DISTANCE_UNITS.Miles
+        window.localStorage.setItem('distanceUnits', unit)
+      }
+      setUnitFromLocalStorage(unit)
+      setIsLoading(false)
     }
+  }, [])
+
+  const handleUnitChange = (newUnit: string) => {
+    setUnitFromLocalStorage(newUnit)
   }
 
   return (
@@ -21,7 +30,6 @@ export default function Settings() {
       <Nav />
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
         <div>
-          {' '}
           <h2 className="text-base font-semibold leading-7 text-gray-900">Settings</h2>
           <p className="mt-1 text-sm leading-6 text-gray-500">
             Adjust your preferences to customize the experience across the entire application.
@@ -30,7 +38,11 @@ export default function Settings() {
             <div className="pt-6 sm:flex">
               <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Units for distance</dt>
               <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                <div className="text-gray-900">{unitFromLocalStorage}</div>
+                {isLoading ? (
+                  <p className="text-gray-400">Loading...</p>
+                ) : (
+                  <div className="text-gray-900">{unitFromLocalStorage}</div>
+                )}
                 <button
                   onClick={() => setDistanceUnitsDialogIsOpen(true)}
                   type="button"
@@ -44,7 +56,12 @@ export default function Settings() {
         </div>
       </div>
 
-      <DistanceUnitsDialog isOpen={distanceUnitsDialogIsOpen} handleClose={() => setDistanceUnitsDialogIsOpen(false)} />
+      <DistanceUnitsDialog
+        currentUnit={unitFromLocalStorage || DISTANCE_UNITS.Miles}
+        isOpen={distanceUnitsDialogIsOpen}
+        handleClose={() => setDistanceUnitsDialogIsOpen(false)}
+        onUnitChange={handleUnitChange}
+      />
     </>
   )
 }
