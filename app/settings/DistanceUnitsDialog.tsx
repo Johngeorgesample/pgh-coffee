@@ -17,7 +17,6 @@ export default function DistanceUnitsDialog(props: IProps) {
   const [selected, setSelected] = useState(props.currentUnit)
 
   const handleSave = () => {
-    window.localStorage.setItem('distanceUnits', selected)
     props.onUnitChange(selected)
     props.handleClose()
   }
