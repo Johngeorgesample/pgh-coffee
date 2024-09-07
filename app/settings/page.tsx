@@ -26,7 +26,6 @@ export default function Settings() {
 
   return (
     <>
-      <Nav />
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
         <div>
           <h2 className="text-base font-semibold leading-7 text-gray-900">Settings</h2>
