@@ -5,7 +5,6 @@ import QAndA from '@/app/components/QAndA'
 export default function About() {
   return (
     <>
-      <Nav />
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
         <h1 className="text-2xl text-bold mb-2">About</h1>
         <p className="mb-5">

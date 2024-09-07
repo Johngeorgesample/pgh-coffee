@@ -6,10 +6,9 @@ import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
-import Nav from '@/app/components/Nav'
 import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops.json'
-import {DISTANCE_UNITS} from './settings/DistanceUnitsDialog'
+import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 
 export default function Mappy() {
   const plausible = usePlausible()
@@ -107,43 +106,40 @@ export default function Mappy() {
 
   return (
     <>
-      <main>
-        <Nav />
-        <Map
-          mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
-          initialViewState={{
-            longitude: -79.99585,
-            latitude: 40.440742,
-            zoom: 12,
-          }}
-          cursor="pointer"
-          mapStyle="mapbox://styles/mapbox/dark-v11"
-          onClick={handleMapClick}
-          ref={mapRef}
-        >
-          <Source id="my-data" type="geojson" data={dataSet}>
-            <Layer
-              id={layerId}
-              type="circle"
-              paint={{
-                'circle-color': [
-                  'case',
-                  ['boolean', ['get', 'selected'], false],
-                  '#fff', // Color for the selected feature
-                  '#FDE047', // Default color
-                ],
-                'circle-radius': 8,
-              }}
-            />
-          </Source>
-        </Map>
-        <button
-          className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
-          onClick={handleSearchClick}
-        >
-          <MagnifyingGlassIcon className="h-8 w-8" />
-        </button>
-      </main>
+      <Map
+        mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
+        initialViewState={{
+          longitude: -79.99585,
+          latitude: 40.440742,
+          zoom: 12,
+        }}
+        cursor="pointer"
+        mapStyle="mapbox://styles/mapbox/dark-v11"
+        onClick={handleMapClick}
+        ref={mapRef}
+      >
+        <Source id="my-data" type="geojson" data={dataSet}>
+          <Layer
+            id={layerId}
+            type="circle"
+            paint={{
+              'circle-color': [
+                'case',
+                ['boolean', ['get', 'selected'], false],
+                '#fff', // Color for the selected feature
+                '#FDE047', // Default color
+              ],
+              'circle-radius': 8,
+            }}
+          />
+        </Source>
+      </Map>
+      <button
+        className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
+        onClick={handleSearchClick}
+      >
+        <MagnifyingGlassIcon className="h-8 w-8" />
+      </button>
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
