@@ -2,6 +2,7 @@ import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import shopGeoJSON from '@/data/coffee_shops.json'
 import haversineDistance from 'haversine-distance'
+import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
 interface IProps {
   handleClick: (shop: TShop) => void
@@ -14,10 +15,10 @@ export default function NearbyShops(props: IProps) {
   }
 
   const isSameShop = (shopA: TShop, shopB: TShop) => {
-        if (shopA.properties.address === shopB.properties.address ) {
-          return shopA.properties.name === shopB.properties.name
-        }
-        return false
+    if (shopA.properties.address === shopB.properties.address) {
+      return shopA.properties.name === shopB.properties.name
+    }
+    return false
   }
 
   const getNearbyShopsByDistance = () => {
@@ -25,8 +26,7 @@ export default function NearbyShops(props: IProps) {
     return shops.filter(
       s =>
         // @ts-ignore-next-line
-        !isSameShop(s, props.shop) &&
-        shopsAreClose(s.geometry.coordinates, props.shop.geometry.coordinates),
+        !isSameShop(s, props.shop) && shopsAreClose(s.geometry.coordinates, props.shop.geometry.coordinates),
     )
   }
 
@@ -47,6 +47,14 @@ export default function NearbyShops(props: IProps) {
   const handleCardClick = (shop: TShop) => {
     props.handleClick(shop)
     plausible('NearbyCardClick', { props: {} })
+  }
+
+  const units = localStorage.getItem('distanceUnits')
+
+  const getDistance = (shopACoord: any, shopBCoord: any) => {
+    const meters = Math.round(haversineDistance(shopACoord, shopBCoord))
+    const miles = Math.round((haversineDistance(shopACoord, shopBCoord) * 0.000621371 + Number.EPSILON) * 100) / 100
+    return units === DISTANCE_UNITS.Miles ? miles : meters
   }
 
   if (nearbyList.length === 0) {
@@ -76,8 +84,7 @@ export default function NearbyShops(props: IProps) {
                 </p>
                 {/*<address className="text-gray-700">{shop.properties.address}</address> */}
                 <p className="italic text-sm text-gray-700">
-                  {Math.round(haversineDistance(shop.geometry.coordinates, props.shop.geometry.coordinates))} meters
-                  away
+                  {getDistance(shop.geometry.coordinates, props.shop.geometry.coordinates)} {units?.toLowerCase()} away
                 </p>
               </div>
             </li>

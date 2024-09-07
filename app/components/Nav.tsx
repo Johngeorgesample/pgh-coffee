@@ -41,6 +41,9 @@ export default function Nav() {
         <a className="text-2xl" href="/about">
           About
         </a>
+        <a className="text-2xl" href="/settings">
+          Settings
+        </a>
       </div>
 
       <div className="sm:hidden">
@@ -58,6 +61,9 @@ export default function Nav() {
           </a>
           <a className="text-2xl" href="/about">
             About
+          </a>
+          <a className="text-2xl" href="/settings">
+            Settings
           </a>
         </div>
       </div>
