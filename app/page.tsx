@@ -9,6 +9,7 @@ import { TShop } from '@/types/shop-types'
 import Nav from '@/app/components/Nav'
 import ShopPanel from '@/app/components/ShopPanel'
 import shopGeoJSON from '@/data/coffee_shops.json'
+import {DISTANCE_UNITS} from './settings/DistanceUnitsDialog'
 
 export default function Mappy() {
   const plausible = usePlausible()
@@ -32,6 +33,14 @@ export default function Mappy() {
       plausible('FeaturePointClick', { props: {} })
     }
   }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (!window.localStorage.getItem('distanceUnits')) {
+        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
+      }
+    }
+  }, [])
 
   // Update color of currentShop dot
   useEffect(() => {
