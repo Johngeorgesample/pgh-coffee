@@ -40,7 +40,7 @@ export default function ShopSearch(props: IProps) {
           </span>
           <input
             ref={inputRef}
-            className="inline flex-1 outline-none h-6 active:outline text-gray-500 bg-transparent"
+            className="inline flex-1 outline-none border-none h-6 active:outline text-gray-500 bg-transparent"
             onChange={e => setFilter(e.target.value)}
             placeholder="Search for a shop"
             value={filter}

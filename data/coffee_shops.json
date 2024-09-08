@@ -135,7 +135,8 @@
         "neighborhood": "East Allegheny",
         "website": "https://www.annexpgh.com/",
         "address": "522 E. Ohio St Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/east_allegheny/annex.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -378,7 +379,8 @@
         "neighborhood": "Brighton Heights",
         "website": "https://california-coffee.square.site/",
         "address": "3619 California Ave, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/brighton_heights/california_coffee_bar.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -654,7 +656,8 @@
         "neighborhood": "North Shore",
         "website": "https://www.convivecoffee.com/",
         "address": "225 N Shore Dr Suite 100, Pittsburgh, PA 15212",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/north_shore/convive.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -682,7 +685,8 @@
         "neighborhood": "Downtown",
         "website": "https://crtv.coffee/",
         "address": "309 Smithfield St, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/creative_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -897,7 +901,8 @@
         "neighborhood": "Downtown",
         "website": "https://www.gasolinestreetcoffee.com/",
         "address": "643 First Ave, Pittsburgh, PA 15219",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/gasoline_street_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1369,7 +1374,8 @@
         "neighborhood": "Downtown",
         "website": "https://www.nicholascoffee.us/",
         "address": "23 Market Square, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/nicholas_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1554,7 +1560,8 @@
         "neighborhood": "Downtown",
         "website": "https://www.rocknjoe.com/",
         "address": "524 Penn Ave, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/rock_n_joe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1726,7 +1733,8 @@
         "neighborhood": "Downtown",
         "website": "https://www.theboredomset.com/",
         "address": "435 Market St, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/boredom_set.jpg"
       },
       "geometry": {
         "type": "Point",
