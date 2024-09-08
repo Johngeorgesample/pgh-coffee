@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import Nav from '@/app/components/Nav'
 import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
+import DistanceSizeDialog from './DistanceSizeDialog'
 
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
+  const [distanceSizeDialogIsOpen, setDistanceSizeDialogIsOpen] = useState(false)
   const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -51,6 +53,25 @@ export default function Settings() {
               </dd>
             </div>
           </dl>
+          <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+            <div className="pt-6 sm:flex">
+              <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Units for distance</dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                {isLoading ? (
+                  <p className="text-gray-400">Loading...</p>
+                ) : (
+                  <div className="text-gray-900">999 meters</div>
+                )}
+                <button
+                  onClick={() => setDistanceSizeDialogIsOpen(true)}
+                  type="button"
+                  className="font-semibold text-slate-700 hover:text-slate-600"
+                >
+                  Update
+                </button>
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
 
@@ -58,6 +79,13 @@ export default function Settings() {
         currentUnit={unitFromLocalStorage || DISTANCE_UNITS.Miles}
         isOpen={distanceUnitsDialogIsOpen}
         handleClose={() => setDistanceUnitsDialogIsOpen(false)}
+        onUnitChange={handleUnitChange}
+      />
+
+      <DistanceSizeDialog
+        currentUnit={unitFromLocalStorage || DISTANCE_UNITS.Miles}
+        isOpen={distanceSizeDialogIsOpen}
+        handleClose={() => setDistanceSizeDialogIsOpen(false)}
         onUnitChange={handleUnitChange}
       />
     </>
