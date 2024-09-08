@@ -69,9 +69,18 @@ export default function NearbyShops(props: IProps) {
         {sortedList.map((shop: any) => {
           return (
             <li
-              key={shop.properties.name + shop.properties.address}
               className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
+              key={shop.properties.name + shop.properties.address}
               onClick={() => handleCardClick(shop)}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();  // Prevent the default action of scrolling when pressing spacebar
+                  handleCardClick(shop)
+                }
+              }}
+              role="button"
+              aria-label={`Nearby shop: ${shop.properties.name}, ${shop.properties.neighborhood}`}
             >
               <div
                 className="h-36 relative bg-yellow-200 bg-cover bg-center"
@@ -82,7 +91,6 @@ export default function NearbyShops(props: IProps) {
                 <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
                   {shop.properties.neighborhood}
                 </p>
-                {/*<address className="text-gray-700">{shop.properties.address}</address> */}
                 <p className="italic text-sm text-gray-700">
                   {getDistance(shop.geometry.coordinates, props.shop.geometry.coordinates)} {units?.toLowerCase()} away
                 </p>
