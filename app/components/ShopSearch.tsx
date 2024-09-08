@@ -27,6 +27,13 @@ export default function ShopSearch(props: IProps) {
     setFilter('')
   }
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleCardClick(shop)
+    }
+  }
+
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -61,6 +68,9 @@ export default function ShopSearch(props: IProps) {
                 key={shop.properties.name + shop.properties.address}
                 className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
                 onClick={() => handleCardClick(shop)}
+                onKeyPress={(event) => handleKeyPress(event, shop)}
+                tabIndex={0}
+                role="button"
               >
                 <div
                   className="h-36 relative bg-yellow-200 bg-cover bg-center"
