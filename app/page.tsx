@@ -12,9 +12,9 @@ import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 
 export default function Mappy() {
   const plausible = usePlausible()
-  let [isOpen, setIsOpen] = useState(false)
-  let [currentShop, setCurrentShop] = useState({} as TShop)
-  let [dataSet, setDataSet] = useState(shopGeoJSON as any)
+  const [isOpen, setIsOpen] = useState(false)
+  const [currentShop, setCurrentShop] = useState({} as TShop)
+  const [dataSet, setDataSet] = useState(shopGeoJSON as any)
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
