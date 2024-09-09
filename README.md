@@ -2,7 +2,7 @@
 
 <https://pgh.coffee/>
 
-![image](https://github.com/user-attachments/assets/430aa991-3758-4866-9f01-629556b00413)
+![image](https://github.com/user-attachments/assets/01c7834c-80b5-4dea-b86f-c3ea548cbb64)
 
 This repository contains a comprehensive data source of all the coffee shops in Pittsburgh, along with a Next.js application to display and explore this information. Whether you're a local resident looking for a new coffee spot or a visitor seeking the best cafes in the city, this project has you covered.
 
