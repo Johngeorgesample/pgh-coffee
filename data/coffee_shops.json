@@ -671,7 +671,8 @@
         "neighborhood": "Strip District",
         "website": "https://coopdevillepgh.com/coffee-bar/",
         "address": "2305 Smallman St, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/strip_district/coop_de_ville.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -777,6 +778,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.9823008, 40.466755]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Delanie's Coffee",
+        "neighborhood": "Shadyside",
+        "website": "http://www.delaniescoffee.com/",
+        "address": "200 S Highland Ave, Pittsburgh, PA 15206",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.925354, 40.458639]
       }
     },
     {
@@ -1624,6 +1639,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [-79.987481, 40.4490258333333]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Spigolo",
+        "neighborhood": "Edgewood",
+        "website": "https://spigolopgh.com/",
+        "address": "101 Edgewood Ave, Pittsburgh, PA 15218",
+        "roaster": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.884518, 40.432737]
       }
     },
     {
