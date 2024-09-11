@@ -477,7 +477,7 @@
       "properties": {
         "name": "Coffee Village",
         "neighborhood": "Downtown",
-        "website": "http://www.coffeevillagepgh.com/",
+        "website": "https://coffeevillages.com/",
         "address": "801 Liberty Ave, Pittsburgh, PA 15222",
         "roaster": "",
         "photo": "../shop_photos/downtown/coffee_village.jpg"
@@ -492,7 +492,7 @@
       "properties": {
         "name": "Coffee Village",
         "neighborhood": "Sewickley",
-        "website": "http://www.coffeevillagepgh.com/",
+        "website": "https://coffeevillages.com/",
         "address": "417 Walnut St, Sewickley, PA 15143",
         "roaster": ""
       },
