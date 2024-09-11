@@ -479,7 +479,8 @@
         "neighborhood": "Downtown",
         "website": "http://www.coffeevillagepgh.com/",
         "address": "801 Liberty Ave, Pittsburgh, PA 15222",
-        "roaster": ""
+        "roaster": "",
+        "photo": "../shop_photos/downtown/coffee_village.jpg"
       },
       "geometry": {
         "type": "Point",
