@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const fetchShops = async (neighborhood?: string) => {
-  let query = supabase.from('ShopsV4').select('*')
+  let query = supabase.from('shops').select('*')
 
   if (neighborhood) {
     query = query.eq('neighborhood', neighborhood)

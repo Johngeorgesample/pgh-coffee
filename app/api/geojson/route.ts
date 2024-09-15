@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const fetchShops = async () => {
-  let query = supabase.from('ShopsV4').select('*')
+  let query = supabase.from('shops').select('*')
 
   const { data, error } = await query
   if (error) {
