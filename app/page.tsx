@@ -34,37 +34,6 @@ export default function Mappy() {
   }
 
   useEffect(() => {
-    const fetchShops = async () => {
-      try {
-        const response = await fetch('/api/shops') // API route for fetching all shops
-        if (!response.ok) {
-          throw new Error('Failed to fetch shops')
-        }
-        const data = await response.json()
-        console.log(data)
-      } catch (err: any) {
-        console.log(err.message)
-      }
-    }
-
-    const fetchGeojson = async () => {
-      try {
-        const response = await fetch('/api/geojson') // API route for fetching all shops
-        if (!response.ok) {
-          throw new Error('Failed to fetch shops')
-        }
-        const data = await response.json()
-        console.log('geojson', data)
-      } catch (err: any) {
-        console.log(err.message)
-      }
-    }
-
-    // fetchShops()
-    fetchGeojson()
-  }, [])
-
-  useEffect(() => {
     if (typeof window !== 'undefined') {
       if (!window.localStorage.getItem('distanceUnits')) {
         window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
