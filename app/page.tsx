@@ -47,7 +47,21 @@ export default function Mappy() {
       }
     }
 
-    fetchShops()
+    const fetchGeojson = async () => {
+      try {
+        const response = await fetch('/api/geojson') // API route for fetching all shops
+        if (!response.ok) {
+          throw new Error('Failed to fetch shops')
+        }
+        const data = await response.json()
+        console.log('geojson', data)
+      } catch (err: any) {
+        console.log(err.message)
+      }
+    }
+
+    // fetchShops()
+    fetchGeojson()
   }, [])
 
   useEffect(() => {
