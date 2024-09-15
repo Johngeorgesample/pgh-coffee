@@ -46,7 +46,7 @@ const formatDataToGeoJSON = (shops: any[]) => {
 }
 
 // API Route Handler
-export async function GET(request: Request) {
+export async function GET() {
   const shops = await fetchShops()
   const geojson = formatDataToGeoJSON(shops)
 
