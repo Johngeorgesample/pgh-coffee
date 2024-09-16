@@ -65,7 +65,7 @@
         "website": "https://abolitioncoffee.com/",
         "address": "3410 Penn Ave, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/lower_lawrenceville/abolition.jpg"
+        "photo": "/shop_photos/lower_lawrenceville/abolition.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -136,7 +136,7 @@
         "website": "https://www.annexpgh.com/",
         "address": "522 E. Ohio St Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/east_allegheny/annex.jpg"
+        "photo": "/shop_photos/east_allegheny/annex.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -165,7 +165,7 @@
         "website": "http://arriviste.coffee/",
         "address": "5730 Ellsworth Ave, Pittsburgh, PA 15232",
         "roaster": "",
-        "photo": "../shop_photos/shadyside/arriviste.jpg"
+        "photo": "/shop_photos/shadyside/arriviste.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -194,7 +194,7 @@
         "website": "http://www.beanthru.com/",
         "address": "1921 William Flinn Hwy Glenshaw, PA 15116",
         "roaster": "",
-        "photo": "../shop_photos/shaler/beanthru.jpg"
+        "photo": "/shop_photos/shaler/beanthru.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -265,7 +265,7 @@
         "website": "https://www.bigdogcoffeeshop.com/",
         "address": "2717 Sarah St Pittsburgh, PA 15203",
         "roaster": "",
-        "photo": "../shop_photos/south_side_flats/big_dog_coffee.jpg"
+        "photo": "/shop_photos/south_side_flats/big_dog_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -350,7 +350,7 @@
         "website": "https://cafeconmigo.com/",
         "address": "10 N Meadow Dr Suite 4, Wexford, PA 15090",
         "roaster": "",
-        "photo": "../shop_photos/wexford/cafe_conmigo.jpg"
+        "photo": "/shop_photos/wexford/cafe_conmigo.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -365,7 +365,7 @@
         "website": "https://www.caffedamorepgh.com/",
         "address": "5308 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/upper_lawrenceville/caffe_damore.jpg"
+        "photo": "/shop_photos/upper_lawrenceville/caffe_damore.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -380,7 +380,7 @@
         "website": "https://california-coffee.square.site/",
         "address": "3619 California Ave, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/brighton_heights/california_coffee_bar.jpg"
+        "photo": "/shop_photos/brighton_heights/california_coffee_bar.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -451,7 +451,7 @@
         "website": "https://cfpcafe.com/",
         "address": "1501 Preble Ave, Pittsburgh, PA 15233",
         "roaster": "",
-        "photo": "../shop_photos/chateau/cfp_cafe.jpg"
+        "photo": "/shop_photos/chateau/cfp_cafe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -480,7 +480,7 @@
         "website": "https://coffeevillages.com/",
         "address": "801 Liberty Ave, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/coffee_village.jpg"
+        "photo": "/shop_photos/downtown/coffee_village.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -509,7 +509,7 @@
         "website": "https://www.colombino.com/",
         "address": "926 Western Ave, Pittsburgh, PA 15233",
         "roaster": "",
-        "photo": "../shop_photos/allegheny_west/colombino.jpg"
+        "photo": "/shop_photos/allegheny_west/colombino.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -538,7 +538,7 @@
         "website": "https://commonplacecoffee.com/",
         "address": "5467 Penn Ave, Pittsburgh, PA 15206",
         "roaster": "",
-        "photo": "../shop_photos/garfield/commonplace.jpg"
+        "photo": "/shop_photos/garfield/commonplace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -553,7 +553,7 @@
         "website": "https://commonplacecoffee.com/",
         "address": "1501 Buena Vista St, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/mexican_war_streets/commonplace.jpg"
+        "photo": "/shop_photos/mexican_war_streets/commonplace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -568,7 +568,7 @@
         "website": "https://commonplacecoffee.com/",
         "address": "7514 Thomas Blvd suite 100, Pittsburgh, PA 15208",
         "roaster": "",
-        "photo": "../shop_photos/north_point_breeze/commonplace.jpg"
+        "photo": "/shop_photos/north_point_breeze/commonplace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -583,7 +583,7 @@
         "website": "https://commonplacecoffee.com/",
         "address": "428 S. 27th St Pittsburgh, PA 15203",
         "roaster": "",
-        "photo": "../shop_photos/south_side_flats/commonplace.jpg"
+        "photo": "/shop_photos/south_side_flats/commonplace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -598,7 +598,7 @@
         "website": "https://commonplacecoffee.com/",
         "address": "5827 Forbes Ave, Pittsburgh, PA 15217",
         "roaster": "",
-        "photo": "../shop_photos/squirrel_hill_north/commonplace.jpg"
+        "photo": "/shop_photos/squirrel_hill_north/commonplace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -613,7 +613,7 @@
         "website": "http://www.constellationcoffeepgh.com/",
         "address": "4059 Penn Ave, Pittsburgh, PA 15224",
         "roaster": "",
-        "photo": "../shop_photos/central_lawrenceville/constellation.jpg"
+        "photo": "/shop_photos/central_lawrenceville/constellation.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -628,7 +628,7 @@
         "website": "https://www.convivecoffee.com/",
         "address": "4032 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/central_lawrenceville/convive.jpg"
+        "photo": "/shop_photos/central_lawrenceville/convive.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -643,7 +643,7 @@
         "website": "https://www.convivecoffee.com/",
         "address": "751 Providence Blvd, Pittsburgh, PA 15237",
         "roaster": "",
-        "photo": "../shop_photos/mccandless/convive.jpg"
+        "photo": "/shop_photos/mccandless/convive.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -658,7 +658,7 @@
         "website": "https://www.convivecoffee.com/",
         "address": "225 N Shore Dr Suite 100, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/north_shore/convive.jpg"
+        "photo": "/shop_photos/north_shore/convive.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -673,7 +673,7 @@
         "website": "https://coopdevillepgh.com/coffee-bar/",
         "address": "2305 Smallman St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/coop_de_ville.jpg"
+        "photo": "/shop_photos/strip_district/coop_de_ville.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -688,7 +688,7 @@
         "website": "https://crtv.coffee/",
         "address": "309 Smithfield St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/creative_coffee.jpg"
+        "photo": "/shop_photos/downtown/creative_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -759,7 +759,7 @@
         "website": "https://www.defer.coffee/",
         "address": "2002 Smallman St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/de_fer.jpg"
+        "photo": "/shop_photos/strip_district/de_fer.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -774,7 +774,7 @@
         "website": "https://www.defer.coffee/",
         "address": "1800 Rialto St, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/troy_hill/de_fer.jpg"
+        "photo": "/shop_photos/troy_hill/de_fer.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -803,7 +803,7 @@
         "website": "http://www.delaniescoffee.com/",
         "address": "1737 E Carson St, Pittsburgh, PA 15203",
         "roaster": "",
-        "photo": "../shop_photos/south_side_flats/delanies_coffee.jpg"
+        "photo": "/shop_photos/south_side_flats/delanies_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -846,7 +846,7 @@
         "website": "https://espressoamano.com/",
         "address": "3623 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/lower_lawrenceville/espresso_a_mano.jpg"
+        "photo": "/shop_photos/lower_lawrenceville/espresso_a_mano.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -889,7 +889,7 @@
         "website": "https://www.fieldday.life/",
         "address": "3706 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/lower_lawrenceville/field_day.jpg"
+        "photo": "/shop_photos/lower_lawrenceville/field_day.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -918,7 +918,7 @@
         "website": "https://www.gasolinestreetcoffee.com/",
         "address": "643 First Ave, Pittsburgh, PA 15219",
         "roaster": "",
-        "photo": "../shop_photos/downtown/gasoline_street_coffee.jpg"
+        "photo": "/shop_photos/downtown/gasoline_street_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1017,7 +1017,7 @@
         "website": "https://ineffablecaphe.com/",
         "address": "3920 Penn Ave, Pittsburgh, PA 15224",
         "roaster": "",
-        "photo": "../shop_photos/central_lawrenceville/ineffable_caphe.jpg"
+        "photo": "/shop_photos/central_lawrenceville/ineffable_caphe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1032,7 +1032,7 @@
         "website": "",
         "address": "4419 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/central_lawrenceville/inkwell.jpg"
+        "photo": "/shop_photos/central_lawrenceville/inkwell.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1047,7 +1047,7 @@
         "website": "https://thejamescafe.com/",
         "address": "2550 Smallman St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/james_cafe.jpg"
+        "photo": "/shop_photos/strip_district/james_cafe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1104,7 +1104,7 @@
         "website": "https://www.kaiburcoffee.com/",
         "address": "3138 Dobson St, Pittsburgh, PA 15219",
         "roaster": "",
-        "photo": "../shop_photos/polish_hill/kaibur_coffee.jpg"
+        "photo": "/shop_photos/polish_hill/kaibur_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1133,7 +1133,7 @@
         "website": "https://klvncoffee.com/",
         "address": "6600 Hamilton Ave Fl 1, Pittsburgh, PA 15206",
         "roaster": "",
-        "photo": "../shop_photos/larimer/klvn.jpg"
+        "photo": "/shop_photos/larimer/klvn.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1163,7 +1163,7 @@
         "website": "https://laprima.com/",
         "address": "1100 Smallman St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/la_prima.jpg"
+        "photo": "/shop_photos/downtown/la_prima.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1178,7 +1178,7 @@
         "website": "https://laprima.com/",
         "address": "205 21st St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/la_prima.jpg"
+        "photo": "/shop_photos/strip_district/la_prima.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1263,7 +1263,7 @@
         "website": "https://margauxpgh.com/",
         "address": "5947 Penn Ave, Pittsburgh, PA 15206",
         "roaster": "",
-        "photo": "../shop_photos/east_liberty/margaux.jpg"
+        "photo": "/shop_photos/east_liberty/margaux.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1278,7 +1278,7 @@
         "website": "https://www.mechaniccoffee.com/",
         "address": "5830 Ellsworth Ave, Pittsburgh, PA 15232",
         "roaster": "",
-        "photo": "../shop_photos/shadyside/mechanic_coffee.jpg"
+        "photo": "/shop_photos/shadyside/mechanic_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1391,7 +1391,7 @@
         "website": "https://www.nicholascoffee.us/",
         "address": "23 Market Square, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/nicholas_coffee.jpg"
+        "photo": "/shop_photos/downtown/nicholas_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1406,7 +1406,7 @@
         "website": "",
         "address": "1812 Penn Ave, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/novaria.jpg"
+        "photo": "/shop_photos/strip_district/novaria.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1519,7 +1519,7 @@
       "website": "https://redhawkcoffee.com/",
       "address": "1019 N Canal St, Pittsburgh, PA 15215",
       "roaster": "",
-        "photo": "../shop_photos/sharpsburg/redhawk.jpg"
+        "photo": "/shop_photos/sharpsburg/redhawk.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1548,7 +1548,7 @@
         "website": "https://redstartroasters.com/",
         "address": "224 N Euclid Ave, Pittsburgh, PA 15206",
         "roaster": "",
-        "photo": "../shop_photos/east_liberty/redstart_roasters.jpg"
+        "photo": "/shop_photos/east_liberty/redstart_roasters.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1577,7 +1577,7 @@
         "website": "https://www.rocknjoe.com/",
         "address": "524 Penn Ave, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/rock_n_joe.jpg"
+        "photo": "/shop_photos/downtown/rock_n_joe.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1606,7 +1606,7 @@
         "website": "https://ruckuscafe.square.site/",
         "address": "1707 Babcock Blvd, Pittsburgh, PA 15209",
         "roaster": "",
-        "photo": "../shop_photos/shaler/ruckus.jpg"
+        "photo": "/shop_photos/shaler/ruckus.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1635,7 +1635,7 @@
         "website": "https://solunapgh.com/",
         "address": "1601 Penn Ave, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/strip_district/soluna.jpg"
+        "photo": "/shop_photos/strip_district/soluna.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1706,7 +1706,7 @@
         "website": "https://tazzadoro.net/",
         "address": "1125 N Highland Ave, Pittsburgh, PA 15206",
         "roaster": "",
-        "photo": "../shop_photos/highland_park/tazza_doro.jpg"
+        "photo": "/shop_photos/highland_park/tazza_doro.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1735,7 +1735,7 @@
         "website": "https://theabbeyonbutlerstreet.com/",
         "address": "4635 Butler St, Pittsburgh, PA 15201",
         "roaster": "",
-        "photo": "../shop_photos/central_lawrenceville/abbey.jpg"
+        "photo": "/shop_photos/central_lawrenceville/abbey.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1764,7 +1764,7 @@
         "website": "https://www.theboredomset.com/",
         "address": "435 Market St, Pittsburgh, PA 15222",
         "roaster": "",
-        "photo": "../shop_photos/downtown/boredom_set.jpg"
+        "photo": "/shop_photos/downtown/boredom_set.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1863,7 +1863,7 @@
         "website": "https://coffeetree.store/",
         "address": "5524 Walnut St, Pittsburgh, PA 15232",
         "roaster": "",
-        "photo": "../shop_photos/shadyside/coffee_tree_roasters.jpg"
+        "photo": "/shop_photos/shadyside/coffee_tree_roasters.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1906,7 +1906,7 @@
         "website": "https://gardencafepgh.com/",
         "address": "1022 Chestnut St, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/east_allegheny/garden_cafe.jpg"
+        "photo": "/shop_photos/east_allegheny/garden_cafe.jpg"
 
       },
       "geometry": {
@@ -1922,7 +1922,7 @@
         "website": "https://www.thegovernmentcenter.com/",
         "address": "715 East St, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/east_allegheny/the_government_center.jpg"
+        "photo": "/shop_photos/east_allegheny/the_government_center.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1937,7 +1937,7 @@
         "website": "https://www.tracebloomfield.com/",
         "address": "4312 Main St, Pittsburgh, PA 15224",
         "roaster": "",
-        "photo": "../shop_photos/bloomfield/trace.jpg"
+        "photo": "/shop_photos/bloomfield/trace.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -2008,7 +2008,7 @@
         "website": "https://whitewhalebookstore.com/",
         "address": "4754 Liberty Ave, Pittsburgh, PA 15224",
         "roaster": "",
-        "photo": "../shop_photos/bloomfield/white_whale.jpg"
+        "photo": "/shop_photos/bloomfield/white_whale.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -2023,7 +2023,7 @@
         "website": "https://www.yinzcoffee.com/",
         "address": "4525 Liberty Ave, Pittsburgh, PA 15224",
         "roaster": "",
-        "photo": "../shop_photos/bloomfield/yinz_coffee.jpg"
+        "photo": "/shop_photos/bloomfield/yinz_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -2038,7 +2038,7 @@
         "website": "https://www.yinzcoffee.com/",
         "address": "2 E North Ave, Pittsburgh, PA 15212",
         "roaster": "",
-        "photo": "../shop_photos/central_northside/yinz_coffee.jpg"
+        "photo": "/shop_photos/central_northside/yinz_coffee.jpg"
       },
       "geometry": {
         "type": "Point",
