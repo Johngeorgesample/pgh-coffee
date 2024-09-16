@@ -1,20 +1,32 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
-import shopGeoJSON from '@/data/coffee_shops.json'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 
-export default function Mappy() {
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+export default function Home() {
   const plausible = usePlausible()
+  const { data, error } = useSWR('/api/shops/geojson', fetcher)
   const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
-  const [dataSet, setDataSet] = useState(shopGeoJSON as any)
+  const [dataSet, setDataSet] = useState({
+    type: 'FeatureCollection',
+    features: [] as TShop[],
+  })
+
+  useEffect(() => {
+    if (data) {
+      setDataSet(data)
+    }
+  }, [data])
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -80,7 +92,7 @@ export default function Mappy() {
 
   const handleClose = () => {
     setIsOpen(false)
-    setDataSet(shopGeoJSON)
+    setDataSet(data)
   }
 
   const handleSearchClick = () => {
