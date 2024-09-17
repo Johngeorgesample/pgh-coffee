@@ -1118,7 +1118,8 @@
         "neighborhood": "Treesdale",
         "website": "https://www.katscoffeehouse.co/s/shop",
         "address": "617 Warrendale Rd suite e, Gibsonia, PA 15044",
-        "roaster": ""
+        "roaster": "",
+        "photo": "/shop_photos/treesdale/kats_coffeehouse.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -1677,7 +1678,8 @@
         "neighborhood": "Bradford Woods",
         "website": "http://www.stationno5.com/",
         "address": "185 Bradford Rd Suite #1 Suite #1, Bradford Woods, PA 15015",
-        "roaster": ""
+        "roaster": "",
+        "photo": "/shop_photos/bradford_woods/station_no_5.jpg"
       },
       "geometry": {
         "type": "Point",
