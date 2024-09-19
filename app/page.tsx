@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import useSWR from 'swr'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
 import Footer from '@/app/components/Footer'
