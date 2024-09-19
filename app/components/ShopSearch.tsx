@@ -12,7 +12,7 @@ export default function ShopSearch(props: IProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   let [filter, setFilter] = useState('')
 
-  const meetsFilterCriteria = (shop: any) => {
+  const meetsFilterCriteria = (shop: TShop) => {
     if (filter) {
       const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name.toLowerCase()}`
       return shopCardText.includes(filter.toLowerCase())
@@ -62,7 +62,7 @@ export default function ShopSearch(props: IProps) {
       </div>
 
       <ul className="relative mt-6 flex-1 px-4 sm:px-6">
-        {coffeeShops.features.map((shop: any) => {
+        {coffeeShops.features.map((shop: TShop) => {
           if (meetsFilterCriteria(shop) || !filter) {
             return (
               <li
