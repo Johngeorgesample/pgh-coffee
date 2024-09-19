@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
+import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -35,7 +36,7 @@ export default function Home() {
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
-  const handleMapClick = (event: any) => {
+  const handleMapClick = (event: MapMouseEvent) => {
     // @ts-ignore-next-line
     const map = mapRef.current?.getMap()
     const features = map.queryRenderedFeatures(event.point, {
@@ -102,14 +103,6 @@ export default function Home() {
   const handleSearchClick = () => {
     setCurrentShop({} as TShop)
     setIsOpen(true)
-  }
-
-  const handleFilterChange = (e: any) => {
-    const filteredResults = dataSet.features.filter((d: any) => {
-      return d.properties.name.toLowerCase().includes(e.toLowerCase())
-    })
-    console.log(filteredResults)
-    setDataSet({ ...dataSet, features: filteredResults })
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
