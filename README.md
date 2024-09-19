@@ -24,7 +24,7 @@ The data source is a curated collection of information about coffee shops in Pit
 * Customer reviews and ratings
 -->
 
-You can find the data source [here](https://github.com/Johngeorgesample/pgh-coffee/blob/main/data/coffee_shops.json).
+You can find the dataset of all 140+ shops at <https://pgh.coffee/api/shops/geojson>.
 
 ### 2. Next.js Web Application
 

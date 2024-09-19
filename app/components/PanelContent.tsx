@@ -31,7 +31,7 @@ export default function PanelContent(props: IProps) {
           {props.shop.properties.neighborhood}
         </p>
       </div>
-      {<NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />}
+      <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
     </>
   )
 }

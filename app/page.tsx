@@ -3,23 +3,40 @@
 import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
+import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
-import shopGeoJSON from '@/data/coffee_shops.json'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
-export default function Mappy() {
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+export default function Home() {
   const plausible = usePlausible()
+  const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
-  const [dataSet, setDataSet] = useState(shopGeoJSON as any)
+  const [dataSet, setDataSet] = useState({
+    type: 'FeatureCollection',
+    features: [] as TShop[],
+  })
+
+  useEffect(() => {
+    fetchCoffeeShops()
+  }, [fetchCoffeeShops])
+
+  useEffect(() => {
+    if (coffeeShops) {
+      setDataSet(coffeeShops)
+    }
+  }, [coffeeShops])
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
-  const handleMapClick = (event: any) => {
+  const handleMapClick = (event: MapMouseEvent) => {
     // @ts-ignore-next-line
     const map = mapRef.current?.getMap()
     const features = map.queryRenderedFeatures(event.point, {
@@ -80,20 +97,12 @@ export default function Mappy() {
 
   const handleClose = () => {
     setIsOpen(false)
-    setDataSet(shopGeoJSON)
+    setDataSet(coffeeShops)
   }
 
   const handleSearchClick = () => {
     setCurrentShop({} as TShop)
     setIsOpen(true)
-  }
-
-  const handleFilterChange = (e: any) => {
-    const filteredResults = dataSet.features.filter((d: any) => {
-      return d.properties.name.toLowerCase().includes(e.toLowerCase())
-    })
-    console.log(filteredResults)
-    setDataSet({ ...dataSet, features: filteredResults })
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
