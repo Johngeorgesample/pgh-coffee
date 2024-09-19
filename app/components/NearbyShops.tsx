@@ -1,6 +1,6 @@
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
-import shopGeoJSON from '@/data/coffee_shops.json'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import haversineDistance from 'haversine-distance'
 import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
@@ -10,6 +10,7 @@ interface IProps {
 }
 export default function NearbyShops(props: IProps) {
   const plausible = usePlausible()
+  const { coffeeShops } = useShopsStore()
   const shopsAreClose = (shopA: any, shopB: any) => {
     return haversineDistance(shopA, shopB) < 1000
   }
@@ -22,9 +23,9 @@ export default function NearbyShops(props: IProps) {
   }
 
   const getNearbyShopsByDistance = () => {
-    const shops = shopGeoJSON.features
+    const shops = coffeeShops.features
     return shops.filter(
-      s =>
+      (s: any) =>
         // @ts-ignore-next-line
         !isSameShop(s, props.shop) && shopsAreClose(s.geometry.coordinates, props.shop.geometry.coordinates),
     )
@@ -33,7 +34,7 @@ export default function NearbyShops(props: IProps) {
   let nearbyList = getNearbyShopsByDistance()
 
   const sortShopsByDistance = (shops: any[], referenceCoordinates: any) => {
-    return nearbyList.sort((shopA, shopB) => {
+    return nearbyList.sort((shopA: any, shopB: any) => {
       // @ts-ignore-next-line
       const distanceA = haversineDistance(referenceCoordinates, shopA.geometry.coordinates)
       // @ts-ignore-next-line
@@ -73,9 +74,9 @@ export default function NearbyShops(props: IProps) {
               key={shop.properties.name + shop.properties.address}
               onClick={() => handleCardClick(shop)}
               tabIndex={0}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();  // Prevent the default action of scrolling when pressing spacebar
+                  e.preventDefault() // Prevent the default action of scrolling when pressing spacebar
                   handleCardClick(shop)
                 }
               }}
@@ -84,7 +85,7 @@ export default function NearbyShops(props: IProps) {
             >
               <div
                 className="h-36 relative bg-yellow-200 bg-cover bg-center"
-                style={shop.properties.photo && { backgroundImage: `url('${shop.properties.photo}')` }}
+                style={shop.properties.photo ? { backgroundImage: `url('${shop.properties.photo}')` } : undefined}
               />
               <div className="px-6 py-2">
                 <p className="font-medium text-xl text-left block">{shop.properties.name}</p>

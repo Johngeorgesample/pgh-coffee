@@ -9,12 +9,13 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function Home() {
   const plausible = usePlausible()
-  const { data, error } = useSWR('/api/shops/geojson', fetcher)
+  const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [dataSet, setDataSet] = useState({
@@ -23,10 +24,14 @@ export default function Home() {
   })
 
   useEffect(() => {
-    if (data) {
-      setDataSet(data)
+    fetchCoffeeShops()
+  }, [fetchCoffeeShops])
+
+  useEffect(() => {
+    if (coffeeShops) {
+      setDataSet(coffeeShops)
     }
-  }, [data])
+  }, [coffeeShops])
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -92,7 +97,7 @@ export default function Home() {
 
   const handleClose = () => {
     setIsOpen(false)
-    setDataSet(data)
+    setDataSet(coffeeShops)
   }
 
   const handleSearchClick = () => {

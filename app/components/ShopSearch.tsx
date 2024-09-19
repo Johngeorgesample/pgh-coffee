@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
-import shopGeoJSON from '@/data/coffee_shops.json'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface IProps {
   handleResultClick: (shop: TShop) => void
 }
 
 export default function ShopSearch(props: IProps) {
+  const { coffeeShops } = useShopsStore()
   const inputRef = useRef<HTMLInputElement>(null)
   let [filter, setFilter] = useState('')
 
@@ -61,7 +62,7 @@ export default function ShopSearch(props: IProps) {
       </div>
 
       <ul className="relative mt-6 flex-1 px-4 sm:px-6">
-        {shopGeoJSON.features.map((shop: any) => {
+        {coffeeShops.features.map((shop: any) => {
           if (meetsFilterCriteria(shop) || !filter) {
             return (
               <li
