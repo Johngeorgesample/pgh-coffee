@@ -3,25 +3,52 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
 
 export default function SubmitAShop() {
+  async function handleForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+
+    const data = Object.fromEntries(formData.entries())
+    try {
+      const response = await fetch('/api/shops/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        const errorResponse = await response.json()
+        console.error('Error:', errorResponse.error)
+      } else {
+        const responseData = await response.json()
+        console.log('Shop added successfully:', responseData)
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error)
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
-      <form>
+      <form onSubmit={handleForm}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
+            <h2 className="text-base font-semibold leading-7 text-gray-900">Submit a shop</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              This information will be displayed publicly so be careful what you share.
+              Either one that&apos;s missing, or a correction for an existing one
             </p>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
-                <label htmlFor="shop-name" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                   Shop name
                 </label>
                 <div className="mt-2">
                   <input
-                    id="shop-name"
-                    name="shop-name"
+                    id="name"
+                    name="name"
+                    required
                     type="text"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -36,6 +63,7 @@ export default function SubmitAShop() {
                   <input
                     id="address"
                     name="address"
+                    required
                     type="text"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -107,7 +135,7 @@ export default function SubmitAShop() {
                 />
               </div>
             </div>
-                <p className="mt-3 text-sm leading-6 text-gray-600">If you want to be informed when your update is added</p>
+            <p className="mt-3 text-sm leading-6 text-gray-600">If you want to be informed when your update is added</p>
           </div>
         </div>
 
