@@ -35,8 +35,6 @@ export default function SubmitAShop() {
     }
   }
 
-
-
   return (
     <>
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
