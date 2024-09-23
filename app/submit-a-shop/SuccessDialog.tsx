@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
-interface IProps {
+interface TProps {
   handleClose: () => void
   isOpen: boolean
 }
 
-export default function SuccessDialog(props: IProps) {
+export default function SuccessDialog(props: TProps) {
   const handleSave = () => {
     props.handleClose()
   }
