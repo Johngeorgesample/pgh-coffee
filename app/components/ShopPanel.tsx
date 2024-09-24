@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export default function ShopPanel(props: IProps) {
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)')
@@ -28,13 +28,19 @@ export default function ShopPanel(props: IProps) {
     return () => mediaQuery.removeEventListener('change', handleResize)
   }, [])
 
+  const currentShopIsEmpty = Object.keys(props.shop).length === 0
+
   return (
     <Transition.Root show={props.panelIsOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => props.emitClose()}>
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="w-full bottom-0 h-1/2 pointer-events-none fixed lg:w-fit lg:h-full lg:inset-y-0 lg:right-0 flex max-w-full lg:pl-10">
+            <div
+              className={`w-full bottom-0  ${
+                currentShopIsEmpty ? 'h-[calc(100%-64px)]' : 'h-1/3'
+              } pointer-events-none fixed lg:w-fit lg:h-full lg:inset-y-0 lg:right-0 flex max-w-full lg:pl-10`}
+            >
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
