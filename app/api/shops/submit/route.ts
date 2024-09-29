@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request: Request) {
-  const { name, address, neighborhood } = await request.json()
+  const { name, address, neighborhood, website } = await request.json()
 
   if (!name || !address) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase
     .from('moderation')
-    .insert([{ name, address, neighborhood }])
+    .insert([{ name, address, neighborhood, website }])
 
   if (error) {
     console.error('Error adding shop:', error.message)
