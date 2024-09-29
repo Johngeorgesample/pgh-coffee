@@ -30,7 +30,7 @@ export default function Settings() {
         <div>
           <h2 className="text-base font-semibold leading-7 text-gray-900">Settings</h2>
           <p className="mt-1 text-sm leading-6 text-gray-500">
-            Adjust your preferences to customize the experience across the entire application.
+            Adjust your preferences to customize the experience across the entire application
           </p>
           <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
             <div className="pt-6 sm:flex">
