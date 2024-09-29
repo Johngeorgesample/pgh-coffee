@@ -41,6 +41,9 @@ export default function Nav() {
         <a className="text-lg" href="/about">
           About
         </a>
+          <a className="text-lg" href="/submit-a-shop">
+            Submit a shop
+          </a>
         <a className="text-lg" href="/settings">
           Settings
         </a>
@@ -61,6 +64,9 @@ export default function Nav() {
           </a>
           <a className="text-2xl" href="/about">
             About
+          </a>
+          <a className="text-2xl" href="/submit-a-shop">
+            Submit a shop
           </a>
           <a className="text-2xl" href="/settings">
             Settings
