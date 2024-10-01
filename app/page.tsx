@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
-import Map, { Source, Layer } from 'react-map-gl'
+import Map, { Source, Layer, ViewStateChangeEvent } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
@@ -22,6 +22,7 @@ export default function Home() {
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
+  const [zoomLevel, setZoomLevel] = useState(12)
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -124,6 +125,7 @@ export default function Home() {
         cursor="pointer"
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onClick={handleMapClick}
+        onMove={(e: ViewStateChangeEvent) => setZoomLevel(e.viewState.zoom)}
         ref={mapRef}
       >
         <Source id="my-data" type="geojson" data={dataSet}>
@@ -137,7 +139,12 @@ export default function Home() {
                 '#fff', // Color for the selected feature
                 '#FDE047', // Default color
               ],
-              'circle-radius': 8,
+              'circle-radius': [
+                'interpolate', ['linear'], ['zoom'],
+                8, 4,  // at zoom level 8, marker radius is 4
+                12, 8, // at zoom level 12, marker radius is 8
+                16, 12 // at zoom level 16, marker radius is 12
+              ],
             }}
           />
         </Source>
