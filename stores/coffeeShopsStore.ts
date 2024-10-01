@@ -11,7 +11,7 @@ interface CoffeeShopsState {
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
     (set) => ({
-      coffeeShops: [],
+      coffeeShops: {},
 
       setCoffeeShops: (data: TShop[]) => set({ coffeeShops: data }),
 
