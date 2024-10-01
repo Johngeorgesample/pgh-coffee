@@ -17,6 +17,7 @@ interface IProps {
 
 export default function ShopPanel(props: IProps) {
   const [isLargeScreen, setIsLargeScreen] = useState(false)
+  const [touched, setTouched] = useState(false)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)')
@@ -30,16 +31,26 @@ export default function ShopPanel(props: IProps) {
 
   const currentShopIsEmpty = Object.keys(props.shop).length === 0
 
+  const handlePanelClick = () => {
+    console.log('touched', touched)
+    setTouched(true)
+  }
+
+  const handleClose = () => {
+    setTouched(false)
+    props.emitClose()
+  }
+
   return (
     <Transition.Root show={props.panelIsOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => props.emitClose()}>
+      <Dialog as="div" className="relative z-10" onClose={handleClose}>
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div
-              className={`w-full bottom-0  ${
-                currentShopIsEmpty ? 'h-[calc(100%-64px)]' : 'h-1/3'
-              } pointer-events-none fixed lg:w-fit lg:h-full lg:inset-y-0 lg:right-0 flex max-w-full lg:pl-10`}
+              className={`w-full bottom-0  ${currentShopIsEmpty ? 'h-[calc(100%-64px)]' : 'h-1/3'}
+              ${!!touched ? 'h-full' : 'h-1/3'}
+              pointer-events-none fixed lg:w-fit lg:h-full lg:inset-y-0 lg:right-0 flex max-w-full lg:pl-10`}
             >
               <Transition.Child
                 as={Fragment}
@@ -50,10 +61,10 @@ export default function ShopPanel(props: IProps) {
                 leaveFrom={isLargeScreen ? 'translate-x-0' : 'translate-y-0'}
                 leaveTo={isLargeScreen ? 'translate-x-full' : 'translate-y-full'}
               >
-                <Dialog.Panel className="pointer-events-auto w-screen lg:max-w-xl">
+                <Dialog.Panel className="pointer-events-auto w-screen lg:max-w-xl" onClick={handlePanelClick}>
                   {props.shop.properties ? (
                     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                      <PanelHeader shop={props.shop} emitClose={props.emitClose} />
+                      <PanelHeader shop={props.shop} emitClose={handleClose} />
                       <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
                       <PanelFooter shop={props.shop} />
                     </div>
