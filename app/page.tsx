@@ -101,8 +101,10 @@ export default function Home() {
   }
 
   const handleSearchClick = () => {
-    setCurrentShop({} as TShop)
-    setIsOpen(true)
+    if (Object.keys(coffeeShops).length) {
+      setCurrentShop({} as TShop)
+      setIsOpen(true)
+    }
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
