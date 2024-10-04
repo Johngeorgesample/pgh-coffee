@@ -14,7 +14,10 @@ export default function ShopSearch(props: IProps) {
 
   const meetsFilterCriteria = (shop: TShop) => {
     if (filter) {
-      const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name.toLowerCase()}`
+      const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')}`
       return shopCardText.includes(filter.toLowerCase())
     }
   }
@@ -69,7 +72,7 @@ export default function ShopSearch(props: IProps) {
                 key={shop.properties.name + shop.properties.address}
                 className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
                 onClick={() => handleCardClick(shop)}
-                onKeyPress={(event) => handleKeyPress(event, shop)}
+                onKeyPress={event => handleKeyPress(event, shop)}
                 tabIndex={0}
                 role="button"
               >
