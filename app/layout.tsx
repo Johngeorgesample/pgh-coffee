@@ -10,17 +10,23 @@ export const metadata: Metadata = {
   title: 'PGH Coffee',
   description: 'Coffee shops in Pittsburgh, PA',
   openGraph: {
-      title: 'pgh.coffee',
-      description: 'A guide to coffee in Pittsburgh, PA',
-      images: [
-        {
-          url: '/opengraph-image.png',
-          width: 1200,
-          height: 630,
-          alt: 'A guide to coffee in Pittsburgh, PA',
-        },
-      ],
-    },
+    title: 'pgh.coffee',
+    description: 'A guide to coffee in Pittsburgh, PA',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'A guide to coffee in Pittsburgh, PA',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image', // You can also use 'summary' for smaller images
+    title: 'Your Twitter Title',
+    description: 'Your Twitter Description',
+    images: ['/twitter-image.png'], // Path to the Twitter image
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
