@@ -10,6 +10,11 @@ interface IProps {
 }
 
 export default function PanelHeader(props: IProps) {
+ const handleCloseClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation() // Prevents click event from reaching the panel
+    props.emitClose()
+  }
+
   return (
     <div className="" id="header">
       <div
@@ -22,7 +27,7 @@ export default function PanelHeader(props: IProps) {
             <button
               type="button"
               className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => props.emitClose()}
+              onClick={handleCloseClick}
             >
               <span className="absolute -inset-2.5" />
               <span className="sr-only">Close panel</span>
