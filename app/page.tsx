@@ -34,6 +34,29 @@ export default function Home() {
     }
   }, [coffeeShops])
 
+  useEffect(() => {
+    const fetchShop = async () => {
+      const params = new URLSearchParams(window.location.search)
+      const shop = params.get('shop')
+      if (shop) {
+        try {
+          const response = await fetch(`/api/shops/${shop}`)
+
+          if (!response.ok) {
+            throw new Error('Shop not found')
+          }
+
+          const data = await response.json()
+          console.log(data)
+
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
+  fetchShop()
+  }, [])
+
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
@@ -50,7 +73,7 @@ export default function Home() {
     const params = new URLSearchParams(url.search)
     params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
     url.search = params.toString()
-    history.replaceState({}, '', url.toString())
+    history.pushState({}, '', url.toString())
   }
 
   const handleMapClick = (event: MapMouseEvent) => {
