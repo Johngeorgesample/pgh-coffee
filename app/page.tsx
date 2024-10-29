@@ -11,7 +11,7 @@ import ShopPanel from '@/app/components/ShopPanel'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function Home() {
   const plausible = usePlausible()
@@ -37,6 +37,11 @@ export default function Home() {
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
+  const handleUpdatingCurrentShop = (shop: TShop) => {
+    console.log(shop)
+    setCurrentShop(shop)
+  }
+
   const handleMapClick = (event: MapMouseEvent) => {
     // @ts-ignore-next-line
     const map = mapRef.current?.getMap()
@@ -46,7 +51,11 @@ export default function Home() {
 
     if (features.length) {
       setIsOpen(true)
-      setCurrentShop(features[0])
+      handleUpdatingCurrentShop({
+        geometry: { ...features[0].geometry },
+        properties: { ...features[0].properties },
+        type: features[0].type,
+      })
       plausible('FeaturePointClick', { props: {} })
     }
   }
@@ -103,13 +112,13 @@ export default function Home() {
 
   const handleSearchClick = () => {
     if (Object.keys(coffeeShops).length) {
-      setCurrentShop({} as TShop)
+      handleUpdatingCurrentShop({} as TShop)
       setIsOpen(true)
     }
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
-    setCurrentShop(shopFromShopPanel)
+    handleUpdatingCurrentShop(shopFromShopPanel)
     document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -140,10 +149,15 @@ export default function Home() {
                 '#FDE047', // Default color
               ],
               'circle-radius': [
-                'interpolate', ['linear'], ['zoom'],
-                8, 4,  // at zoom level 8, marker radius is 4
-                12, 8, // at zoom level 12, marker radius is 8
-                16, 12 // at zoom level 16, marker radius is 12
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                8,
+                4, // at zoom level 8, marker radius is 4
+                12,
+                8, // at zoom level 12, marker radius is 8
+                16,
+                12, // at zoom level 16, marker radius is 12
               ],
             }}
           />
