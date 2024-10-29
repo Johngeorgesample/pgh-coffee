@@ -40,6 +40,17 @@ export default function Home() {
   const handleUpdatingCurrentShop = (shop: TShop) => {
     console.log(shop)
     setCurrentShop(shop)
+    if (Object.keys(shop).length) {
+      appendToURL(shop)
+    }
+  }
+
+  const appendToURL = (shop: TShop) => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
   }
 
   const handleMapClick = (event: MapMouseEvent) => {
