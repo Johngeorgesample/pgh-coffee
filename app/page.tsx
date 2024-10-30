@@ -47,33 +47,38 @@ export default function Home() {
           }
 
           const data = await response.json()
-          console.log(data)
-
         } catch (err) {
           console.log(err)
         }
       }
     }
-  fetchShop()
+    fetchShop()
   }, [])
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
-    console.log(shop)
     setCurrentShop(shop)
     if (Object.keys(shop).length) {
-      appendToURL(shop)
+      appendSearchParamToURL(shop)
     }
   }
 
-  const appendToURL = (shop: TShop) => {
+  const appendSearchParamToURL = (shop: TShop) => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
     url.search = params.toString()
     history.pushState({}, '', url.toString())
+  }
+
+  const removeSearchParam = () => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('shop')
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
   }
 
   const handleMapClick = (event: MapMouseEvent) => {
@@ -142,6 +147,7 @@ export default function Home() {
   const handleClose = () => {
     setIsOpen(false)
     setDataSet(coffeeShops)
+    removeSearchParam()
   }
 
   const handleSearchClick = () => {
