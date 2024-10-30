@@ -38,6 +38,7 @@ export default function Home() {
     const fetchShopFromURL = async () => {
       const params = new URLSearchParams(window.location.search)
       const shop = params.get('shop')
+
       if (shop) {
         try {
           const response = await fetch(`/api/shops/${shop}`)
@@ -49,6 +50,9 @@ export default function Home() {
         } catch (err) {
           console.log(err)
         }
+      } else {
+        setCurrentShop({} as TShop)
+        setIsOpen(false)
       }
     }
 
