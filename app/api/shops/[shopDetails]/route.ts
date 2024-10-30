@@ -20,7 +20,22 @@ export async function GET(req: NextRequest, { params }: { params: { shopDetails:
   const shopData = await getShop(name, neighborhood)
 
   if (shopData && shopData.length > 0) {
-    return NextResponse.json(shopData[0])
+    const transformedData = {
+      type: 'Feature',
+      properties: {
+        name: shopData[0].name,
+        neighborhood: shopData[0].neighborhood,
+        address: shopData[0].address,
+        photo: shopData[0].photo,
+        website: shopData[0].website,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [shopData[0].longitude, shopData[0].latitude],
+      },
+    }
+
+    return NextResponse.json(transformedData)
   } else {
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
