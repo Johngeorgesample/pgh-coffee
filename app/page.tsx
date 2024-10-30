@@ -35,16 +35,13 @@ export default function Home() {
   }, [coffeeShops])
 
   useEffect(() => {
-    const fetchShop = async () => {
+    const fetchShopFromURL = async () => {
       const params = new URLSearchParams(window.location.search)
       const shop = params.get('shop')
       if (shop) {
         try {
           const response = await fetch(`/api/shops/${shop}`)
-
-          if (!response.ok) {
-            throw new Error('Shop not found')
-          }
+          if (!response.ok) throw new Error('Shop not found')
 
           const data = await response.json()
           setCurrentShop(data)
@@ -54,7 +51,18 @@ export default function Home() {
         }
       }
     }
-    fetchShop()
+
+    fetchShopFromURL()
+
+    const handlePopState = () => {
+      fetchShopFromURL()
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
   }, [])
 
   const mapRef = useRef(null)
