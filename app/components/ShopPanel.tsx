@@ -34,7 +34,7 @@ export default function ShopPanel(props: IProps) {
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="w-full bottom-0 h-1/2 pointer-events-none fixed lg:w-fit lg:h-full lg:inset-y-0 lg:right-0 flex max-w-full lg:pl-10">
+            <div className="w-full bottom-0 h-1/2 pointer-events-none fixed lg:w-fit lg:h-[calc(100%-4rem-3.5rem)] lg:inset-y-0 lg:top-16 lg:right-0 flex max-w-full lg:pl-10">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
