@@ -47,6 +47,8 @@ export default function Home() {
           }
 
           const data = await response.json()
+          setCurrentShop(data)
+          setIsOpen(true)
         } catch (err) {
           console.log(err)
         }
