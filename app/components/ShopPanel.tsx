@@ -46,7 +46,7 @@ export default function ShopPanel(props: IProps) {
               >
                 <Dialog.Panel className="pointer-events-auto w-screen lg:max-w-xl">
                   {props.shop.properties ? (
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white">
                       <PanelHeader shop={props.shop} emitClose={props.emitClose} />
                       <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
                       <PanelFooter shop={props.shop} />
