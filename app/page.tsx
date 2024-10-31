@@ -11,7 +11,7 @@ import ShopPanel from '@/app/components/ShopPanel'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function Home() {
   const plausible = usePlausible()
@@ -34,8 +34,66 @@ export default function Home() {
     }
   }, [coffeeShops])
 
+  useEffect(() => {
+    const fetchShopFromURL = async () => {
+      const params = new URLSearchParams(window.location.search)
+      const shop = params.get('shop')
+
+      if (shop) {
+        try {
+          const response = await fetch(`/api/shops/${shop}`)
+          if (!response.ok) throw new Error('Shop not found')
+
+          const data = await response.json()
+          setCurrentShop(data)
+          setIsOpen(true)
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        setCurrentShop({} as TShop)
+        setIsOpen(false)
+      }
+    }
+
+    fetchShopFromURL()
+
+    const handlePopState = () => {
+      fetchShopFromURL()
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
+
   const mapRef = useRef(null)
   const layerId = 'myPoint'
+
+  const handleUpdatingCurrentShop = (shop: TShop) => {
+    setCurrentShop(shop)
+    if (Object.keys(shop).length) {
+      appendSearchParamToURL(shop)
+    }
+  }
+
+  const appendSearchParamToURL = (shop: TShop) => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
+    url.search = params.toString()
+    history.pushState({}, '', url.toString())
+  }
+
+  const removeSearchParam = () => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('shop')
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
+  }
 
   const handleMapClick = (event: MapMouseEvent) => {
     // @ts-ignore-next-line
@@ -46,7 +104,11 @@ export default function Home() {
 
     if (features.length) {
       setIsOpen(true)
-      setCurrentShop(features[0])
+      handleUpdatingCurrentShop({
+        geometry: { ...features[0].geometry },
+        properties: { ...features[0].properties },
+        type: features[0].type,
+      })
       plausible('FeaturePointClick', { props: {} })
     }
   }
@@ -99,17 +161,18 @@ export default function Home() {
   const handleClose = () => {
     setIsOpen(false)
     setDataSet(coffeeShops)
+    removeSearchParam()
   }
 
   const handleSearchClick = () => {
     if (Object.keys(coffeeShops).length) {
-      setCurrentShop({} as TShop)
+      handleUpdatingCurrentShop({} as TShop)
       setIsOpen(true)
     }
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
-    setCurrentShop(shopFromShopPanel)
+    handleUpdatingCurrentShop(shopFromShopPanel)
     document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -140,10 +203,15 @@ export default function Home() {
                 '#FDE047', // Default color
               ],
               'circle-radius': [
-                'interpolate', ['linear'], ['zoom'],
-                8, 4,  // at zoom level 8, marker radius is 4
-                12, 8, // at zoom level 12, marker radius is 8
-                16, 12 // at zoom level 16, marker radius is 12
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                8,
+                4, // at zoom level 8, marker radius is 4
+                12,
+                8, // at zoom level 12, marker radius is 8
+                16,
+                12, // at zoom level 16, marker radius is 12
               ],
             }}
           />
