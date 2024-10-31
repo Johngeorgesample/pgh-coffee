@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
-import Map, { Source, Layer, ViewStateChangeEvent } from 'react-map-gl'
+import Map, { Source, Layer, Marker, ViewStateChangeEvent } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
@@ -171,6 +171,23 @@ export default function Home() {
     }
   }
 
+  const handleSearchThisArea = () => {
+    // @ts-ignore-next-line
+    const bounds = mapRef.current.getMap().getBounds()
+    const [sw, ne] = [bounds.getSouthWest(), bounds.getNorthEast()]
+
+    const inView = coffeeShops.features.filter((shop: TShop) => {
+      const [longitude, latitude] = shop.geometry.coordinates
+      return latitude >= sw.lat && latitude <= ne.lat && longitude >= sw.lng && longitude <= ne.lng
+    })
+
+    console.log(inView)
+    setDataSet({
+      ...dataSet,
+      features: inView,
+    })
+  }
+
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
     handleUpdatingCurrentShop(shopFromShopPanel)
     document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
@@ -223,6 +240,14 @@ export default function Home() {
       >
         <MagnifyingGlassIcon className="h-8 w-8" />
       </button>
+      {isOpen && (
+        <button
+          className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
+          onClick={handleSearchThisArea}
+        >
+          <p>Search this area</p>
+        </button>
+      )}
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
