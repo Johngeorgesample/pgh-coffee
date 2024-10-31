@@ -3,6 +3,7 @@ import ShopCard from '@/app/components/ShopCard'
 
 interface IProps {
   coffeeShops: TShop[]
+  distances?: any
   filter?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
@@ -20,15 +21,16 @@ export default function ShopList(props: IProps) {
   }
 
   return (
-    <ul className="relative mt-6 flex-1 px-4 sm:px-6">
-      {props.coffeeShops.map((shop: TShop) => {
+    <ul className="relative mt-6 flex-1">
+      {props.coffeeShops.map((shop: TShop, index) => {
         if (doesShopMatchFilter(shop) || !props.filter) {
           return (
             <ShopCard
               key={shop.properties.name + shop.properties.address}
-              shop={shop}
+              distance={props.distances?.[index] ?? null}
               handleCardClick={props.handleCardClick}
               handleKeyPress={props.handleKeyPress}
+              shop={shop}
             />
           )
         }

@@ -1,9 +1,10 @@
 import { TShop } from '@/types/shop-types'
 
 interface IProps {
-  shop: TShop
+  distance?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
+  shop: TShop
 }
 
 export default function ShopCard(props: IProps) {
@@ -24,6 +25,9 @@ export default function ShopCard(props: IProps) {
         <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
           {props.shop.properties.neighborhood}
         </p>
+        {props.distance && (<p className="italic text-sm text-gray-700">
+          {props.distance} away
+        </p>)}
       </div>
     </li>
   )

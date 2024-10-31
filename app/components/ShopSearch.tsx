@@ -34,8 +34,8 @@ export default function ShopSearch(props: IProps) {
   }, [])
 
   return (
-    <div className="flex h-full flex-col overflow-y-scroll bg-white">
-      <div className="flex justify-center flex-col mt-4 mx-4 sm:mx-6 ">
+    <div className="flex h-full flex-col overflow-y-scroll bg-white px-4 sm:px-6">
+      <div className="flex justify-center flex-col mt-4">
         <div className="my-2 border rounded-lg px-2 w-full flex items-center gap-2">
           <span className="inline text-gray-500" aria-hidden="true">
             <MagnifyingGlassIcon className="h-4 w-4" />
