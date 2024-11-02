@@ -7,7 +7,7 @@ interface IProps {
   filter?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
-  units: string | null
+  units?: string | null
 }
 
 export default function ShopList(props: IProps) {
