@@ -80,6 +80,7 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         distances={sortedShopsWithDistances.distances}
         handleCardClick={handleCardClick}
         handleKeyPress={handleKeyPress}
+        units={units}
       />
     </section>
   )

@@ -5,6 +5,21 @@ interface IProps {
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
+  units?: string
+}
+
+const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
+  if (units === 'miles') {
+    return Math.round(distance * 100) / 100
+  }
+  if (units === 'meters') {
+    return Math.round(distance)
+  }
+}
+
+const generateDistanceText = ({ units, distance }: { units: string; distance: string }) => {
+  const parsedDistance = parseFloat(distance)
+  return `${roundDistance({ units, distance: parsedDistance })} ${units.toLowerCase()} away`
 }
 
 export default function ShopCard(props: IProps) {
@@ -25,9 +40,11 @@ export default function ShopCard(props: IProps) {
         <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
           {props.shop.properties.neighborhood}
         </p>
-        {props.distance && (<p className="italic text-sm text-gray-700">
-          {props.distance} away
-        </p>)}
+        {props.distance && props.units && (
+          <p className="italic text-sm text-gray-700">
+            {generateDistanceText({ units: props.units, distance: props.distance })}
+          </p>
+        )}
       </div>
     </li>
   )

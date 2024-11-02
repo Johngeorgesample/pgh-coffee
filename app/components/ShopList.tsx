@@ -7,6 +7,7 @@ interface IProps {
   filter?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
+  units: string | null
 }
 
 export default function ShopList(props: IProps) {
@@ -31,6 +32,7 @@ export default function ShopList(props: IProps) {
               handleCardClick={props.handleCardClick}
               handleKeyPress={props.handleKeyPress}
               shop={shop}
+              units={props.units?.toLowerCase()}
             />
           )
         }
