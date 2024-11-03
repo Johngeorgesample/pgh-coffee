@@ -255,23 +255,12 @@ export default function Home() {
       >
         <MagnifyingGlassIcon className="h-8 w-8" />
       </button>
-<<<<<<< HEAD
       <button
         className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
         onClick={handleSearchThisArea}
       >
         <p>Search this area</p>
       </button>
-=======
-      {isOpen && (
-        <button
-          className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
-          onClick={handleSearchThisArea}
-        >
-          <p>Search this area</p>
-        </button>
-      )}
->>>>>>> 5646dcc02c6bed9f1178b0c47c619adada183fba
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
