@@ -6,11 +6,17 @@ interface IProps {
   distances?: any
   filter?: string
   handleCardClick: (shop: TShop) => any
-  handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   units?: string | null
 }
 
 export default function ShopList(props: IProps) {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      props.handleCardClick(shop)
+    }
+  }
+
   const doesShopMatchFilter = (shop: TShop) => {
     if (props.filter) {
       const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
@@ -30,7 +36,7 @@ export default function ShopList(props: IProps) {
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] ?? null}
               handleCardClick={props.handleCardClick}
-              handleKeyPress={props.handleKeyPress}
+              handleKeyPress={handleKeyPress}
               shop={shop}
               units={props.units?.toLowerCase()}
             />

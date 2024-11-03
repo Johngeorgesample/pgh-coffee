@@ -8,8 +8,12 @@ import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
+import ShopList from '@/app/components/ShopList'
+import ShopDetails from '@/app/components/ShopDetails'
+
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import ShopSearch from './components/ShopSearch'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -18,6 +22,7 @@ export default function Home() {
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
+  const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
@@ -74,6 +79,7 @@ export default function Home() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
+    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
     }
@@ -168,6 +174,7 @@ export default function Home() {
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
       setIsOpen(true)
+      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
     }
   }
 
@@ -186,6 +193,14 @@ export default function Home() {
       ...dataSet,
       features: inView,
     })
+    setIsOpen(true)
+    console.log(inView)
+    // setPanelContent(<ShopSearch />)
+    setPanelContent(
+      <div className="px-4 sm:px-6">
+        <ShopList coffeeShops={inView} handleCardClick={handleNearbyShopClick} />
+      </div>,
+    )
   }
 
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
@@ -240,21 +255,21 @@ export default function Home() {
       >
         <MagnifyingGlassIcon className="h-8 w-8" />
       </button>
-      {isOpen && (
-        <button
-          className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
-          onClick={handleSearchThisArea}
-        >
-          <p>Search this area</p>
-        </button>
-      )}
+      <button
+        className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
+        onClick={handleSearchThisArea}
+      >
+        <p>Search this area</p>
+      </button>
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
         shop={currentShop}
         panelIsOpen={isOpen}
         emitClose={handleClose}
-      />
+      >
+        {panelContent}
+      </ShopPanel>
     </>
   )
 }

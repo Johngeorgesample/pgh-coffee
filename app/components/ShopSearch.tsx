@@ -22,19 +22,12 @@ export default function ShopSearch(props: IProps) {
     setFilter('')
   }
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      handleCardClick(shop)
-    }
-  }
-
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
 
   return (
-    <div className="flex h-full flex-col overflow-y-scroll bg-white px-4 sm:px-6">
+    <div className="flex h-full flex-col overflow-y-scroll px-4 sm:px-6">
       <div className="flex justify-center flex-col mt-4">
         <div className="my-2 border rounded-lg px-2 w-full flex items-center gap-2">
           <span className="inline text-gray-500" aria-hidden="true">
@@ -59,7 +52,6 @@ export default function ShopSearch(props: IProps) {
         coffeeShops={coffeeShops.features}
         filter={filter}
         handleCardClick={handleCardClick}
-        handleKeyPress={handleKeyPress}
       />
     </div>
   )

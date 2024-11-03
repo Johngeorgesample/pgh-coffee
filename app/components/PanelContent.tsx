@@ -7,7 +7,6 @@ import NearbyShops from './NearbyShops'
 
 interface IProps {
   handleNearbyShopClick: (shop: TShop) => void
-
   shop: TShop
 }
 

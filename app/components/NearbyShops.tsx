@@ -62,13 +62,6 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
     plausible('NearbyCardClick', { props: {} })
   }
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      handleCardClick(shop)
-    }
-  }
-
   if (sortedShopsWithDistances.shops.length === 0) return null
 
   return (
@@ -79,7 +72,6 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         coffeeShops={sortedShopsWithDistances.shops}
         distances={sortedShopsWithDistances.distances}
         handleCardClick={handleCardClick}
-        handleKeyPress={handleKeyPress}
         units={units}
       />
     </section>
