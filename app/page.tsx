@@ -50,8 +50,9 @@ export default function Home() {
           if (!response.ok) throw new Error('Shop not found')
 
           const data = await response.json()
-          setCurrentShop(data)
           setIsOpen(true)
+          setCurrentShop(data)
+          setPanelContent(<ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
         } catch (err) {
           console.log(err)
         }
@@ -73,51 +74,6 @@ export default function Home() {
       window.removeEventListener('popstate', handlePopState)
     }
   }, [])
-
-  const mapRef = useRef(null)
-  const layerId = 'myPoint'
-
-  const handleUpdatingCurrentShop = (shop: TShop) => {
-    setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
-    if (Object.keys(shop).length) {
-      appendSearchParamToURL(shop)
-    }
-  }
-
-  const appendSearchParamToURL = (shop: TShop) => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
-    url.search = params.toString()
-    history.pushState({}, '', url.toString())
-  }
-
-  const removeSearchParam = () => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.delete('shop')
-    url.search = params.toString()
-    history.replaceState({}, '', url.toString())
-  }
-
-  const handleMapClick = (event: MapMouseEvent) => {
-    // @ts-ignore-next-line
-    const map = mapRef.current?.getMap()
-    const features = map.queryRenderedFeatures(event.point, {
-      layers: [layerId],
-    })
-
-    if (features.length) {
-      setIsOpen(true)
-      handleUpdatingCurrentShop({
-        geometry: { ...features[0].geometry },
-        properties: { ...features[0].properties },
-        type: features[0].type,
-      })
-      plausible('FeaturePointClick', { props: {} })
-    }
-  }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -163,6 +119,52 @@ export default function Home() {
       }
     }
   }, [currentShop])
+
+
+  const mapRef = useRef(null)
+  const layerId = 'myPoint'
+
+  const handleUpdatingCurrentShop = (shop: TShop) => {
+    setCurrentShop(shop)
+    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    if (Object.keys(shop).length) {
+      appendSearchParamToURL(shop)
+    }
+  }
+
+  const appendSearchParamToURL = (shop: TShop) => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
+    url.search = params.toString()
+    history.pushState({}, '', url.toString())
+  }
+
+  const removeSearchParam = () => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('shop')
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
+  }
+
+  const handleMapClick = (event: MapMouseEvent) => {
+    // @ts-ignore-next-line
+    const map = mapRef.current?.getMap()
+    const features = map.queryRenderedFeatures(event.point, {
+      layers: [layerId],
+    })
+
+    if (features.length) {
+      setIsOpen(true)
+      handleUpdatingCurrentShop({
+        geometry: { ...features[0].geometry },
+        properties: { ...features[0].properties },
+        type: features[0].type,
+      })
+      plausible('FeaturePointClick', { props: {} })
+    }
+  }
 
   const handleClose = () => {
     setIsOpen(false)
