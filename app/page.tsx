@@ -29,6 +29,23 @@ export default function Home() {
   })
   const [zoomLevel, setZoomLevel] = useState(12)
 
+  const MAP_CONSTANTS = {
+    INITIAL_VIEW: {
+      longitude: -79.99585,
+      latitude: 40.440742,
+      zoom: 12,
+    },
+    CIRCLE_PAINT: {
+      SELECTED_COLOR: '#fff',
+      DEFAULT_COLOR: '#FDE047',
+      ZOOM_LEVELS: [
+        { zoom: 8, radius: 4 },
+        { zoom: 12, radius: 8 },
+        { zoom: 16, radius: 12 },
+      ],
+    },
+  } as const
+
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
@@ -52,7 +69,9 @@ export default function Home() {
           const data = await response.json()
           setIsOpen(true)
           setCurrentShop(data)
-          setPanelContent(<ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+          setPanelContent(
+            <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
+          )
         } catch (err) {
           console.log(err)
         }
@@ -119,7 +138,6 @@ export default function Home() {
       }
     }
   }, [currentShop])
-
 
   const mapRef = useRef(null)
   const layerId = 'myPoint'
@@ -214,11 +232,7 @@ export default function Home() {
     <>
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
-        initialViewState={{
-          longitude: -79.99585,
-          latitude: 40.440742,
-          zoom: 12,
-        }}
+        initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
         cursor="pointer"
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onClick={handleMapClick}
@@ -233,19 +247,14 @@ export default function Home() {
               'circle-color': [
                 'case',
                 ['boolean', ['get', 'selected'], false],
-                '#fff', // Color for the selected feature
-                '#FDE047', // Default color
+                MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
+                MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
               ],
               'circle-radius': [
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                8,
-                4, // at zoom level 8, marker radius is 4
-                12,
-                8, // at zoom level 12, marker radius is 8
-                16,
-                12, // at zoom level 16, marker radius is 12
+                ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius]),
               ],
             }}
           />
