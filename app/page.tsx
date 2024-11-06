@@ -261,6 +261,7 @@ export default function Home() {
         </Source>
       </Map>
       <button
+        aria-label="Search shops"
         className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
         onClick={handleSearchClick}
       >
