@@ -198,31 +198,6 @@ export default function Home() {
     }
   }
 
-  const handleSearchThisArea = () => {
-    // @ts-ignore-next-line
-    const bounds = mapRef.current.getMap().getBounds()
-    const [sw, ne] = [bounds.getSouthWest(), bounds.getNorthEast()]
-
-    const inView = coffeeShops.features.filter((shop: TShop) => {
-      const [longitude, latitude] = shop.geometry.coordinates
-      return latitude >= sw.lat && latitude <= ne.lat && longitude >= sw.lng && longitude <= ne.lng
-    })
-
-    console.log(inView)
-    setDataSet({
-      ...dataSet,
-      features: inView,
-    })
-    setIsOpen(true)
-    console.log(inView)
-    // setPanelContent(<ShopSearch />)
-    setPanelContent(
-      <div className="px-4 sm:px-6">
-        <ShopList coffeeShops={inView} handleCardClick={handleNearbyShopClick} />
-      </div>,
-    )
-  }
-
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
     handleUpdatingCurrentShop(shopFromShopPanel)
     document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
@@ -266,12 +241,6 @@ export default function Home() {
         onClick={handleSearchClick}
       >
         <MagnifyingGlassIcon className="h-8 w-8" />
-      </button>
-      <button
-        className="absolute top-[10%] left-[25%] bg-white rounded-lg h-8 w-48 flex justify-center items-center"
-        onClick={handleSearchThisArea}
-      >
-        <p>Search this area</p>
       </button>
       <Footer />
       <ShopPanel
