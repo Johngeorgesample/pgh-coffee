@@ -3,12 +3,11 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { TShop } from '@/types/shop-types'
-import PanelHeader from './PanelHeader'
-import PanelContent from './PanelContent'
-import PanelFooter from './PanelFooter'
 import ShopSearch from './ShopSearch'
+import ShopDetails from './ShopDetails'
 
 interface IProps {
+  children: any
   shop: TShop
   panelIsOpen: boolean
   emitClose: Function
@@ -16,7 +15,7 @@ interface IProps {
 }
 
 export default function ShopPanel(props: IProps) {
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)')
@@ -44,16 +43,8 @@ export default function ShopPanel(props: IProps) {
                 leaveFrom={isLargeScreen ? 'translate-x-0' : 'translate-y-0'}
                 leaveTo={isLargeScreen ? 'translate-x-full' : 'translate-y-full'}
               >
-                <Dialog.Panel className="pointer-events-auto w-screen lg:max-w-xl">
-                  {props.shop.properties ? (
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white">
-                      <PanelHeader shop={props.shop} emitClose={props.emitClose} />
-                      <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
-                      <PanelFooter shop={props.shop} />
-                    </div>
-                  ) : (
-                    <ShopSearch handleResultClick={props.handlePanelContentClick} />
-                  )}
+                <Dialog.Panel className="bg-white overflow-y-scroll pointer-events-auto w-screen lg:max-w-xl">
+                  {props.children}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
