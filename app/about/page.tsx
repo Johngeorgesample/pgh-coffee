@@ -185,7 +185,7 @@ export default function About() {
           </div>
         </div>
       </div>
-      {/* Press Section */}
+      {/* Join the community section */}
       <div className="max-w-4xl mx-auto mb-4 px-6 md:px-8">
         <a href="#join-the-community">
           <h3 className="text-base font-semibold leading-7 text-gray-900" id="join-the-community">
