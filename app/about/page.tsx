@@ -7,7 +7,11 @@ export default function About() {
   return (
     <>
       <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16">
-        <h1 className="text-base font-semibold leading-7 text-gray-900">About</h1>
+        <a href="#about">
+          <h1 className="text-base font-semibold leading-7 text-gray-900" id="about">
+            About
+          </h1>
+        </a>
         <p className="mt-1 mb-5 text-sm leading-6">
           Hi, I’m John-George, a coffee lover and developer from Pittsburgh. For almost a decade, I’ve been captivated
           by the city’s coffee scene. What started as a personal quest to explore every shop soon became a mission to
@@ -28,7 +32,11 @@ export default function About() {
 
       {/* Press Section */}
       <div className="max-w-4xl mx-auto mb-4 px-6 md:px-8">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">In the Media</h3>
+        <a href="#in-the-media">
+          <h3 className="text-base font-semibold leading-7 text-gray-900" id="in-the-media">
+            In the Media
+          </h3>
+        </a>
         <p className="text-sm leading-6">
           The project was recently featured in an article on{' '}
           <a
@@ -44,7 +52,11 @@ export default function About() {
 
       {/* Contact Section */}
       <div className="max-w-4xl mx-auto mb-4 px-6 md:px-8">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">Contact</h3>
+        <a href="#contact">
+          <h3 className="text-base font-semibold leading-7 text-gray-900" id="contact">
+            Contact
+          </h3>
+        </a>
         <p className="mt-2 text-sm">
           I'd love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee, don’t
           hesitate to reach out.
@@ -115,61 +127,71 @@ export default function About() {
 
       {/* FAQ Section */}
       <div className="max-w-4xl mx-auto px-6 md:px-8">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">FAQ</h3>
+        <a href="#faq">
+          <h3 className="text-base font-semibold leading-7 text-gray-900" id="faq">
+            FAQ
+          </h3>
+        </a>
 
-        <QAndA
-          question="Why is my favorite coffee shop missing?"
-          answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up! I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon!"
-        />
+        <div className="ml-8">
+          <QAndA
+            question="Why is my favorite coffee shop missing?"
+            answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up! I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon!"
+          />
 
-        <div className="mb-2 text-sm leading-6">
-          <p className="font-semibold">How can I contribute to the site?</p>
-          <p>
-            I’d love your help! You can submit new shops through the{' '}
-            <a className="underline text-blue-700" href="/submit-a-shop">
-              Submit a Shop
-            </a>{' '}
-            page. If you have feedback, suggestions, or corrections, I’m always open to improving the experience with
-            the community’s input.
-          </p>
-        </div>
+          <div className="mb-2 text-sm leading-6">
+            <p className="font-semibold">How can I contribute to the site?</p>
+            <p>
+              I’d love your help! You can submit new shops through the{' '}
+              <a className="underline text-blue-700" href="/submit-a-shop">
+                Submit a Shop
+              </a>{' '}
+              page. If you have feedback, suggestions, or corrections, I’m always open to improving the experience with
+              the community’s input.
+            </p>
+          </div>
 
-        <QAndA
-          question="Can I use the coffee shop dataset for my project?"
-          answer="Absolutely! The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
-        />
+          <QAndA
+            question="Can I use the coffee shop dataset for my project?"
+            answer="Absolutely! The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
+          />
 
-        <QAndA
-          question="Where do the photos come from?"
-          answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work!"
-        />
+          <QAndA
+            question="Where do the photos come from?"
+            answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work!"
+          />
 
-        <div className="mb-2 text-sm leading-6">
-          <p className="font-semibold">How can I support this project?</p>
-          <p>
-            If you see me around Pittsburgh, you can buy me a cortado! Otherwise, you can{' '}
-            <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample" target="_blank">
-              buy me a digital coffee
-            </a>
-            . Want to stay in the loop? Follow the site’s Instagram account at{' '}
-            <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
-              @pgh.coffee
-            </a>
-            . Your support means the world!
-          </p>
-        </div>
+          <div className="mb-2 text-sm leading-6">
+            <p className="font-semibold">How can I support this project?</p>
+            <p>
+              If you see me around Pittsburgh, you can buy me a cortado! Otherwise, you can{' '}
+              <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample" target="_blank">
+                buy me a digital coffee
+              </a>
+              . Want to stay in the loop? Follow the site’s Instagram account at{' '}
+              <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
+                @pgh.coffee
+              </a>
+              . Your support means the world!
+            </p>
+          </div>
 
-        <div className="mb-2 text-sm leading-6">
-          <p className="font-semibold">What’s next for the site?</p>
-          <p>
-            I’m always working to improve the site. In the future, I hope to add more features, like user accounts so
-            you can track your favorite spots and share reviews. Stay tuned!
-          </p>
+          <div className="mb-2 text-sm leading-6">
+            <p className="font-semibold">What’s next for the site?</p>
+            <p>
+              I’m always working to improve the site. In the future, I hope to add more features, like user accounts so
+              you can track your favorite spots and share reviews. Stay tuned!
+            </p>
+          </div>
         </div>
       </div>
       {/* Press Section */}
       <div className="max-w-4xl mx-auto mb-4 px-6 md:px-8">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">Join the community</h3>
+        <a href="#join-the-community">
+          <h3 className="text-base font-semibold leading-7 text-gray-900" id="join-the-community">
+            Join the community
+          </h3>
+        </a>
         <p className="text-sm leading-6">
           Want to help make Pittsburgh’s coffee scene even better? Here are a few ways you can get involved:
         </p>
