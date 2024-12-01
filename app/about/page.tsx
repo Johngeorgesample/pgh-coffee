@@ -188,8 +188,8 @@ export default function About() {
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">What’s next for the site?</p>
             <p>
-              Building on the site's open-source foundation, I'm adding features that will transform pgh.coffee from a
-              simple map to a living resource for Pittsburgh's coffee community. Expect user accounts, the ability to
+              Building on the site&apos;s open-source foundation, I&apos;m adding features that will transform pgh.coffee from a
+              simple map to a living resource for Pittsburgh&apos;s coffee community. Expect user accounts, the ability to
               track your coffee discoveries, and ways to share your favorite local spots.
             </p>
           </div>
