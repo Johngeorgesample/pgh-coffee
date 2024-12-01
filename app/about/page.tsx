@@ -94,7 +94,7 @@ export default function About() {
           </h3>
         </a>
         <p className="text-sm leading-6">
-          I'd love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee, don’t
+          I&apos;d love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee, don&apos;t
           hesitate to reach out.
         </p>
 
