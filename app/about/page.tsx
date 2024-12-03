@@ -123,7 +123,7 @@ export default function About() {
               <p className="font-semibold">Social Media</p>
               <ul className="list-disc ml-8">
                 <li>
-                  <p className="text-sm leading-6">Follow @pgh.coffee on Instagram</p>
+                  <p className="text-sm leading-6">Follow <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">@pgh.coffee</a> on Instagram</p>
                 </li>
                 <li>
                   <p className="text-sm leading-6">
