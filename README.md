@@ -74,7 +74,7 @@ Here’s an example of what the JSON response will look like:
     },
     ...
   ]
-  }
+}
 ```
 
 - **Get Coffee Shops (JSON)**  
