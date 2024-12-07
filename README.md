@@ -40,6 +40,67 @@ npm run dev
 
 The app will be accessible at <http://localhost:3000>.
 
+## Public API
+
+If you're interested in the dataset, pgh.coffee provides a public API that you can use to access information about coffee shops in Pittsburgh.
+
+### Endpoints
+
+- **Get Coffee Shops (GeoJSON)**
+  URL: [`https://pgh.coffee/api/shops/geojson`](https://pgh.coffee/api/shops/geojson)
+  Description: Returns the dataset of all coffee shops in GeoJSON format, including their names, addresses, and locations.
+
+
+Here’s an example of what the JSON response will look like:
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "61B Cafe",
+        "neighborhood": "Regent Square",
+        "website": "",
+        "address": "1108 S Braddock Ave, Pittsburgh, PA 15218",
+        "roaster": "",
+        "photo": "https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos/regent_square/61b_cafe.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.893948, 40.432417]
+      }
+    },
+    ...
+  ]
+  }
+```
+
+- **Get Coffee Shops (JSON)**  
+  URL: [`https://pgh.coffee/api/shops`](https://pgh.coffee/api/shops)  
+  Description: Returns the dataset of all coffee shops in a standard JSON format, including their names, addresses, and locations (without GeoJSON structure).
+
+Here’s an example of what the JSON response will look like:
+
+
+```json
+[
+  {
+    "name": "61B Cafe",
+    "neighborhood": "Regent Square",
+    "website": "",
+    "address": "1108 S Braddock Ave, Pittsburgh, PA 15218",
+    "roaster": "",
+    "longitude": -79.893948,
+    "latitude": 40.432417,
+    "photo": "https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos/regent_square/61b_cafe.jpg",
+    "uuid": "78e3178d-b181-4f7f-a719-84b1f5288395"
+  },
+  ...
+]
+```
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
