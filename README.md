@@ -28,11 +28,11 @@ npm install
 - Visit [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/) and create an access token with all Public scopes checked.
 - Duplicate `.env.example` as `.env` and enter your Mapbox Access Token.
 
-1. **Set up database**
+4. **Set up database**
 
 _Coming soon_
 
-2. **Run the Next.js App:**
+5. **Run the Next.js App:**
 
 ```
 npm run dev
