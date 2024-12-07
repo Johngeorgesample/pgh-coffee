@@ -46,10 +46,10 @@ If you're interested in the dataset, pgh.coffee provides a public API that you c
 
 ### Endpoints
 
-- **Get Coffee Shops (GeoJSON)**
-  URL: [`https://pgh.coffee/api/shops/geojson`](https://pgh.coffee/api/shops/geojson)
-  Description: Returns the dataset of all coffee shops in GeoJSON format, including their names, addresses, and locations.
 
+- **Get Coffee Shops (GeoJSON)**  
+  URL: [`https://pgh.coffee/api/shops/geojson`](https://pgh.coffee/api/shops/geojson)  
+  Description: Returns the dataset of all coffee shops in GeoJSON format, including their names, addresses, and locations.
 
 Here’s an example of what the JSON response will look like:
 
