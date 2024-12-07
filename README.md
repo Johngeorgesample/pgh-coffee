@@ -46,4 +46,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Special thank[s to t](s to t)he Pittsburgh coffee community for their support and contributions to the data source.
+- Special thanks to the Pittsburgh coffee community for their support and contributions to the data source.
