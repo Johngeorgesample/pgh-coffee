@@ -6,6 +6,7 @@ import { TShop } from '@/types/shop-types'
 import { TNeighborhood } from '@/types/neighborhood-types'
 import NearbyShops from './NearbyShops'
 import AddToListDialog from './AddToListDialog'
+import AddToListDropdown from './AddToListDropdown'
 
 interface IProps {
   handleNearbyShopClick: (shop: TShop) => void
@@ -31,17 +32,12 @@ export default function PanelContent(props: IProps) {
         <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
         <p className="mt-1 text-sm text-gray-900">{props.shop.properties.neighborhood}</p>
         <div className="flex mt-4">
-          <div
-            className="w-fit p-2 rounded-full border-2 border-yellow-400 hover:bg-yellow-100 hover:cursor-pointer"
-            onClick={() => setAddToListDialogIsOpen(true)}
-          >
-            <PlusIcon className="h-6 w-6" />
-          </div>
+          <AddToListDropdown />
         </div>
       </div>
       <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
 
-      <AddToListDialog isOpen={addToListDialogIsOpen} handleClose={() => setAddToListDialogIsOpen(false)} />
+      {/* <AddToListDialog isOpen={addToListDialogIsOpen} handleClose={() => setAddToListDialogIsOpen(false)} /> */}
     </>
   )
 }
