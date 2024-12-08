@@ -1,9 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { ArrowTopRightOnSquareIcon, BookmarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { TNeighborhood } from '@/types/neighborhood-types'
 import NearbyShops from './NearbyShops'
+import AddToListDialog from './AddToListDialog'
 
 interface IProps {
   handleNearbyShopClick: (shop: TShop) => void
@@ -12,6 +14,7 @@ interface IProps {
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
+  const [addToListDialogIsOpen, setAddToListDialogIsOpen] = useState(false)
   return (
     <>
       <div className="relative mt-6 flex-1 px-4 sm:px-6">
@@ -27,16 +30,18 @@ export default function PanelContent(props: IProps) {
         )}
         <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
         <p className="mt-1 text-sm text-gray-900">{props.shop.properties.neighborhood}</p>
-        <div className="flex">
-          <div className="w-fit p-2 rounded-full border-2 border-yellow-400">
-            <BookmarkIcon className="h-6 w-6" />
-          </div>
-          <div className="w-fit p-2 rounded-full border-2 border-yellow-400">
+        <div className="flex mt-4">
+          <div
+            className="w-fit p-2 rounded-full border-2 border-yellow-400 hover:bg-yellow-100 hover:cursor-pointer"
+            onClick={() => setAddToListDialogIsOpen(true)}
+          >
             <PlusIcon className="h-6 w-6" />
           </div>
         </div>
       </div>
       <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
+
+      <AddToListDialog isOpen={addToListDialogIsOpen} handleClose={() => setAddToListDialogIsOpen(false)} />
     </>
   )
 }
