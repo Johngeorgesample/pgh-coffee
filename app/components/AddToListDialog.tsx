@@ -33,8 +33,20 @@ export default function AddToListDialog(props: IProps) {
                   <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900">Add to list</DialogTitle>
                   {/* @TODO iterate lists here */}
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">Used to show how close nearby shops are.</p>
+                    <ul>
+                      <li className="text-sm">
+                        <button className="hover:cursor-pointer hover:bg-gray-100" onClick={() => console.log('make request')}>
+                          Favorites
+                        </button>
+                      </li>
+                      <li className="text-sm">
+                        <button className="hover:cursor-pointer hover:bg-gray-100" onClick={() => console.log('make request')}>
+                          Want to go
+                        </button>
+                      </li>
+                    </ul>
                   </div>
+
                 </div>
               </div>
             </div>
