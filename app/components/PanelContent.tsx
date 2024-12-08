@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, BookmarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { TNeighborhood } from '@/types/neighborhood-types'
 import NearbyShops from './NearbyShops'
@@ -26,9 +26,15 @@ export default function PanelContent(props: IProps) {
           </a>
         )}
         <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
-        <p className="mt-1 text-sm text-gray-900">
-          {props.shop.properties.neighborhood}
-        </p>
+        <p className="mt-1 text-sm text-gray-900">{props.shop.properties.neighborhood}</p>
+        <div className="flex">
+          <div className="w-fit p-2 rounded-full border-2 border-yellow-400">
+            <BookmarkIcon className="h-6 w-6" />
+          </div>
+          <div className="w-fit p-2 rounded-full border-2 border-yellow-400">
+            <PlusIcon className="h-6 w-6" />
+          </div>
+        </div>
       </div>
       <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
     </>
