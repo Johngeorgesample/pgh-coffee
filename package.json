@@ -15,7 +15,7 @@
     "@types/mapbox-gl": "^3.4.0",
     "haversine-distance": "^1.2.3",
     "mapbox-gl": "^3.6.0",
-    "next": "^14.2.10",
+    "next": "^14.2.20",
     "next-plausible": "^3.12.1",
     "react": "^18",
     "react-dom": "^18",
