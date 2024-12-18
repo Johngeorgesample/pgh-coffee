@@ -11,7 +11,7 @@ interface TProps {
 
 export default function ShopDetails(props: TProps) {
   return (
-    <div className="flex h-full flex-col overflow-y-scroll">
+    <div className="flex h-full flex-col overflow-y-auto">
       <PanelHeader shop={props.shop} emitClose={props.emitClose} />
       <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
       <PanelFooter shop={props.shop} />

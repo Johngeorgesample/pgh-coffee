@@ -27,7 +27,7 @@ export default function ShopSearch(props: IProps) {
   }, [])
 
   return (
-    <div className="flex h-full flex-col overflow-y-scroll px-4 sm:px-6">
+    <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
       <div className="flex justify-center flex-col mt-4">
         <div className="my-2 border rounded-lg px-2 w-full flex items-center gap-2">
           <span className="inline text-gray-500" aria-hidden="true">
