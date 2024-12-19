@@ -180,7 +180,11 @@ export default function Home() {
         properties: { ...features[0].properties },
         type: features[0].type,
       })
-      plausible('FeaturePointClick', { props: {} })
+      plausible('FeaturePointClick', {
+        props: {
+          shop: features[0].properties,
+        },
+      })
     }
   }
 
