@@ -185,6 +185,11 @@ export default function Home() {
           shop: features[0].properties,
         },
       })
+      plausible('FeaturePointClick', {
+        props: {
+          shopName: features[0].properties.name,
+        },
+      })
     }
   }
 
