@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { usePlausible } from 'next-plausible'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -10,6 +11,7 @@ interface IProps {
 
 export default function ShopSearch(props: IProps) {
   const { coffeeShops } = useShopsStore()
+  const plausible = usePlausible()
   const inputRef = useRef<HTMLInputElement>(null)
   let [filter, setFilter] = useState('')
 
@@ -20,6 +22,12 @@ export default function ShopSearch(props: IProps) {
   const handleCardClick = (shop: TShop) => {
     props.handleResultClick(shop)
     setFilter('')
+    plausible('ShopSearchClick', {
+      props: {
+        shopName: shop.properties.name,
+        neighborhood: shop.properties.neighborhood,
+      },
+    })
   }
 
   useEffect(() => {
@@ -48,11 +56,7 @@ export default function ShopSearch(props: IProps) {
         </div>
       </div>
 
-      <ShopList
-        coffeeShops={coffeeShops.features}
-        filter={filter}
-        handleCardClick={handleCardClick}
-      />
+      <ShopList coffeeShops={coffeeShops.features} filter={filter} handleCardClick={handleCardClick} />
     </div>
   )
 }

@@ -59,7 +59,10 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
 
   const handleCardClick = (shop: TShop) => {
     handleClick(shop)
-    plausible('NearbyCardClick', { props: {} })
+    plausible('NearbyCardClick', { props: {
+          shopName: shop.properties.name,
+          neighborhood: shop.properties.neighborhood,
+    } })
   }
 
   if (sortedShopsWithDistances.shops.length === 0) return null
