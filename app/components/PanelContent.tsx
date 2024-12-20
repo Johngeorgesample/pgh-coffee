@@ -25,10 +25,14 @@ export default function PanelContent(props: IProps) {
             <ArrowTopRightOnSquareIcon className="ml-1 h-4 w-4 inline" aria-hidden="true" />
           </a>
         )}
-        <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
-        <p className="mt-1 text-sm text-gray-900">
-          {props.shop.properties.neighborhood}
-        </p>
+        <a
+          href={`https://www.google.com/maps?q=${props.shop.geometry.coordinates[1]},${props.shop.geometry.coordinates[0]}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <address className="mt-1 text-sm text-gray-900">{props.shop.properties.address}</address>
+        </a>
+        <p className="mt-1 text-sm text-gray-900">{props.shop.properties.neighborhood}</p>
       </div>
       <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
     </>
