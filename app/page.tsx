@@ -28,6 +28,9 @@ export default function Home() {
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
+
+  const [isIOS, setIsIOS] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(12)
 
   const MAP_CONSTANTS = {
@@ -46,6 +49,14 @@ export default function Home() {
       ],
     },
   } as const
+
+  useEffect(() => {
+    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream)
+
+    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
+  }, [])
+
+
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -261,7 +272,7 @@ export default function Home() {
       >
         {panelContent}
       </ShopPanel>
-      <InstallPrompt />
+      {isIOS && !isStandalone && <InstallPrompt />}
     </>
   )
 }
