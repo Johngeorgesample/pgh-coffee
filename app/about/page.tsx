@@ -26,7 +26,7 @@ export default function About() {
 
         <p className="mt-1 mb-3 text-sm leading-6">
           I hope this site helps you find your next favorite coffee spot. Feel free to explore, share your
-          recommendations, or simply enjoy the journey!
+          recommendations, or simply enjoy the journey.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default function About() {
           <li>
             <div className="mt-2">
               <p className="text-sm leading-6">
-                Submit a Coffee Shop: If you know a hidden gem that’s not yet featured, let me know!
+                Submit a Coffee Shop: If you know a hidden gem that’s not yet featured, let me know.
               </p>
             </div>
           </li>
@@ -94,7 +94,7 @@ export default function About() {
           </h3>
         </a>
         <p className="text-sm leading-6">
-          I&apos;d love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee,
+          I&apos;d love to hear from you. Whether you have feedback, suggestions, or just want to chat about coffee,
           don&apos;t hesitate to reach out.
         </p>
 
@@ -167,7 +167,7 @@ export default function About() {
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">How can I contribute to the site?</p>
             <p>
-              I’d love your help! You can submit new shops through the{' '}
+              I’d love your help. You can submit new shops through the{' '}
               <a className="underline text-blue-700" href="/submit-a-shop">
                 Submit a Shop
               </a>{' '}
@@ -178,7 +178,7 @@ export default function About() {
 
           <QAndA
             question="Why is my favorite coffee shop missing?"
-            answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up! I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon!"
+            answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up. I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon."
           />
 
           <div className="mb-2 text-sm leading-6">
@@ -198,12 +198,12 @@ export default function About() {
 
           <QAndA
             question="Can I use the coffee shop dataset for my project?"
-            answer="Absolutely! The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
+            answer="Absolutely. The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
           />
 
           <QAndA
             question="Where do the photos come from?"
-            answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work!"
+            answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work."
           />
 
           <div className="mb-2 text-sm leading-6">
@@ -218,7 +218,7 @@ export default function About() {
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">How can I support this project?</p>
             <p>
-              If you see me around Pittsburgh, you can buy me a cortado! Otherwise, you can{' '}
+              If you see me around Pittsburgh, you can buy me a cortado. Otherwise, you can{' '}
               <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample" target="_blank">
                 buy me a digital coffee
               </a>
@@ -226,7 +226,7 @@ export default function About() {
               <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
                 @pgh.coffee
               </a>
-              . Your support means the world!
+              . Your support means the world.
             </p>
           </div>
         </div>
