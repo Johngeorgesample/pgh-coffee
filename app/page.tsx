@@ -200,6 +200,10 @@ export default function Home() {
       handleUpdatingCurrentShop({} as TShop)
       setIsOpen(true)
       setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+
+      plausible('SearchClick', {
+        props: {},
+      })
     }
   }
 
