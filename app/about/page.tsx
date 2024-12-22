@@ -94,8 +94,8 @@ export default function About() {
           </h3>
         </a>
         <p className="text-sm leading-6">
-          I&apos;d love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee, don&apos;t
-          hesitate to reach out.
+          I&apos;d love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee,
+          don&apos;t hesitate to reach out.
         </p>
 
         <ul className="list-disc ml-8">
@@ -123,7 +123,13 @@ export default function About() {
               <p className="font-semibold">Social Media</p>
               <ul className="list-disc ml-8">
                 <li>
-                  <p className="text-sm leading-6">Follow <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">@pgh.coffee</a> on Instagram</p>
+                  <p className="text-sm leading-6">
+                    Follow{' '}
+                    <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
+                      @pgh.coffee
+                    </a>{' '}
+                    on Instagram
+                  </p>
                 </li>
                 <li>
                   <p className="text-sm leading-6">
@@ -175,6 +181,21 @@ export default function About() {
             answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up! I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon!"
           />
 
+          <div className="mb-2 text-sm leading-6">
+            <p className="font-semibold">Does pgh.coffee have an app?</p>
+            <p>
+              While we’re not in the app store, you can pin pgh.coffee to your home screen for a seamless, app-like
+              experience. Here’s how:
+            </p>
+
+            <ul className="list-disc ml-8">
+              <li><span className="">For iPhone (Safari)</span>: Tap the Share button, then choose Add to Home Screen.</li>
+              <li><span className="">For Android (Chrome)</span>: Tap the Menu (three dots), then select Add to Home Screen.</li>
+            </ul>
+
+            <p>It’s quick and easy, so you can keep exploring Pittsburgh’s coffee scene with just a tap. </p>
+          </div>
+
           <QAndA
             question="Can I use the coffee shop dataset for my project?"
             answer="Absolutely! The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
@@ -188,9 +209,9 @@ export default function About() {
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">What’s next for the site?</p>
             <p>
-              Building on the site&apos;s open-source foundation, I&apos;m adding features that will transform pgh.coffee from a
-              simple map to a living resource for Pittsburgh&apos;s coffee community. Expect user accounts, the ability to
-              track your coffee discoveries, and ways to share your favorite local spots.
+              Building on the site&apos;s open-source foundation, I&apos;m adding features that will transform
+              pgh.coffee from a simple map to a living resource for Pittsburgh&apos;s coffee community. Expect user
+              accounts, the ability to track your coffee discoveries, and ways to share your favorite local spots.
             </p>
           </div>
 
