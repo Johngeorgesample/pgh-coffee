@@ -45,7 +45,7 @@ export default function ShopSearch(props: IProps) {
             ref={inputRef}
             className="inline flex-1 outline-none border-none h-6 active:outline text-gray-500 bg-transparent"
             onChange={e => setFilter(e.target.value)}
-            placeholder="Search for a shop"
+            placeholder="Search for a shop or neighborhood"
             value={filter}
           />
           {filter && (
