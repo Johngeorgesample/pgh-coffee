@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer, Marker, ViewStateChangeEvent } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
+import InstallPrompt from '@/app/components/InstallPrompt'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -260,6 +261,7 @@ export default function Home() {
       >
         {panelContent}
       </ShopPanel>
+      <InstallPrompt />
     </>
   )
 }

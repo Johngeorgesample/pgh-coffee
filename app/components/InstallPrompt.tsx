@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-function InstallPrompt() {
+export default function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
 
@@ -35,14 +35,6 @@ function InstallPrompt() {
           .
         </p>
       )}
-    </div>
-  )
-}
-
-export default function Page() {
-  return (
-    <div>
-      <InstallPrompt />
     </div>
   )
 }
