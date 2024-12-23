@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer, Marker, ViewStateChangeEvent } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
-import InstallPrompt from '@/app/components/InstallPrompt'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -28,9 +27,6 @@ export default function Home() {
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
-
-  const [isIOS, setIsIOS] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(12)
 
   const MAP_CONSTANTS = {
@@ -49,14 +45,6 @@ export default function Home() {
       ],
     },
   } as const
-
-  useEffect(() => {
-    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream)
-
-    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
-  }, [])
-
-
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -272,7 +260,6 @@ export default function Home() {
       >
         {panelContent}
       </ShopPanel>
-      {isIOS && !isStandalone && <InstallPrompt />}
     </>
   )
 }
