@@ -11,11 +11,27 @@ interface TProps {
 }
 
 export default function PhotoDialog(props: TProps) {
+  const [currentPhoto, setCurrentPhoto] = useState(props.shop.properties.photo)
+
+  useEffect(() => {
+    if (props.isOpen) {
+      setCurrentPhoto(props.shop.properties.photo)
+    }
+  }, [props.isOpen])
+
   const updatePhoto = (direction: 'previous' | 'next') => {
     console.log(direction)
+    if (direction === 'next') {
+      setCurrentPhoto('https://www.johngeorgesample.com/bugbite.webp')
+    }
   }
+
+  const handleClose = () => {
+    props.handleClose()
+  }
+
   return (
-    <Dialog open={props.isOpen} onClose={props.handleClose} className="relative z-10">
+    <Dialog open={props.isOpen} onClose={handleClose} className="relative z-10">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -41,7 +57,7 @@ export default function PhotoDialog(props: TProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />{' '}
                 </svg>
               </div>
-              <img className="w-[90%]" src={props.shop.properties.photo} />
+              <img className="w-[90%]" src={currentPhoto} />
               <div className="h-12 w-12" onClick={() => updatePhoto('next')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
