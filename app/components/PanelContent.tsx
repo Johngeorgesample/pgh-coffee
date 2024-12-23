@@ -14,7 +14,11 @@ interface IProps {
 export default function PanelContent(props: IProps) {
   return (
     <>
-      <div className="relative mt-6 flex-1 px-4 sm:px-6">
+      <div className="relative mt-4 mb-3 flex-1 text-2xl px-4 sm:px-6">
+        <p>{props.shop.properties.name}</p>
+      </div>
+      <hr />
+      <div className="relative mt-2 flex-1 px-4 sm:px-6">
         {props.shop.properties.website && (
           <a
             className="mt-1 text-sm text-gray-900 flex items-center hover:underline"
