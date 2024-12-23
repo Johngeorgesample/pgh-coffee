@@ -14,18 +14,21 @@ interface IProps {
 export default function PanelHeader(props: IProps) {
   const [photoDialogIsOpen, setPhotoDialogIsOpen] = useState(false)
 
-  const handleHeaderClick = () => {
+  const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log(event)
+    if (event.target === event.currentTarget) {
       setPhotoDialogIsOpen(true)
+    }
   }
 
   return (
     <div className="" id="header">
       <div
-        className="h-56 relative bg-yellow-200 bg-cover bg-center"
+        className="h-56 relative bg-yellow-200 bg-cover bg-center hover:cursor-pointer"
         style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
-        onClick={props.shop.properties.photo ? handleHeaderClick : ()=> {}}
+        onClick={props.shop.properties.photo ? handleHeaderClick : undefined}
       >
-        <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
+        <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between hover:cursor-auto">
           <Dialog.Title className="text-3xl text-gray-900">{props.shop.properties.name}</Dialog.Title>
           <div className="ml-3 flex h-7 items-center">
             <button
@@ -40,11 +43,7 @@ export default function PanelHeader(props: IProps) {
           </div>
         </div>
       </div>
-      <PhotoDialog
-        shop={props.shop}
-        isOpen={photoDialogIsOpen}
-        handleClose={() => setPhotoDialogIsOpen(false)}
-      />
+      <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
     </div>
   )
 }
