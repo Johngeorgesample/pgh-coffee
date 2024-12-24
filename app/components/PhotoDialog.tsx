@@ -12,6 +12,7 @@ interface TProps {
 
 export default function PhotoDialog(props: TProps) {
   const [currentPhoto, setCurrentPhoto] = useState(props.shop.properties.photo)
+  const photos = []
 
   useEffect(() => {
     if (props.isOpen) {
@@ -23,6 +24,9 @@ export default function PhotoDialog(props: TProps) {
     console.log(direction)
     if (direction === 'next') {
       setCurrentPhoto('https://www.johngeorgesample.com/bugbite.webp')
+    }
+    if (direction === 'previous') {
+      setCurrentPhoto(props.shop.properties.photo)
     }
   }
 
