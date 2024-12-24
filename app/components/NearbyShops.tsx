@@ -68,7 +68,7 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
   if (sortedShopsWithDistances.shops.length === 0) return null
 
   return (
-    <section className="relative mt-6 flex-1 px-4 sm:px-6">
+    <section className="relative mt-3 flex-1 px-4 sm:px-6">
       <hr className="w-1/2 m-auto mt-2 mb-2" />
       <p className="mb-2 text-gray-700">Nearby shops</p>
       <ShopList
