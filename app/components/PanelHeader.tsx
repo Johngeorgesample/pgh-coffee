@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -12,11 +13,19 @@ interface IProps {
 }
 
 export default function PanelHeader(props: IProps) {
+  const plausible = usePlausible()
   const [photoDialogIsOpen, setPhotoDialogIsOpen] = useState(false)
 
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       setPhotoDialogIsOpen(true)
+
+      plausible('PanelHeaderClick', {
+        props: {
+          shopName: props.shop.properties.name,
+          neighborhood: props.shop.properties.neighborhood,
+        },
+      })
     }
   }
 
