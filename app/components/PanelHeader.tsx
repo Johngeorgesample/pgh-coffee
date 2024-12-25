@@ -23,7 +23,9 @@ export default function PanelHeader(props: IProps) {
   return (
     <div className="" id="header">
       <div
-        className="group h-56 relative bg-yellow-200 bg-cover bg-center hover:cursor-pointer"
+        className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
+          props.shop.properties.photo ? 'hover:cursor-pointer' : ''
+        }`}
         style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
         onClick={props.shop.properties.photo ? handleHeaderClick : undefined}
       >
