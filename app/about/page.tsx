@@ -206,6 +206,12 @@ export default function About() {
             answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work."
           />
 
+          <QAndA
+            question="Why aren’t chains like Starbucks and Dunkin’ listed?"
+            answer="pgh.coffee is focused on highlighting Pittsburgh's independent and locally owned coffee shops."
+          />
+
+
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">What’s next for the site?</p>
             <p>

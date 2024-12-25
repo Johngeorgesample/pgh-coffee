@@ -21,9 +21,7 @@ export default function PhotoDialog(props: TProps) {
   }, [props.isOpen])
 
   const updatePhoto = (direction: 'previous' | 'next') => {
-    setCurrentPhotoIndex((prevIndex) => 
-      direction === 'next' ? prevIndex + 1 : prevIndex - 1
-    )
+    setCurrentPhotoIndex(prevIndex => (direction === 'next' ? prevIndex + 1 : prevIndex - 1))
   }
 
   const handleClose = () => {
