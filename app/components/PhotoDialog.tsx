@@ -11,23 +11,26 @@ interface TProps {
 }
 
 export default function PhotoDialog(props: TProps) {
-  const [currentPhoto, setCurrentPhoto] = useState(props.shop.properties.photo)
-  const photos = []
+  let photos = [props.shop.properties.photo]
+  photos = [...photos, 'https://www.johngeorgesample.com/bugbite.webp']
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
 
   useEffect(() => {
     if (props.isOpen) {
-      setCurrentPhoto(props.shop.properties.photo)
+      setCurrentPhotoIndex(0)
     }
   }, [props.isOpen])
 
   const updatePhoto = (direction: 'previous' | 'next') => {
-    console.log(direction)
-    if (direction === 'next') {
-      setCurrentPhoto('https://www.johngeorgesample.com/bugbite.webp')
-    }
-    if (direction === 'previous') {
-      setCurrentPhoto(props.shop.properties.photo)
-    }
+    setCurrentPhotoIndex((prevIndex) => {
+      if (direction === 'next') {
+        return prevIndex >= photos.length - 1 ? 0 : prevIndex + 1
+      }
+      if (direction === 'previous') {
+        return prevIndex > 0 ? prevIndex - 1 : photos.length - 1
+      }
+      return prevIndex
+    })
   }
 
   const handleClose = () => {
@@ -47,7 +50,7 @@ export default function PhotoDialog(props: TProps) {
             transition
             className="relative transform overflow-hidden rounded-lg text-left transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-4xl data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
           >
-            <div className="flex items-center">
+            <div className="flex items-center align-center justify-center">
               <div className="h-12 w-12" onClick={() => updatePhoto('previous')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +64,7 @@ export default function PhotoDialog(props: TProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />{' '}
                 </svg>
               </div>
-              <img className="w-[90%]" src={currentPhoto} />
+              <img className="max-w-[90%] max-h-[74vh] w-auto h-auto" src={photos[currentPhotoIndex]} />
               <div className="h-12 w-12" onClick={() => updatePhoto('next')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

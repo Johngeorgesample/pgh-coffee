@@ -22,12 +22,11 @@ export default function PanelContent(props: IProps) {
       </div>
       */}
 
-      <div className="flex flex-col gap-1 align-center mt-4 mb-3 flex-1 text-2xl px-4 sm:px-6">
+      <div className="flex flex-col align-center mt-4 text-2xl px-4 sm:px-6">
         <p className="font-medium">{props.shop.properties.name}</p>
-        <p className="text-lg">{props.shop.properties.neighborhood}</p>
+        <p className="text-lg text-gray-600">{props.shop.properties.neighborhood}</p>
       </div>
-      <hr />
-      <div className="relative mt-2 flex-1 px-4 sm:px-6">
+      <div className="relative text-gray-700 flex-1 px-4 sm:px-6">
         {props.shop.properties.website && (
           <div className="flex mt-2">
             <svg
@@ -45,7 +44,7 @@ export default function PanelContent(props: IProps) {
               />
             </svg>
             <a
-              className="group text-sm text-gray-900 flex items-center hover:underline"
+              className="group text-sm flex items-center hover:underline"
               href={props.shop.properties.website}
               target="_blank"
             >
@@ -75,7 +74,7 @@ export default function PanelContent(props: IProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <address className="text-sm text-gray-900 hover:underline">{props.shop.properties.address}</address>
+            <address className="text-sm hover:underline">{props.shop.properties.address}</address>
           </a>
         </div>
       </div>
