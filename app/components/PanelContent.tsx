@@ -14,14 +14,6 @@ interface IProps {
 export default function PanelContent(props: IProps) {
   return (
     <>
-      {/*
-      <div className="flex gap-2 items-center align-center mt-4 mb-3 flex-1 text-2xl px-4 sm:px-6">
-        <p>{props.shop.properties.name}</p>
-        <p>•</p>
-        <p className="">{props.shop.properties.neighborhood}</p>
-      </div>
-      */}
-
       <div className="flex flex-col align-center mt-4 text-2xl px-4 sm:px-6">
         <p className="font-medium">{props.shop.properties.name}</p>
         <p className="text-lg text-gray-600">{props.shop.properties.neighborhood}</p>
