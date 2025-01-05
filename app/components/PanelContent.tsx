@@ -27,7 +27,7 @@ export default function PanelContent(props: IProps) {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-4 mr-2"
+              className="w-4 mr-1"
             >
               <path
                 strokeLinecap="round"
@@ -52,7 +52,7 @@ export default function PanelContent(props: IProps) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-4 mr-2"
+            className="w-4 mr-1"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             <path
