@@ -6,7 +6,7 @@ interface IProps {
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
-  units: TUnits
+  units?: TUnits
 
 }
 
