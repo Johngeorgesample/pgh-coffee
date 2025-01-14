@@ -11,6 +11,16 @@ interface IProps {
   shop: TShop
 }
 
+interface IShopWithDistance {
+  shop: TShop
+  distance: number
+}
+
+interface ISortedShopsResults {
+  shops: TShop[]
+  distances: number[]
+}
+
 const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ handleClick, shop }: IProps) {
@@ -46,9 +56,9 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         shop: s,
         distance: calculateDistance(shop.geometry.coordinates, s.geometry.coordinates),
       }))
-      .sort((a: any, b: any) => a.distance - b.distance)
+      .sort((a: IShopWithDistance, b: IShopWithDistance) => a.distance - b.distance)
       .reduce(
-        (acc: any, { shop, distance }: any) => {
+        (acc: ISortedShopsResults, { shop, distance }: IShopWithDistance) => {
           acc.shops.push(shop)
           acc.distances.push(distance)
           return acc
