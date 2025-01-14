@@ -11,10 +11,10 @@ interface IProps {
 }
 
 const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
-  if (units === 'miles') {
+  if (units === 'Miles') {
     return Math.round(distance * 100) / 100
   }
-  if (units === 'meters') {
+  if (units === 'Meters') {
     return Math.round(distance)
   }
 }

@@ -7,7 +7,7 @@ interface IProps {
   distances?: any
   filter?: string
   handleCardClick: (shop: TShop) => void
-  units?: TUnits | null
+  units: TUnits
 }
 
 export default function ShopList(props: IProps) {
@@ -39,7 +39,7 @@ export default function ShopList(props: IProps) {
               handleCardClick={props.handleCardClick}
               handleKeyPress={handleKeyPress}
               shop={shop}
-              units={props.units?.toLowerCase()}
+              units={props.units}
             />
           )
         }
