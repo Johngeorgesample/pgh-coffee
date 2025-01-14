@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, useEffect } from 'react'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
+import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import haversineDistance from 'haversine-distance'
 import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
@@ -27,9 +28,9 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
   const plausible = usePlausible()
   const { coffeeShops } = useShopsStore()
 
-  const [units, setUnits] = useState<string | null>(null)
+  const [units, setUnits] = useState<TUnits>('miles')
   useEffect(() => {
-    setUnits(localStorage.getItem('distanceUnits'))
+    setUnits(localStorage.getItem('distanceUnits') as TUnits)
   }, [])
 
   const calculateDistance = useCallback(
