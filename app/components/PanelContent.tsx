@@ -40,6 +40,7 @@ export default function PanelContent(props: IProps) {
         <div className="flex mt-2">
             <MapPinIcon className="w-4 mr-1" />
           <a
+            className="group text-sm flex items-center hover:underline"
             href={getGoogleMapsUrl({
               latitude: props.shop.geometry.coordinates[0],
               longitude: props.shop.geometry.coordinates[1],
@@ -48,6 +49,7 @@ export default function PanelContent(props: IProps) {
             rel="noopener noreferrer"
           >
             <address className="text-sm hover:underline">{props.shop.properties.address}</address>
+            <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
           </a>
         </div>
       </div>
