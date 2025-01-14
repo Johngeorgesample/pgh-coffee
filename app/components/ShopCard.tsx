@@ -1,11 +1,13 @@
 import { TShop } from '@/types/shop-types'
+import { TUnits } from '@/types/unit-types'
 
 interface IProps {
   distance?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
-  units?: string
+  units?: TUnits
+
 }
 
 const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
