@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
-import { PhotoIcon } from '@heroicons/react/24/solid'
+import { useRef, useState } from 'react'
 import SuccessDialog from './SuccessDialog'
 
 export default function SubmitAShop() {
