@@ -7,20 +7,19 @@ interface IProps {
 }
 
 export default function PanelFooter(props: IProps) {
+  const githubURL = `https://github.com/Johngeorgesample/pgh-coffee/issues/new?labels=data-issue&title=Problem+with+${props.shop.properties.name}`
+  const email = 'johngeorgesample@gmail.com'
   return (
     <>
       <hr className="my-4 w-1/2 m-auto" />
       <div className="text-sm mb-2 text-center">
         <p className="text-gray-500">Is this information incorrect?</p>
         <p className="text-gray-500">
-          <a className="italic underline" href="https://github.com/Johngeorgesample/pgh-coffee/issues/new">
+          <a aria-label="File an issue on GitHub" className="italic underline" href={githubURL}>
             File an issue
           </a>{' '}
           or{' '}
-          <a
-            className="italic underline"
-            href={`mailto:johngeorgesample@gmail.com?subject=Issue with ${props.shop.properties.name}`}
-          >
+          <a className="italic underline" href={`mailto:${email}?subject=Issue with ${props.shop.properties.name}`}>
             email me
           </a>
         </p>
