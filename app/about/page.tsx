@@ -1,6 +1,5 @@
 'use client'
 
-import Nav from '@/app/components/Nav'
 import QAndA from '@/app/components/QAndA'
 
 export default function About() {
