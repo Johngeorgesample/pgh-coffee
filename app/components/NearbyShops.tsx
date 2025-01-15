@@ -76,7 +76,7 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
     } })
   }
 
-  if (sortedShopsWithDistances.shops.length === 0) return null
+  if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
 
   return (
     <section className="relative mt-3 flex-1 px-4 sm:px-6">
