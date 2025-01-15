@@ -4,11 +4,13 @@ import { useRef, useState } from 'react'
 import SuccessDialog from './SuccessDialog'
 
 export default function SubmitAShop() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
 
   const submitForm = useRef<HTMLFormElement>(null)
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setIsSubmitting(true)
     const formData = new FormData(event.currentTarget)
 
     const data = Object.fromEntries(formData.entries())
@@ -24,9 +26,11 @@ export default function SubmitAShop() {
       if (!response.ok) {
         const errorResponse = await response.json()
         console.error('Error:', errorResponse.error)
+        setIsSubmitting(false)
       } else {
         setSuccessDialogIsOpen(true)
         submitForm.current?.reset()
+        setIsSubmitting(false)
       }
     } catch (error) {
       console.error('Unexpected error:', error)
@@ -109,9 +113,11 @@ export default function SubmitAShop() {
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
               type="submit"
-              className="rounded-md bg-yellow-300 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400"
+              className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${
+                isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
+              }`}
             >
-              Save
+              {isSubmitting ? 'Submitting...' : 'Save'}
             </button>
           </div>
         </form>
