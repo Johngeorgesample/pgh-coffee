@@ -3,6 +3,13 @@
 import { useRef, useState } from 'react'
 import SuccessDialog from './SuccessDialog'
 
+interface IShopSubmission {
+  name: string
+  address: string
+  neighborhood?: string
+  website?: string
+}
+
 export default function SubmitAShop() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
@@ -13,7 +20,13 @@ export default function SubmitAShop() {
     setIsSubmitting(true)
     const formData = new FormData(event.currentTarget)
 
-    const data = Object.fromEntries(formData.entries())
+    const data: IShopSubmission = {
+      name: formData.get('name') as string,
+      address: formData.get('address') as string,
+      neighborhood: formData.get('neighborhood') as string,
+      website: formData.get('website') as string,
+    }
+
     try {
       const response = await fetch('/api/shops/submit', {
         method: 'POST',
