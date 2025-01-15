@@ -59,7 +59,11 @@ export default function PhotoDialog(props: TProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />{' '}
                 </svg>
               </button>
-              <img className="max-w-[90%] max-h-[74vh] w-auto h-auto" src={photos[currentPhotoIndex]} />
+              <img
+                alt={props.shop.properties.name}
+                className="max-w-[90%] max-h-[74vh] w-auto h-auto"
+                src={photos[currentPhotoIndex]}
+              />
               <button
                 className="h-12 w-12 disabled:hidden"
                 disabled={!(currentPhotoIndex < photos.length - 1)}

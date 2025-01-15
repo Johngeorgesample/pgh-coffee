@@ -92,6 +92,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('popstate', handlePopState)
     }
+    // eslint-disable-next-line
   }, [])
 
   useEffect(() => {
@@ -118,6 +119,7 @@ export default function Home() {
       }),
     }
     setDataSet(newData)
+    // eslint-disable-next-line
   }, [currentShop])
 
   // Pan to currentShop

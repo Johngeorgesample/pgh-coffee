@@ -3,8 +3,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { TShop } from '@/types/shop-types'
-import ShopSearch from './ShopSearch'
-import ShopDetails from './ShopDetails'
 
 interface IProps {
   children: any

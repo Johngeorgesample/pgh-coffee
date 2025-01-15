@@ -49,7 +49,7 @@ export default function ShopSearch(props: IProps) {
             value={filter}
           />
           {filter && (
-            <button className="inline ml-2 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
+            <button aria-label="Clear search" className="inline ml-2 text-gray-500 hover:text-gray-600" onClick={handleFilterClear}>
               ×
             </button>
           )}

@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { usePlausible } from 'next-plausible'
-import { Dialog } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
 

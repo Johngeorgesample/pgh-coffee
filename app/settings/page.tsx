@@ -1,28 +1,41 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Nav from '@/app/components/Nav'
+import { TUnits } from '@/types/unit-types'
 import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
-  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<string | null>(null)
+  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>('miles')
   const [isLoading, setIsLoading] = useState(true)
+  const DEFAULT_UNIT = DISTANCE_UNITS.Miles
+  const DISTANCE_PREFERENCE_KEY = 'distanceUnits'
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setUnitFromLocalStorage(window.localStorage.getItem('distanceUnits'))
-      if (!window.localStorage.getItem('distanceUnits')) {
-        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
+      setUnitFromLocalStorage(window.localStorage.getItem(DISTANCE_PREFERENCE_KEY) as TUnits)
+      if (!window.localStorage.getItem(DISTANCE_PREFERENCE_KEY)) {
+        window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, DEFAULT_UNIT)
       }
       setIsLoading(false)
     }
+  // eslint-disable-next-line
   }, [])
 
   const handleUnitChange = (newUnit: string) => {
-    window.localStorage.setItem('distanceUnits', newUnit)
-    setUnitFromLocalStorage(newUnit)
+    try {
+      window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, newUnit)
+      setUnitFromLocalStorage(newUnit as TUnits)
+    } catch (error) {
+      console.error('Failed to save unit preference:', error)
+    }
   }
+
+  const LoadingState = () => (
+    <p className="text-gray-400" aria-label="Loading settings">
+      Loading...
+    </p>
+  )
 
   return (
     <>
@@ -36,15 +49,12 @@ export default function Settings() {
             <div className="pt-6 sm:flex">
               <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Units for distance</dt>
               <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                {isLoading ? (
-                  <p className="text-gray-400">Loading...</p>
-                ) : (
-                  <div className="text-gray-900">{unitFromLocalStorage}</div>
-                )}
+                {isLoading ? <LoadingState /> : <div className="text-gray-900">{unitFromLocalStorage}</div>}
                 <button
+                  aria-label="Update distance units"
+                  className="font-semibold text-slate-700 hover:text-slate-600"
                   onClick={() => setDistanceUnitsDialogIsOpen(true)}
                   type="button"
-                  className="font-semibold text-slate-700 hover:text-slate-600"
                 >
                   Update
                 </button>
@@ -55,7 +65,7 @@ export default function Settings() {
       </div>
 
       <DistanceUnitsDialog
-        currentUnit={unitFromLocalStorage || DISTANCE_UNITS.Miles}
+        currentUnit={unitFromLocalStorage || DEFAULT_UNIT}
         isOpen={distanceUnitsDialogIsOpen}
         handleClose={() => setDistanceUnitsDialogIsOpen(false)}
         onUnitChange={handleUnitChange}
