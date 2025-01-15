@@ -2,20 +2,17 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
-import Map, { Source, Layer, Marker, ViewStateChangeEvent } from 'react-map-gl'
+import Map, { Source, Layer } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
-import ShopList from '@/app/components/ShopList'
 import ShopDetails from '@/app/components/ShopDetails'
 
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopSearch from './components/ShopSearch'
-
-const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function Home() {
   const plausible = usePlausible()
@@ -27,7 +24,6 @@ export default function Home() {
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
-  const [zoomLevel, setZoomLevel] = useState(12)
 
   const MAP_CONSTANTS = {
     INITIAL_VIEW: {
@@ -222,7 +218,6 @@ export default function Home() {
         cursor="pointer"
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onClick={handleMapClick}
-        onMove={(e: ViewStateChangeEvent) => setZoomLevel(e.viewState.zoom)}
         ref={mapRef}
       >
         <Source id="my-data" type="geojson" data={dataSet}>
