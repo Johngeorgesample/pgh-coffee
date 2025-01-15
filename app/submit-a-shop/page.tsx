@@ -6,7 +6,7 @@ import SuccessDialog from './SuccessDialog'
 export default function SubmitAShop() {
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
 
-  const submitForm = useRef(null)
+  const submitForm = useRef<HTMLFormElement>(null)
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
@@ -26,7 +26,6 @@ export default function SubmitAShop() {
         console.error('Error:', errorResponse.error)
       } else {
         setSuccessDialogIsOpen(true)
-        // @ts-ignore-next-line
         submitForm.current?.reset()
       }
     } catch (error) {
@@ -118,10 +117,7 @@ export default function SubmitAShop() {
         </form>
       </div>
 
-      <SuccessDialog
-        isOpen={successDialogIsOpen}
-        handleClose={() => setSuccessDialogIsOpen(false)}
-      />
+      <SuccessDialog isOpen={successDialogIsOpen} handleClose={() => setSuccessDialogIsOpen(false)} />
     </>
   )
 }
