@@ -5,7 +5,6 @@ import { usePlausible } from 'next-plausible'
 import Map, { Source, Layer } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import Footer from '@/app/components/Footer'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import ShopPanel from '@/app/components/ShopPanel'
 import ShopDetails from '@/app/components/ShopDetails'
@@ -13,6 +12,7 @@ import ShopDetails from '@/app/components/ShopDetails'
 import { DISTANCE_UNITS } from './settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopSearch from './components/ShopSearch'
+import SearchFAB from './components/SearchFAB'
 
 export default function Home() {
   const plausible = usePlausible()
@@ -241,13 +241,7 @@ export default function Home() {
           />
         </Source>
       </Map>
-      <button
-        aria-label="Search shops"
-        className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
-        onClick={handleSearchClick}
-      >
-        <MagnifyingGlassIcon className="h-8 w-8" />
-      </button>
+      <SearchFAB handleClick={handleSearchClick} />
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
