@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.ts';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -32,4 +32,8 @@ body {
 
 canvas {
   outline: none;
+}
+
+hr {
+  @apply border-gray-300;
 }
