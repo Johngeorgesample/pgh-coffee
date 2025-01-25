@@ -27,7 +27,7 @@ const generateDistanceText = ({ units, distance }: { units: string; distance: st
 export default function ShopCard(props: IProps) {
   return (
     <li
-      className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
+      className="relative mb-4 rounded-sm overflow-hidden shadow-md hover:cursor-pointer"
       onClick={() => props.handleCardClick(props.shop)}
       onKeyPress={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
