@@ -15,10 +15,18 @@ beforeAll(() => {
 
 describe('ShopPanel Component', () => {
   const mockShop: TShop = {
-    id: '1',
-    name: 'Test Coffee Shop',
-    location: '123 Coffee Street',
-    // Add any other necessary properties for TShop here
+  "type": "Feature",
+  "properties": {
+    "name": "Test Shop",
+    "neighborhood": "Lower Lawrenceville",
+    "address": "123 Test St.",
+    "photo": "",
+    "website": ""
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-79.9253955, 40.4855015]
+  }
   }
 
   const mockEmitClose = vi.fn()
