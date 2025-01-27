@@ -146,7 +146,7 @@ export default function HomeClient() {
 
   return (
     <>
-      <MapContainer 
+      <MapContainer
         dataSet={dataSet}
         currentShop={currentShop}
         currentShopAddress={currentShop.properties?.address}
@@ -154,7 +154,7 @@ export default function HomeClient() {
           const shop = {
             properties,
             geometry,
-            type
+            type,
           } as TShop
           setIsOpen(true)
           handleUpdatingCurrentShop(shop)
