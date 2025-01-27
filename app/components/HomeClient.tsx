@@ -151,11 +151,11 @@ export default function HomeClient() {
         currentShop={currentShop}
         currentShopAddress={currentShop.properties?.address}
         onShopSelect={(properties, geometry, type) => {
-          const shop: TShop = {
+          const shop = {
             properties,
             geometry,
             type
-          }
+          } as TShop
           setIsOpen(true)
           handleUpdatingCurrentShop(shop)
           plausible('FeaturePointClick', {
