@@ -2,31 +2,32 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import ShopPanel from '@/app/components/ShopPanel'
 import { TShop } from '@/types/shop-types'
 
-
 beforeAll(() => {
-  globalThis.matchMedia = globalThis.matchMedia || function() {
-    return {
-      matches: false,
-      addEventListener: () => {},
-      removeEventListener: () => {},
+  globalThis.matchMedia =
+    globalThis.matchMedia ||
+    function () {
+      return {
+        matches: false,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      }
     }
-  }
 })
 
 describe('ShopPanel Component', () => {
   const mockShop: TShop = {
-  "type": "Feature",
-  "properties": {
-    "name": "Test Shop",
-    "neighborhood": "Lower Lawrenceville",
-    "address": "123 Test St.",
-    "photo": "",
-    "website": ""
-  },
-  "geometry": {
-    "type": "Point",
-    "coordinates": [-79.9253955, 40.4855015]
-  }
+    type: 'Feature',
+    properties: {
+      name: 'Test Shop',
+      neighborhood: 'Lower Lawrenceville',
+      address: '123 Test St.',
+      photo: '',
+      website: '',
+    },
+    geometry: {
+      type: 'Point',
+      coordinates: [-79.9253955, 40.4855015],
+    },
   }
 
   const mockEmitClose = vi.fn()
@@ -77,7 +78,7 @@ describe('ShopPanel Component', () => {
     render(
       <ShopPanel {...defaultProps}>
         <button onClick={() => mockHandlePanelContentClick(mockShop)}>Click Me</button>
-      </ShopPanel>
+      </ShopPanel>,
     )
 
     const button = screen.getByText('Click Me')
