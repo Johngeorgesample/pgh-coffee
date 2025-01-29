@@ -16,7 +16,6 @@ const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: number }) 
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
-
   const { name, neighborhood, website, address } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
@@ -31,11 +30,7 @@ export default function PanelContent(props: IProps) {
           {website && (
             <div className="flex mt-2">
               <GlobeAltIcon className="w-4 mr-1" />
-              <a
-                className="group text-sm flex items-center hover:underline "
-                href={website}
-                target="_blank"
-              >
+              <a className="group text-sm flex items-center hover:underline " href={website} target="_blank">
                 {website}
                 <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
               </a>
