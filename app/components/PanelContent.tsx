@@ -16,23 +16,27 @@ const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: number }) 
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
+
+  const { name, neighborhood, website, address } = props.shop.properties
+  const coordinates = props.shop.geometry?.coordinates
+
   return (
     <>
       <section>
         <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
-          <p className="font-medium">{props.shop.properties.name}</p>
-          <p className="text-lg text-gray-600">{props.shop.properties.neighborhood}</p>
+          <p className="font-medium">{name}</p>
+          <p className="text-lg text-gray-600">{neighborhood}</p>
         </div>
         <div className="relative text-gray-700 px-4 sm:px-6">
-          {props.shop.properties.website && (
+          {website && (
             <div className="flex mt-2">
               <GlobeAltIcon className="w-4 mr-1" />
               <a
-                className="group text-sm flex items-center hover:underline"
-                href={props.shop.properties.website}
+                className="group text-sm flex items-center hover:underline "
+                href={website}
                 target="_blank"
               >
-                {props.shop.properties.website}
+                {website}
                 <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
               </a>
             </div>
@@ -42,13 +46,13 @@ export default function PanelContent(props: IProps) {
             <a
               className="group text-sm flex items-center hover:underline"
               href={getGoogleMapsUrl({
-                latitude: props.shop.geometry.coordinates[0],
-                longitude: props.shop.geometry.coordinates[1],
+                latitude: coordinates[0],
+                longitude: coordinates[1],
               })}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <address className="text-sm hover:underline">{props.shop.properties.address}</address>
+              <address className="text-sm hover:underline">{address}</address>
               <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
             </a>
           </div>
