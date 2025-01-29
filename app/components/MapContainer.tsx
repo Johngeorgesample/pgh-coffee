@@ -1,7 +1,5 @@
-'use client'
-
 import { useRef, useEffect } from 'react'
-import Map, { Source, Layer } from 'react-map-gl'
+import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import { TShop } from '@/types/shop-types'
 
@@ -16,7 +14,7 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ dataSet, currentShop, onShopSelect }: MapContainerProps) {
-  const mapRef = useRef(null)
+  const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
 
   const MAP_CONSTANTS = {
@@ -38,14 +36,11 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
 
   // Pan to currentShop
   useEffect(() => {
-    if (currentShop.properties) {
-      if (mapRef.current && currentShop) {
-        // @ts-ignore-next-line
+    if (currentShop?.properties && currentShop?.geometry?.coordinates) {
+      if (mapRef.current) {
         mapRef.current.flyTo({
-          // @ts-ignore-next-line
           center: [currentShop.geometry.coordinates[0], currentShop.geometry.coordinates[1]],
-          // @ts-ignore-next-line
-          zoom: mapRef.current?.getZoom(),
+          zoom: mapRef.current.getZoom(),
           bearing: 0,
           pitch: 0,
           duration: 1000,
@@ -56,13 +51,12 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
   }, [currentShop])
 
   const handleMapClick = (event: MapMouseEvent) => {
-    // @ts-ignore-next-line
     const map = mapRef.current?.getMap()
-    const features = map.queryRenderedFeatures(event.point, {
+    const features = map?.queryRenderedFeatures(event.point, {
       layers: [layerId],
-    })
+    }) as unknown as GeoJSON.Feature[] | undefined
 
-    if (features.length) {
+    if (features?.length && features[0].properties) {
       onShopSelect(features[0].properties, features[0].geometry, features[0].type)
     }
   }
