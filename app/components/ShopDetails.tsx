@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { TShop } from '@/types/shop-types'
 import PanelHeader from './PanelHeader'
 import PanelContent from './PanelContent'
@@ -5,11 +6,11 @@ import PanelFooter from './PanelFooter'
 
 interface TProps {
   shop: TShop
-  emitClose: Function
+  emitClose: () => void
   handlePanelContentClick: (shop: TShop) => void
 }
 
-export default function ShopDetails(props: TProps) {
+const ShopDetails = memo((props: TProps) => {
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       <PanelHeader shop={props.shop} emitClose={props.emitClose} />
@@ -17,4 +18,6 @@ export default function ShopDetails(props: TProps) {
       <PanelFooter shop={props.shop} />
     </div>
   )
-}
+})
+
+export default ShopDetails
