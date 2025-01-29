@@ -20,4 +20,5 @@ const ShopDetails = memo((props: TProps) => {
   )
 })
 
+ShopDetails.displayName = 'ShopDetails'
 export default ShopDetails
