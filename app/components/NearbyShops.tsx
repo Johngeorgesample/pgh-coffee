@@ -48,11 +48,11 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
     if (!coffeeShops.features) return { shops: [], distances: [] }
 
     return coffeeShops.features
-      .filter(
-        (s: TShop) =>
-          s.properties.address !== shop.properties.address &&
-          haversineDistance(s.geometry.coordinates, shop.geometry.coordinates) < 1000,
-      )
+      .filter((s: TShop) => {
+        const isDifferentShop = s.properties.address !== shop.properties.address
+        const distance = haversineDistance(s.geometry.coordinates, shop.geometry.coordinates)
+        return isDifferentShop && distance < 1000
+      })
       .map((s: TShop) => ({
         shop: s,
         distance: calculateDistance(shop.geometry.coordinates, s.geometry.coordinates),
@@ -70,10 +70,12 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
 
   const handleCardClick = (shop: TShop) => {
     handleClick(shop)
-    plausible('NearbyCardClick', { props: {
-          shopName: shop.properties.name,
-          neighborhood: shop.properties.neighborhood,
-    } })
+    plausible('NearbyCardClick', {
+      props: {
+        shopName: shop.properties.name,
+        neighborhood: shop.properties.neighborhood,
+      },
+    })
   }
 
   if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>

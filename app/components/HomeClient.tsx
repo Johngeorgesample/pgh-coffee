@@ -23,6 +23,53 @@ export default function HomeClient() {
     features: [] as TShop[],
   })
 
+  const appendSearchParamToURL = (shop: TShop) => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
+    url.search = params.toString()
+    history.pushState({}, '', url.toString())
+  }
+
+  const removeSearchParam = () => {
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('shop')
+    url.search = params.toString()
+    history.replaceState({}, '', url.toString())
+  }
+
+  const handleClose = () => {
+    setIsOpen(false)
+    setDataSet(coffeeShops)
+    removeSearchParam()
+  }
+
+  const handleUpdatingCurrentShop = (shop: TShop) => {
+    setCurrentShop(shop)
+    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    if (Object.keys(shop).length) {
+      appendSearchParamToURL(shop)
+    }
+  }
+
+  const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
+    handleUpdatingCurrentShop(shopFromShopPanel)
+    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleSearchClick = () => {
+    if (Object.keys(coffeeShops).length) {
+      handleUpdatingCurrentShop({} as TShop)
+      setIsOpen(true)
+      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+
+      plausible('SearchClick', {
+        props: {},
+      })
+    }
+  }
+
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
@@ -65,10 +112,7 @@ export default function HomeClient() {
     }
 
     window.addEventListener('popstate', handlePopState)
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState)
-    }
+    return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
   useEffect(() => {
@@ -79,8 +123,8 @@ export default function HomeClient() {
     }
   }, [])
 
-  // Update color of currentShop dot
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const newData = {
       ...dataSet,
       features: dataSet.features.map((f: TShop) => {
@@ -96,53 +140,6 @@ export default function HomeClient() {
     }
     setDataSet(newData)
   }, [currentShop])
-
-  const handleUpdatingCurrentShop = (shop: TShop) => {
-    setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
-    if (Object.keys(shop).length) {
-      appendSearchParamToURL(shop)
-    }
-  }
-
-  const appendSearchParamToURL = (shop: TShop) => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
-    url.search = params.toString()
-    history.pushState({}, '', url.toString())
-  }
-
-  const removeSearchParam = () => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.delete('shop')
-    url.search = params.toString()
-    history.replaceState({}, '', url.toString())
-  }
-
-  const handleClose = () => {
-    setIsOpen(false)
-    setDataSet(coffeeShops)
-    removeSearchParam()
-  }
-
-  const handleSearchClick = () => {
-    if (Object.keys(coffeeShops).length) {
-      handleUpdatingCurrentShop({} as TShop)
-      setIsOpen(true)
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
-
-      plausible('SearchClick', {
-        props: {},
-      })
-    }
-  }
-
-  const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
-    handleUpdatingCurrentShop(shopFromShopPanel)
-    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <>
