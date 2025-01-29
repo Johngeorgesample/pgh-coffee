@@ -1,8 +1,5 @@
 import { TNeighborhood } from './neighborhood-types'
 
-export interface TShopProperties {
-  }
-
 export interface TShop {
   type: string,
   properties: {
