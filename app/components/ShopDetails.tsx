@@ -13,7 +13,7 @@ interface TProps {
 const ShopDetails = memo((props: TProps) => {
   return (
     <div className="flex h-full flex-col overflow-y-auto">
-      <PanelHeader shop={props.shop} emitClose={props.emitClose} />
+      <PanelHeader shop={props.shop} />
       <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
       <PanelFooter shop={props.shop} />
     </div>
