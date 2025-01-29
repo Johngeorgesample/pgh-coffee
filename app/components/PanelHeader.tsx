@@ -11,6 +11,7 @@ interface IProps {
 }
 
 export default function PanelHeader(props: IProps) {
+  const { name, neighborhood, photo } = props.shop.properties
   const plausible = usePlausible()
   const [photoDialogIsOpen, setPhotoDialogIsOpen] = useState(false)
 
@@ -20,14 +21,14 @@ export default function PanelHeader(props: IProps) {
 
       plausible('PanelHeaderClick', {
         props: {
-          shopName: props.shop.properties.name,
-          neighborhood: props.shop.properties.neighborhood,
+          shopName: name,
+          neighborhood: neighborhood,
         },
       })
     }
   }
 
-  const hasPhoto = !!props.shop.properties.photo
+  const hasPhoto = !!photo
 
   return (
     <div id="header">
@@ -35,7 +36,7 @@ export default function PanelHeader(props: IProps) {
         className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
           hasPhoto ? 'hover:cursor-pointer' : ''
         }`}
-        style={hasPhoto ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
+        style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
         onClick={hasPhoto ? handleHeaderClick : undefined}
       >
         { hasPhoto && (
