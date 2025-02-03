@@ -49,7 +49,8 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
 
     return coffeeShops.features
       .filter((s: TShop) => {
-        const isDifferentShop = s.properties.address !== shop.properties.address
+        const isDifferentShop =
+          s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
         const distance = haversineDistance(s.geometry.coordinates, shop.geometry.coordinates)
         return isDifferentShop && distance < 1000
       })
