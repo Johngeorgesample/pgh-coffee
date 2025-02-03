@@ -128,7 +128,7 @@ export default function HomeClient() {
     const newData = {
       ...dataSet,
       features: dataSet.features.map((f: TShop) => {
-        const isSelected = f.properties.address === currentShop.properties?.address
+        const isSelected = (f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name)
         return {
           ...f,
           properties: {
