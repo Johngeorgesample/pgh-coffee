@@ -1,18 +1,32 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
-import { PhotoIcon } from '@heroicons/react/24/solid'
+import { useRef, useState } from 'react'
 import SuccessDialog from './SuccessDialog'
 
+interface IShopSubmission {
+  name: string
+  address: string
+  neighborhood?: string
+  website?: string
+}
+
 export default function SubmitAShop() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
 
-  const submitForm = useRef(null)
+  const submitForm = useRef<HTMLFormElement>(null)
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setIsSubmitting(true)
     const formData = new FormData(event.currentTarget)
 
-    const data = Object.fromEntries(formData.entries())
+    const data: IShopSubmission = {
+      name: formData.get('name') as string,
+      address: formData.get('address') as string,
+      neighborhood: formData.get('neighborhood') as string,
+      website: formData.get('website') as string,
+    }
+
     try {
       const response = await fetch('/api/shops/submit', {
         method: 'POST',
@@ -25,10 +39,11 @@ export default function SubmitAShop() {
       if (!response.ok) {
         const errorResponse = await response.json()
         console.error('Error:', errorResponse.error)
+        setIsSubmitting(false)
       } else {
         setSuccessDialogIsOpen(true)
-        // @ts-ignore-next-line
         submitForm.current?.reset()
+        setIsSubmitting(false)
       }
     } catch (error) {
       console.error('Unexpected error:', error)
@@ -57,7 +72,7 @@ export default function SubmitAShop() {
                       name="name"
                       required
                       type="text"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -72,7 +87,7 @@ export default function SubmitAShop() {
                       name="address"
                       required
                       type="text"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -86,7 +101,7 @@ export default function SubmitAShop() {
                       id="neighborhood"
                       name="neighborhood"
                       type="text"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -100,7 +115,7 @@ export default function SubmitAShop() {
                       id="website"
                       name="website"
                       type="text"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -111,18 +126,17 @@ export default function SubmitAShop() {
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
               type="submit"
-              className="rounded-md bg-yellow-300 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400"
+              className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${
+                isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
+              }`}
             >
-              Save
+              {isSubmitting ? 'Submitting...' : 'Save'}
             </button>
           </div>
         </form>
       </div>
 
-      <SuccessDialog
-        isOpen={successDialogIsOpen}
-        handleClose={() => setSuccessDialogIsOpen(false)}
-      />
+      <SuccessDialog isOpen={successDialogIsOpen} handleClose={() => setSuccessDialogIsOpen(false)} />
     </>
   )
 }

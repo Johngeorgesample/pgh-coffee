@@ -1,20 +1,18 @@
 import { TShop } from '@/types/shop-types'
+import { TUnits } from '@/types/unit-types'
 
 interface IProps {
   distance?: string
   handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
-  units?: string
+  units?: TUnits
+
 }
 
 const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
-  if (units === 'miles') {
-    return Math.round(distance * 100) / 100
-  }
-  if (units === 'meters') {
-    return Math.round(distance)
-  }
+  if (units === 'Miles') return Math.round(distance * 100) / 100
+  if (units === 'Meters') return Math.round(distance)
 }
 
 const generateDistanceText = ({ units, distance }: { units: string; distance: string }) => {
@@ -25,9 +23,9 @@ const generateDistanceText = ({ units, distance }: { units: string; distance: st
 export default function ShopCard(props: IProps) {
   return (
     <li
-      className="relative mb-4 rounded overflow-hidden shadow-md hover:cursor-pointer"
+      className="relative mb-4 rounded-sm overflow-hidden shadow-md hover:cursor-pointer"
       onClick={() => props.handleCardClick(props.shop)}
-      onKeyPress={event => props.handleKeyPress(event, props.shop)}
+      onKeyDown={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
       role="button"
     >

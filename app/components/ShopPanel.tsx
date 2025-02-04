@@ -3,8 +3,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { TShop } from '@/types/shop-types'
-import ShopSearch from './ShopSearch'
-import ShopDetails from './ShopDetails'
 
 interface IProps {
   children: any
@@ -43,7 +41,7 @@ export default function ShopPanel(props: IProps) {
                 leaveFrom={isLargeScreen ? 'translate-x-0' : 'translate-y-0'}
                 leaveTo={isLargeScreen ? 'translate-x-full' : 'translate-y-full'}
               >
-                <Dialog.Panel className="bg-white overflow-y-scroll pointer-events-auto w-screen lg:max-w-xl">
+                <Dialog.Panel className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-xl">
                   {props.children}
                 </Dialog.Panel>
               </Transition.Child>

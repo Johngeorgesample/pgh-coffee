@@ -1,12 +1,13 @@
 import { TShop } from '@/types/shop-types'
+import { TUnits } from '@/types/unit-types'
 import ShopCard from '@/app/components/ShopCard'
 
 interface IProps {
   coffeeShops: TShop[]
-  distances?: any
+  distances?: number[]
   filter?: string
-  handleCardClick: (shop: TShop) => any
-  units?: string | null
+  handleCardClick: (shop: TShop) => void
+  units?: TUnits
 }
 
 export default function ShopList(props: IProps) {
@@ -34,14 +35,15 @@ export default function ShopList(props: IProps) {
           return (
             <ShopCard
               key={shop.properties.name + shop.properties.address}
-              distance={props.distances?.[index] ?? null}
+              distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               handleCardClick={props.handleCardClick}
               handleKeyPress={handleKeyPress}
               shop={shop}
-              units={props.units?.toLowerCase()}
+              units={props.units}
             />
           )
         }
+        return null
       })}
     </ul>
   )

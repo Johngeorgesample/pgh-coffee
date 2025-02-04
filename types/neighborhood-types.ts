@@ -23,6 +23,7 @@ export type TNeighborhood =
   | 'Chateau'
   | 'Crafton Heights'
   | 'Crawford-Roberts'
+  | 'Downtown'
   | 'Duquesne Heights'
   | 'East Allegheny'
   | 'East Carnegie'

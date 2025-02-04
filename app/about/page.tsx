@@ -1,6 +1,5 @@
 'use client'
 
-import Nav from '@/app/components/Nav'
 import QAndA from '@/app/components/QAndA'
 
 export default function About() {
@@ -26,7 +25,7 @@ export default function About() {
 
         <p className="mt-1 mb-3 text-sm leading-6">
           I hope this site helps you find your next favorite coffee spot. Feel free to explore, share your
-          recommendations, or simply enjoy the journey!
+          recommendations, or simply enjoy the journey.
         </p>
       </div>
 
@@ -64,7 +63,7 @@ export default function About() {
           <li>
             <div className="mt-2">
               <p className="text-sm leading-6">
-                Submit a Coffee Shop: If you know a hidden gem that’s not yet featured, let me know!
+                Submit a Coffee Shop: If you know a hidden gem that’s not yet featured, let me know.
               </p>
             </div>
           </li>
@@ -94,8 +93,8 @@ export default function About() {
           </h3>
         </a>
         <p className="text-sm leading-6">
-          I&apos;d love to hear from you! Whether you have feedback, suggestions, or just want to chat about coffee, don&apos;t
-          hesitate to reach out.
+          I&apos;d love to hear from you. Whether you have feedback, suggestions, or just want to chat about coffee,
+          don&apos;t hesitate to reach out.
         </p>
 
         <ul className="list-disc ml-8">
@@ -123,7 +122,13 @@ export default function About() {
               <p className="font-semibold">Social Media</p>
               <ul className="list-disc ml-8">
                 <li>
-                  <p className="text-sm leading-6">Follow <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">@pgh.coffee</a> on Instagram</p>
+                  <p className="text-sm leading-6">
+                    Follow{' '}
+                    <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
+                      @pgh.coffee
+                    </a>{' '}
+                    on Instagram
+                  </p>
                 </li>
                 <li>
                   <p className="text-sm leading-6">
@@ -161,7 +166,7 @@ export default function About() {
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">How can I contribute to the site?</p>
             <p>
-              I’d love your help! You can submit new shops through the{' '}
+              I’d love your help. You can submit new shops through the{' '}
               <a className="underline text-blue-700" href="/submit-a-shop">
                 Submit a Shop
               </a>{' '}
@@ -172,32 +177,53 @@ export default function About() {
 
           <QAndA
             question="Why is my favorite coffee shop missing?"
-            answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up! I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon!"
+            answer="As one person, it’s a challenge to keep track of every new shop in the city—there’s always something new popping up. I’m actively working on adding more, and if your favorite spot is missing, feel free to let me know, and I’ll make sure to add it soon."
           />
+
+          <div className="mb-2 text-sm leading-6">
+            <p className="font-semibold">Does pgh.coffee have an app?</p>
+            <p>
+              While we’re not in the app store, you can pin pgh.coffee to your home screen for a seamless, app-like
+              experience. Here’s how:
+            </p>
+
+            <ul className="list-disc ml-8">
+              <li><span className="">For iPhone (Safari)</span>: Tap the Share button, then choose Add to Home Screen.</li>
+              <li><span className="">For Android (Chrome)</span>: Tap the Menu (three dots), then select Add to Home Screen.</li>
+            </ul>
+
+            <p>It’s quick and easy, so you can keep exploring Pittsburgh’s coffee scene with just a tap. </p>
+          </div>
 
           <QAndA
             question="Can I use the coffee shop dataset for my project?"
-            answer="Absolutely! The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
+            answer="Absolutely. The entire dataset is licensed under MIT, so you’re free to use it as you like. Just be sure to credit the source if applicable."
           />
 
           <QAndA
             question="Where do the photos come from?"
-            answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work!"
+            answer="Most of the photos on the site were taken by me to ensure there are no copyright issues. However, if you’re a photographer and would like to contribute, I’d be happy to credit your work."
           />
+
+          <QAndA
+            question="Why aren’t chains like Starbucks and Dunkin’ listed?"
+            answer="pgh.coffee is focused on highlighting Pittsburgh's independent and locally owned coffee shops."
+          />
+
 
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">What’s next for the site?</p>
             <p>
-              Building on the site&apos;s open-source foundation, I&apos;m adding features that will transform pgh.coffee from a
-              simple map to a living resource for Pittsburgh&apos;s coffee community. Expect user accounts, the ability to
-              track your coffee discoveries, and ways to share your favorite local spots.
+              Building on the site&apos;s open-source foundation, I&apos;m adding features that will transform
+              pgh.coffee from a simple map to a living resource for Pittsburgh&apos;s coffee community. Expect user
+              accounts, the ability to track your coffee discoveries, and ways to share your favorite local spots.
             </p>
           </div>
 
           <div className="mb-2 text-sm leading-6">
             <p className="font-semibold">How can I support this project?</p>
             <p>
-              If you see me around Pittsburgh, you can buy me a cortado! Otherwise, you can{' '}
+              If you see me around Pittsburgh, you can buy me a cortado. Otherwise, you can{' '}
               <a className="underline text-blue-700" href="https://buymeacoffee.com/johngeorgesample" target="_blank">
                 buy me a digital coffee
               </a>
@@ -205,7 +231,7 @@ export default function About() {
               <a className="underline text-blue-700" href="https://www.instagram.com/pgh.coffee/" target="_blank">
                 @pgh.coffee
               </a>
-              . Your support means the world!
+              . Your support means the world.
             </p>
           </div>
         </div>

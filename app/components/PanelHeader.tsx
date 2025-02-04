@@ -1,36 +1,57 @@
 'use client'
 
-import { Dialog } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
+import PhotoDialog from './PhotoDialog'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
   shop: TShop
-  emitClose: Function
 }
 
 export default function PanelHeader(props: IProps) {
+  const { name, neighborhood, photo } = props.shop.properties
+  const plausible = usePlausible()
+  const [photoDialogIsOpen, setPhotoDialogIsOpen] = useState(false)
+
+  const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      setPhotoDialogIsOpen(true)
+
+      plausible('PanelHeaderClick', {
+        props: {
+          shopName: name,
+          neighborhood: neighborhood,
+        },
+      })
+    }
+  }
+
+  const hasPhoto = !!photo
+
   return (
-    <div className="" id="header">
+    <div id="header">
       <div
-        className="h-56 relative bg-yellow-200 bg-cover bg-center"
-        style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : undefined}
+        className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
+          hasPhoto ? 'hover:cursor-pointer' : ''
+        }`}
+        style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
+        onClick={hasPhoto ? handleHeaderClick : undefined}
       >
-        <div className="py-2 px-4 sm:px-6 absolute w-full bottom-0 backdrop-blur-xl bg-white/40 flex items-center justify-between">
-          <Dialog.Title className="text-3xl text-gray-900">{props.shop.properties.name}</Dialog.Title>
-          <div className="ml-3 flex h-7 items-center">
-            <button
-              type="button"
-              className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => props.emitClose()}
-            >
-              <span className="absolute -inset-2.5" />
-              <span className="sr-only">Close panel</span>
-              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
+        { hasPhoto && (
+          <div
+            className="group-hover:inline-flex absolute bottom-0 m-2 hidden bg-black bg-opacity-50 text-white p-1 rounded-md"
+            role="button"
+            aria-label="open photo gallery"
+          >
+            <PhotoIcon className="w-6 pr-1" />
+
+            <p className="text-sm">See photos</p>
           </div>
-        </div>
+        )}
       </div>
+      <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
     </div>
   )
 }
