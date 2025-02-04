@@ -6,6 +6,15 @@
 
 This repository contains the source code for pgh.coffee — a website focused on helping users discover coffee shops in Pittsburgh, PA. The site uses Next.js, Supabase for its PostgreSQL database, Zustand for state management, and Tailwind CSS for styling.
 
+## Table of Contents
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+- [Tests](#tests)
+- [API Documentation](#api-documentation)
+  - [Endpoints](#endpoints)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Getting Started
 
 Follow these steps to get started with the project:
@@ -40,7 +49,18 @@ npm run dev
 
 The app will be accessible at <http://localhost:3000>.
 
-## Public API
+## Tests
+
+This project uses [Vitest](https://vitest.dev/) as its testing framework. Tests are located in the `/tests/unit` directory.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm run test
+```
+
+## API Documentation
 
 If you're interested in the dataset, pgh.coffee provides a public API that you can use to access information about coffee shops in Pittsburgh.
 
