@@ -40,14 +40,13 @@ export default function HomeClient() {
 
 const handleClose = useCallback(() => {
   setIsOpen(false);
-  // Reset selected state for all shops
   setDataSet(prevDataSet => ({
     ...prevDataSet,
     features: prevDataSet.features.map(f => ({
       ...f,
       properties: {
         ...f.properties,
-        selected: false, // Reset selected state
+        selected: false,
       },
     })),
   }));
@@ -166,7 +165,6 @@ const handleShopSelect = useCallback(
     setIsOpen(true);
     handleUpdatingCurrentShop(shop);
 
-    // Update dataSet to mark the selected shop
     setDataSet(prevDataSet => {
       const newFeatures = prevDataSet.features.map((f: TShop) => {
         const isSelected = (f.properties.address === shop.properties.address && f.properties.name === shop.properties.name);
@@ -174,7 +172,7 @@ const handleShopSelect = useCallback(
           ...f,
           properties: {
             ...f.properties,
-            selected: isSelected, // Mark the selected shop
+            selected: isSelected,
           },
         };
       });

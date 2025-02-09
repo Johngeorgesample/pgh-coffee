@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 export default function Nav() {
   const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false)
