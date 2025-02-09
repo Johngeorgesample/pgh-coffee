@@ -39,7 +39,7 @@ export default function HomeClient() {
   }, [])
 
 const handleClose = useCallback(() => {
-  setIsOpen(false);
+  setIsOpen(false)
   setDataSet(prevDataSet => ({
     ...prevDataSet,
     features: prevDataSet.features.map(f => ({
@@ -49,9 +49,9 @@ const handleClose = useCallback(() => {
         selected: false,
       },
     })),
-  }));
-  removeSearchParam();
-}, [removeSearchParam]);
+  }))
+  removeSearchParam()
+}, [removeSearchParam])
 
   const handleUpdatingCurrentShop = useCallback(
     (shop: TShop) => {
@@ -160,38 +160,38 @@ const handleShopSelect = useCallback(
       properties,
       geometry,
       type,
-    } as TShop;
+    } as TShop
 
-    setIsOpen(true);
-    handleUpdatingCurrentShop(shop);
+    setIsOpen(true)
+    handleUpdatingCurrentShop(shop)
 
     setDataSet(prevDataSet => {
       const newFeatures = prevDataSet.features.map((f: TShop) => {
-        const isSelected = (f.properties.address === shop.properties.address && f.properties.name === shop.properties.name);
+        const isSelected = (f.properties.address === shop.properties.address && f.properties.name === shop.properties.name)
         return {
           ...f,
           properties: {
             ...f.properties,
             selected: isSelected,
           },
-        };
-      });
+        }
+      })
 
       return {
         ...prevDataSet,
         features: newFeatures,
-      };
-    });
+      }
+    })
 
     plausible('FeaturePointClick', {
       props: {
         shopName: properties.name,
         neighborhood: properties.neighborhood,
       },
-    });
+    })
   },
   [handleUpdatingCurrentShop, plausible]
-);
+)
 
   return (
     <>
