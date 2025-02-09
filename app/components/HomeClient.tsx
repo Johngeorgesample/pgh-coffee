@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -17,58 +17,95 @@ export default function HomeClient() {
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
-  const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
 
-  const appendSearchParamToURL = (shop: TShop) => {
+  const appendSearchParamToURL = useCallback((shop: TShop) => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
     url.search = params.toString()
     history.pushState({}, '', url.toString())
-  }
+  }, [])
 
-  const removeSearchParam = () => {
+  const removeSearchParam = useCallback(() => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.delete('shop')
     url.search = params.toString()
     history.replaceState({}, '', url.toString())
-  }
+  }, [])
 
-  const handleClose = () => {
-    setIsOpen(false)
-    setDataSet(coffeeShops)
-    removeSearchParam()
-  }
+const handleClose = useCallback(() => {
+  setIsOpen(false);
+  // Reset selected state for all shops
+  setDataSet(prevDataSet => ({
+    ...prevDataSet,
+    features: prevDataSet.features.map(f => ({
+      ...f,
+      properties: {
+        ...f.properties,
+        selected: false, // Reset selected state
+      },
+    })),
+  }));
+  removeSearchParam();
+}, [removeSearchParam]);
 
-  const handleUpdatingCurrentShop = (shop: TShop) => {
-    setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
-    if (Object.keys(shop).length) {
-      appendSearchParamToURL(shop)
-    }
-  }
+  const handleUpdatingCurrentShop = useCallback(
+    (shop: TShop) => {
+      setCurrentShop(shop)
+      if (Object.keys(shop).length) {
+        appendSearchParamToURL(shop)
+      }
+    },
+    [appendSearchParamToURL],
+  )
 
-  const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
-    handleUpdatingCurrentShop(shopFromShopPanel)
-    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const handleNearbyShopClick = useCallback(
+    (shopFromShopPanel: TShop) => {
+      handleUpdatingCurrentShop(shopFromShopPanel)
+      document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
+    },
+    [handleUpdatingCurrentShop],
+  )
 
-  const handleSearchClick = () => {
+  const handleSearchClick = useCallback(() => {
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
       setIsOpen(true)
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
 
       plausible('SearchClick', {
         props: {},
       })
     }
-  }
+  }, [coffeeShops, handleUpdatingCurrentShop, plausible])
+
+  const panelContent = useMemo(() => {
+    if (!Object.keys(currentShop).length) {
+      return <ShopSearch handleResultClick={handleNearbyShopClick} />
+    }
+    return <ShopDetails shop={currentShop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />
+  }, [currentShop, handleNearbyShopClick, handleClose])
+
+  const mappedDataSet = useMemo(
+    () => ({
+      type: 'FeatureCollection',
+      features:
+        dataSet.features?.map((f: TShop) => ({
+          ...f,
+          properties: {
+            ...f.properties,
+            selected:
+              f.properties.address === currentShop.properties?.address &&
+              f.properties.name === currentShop.properties?.name,
+          },
+        })) || [],
+    }),
+    [dataSet, currentShop.properties?.address, currentShop.properties?.name],
+  )
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -93,11 +130,8 @@ export default function HomeClient() {
           const data = await response.json()
           setIsOpen(true)
           setCurrentShop(data)
-          setPanelContent(
-            <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
-          )
         } catch (err) {
-          console.log(err)
+          console.error('Error fetching shop:', err)
         }
       } else {
         setCurrentShop({} as TShop)
@@ -116,52 +150,58 @@ export default function HomeClient() {
   }, [])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (!window.localStorage.getItem('distanceUnits')) {
-        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
-      }
+    if (typeof window !== 'undefined' && !window.localStorage.getItem('distanceUnits')) {
+      window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
     }
   }, [])
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const newData = {
-      ...dataSet,
-      features: dataSet.features.map((f: TShop) => {
-        const isSelected = (f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name)
+const handleShopSelect = useCallback(
+  (properties: any, geometry: any, type: any) => {
+    const shop = {
+      properties,
+      geometry,
+      type,
+    } as TShop;
+
+    setIsOpen(true);
+    handleUpdatingCurrentShop(shop);
+
+    // Update dataSet to mark the selected shop
+    setDataSet(prevDataSet => {
+      const newFeatures = prevDataSet.features.map((f: TShop) => {
+        const isSelected = (f.properties.address === shop.properties.address && f.properties.name === shop.properties.name);
         return {
           ...f,
           properties: {
             ...f.properties,
-            selected: isSelected,
+            selected: isSelected, // Mark the selected shop
           },
-        }
-      }),
-    }
-    setDataSet(newData)
-  }, [currentShop])
+        };
+      });
+
+      return {
+        ...prevDataSet,
+        features: newFeatures,
+      };
+    });
+
+    plausible('FeaturePointClick', {
+      props: {
+        shopName: properties.name,
+        neighborhood: properties.neighborhood,
+      },
+    });
+  },
+  [handleUpdatingCurrentShop, plausible]
+);
 
   return (
     <>
       <MapContainer
-        dataSet={dataSet}
+        dataSet={mappedDataSet}
         currentShop={currentShop}
         currentShopAddress={currentShop.properties?.address}
-        onShopSelect={(properties, geometry, type) => {
-          const shop = {
-            properties,
-            geometry,
-            type,
-          } as TShop
-          setIsOpen(true)
-          handleUpdatingCurrentShop(shop)
-          plausible('FeaturePointClick', {
-            props: {
-              shopName: properties.name,
-              neighborhood: properties.neighborhood,
-            },
-          })
-        }}
+        onShopSelect={handleShopSelect}
       />
       <button
         aria-label="Search shops"
