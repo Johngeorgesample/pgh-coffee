@@ -35,29 +35,30 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
   } as const
 
   const panToCurrentShop = () => {
-    if (mapRef.current) {
-      const long = currentShop.geometry.coordinates[0]
-      const lat = currentShop.geometry.coordinates[1]
+    if (currentShop?.properties && currentShop?.geometry?.coordinates) {
+      if (mapRef.current) {
+        const long = currentShop.geometry.coordinates[0]
+        const lat = currentShop.geometry.coordinates[1]
 
-      const isMobile = window.innerWidth <= 1023
-      const zoom = mapRef.current.getZoom()
+        const isMobile = window.innerWidth <= 1023
+        const zoom = mapRef.current.getZoom()
 
-      const latOffset = isMobile ? (window.innerHeight * 0.5) / (5000 * Math.pow(2, zoom - 10)) : 0
+        const latOffset = isMobile ? (window.innerHeight * 0.5) / (5000 * Math.pow(2, zoom - 10)) : 0
 
-      const adjustedCoordinates: [number, number] = isMobile
-        ? [long, lat - latOffset]
-        : [long, lat]
+        const adjustedCoordinates: [number, number] = isMobile ? [long, lat - latOffset] : [long, lat]
 
-      mapRef.current.flyTo({
-        center: adjustedCoordinates,
-        zoom: zoom,
-        bearing: 0,
-        pitch: 0,
-        duration: 1000,
-        essential: true,
-      })
+        mapRef.current.flyTo({
+          center: adjustedCoordinates,
+          zoom: zoom,
+          bearing: 0,
+          pitch: 0,
+          duration: 1000,
+          essential: true,
+        })
+      }
     }
   }
+
   useEffect(panToCurrentShop, [currentShop])
 
   const handleMapClick = (event: MapMouseEvent) => {
