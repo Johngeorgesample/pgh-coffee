@@ -70,6 +70,56 @@ export default function HomeClient() {
     }
   }
 
+  const fetchShopFromURL = async () => {
+    const params = new URLSearchParams(window.location.search)
+    const shop = params.get('shop')
+
+    if (shop) {
+      try {
+        const response = await fetch(`/api/shops/${shop}`)
+        if (!response.ok) throw new Error('Shop not found')
+
+        const data = await response.json()
+        setIsOpen(true)
+        setCurrentShop(data)
+        setPanelContent(
+          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
+        )
+      } catch (err) {
+        console.log(err)
+      }
+    } else {
+      setCurrentShop({} as TShop)
+      setIsOpen(false)
+    }
+  }
+
+  const updateCurrentShopMarker = () => {
+    const newData = {
+      ...dataSet,
+      features: dataSet.features.map((f: TShop) => {
+        const isSelected =
+          f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name
+        return {
+          ...f,
+          properties: {
+            ...f.properties,
+            selected: isSelected,
+          },
+        }
+      }),
+    }
+    setDataSet(newData)
+  }
+
+  const handleDefaultDistanceUnits = () => {
+    if (typeof window !== 'undefined') {
+      if (!window.localStorage.getItem('distanceUnits')) {
+        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
+      }
+    }
+  }
+
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
@@ -81,65 +131,19 @@ export default function HomeClient() {
   }, [coffeeShops])
 
   useEffect(() => {
-    const fetchShopFromURL = async () => {
-      const params = new URLSearchParams(window.location.search)
-      const shop = params.get('shop')
-
-      if (shop) {
-        try {
-          const response = await fetch(`/api/shops/${shop}`)
-          if (!response.ok) throw new Error('Shop not found')
-
-          const data = await response.json()
-          setIsOpen(true)
-          setCurrentShop(data)
-          setPanelContent(
-            <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
-          )
-        } catch (err) {
-          console.log(err)
-        }
-      } else {
-        setCurrentShop({} as TShop)
-        setIsOpen(false)
-      }
-    }
-
     fetchShopFromURL()
-
-    const handlePopState = () => {
-      fetchShopFromURL()
-    }
-
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (!window.localStorage.getItem('distanceUnits')) {
-        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
+    window.addEventListener('popstate', fetchShopFromURL)
+    return () => window.removeEventListener('popstate', fetchShopFromURL)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const newData = {
-      ...dataSet,
-      features: dataSet.features.map((f: TShop) => {
-        const isSelected = (f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name)
-        return {
-          ...f,
-          properties: {
-            ...f.properties,
-            selected: isSelected,
-          },
-        }
-      }),
-    }
-    setDataSet(newData)
-  }, [currentShop])
+  }, [])
+
+  useEffect(handleDefaultDistanceUnits, [])
+
+  useEffect(
+    updateCurrentShopMarker,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentShop],
+  )
 
   return (
     <>

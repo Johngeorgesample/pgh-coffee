@@ -34,8 +34,7 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
     },
   } as const
 
-  // Pan to currentShop
-  useEffect(() => {
+  const panToCurrentShop = () => {
     if (currentShop?.properties && currentShop?.geometry?.coordinates) {
       if (mapRef.current) {
         mapRef.current.flyTo({
@@ -48,7 +47,9 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
         })
       }
     }
-  }, [currentShop])
+  }
+
+  useEffect(panToCurrentShop, [currentShop])
 
   const handleMapClick = (event: MapMouseEvent) => {
     const map = mapRef.current?.getMap()
