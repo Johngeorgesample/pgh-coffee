@@ -34,7 +34,7 @@ export default function PanelHeader(props: IProps) {
     <div id="header">
       <div
         className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
-          hasPhoto ? 'hover:cursor-pointer' : ''
+          hasPhoto ? 'cursor-pointer' : ''
         }`}
         style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
         onClick={hasPhoto ? handleHeaderClick : undefined}
