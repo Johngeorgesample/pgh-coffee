@@ -13,6 +13,7 @@
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.1",
     "@supabase/supabase-js": "^2.45.4",
+    "@types/jest": "^29.5.14",
     "@types/mapbox-gl": "^3.4.0",
     "@vitejs/plugin-react": "^4.3.4",
     "haversine-distance": "^1.2.3",
