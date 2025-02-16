@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, test, vi } from 'vitest'
-import { usePlausible } from 'next-plausible'
+import { describe, vi } from 'vitest'
 import PanelContent, { getGoogleMapsUrl } from '@/app/components/PanelContent'
 import type { TShop } from '@/types/shop-types'
 
