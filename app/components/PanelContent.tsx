@@ -11,7 +11,7 @@ interface IProps {
   shop: TShop
 }
 
-const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: number }) =>
+export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: number }) =>
   `https://www.google.com/maps?q=${coordinates.longitude},${coordinates.latitude}`
 
 // @TODO PanelBody might be a better name?
