@@ -4,24 +4,24 @@ import ShopCard, { roundDistance, generateDistanceText } from '@/app/components/
 import type { TShop } from '@/types/shop-types'
 
 describe('roundDistance', () => {
-  test('rounds to 2 decimal places for Miles', () => {
+  it('rounds to 2 decimal places for Miles', () => {
     expect(roundDistance({ units: 'Miles', distance: 1.23456 })).toBe(1.23)
     expect(roundDistance({ units: 'Miles', distance: 5.678 })).toBe(5.68)
   })
 
-  test('rounds to whole numbers for Meters', () => {
+  it('rounds to whole numbers for Meters', () => {
     expect(roundDistance({ units: 'Meters', distance: 1234.56 })).toBe(1235)
     expect(roundDistance({ units: 'Meters', distance: 567.89 })).toBe(568)
   })
 })
 
 describe('generateDistanceText', () => {
-  test('formats distance with Miles correctly', () => {
+  it('formats distance with Miles correctly', () => {
     expect(generateDistanceText({ units: 'Miles', distance: '1.23456' }))
       .toBe('1.23 miles away')
   })
 
-  test('formats distance with Meters correctly', () => {
+  it('formats distance with Meters correctly', () => {
     expect(generateDistanceText({ units: 'Meters', distance: '1234.56' }))
       .toBe('1235 meters away')
   })
@@ -56,14 +56,14 @@ describe('ShopCard', () => {
     vi.clearAllMocks()
   })
 
-  test('renders shop name and neighborhood', () => {
+  it('renders shop name and neighborhood', () => {
     render(<ShopCard {...defaultProps} />)
     
     expect(screen.getByText('Test Shop')).toBeTruthy()
     expect(screen.getByText('Downtown')).toBeTruthy()
   })
 
-  test('renders distance when distance and units are provided', () => {
+  it('renders distance when distance and units are provided', () => {
     render(
       <ShopCard
         {...defaultProps}
@@ -75,7 +75,7 @@ describe('ShopCard', () => {
     expect(screen.getByText('1.23 miles away')).toBeTruthy()
   })
 
-  test('does not render distance when distance or units are missing', () => {
+  it('does not render distance when distance or units are missing', () => {
     const { rerender } = render(<ShopCard {...defaultProps} />)
     expect(screen.queryByText(/away/)).toBeNull()
 
@@ -86,13 +86,13 @@ describe('ShopCard', () => {
     expect(screen.queryByText(/away/)).toBeNull()
   })
 
-  test('sets background image when photo is provided', () => {
+  it('sets background image when photo is provided', () => {
     render(<ShopCard {...defaultProps} />)
     const bgElement = screen.getByRole('button').querySelector('.h-36') as HTMLElement
     expect(bgElement?.style.backgroundImage).toContain("url(test-photo-url.jpg)")
   })
 
-  test('does not set background image when photo is missing', () => {
+  it('does not set background image when photo is missing', () => {
     const shopWithoutPhoto = {
       ...mockShop,
       properties: { ...mockShop.properties, photo: undefined }
@@ -102,20 +102,20 @@ describe('ShopCard', () => {
     expect(bgElement?.style.backgroundImage).toBe('')
   })
 
-  test('calls handleCardClick when clicked', () => {
+  it('calls handleCardClick when clicked', () => {
     render(<ShopCard {...defaultProps} />)
     fireEvent.click(screen.getByRole('button'))
     expect(mockHandleCardClick).toHaveBeenCalledWith(mockShop)
   })
 
-  test('calls handleKeyPress when key is pressed', () => {
+  it('calls handleKeyPress when key is pressed', () => {
     render(<ShopCard {...defaultProps} />)
     const keyEvent = { key: 'Enter' }
     fireEvent.keyDown(screen.getByRole('button'), keyEvent)
     expect(mockHandleKeyPress).toHaveBeenCalledWith(expect.any(Object), mockShop)
   })
 
-  test('has correct accessibility attributes', () => {
+  it('has correct accessibility attributes', () => {
     render(<ShopCard {...defaultProps} />)
     const card = screen.getByRole('button')
     expect(card.getAttribute('tabIndex')).toBe('0')
