@@ -20,11 +20,11 @@ describe('NearbyShops', () => {
   const mockShop: TShop = {
     type: 'shop',
     properties: {
-      name: 'Coffee Haven',
+      name: 'Test Sho',
       neighborhood: 'Squirrel Hill South',
       address: '456 Murray Ave, Pittsburgh, PA 15217',
       photo: 'https://example.com/photo.jpg',
-      website: 'https://coffeehaven.com',
+      website: 'https://testshop.com',
     },
     geometry: {
       type: 'Point',
@@ -48,7 +48,6 @@ describe('NearbyShops', () => {
           coordinates: [-79.9255, 40.436],
         },
       },
-      // Add more mock shops as needed
     ],
   }
 
