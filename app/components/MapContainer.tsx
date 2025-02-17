@@ -9,7 +9,6 @@ interface MapContainerProps {
     features: TShop[]
   }
   currentShop: TShop
-  currentShopAddress: string | undefined
   onShopSelect: (properties: Record<string, any>, geometry: Record<string, any>, type: string) => void
 }
 
@@ -63,34 +62,36 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
   }
 
   return (
-    <Map
-      mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
-      initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
-      cursor="pointer"
-      mapStyle="mapbox://styles/mapbox/dark-v11"
-      onClick={handleMapClick}
-      ref={mapRef}
-    >
-      <Source id="my-data" type="geojson" data={dataSet}>
-        <Layer
-          id={layerId}
-          type="circle"
-          paint={{
-            'circle-color': [
-              'case',
-              ['boolean', ['get', 'selected'], false],
-              MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
-              MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
-            ],
-            'circle-radius': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius]),
-            ],
-          }}
-        />
-      </Source>
-    </Map>
+    <div data-testid="map-container">
+      <Map
+        mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
+        initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
+        cursor="pointer"
+        mapStyle="mapbox://styles/mapbox/dark-v11"
+        onClick={handleMapClick}
+        ref={mapRef}
+      >
+        <Source id="my-data" type="geojson" data={dataSet}>
+          <Layer
+            id={layerId}
+            type="circle"
+            paint={{
+              'circle-color': [
+                'case',
+                ['boolean', ['get', 'selected'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
+                MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
+              ],
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius]),
+              ],
+            }}
+          />
+        </Source>
+      </Map>
+    </div>
   )
 }

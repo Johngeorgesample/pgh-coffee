@@ -27,7 +27,7 @@ export default function ShopPanel(props: IProps) {
 
   return (
     <Transition.Root show={props.panelIsOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => props.emitClose()}>
+      <Dialog data-testid="shop-panel" as="div" className="relative z-10" onClose={() => props.emitClose()}>
         <div className="fixed" />
         <div className="fixed overflow-hidden">
           <div className="absolute overflow-hidden">
