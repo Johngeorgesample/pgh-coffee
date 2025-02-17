@@ -151,7 +151,6 @@ export default function HomeClient() {
       <MapContainer
         dataSet={dataSet}
         currentShop={currentShop}
-        currentShopAddress={currentShop.properties?.address}
         onShopSelect={(properties, geometry, type) => {
           const shop = {
             properties,
