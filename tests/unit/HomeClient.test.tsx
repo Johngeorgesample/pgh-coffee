@@ -16,6 +16,14 @@ beforeAll(() => {
     }
 })
 
+vi.mock('react-map-gl', () => {
+  return {
+    default: ({ children }: any) => <div>{children}</div>,
+    Source: ({ children }: any) => <div>{children}</div>,
+    Layer: ({ children }: any) => <div>{children}</div>,
+  }
+})
+
 vi.mock('next-plausible', () => ({
   usePlausible: () => vi.fn(),
 }))
