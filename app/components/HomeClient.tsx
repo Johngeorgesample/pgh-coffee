@@ -148,6 +148,7 @@ export default function HomeClient() {
 
   return (
     <>
+      {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
       <MapContainer
         dataSet={dataSet}
         currentShop={currentShop}
