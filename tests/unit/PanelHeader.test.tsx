@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, test } from 'vitest'
 import { usePlausible } from 'next-plausible'
+import { TShop } from '@/types/shop-types'
 import PanelHeader from '@/app/components/PanelHeader'
 
 vi.mock('next-plausible', () => ({
