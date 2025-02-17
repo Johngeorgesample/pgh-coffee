@@ -1,8 +1,16 @@
-import { render, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import MapContainer from '@/app/components/MapContainer'
 import { TShop } from '@/types/shop-types'
 import { TNeighborhood } from '@/types/neighborhood-types'
+
+vi.mock('react-map-gl', () => {
+  return {
+    default: ({ children }: any) => <div>{children}</div>,
+    Source: ({ children }: any) => <div>{children}</div>,
+    Layer: ({ children }: any) => <div>{children}</div>,
+  }
+})
 
 describe('MapContainer', () => {
   const mockOnShopSelect = vi.fn()
@@ -13,9 +21,9 @@ describe('MapContainer', () => {
       {
         type: 'Feature',
         properties: {
-          name: '61B Cafe',
+          name: 'Test Shop',
           neighborhood: 'Downtown' as TNeighborhood,
-          address: '1108 S Braddock Ave, Pittsburgh, PA 15218',
+          address: '123 Fake St, Pittsburgh, PA 15218',
           website: '',
           photo: 'foo',
         },
@@ -29,7 +37,11 @@ describe('MapContainer', () => {
 
   const currentShop: TShop = dataSet.features[0]
 
-  it('renders the map', () => {
+  it('renders the map and canvas element', () => {
     render(<MapContainer dataSet={dataSet} currentShop={currentShop} onShopSelect={mockOnShopSelect} />)
+
+    const mapContainer = screen.getByTestId('map-container')
+
+    expect(mapContainer).toBeInTheDocument()
   })
 })
