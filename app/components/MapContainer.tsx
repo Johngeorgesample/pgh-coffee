@@ -9,7 +9,6 @@ interface MapContainerProps {
     features: TShop[]
   }
   currentShop: TShop
-  currentShopAddress: string | undefined
   onShopSelect: (properties: Record<string, any>, geometry: Record<string, any>, type: string) => void
 }
 
