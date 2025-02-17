@@ -37,7 +37,7 @@ describe('MapContainer', () => {
 
   const currentShop: TShop = dataSet.features[0]
 
-  it('renders the map and canvas element', () => {
+  it('renders the MapContainer component and displays the map', () => {
     render(<MapContainer dataSet={dataSet} currentShop={currentShop} onShopSelect={mockOnShopSelect} />)
 
     const mapContainer = screen.getByTestId('map-container')
