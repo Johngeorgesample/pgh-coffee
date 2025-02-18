@@ -151,7 +151,7 @@ export default function HomeClient() {
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
       <MapContainer
         dataSet={dataSet}
-        currentShop={currentShop}
+        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
         onShopSelect={(properties, geometry, type) => {
           const shop = {
             properties,
