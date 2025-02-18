@@ -8,11 +8,11 @@ interface MapContainerProps {
     type: string
     features: TShop[]
   }
-  currentShop: TShop
+  currentShopCoordinates: [number, number]
   onShopSelect: (properties: Record<string, any>, geometry: Record<string, any>, type: string) => void
 }
 
-export default function MapContainer({ dataSet, currentShop, onShopSelect }: MapContainerProps) {
+export default function MapContainer({ dataSet, currentShopCoordinates, onShopSelect }: MapContainerProps) {
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
 
@@ -34,10 +34,10 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
   } as const
 
   const panToCurrentShop = () => {
-    if (currentShop?.properties && currentShop?.geometry?.coordinates) {
+    if (currentShopCoordinates?.every(element => Boolean(element))) {
       if (mapRef.current) {
         mapRef.current.flyTo({
-          center: [currentShop.geometry.coordinates[0], currentShop.geometry.coordinates[1]],
+          center: [currentShopCoordinates[0], currentShopCoordinates[1]],
           zoom: mapRef.current.getZoom(),
           bearing: 0,
           pitch: 0,
@@ -48,7 +48,7 @@ export default function MapContainer({ dataSet, currentShop, onShopSelect }: Map
     }
   }
 
-  useEffect(panToCurrentShop, [currentShop])
+  useEffect(panToCurrentShop, [currentShopCoordinates])
 
   const handleMapClick = (event: MapMouseEvent) => {
     const map = mapRef.current?.getMap()

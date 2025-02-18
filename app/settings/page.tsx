@@ -52,7 +52,7 @@ export default function Settings() {
                 {isLoading ? <LoadingState /> : <div className="text-gray-900">{unitFromLocalStorage}</div>}
                 <button
                   aria-label="Update distance units"
-                  className="font-semibold text-slate-700 hover:text-slate-600"
+                  className="font-semibold text-slate-700 hover:text-slate-500"
                   onClick={() => setDistanceUnitsDialogIsOpen(true)}
                   type="button"
                 >
