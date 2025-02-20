@@ -36,9 +36,20 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
   const panToCurrentShop = () => {
     if (currentShopCoordinates?.every(element => Boolean(element))) {
       if (mapRef.current) {
+        const long = currentShopCoordinates[0]
+        const lat = currentShopCoordinates[1]
+
+        const isMobile = window.innerWidth <= 1023
+        const zoom = mapRef.current.getZoom()
+
+        const latOffset = isMobile ? (window.innerHeight * 0.5) / (5000 * Math.pow(2, zoom - 10)) : 0
+
+        const adjustedCoordinates: [number, number] = isMobile ? [long, lat - latOffset] : [long, lat]
+
         mapRef.current.flyTo({
-          center: [currentShopCoordinates[0], currentShopCoordinates[1]],
-          zoom: mapRef.current.getZoom(),
+          center: adjustedCoordinates,
+          zoom: zoom,
+          // zoom: mapRef.current.getZoom(),
           bearing: 0,
           pitch: 0,
           duration: 1000,
