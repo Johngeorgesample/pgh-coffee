@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -18,10 +18,10 @@
     "@vitejs/plugin-react": "^4.3.4",
     "haversine-distance": "^1.2.3",
     "mapbox-gl": "^3.6.0",
-    "next": "^14.2.23",
+    "next": "15.1.7",
     "next-plausible": "^3.12.1",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-map-gl": "^7.1.7",
     "zustand": "^5.0.0-rc.2"
   },
@@ -31,14 +31,18 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "eslint": "^8",
-    "eslint-config-next": "14.0.0",
+    "eslint-config-next": "15.1.7",
     "jsdom": "^26.0.0",
     "postcss": "^8",
     "tailwindcss": "^4.0.0",
     "typescript": "^5",
     "vitest": "^3.0.5"
+  },
+  "overrides": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
   }
 }
