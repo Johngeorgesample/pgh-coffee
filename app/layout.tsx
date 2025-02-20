@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'PGH Coffee',
   description: 'Coffee shops in Pittsburgh, PA',
-  themeColor: "#ffdf20",
   openGraph: {
     title: 'pgh.coffee',
     description: 'A guide to coffee in Pittsburgh, PA',
