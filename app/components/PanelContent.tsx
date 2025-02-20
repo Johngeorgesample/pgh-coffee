@@ -5,9 +5,6 @@ import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
-import { mockAnimationsApi } from 'jsdom-testing-mocks'
-
-mockAnimationsApi()
 
 interface IProps {
   handleNearbyShopClick: (shop: TShop) => void

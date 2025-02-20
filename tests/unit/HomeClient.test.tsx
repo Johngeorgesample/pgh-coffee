@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import { mockAnimationsApi } from 'jsdom-testing-mocks'
 import HomeClient from '@/app/components/HomeClient'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
 beforeAll(() => {
+  mockAnimationsApi()
   globalThis.matchMedia =
     globalThis.matchMedia ||
     function () {
