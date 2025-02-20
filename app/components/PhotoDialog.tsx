@@ -53,7 +53,7 @@ export default function PhotoDialog(props: TProps) {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="text-white hover:cursor-pointer"
+                  className="text-white cursor-pointer"
                 >
                   {' '}
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />{' '}
@@ -75,7 +75,7 @@ export default function PhotoDialog(props: TProps) {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="text-white hover:cursor-pointer"
+                  className="text-white cursor-pointer"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>

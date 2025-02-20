@@ -31,10 +31,10 @@ export default function PanelHeader(props: IProps) {
   const hasPhoto = !!photo
 
   return (
-    <div id="header">
+    <div id="header" data-testid="header">
       <div
         className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
-          hasPhoto ? 'hover:cursor-pointer' : ''
+          hasPhoto ? 'cursor-pointer' : ''
         }`}
         style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
         onClick={hasPhoto ? handleHeaderClick : undefined}

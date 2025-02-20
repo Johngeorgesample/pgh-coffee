@@ -11,6 +11,7 @@ import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import SearchFAB from '@/app/components/SearchFAB'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -147,10 +148,10 @@ export default function HomeClient() {
 
   return (
     <>
+      {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
       <MapContainer
         dataSet={dataSet}
-        currentShop={currentShop}
-        currentShopAddress={currentShop.properties?.address}
+        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
         onShopSelect={(properties, geometry, type) => {
           const shop = {
             properties,
@@ -167,13 +168,7 @@ export default function HomeClient() {
           })
         }}
       />
-      <button
-        aria-label="Search shops"
-        className="absolute bottom-[10%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full h-16 w-16 flex justify-center items-center"
-        onClick={handleSearchClick}
-      >
-        <MagnifyingGlassIcon className="h-8 w-8" />
-      </button>
+      <SearchFAB handleClick={handleSearchClick} />
       <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
