@@ -1,7 +1,13 @@
-const { withPlausibleProxy } = require('next-plausible')
+const { withPlausibleProxy } = require('next-plausible');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
-module.exports = withPlausibleProxy()({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
-  }
-})
+  },
+}
+
+module.exports = withPlausibleProxy()(withBundleAnalyzer(nextConfig))
