@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -47,6 +48,9 @@ export default function HomeClient() {
   }
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
+    if (!isOpen) {
+      setIsOpen(true)
+    }
     setCurrentShop(shop)
     setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
     if (Object.keys(shop).length) {
@@ -62,7 +66,6 @@ export default function HomeClient() {
   const handleSearchClick = () => {
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
-      setIsOpen(true)
       setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
 
       plausible('SearchClick', {
@@ -158,7 +161,6 @@ export default function HomeClient() {
             geometry,
             type,
           } as TShop
-          setIsOpen(true)
           handleUpdatingCurrentShop(shop)
           plausible('FeaturePointClick', {
             props: {
