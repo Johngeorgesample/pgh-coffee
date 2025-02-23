@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
 import ShopPanel from '@/app/components/ShopPanel'
