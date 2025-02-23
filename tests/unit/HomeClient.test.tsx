@@ -26,6 +26,13 @@ vi.mock('react-map-gl', () => {
   }
 })
 
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn().mockReturnValue({
+    replace: vi.fn(),
+    push: vi.fn(),
+  }),
+}))
+
 vi.mock('next-plausible', () => ({
   usePlausible: () => vi.fn(),
 }))
