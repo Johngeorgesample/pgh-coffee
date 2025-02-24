@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
 import ShopPanel from '@/app/components/ShopPanel'
@@ -23,13 +23,14 @@ export default function HomeClient() {
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
+  const router = useRouter()
 
   const appendSearchParamToURL = (shop: TShop) => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
     url.search = params.toString()
-    history.pushState({}, '', url.toString())
+    router.push(url.toString())
   }
 
   const removeSearchParam = () => {
@@ -37,7 +38,7 @@ export default function HomeClient() {
     const params = new URLSearchParams(url.search)
     params.delete('shop')
     url.search = params.toString()
-    history.replaceState({}, '', url.toString())
+    router.replace(url.toString())
   }
 
   const handleClose = () => {
