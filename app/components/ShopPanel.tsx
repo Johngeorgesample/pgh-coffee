@@ -26,7 +26,7 @@ export default function ShopPanel(props: IProps) {
   }, [])
 
   return (
-    <Transition.Root show={props.panelIsOpen} as={Fragment}>
+    <Transition show={props.panelIsOpen}>
       <Dialog data-testid="shop-panel" as="div" className="relative z-10" onClose={() => props.emitClose()}>
         <div className="fixed" />
         <div className="fixed overflow-hidden">
@@ -41,14 +41,14 @@ export default function ShopPanel(props: IProps) {
                 leaveFrom={isLargeScreen ? 'translate-x-0' : 'translate-y-0'}
                 leaveTo={isLargeScreen ? 'translate-x-full' : 'translate-y-full'}
               >
-                <Dialog.Panel className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-xl">
+                <div className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-xl">
                   {props.children}
-                </Dialog.Panel>
+                </div>
               </Transition.Child>
             </div>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   )
 }
