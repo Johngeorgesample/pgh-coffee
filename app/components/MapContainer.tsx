@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import { TShop } from '@/types/shop-types'
@@ -13,8 +13,13 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ dataSet, currentShopCoordinates, onShopSelect }: MapContainerProps) {
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number
+    longitude: number
+  } | null>(null)
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
+  const userLayerId = 'user-point'
 
   const MAP_CONSTANTS = {
     INITIAL_VIEW: {
@@ -25,6 +30,7 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
     CIRCLE_PAINT: {
       SELECTED_COLOR: '#fff',
       DEFAULT_COLOR: '#FDE047',
+      USER_LOCATION_COLOR: '#3B82F6',
       ZOOM_LEVELS: [
         { zoom: 8, radius: 4 },
         { zoom: 12, radius: 8 },
@@ -61,6 +67,27 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
     }
   }
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => setUserLocation({ latitude, longitude }),
+      console.error,
+    )
+  }, [])
+
+  const userFeatureCollection = userLocation && {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: [userLocation.longitude, userLocation.latitude],
+        },
+      },
+    ],
+  }
+
   return (
     <div data-testid="map-container">
       <Map
@@ -91,6 +118,23 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
             }}
           />
         </Source>
+        {userFeatureCollection && (
+          <Source id="user-location" type="geojson" data={userFeatureCollection}>
+            <Layer
+              id={userLayerId}
+              type="circle"
+              paint={{
+                'circle-color': MAP_CONSTANTS.CIRCLE_PAINT.USER_LOCATION_COLOR,
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius]),
+                ],
+              }}
+            />
+          </Source>
+        )}
       </Map>
     </div>
   )
