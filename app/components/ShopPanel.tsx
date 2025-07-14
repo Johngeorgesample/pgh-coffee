@@ -45,7 +45,7 @@ export default function ShopPanel(props: IProps) {
         api.start({ y: my, immediate: true })
       }
     },
-    { filterTaps: true, axis: 'y' },
+    { filterTaps: true, axis: 'y', pointer: { touch: true, mouse: true } },
   )
 
   if (!props.panelIsOpen) return null
