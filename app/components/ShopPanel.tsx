@@ -34,6 +34,7 @@ export default function ShopPanel(props: IProps) {
       if (my < 0) return // prevent swipe *up*
 
       if (last) {
+        // @ts-expect-error
         if (my > 100 || (velocity > 0.5 && dy > 0)) {
           api.start({ y: 1000, immediate: false })
           setTimeout(() => props.emitClose(), 200)
