@@ -1,8 +1,11 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { ArrowTopRightOnSquareIcon, BookmarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
+import AddToListDialog from './AddToListDialog'
+import AddToListDropdown from './AddToListDropdown'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
@@ -18,6 +21,7 @@ export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: num
 export default function PanelContent(props: IProps) {
   const { name, neighborhood, website, address } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
+  const [addToListDialogIsOpen, setAddToListDialogIsOpen] = useState(false)
 
   return (
     <>
@@ -25,6 +29,9 @@ export default function PanelContent(props: IProps) {
         <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
           <p className="font-medium">{name}</p>
           <p className="text-lg text-gray-600">{neighborhood}</p>
+          <div className="flex mt-4">
+            <AddToListDropdown />
+          </div>
         </div>
         <div className="relative text-gray-700 px-4 sm:px-6">
           {website && (
@@ -54,6 +61,8 @@ export default function PanelContent(props: IProps) {
         </div>
       </section>
       <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
+
+      {/* <AddToListDialog isOpen={addToListDialogIsOpen} handleClose={() => setAddToListDialogIsOpen(false)} /> */}
     </>
   )
 }
