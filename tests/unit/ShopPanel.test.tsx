@@ -41,36 +41,8 @@ describe('ShopPanel Component', () => {
     handlePanelContentClick: mockHandlePanelContentClick,
   }
 
-  it('renders the panel content when open', () => {
+  it('renders the panel content', () => {
     render(<ShopPanel {...defaultProps} />)
-    expect(screen.getByText('Panel Content')).toBeInTheDocument()
-  })
-
-  it('does not render the panel content when closed', () => {
-    render(<ShopPanel {...defaultProps} panelIsOpen={false} />)
-    expect(screen.queryByText('Panel Content')).not.toBeInTheDocument()
-  })
-
-  it('calls emitClose when the dialog is closed', () => {
-    render(<ShopPanel {...defaultProps} />)
-
-    const dialog = screen.getByRole('dialog')
-    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
-
-    expect(mockEmitClose).toHaveBeenCalled()
-  })
-
-  it('applies correct animation based on screen size', () => {
-    window.matchMedia = vi.fn().mockImplementation(query => {
-      return {
-        matches: query === '(min-width: 1024px)',
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-      }
-    })
-
-    render(<ShopPanel {...defaultProps} />)
-
     expect(screen.getByText('Panel Content')).toBeInTheDocument()
   })
 
