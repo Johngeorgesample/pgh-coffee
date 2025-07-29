@@ -15,7 +15,7 @@ import SearchFAB from '@/app/components/SearchFAB'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { coffeeShops, fetchCoffeeShops, searchValue } = useShopsStore()
+  const { coffeeShops, fetchCoffeeShops, searchValue, setSearchValue } = useShopsStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
@@ -57,6 +57,9 @@ export default function HomeClient() {
     )
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
+      setSearchValue(shop.properties.name)
+    } else {
+      setSearchValue('')
     }
   }
 
@@ -150,11 +153,10 @@ export default function HomeClient() {
   )
 
   useEffect(() => {
-    console.log('Search value changed:', searchValue)
-    if (searchValue && searchValue !== currentShop.properties.name) {
+    if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
       setPanelContent(<ShopSearch filter={searchValue} handleResultClick={handleNearbyShopClick} />)
     }
-  }, [searchValue])
+  }, [searchValue, currentShop.properties?.name])
 
   return (
     <>

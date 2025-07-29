@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { TShop } from '@/types/shop-types'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -13,10 +12,6 @@ interface IProps {
 
 export default function SearchBar(props: IProps) {
   const { searchValue, setSearchValue } = useShopsStore()
-
-  useEffect(() => {
-    setSearchValue(props.shop.properties.name)
-  }, [props.shop.properties.name, setSearchValue])
 
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-2 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
