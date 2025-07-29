@@ -3,6 +3,7 @@ import { TShop } from '@/types/shop-types'
 import PanelHeader from './PanelHeader'
 import PanelContent from './PanelContent'
 import PanelFooter from './PanelFooter'
+import SearchBar from './SearchBar'
 
 interface TProps {
   shop: TShop
@@ -14,7 +15,8 @@ interface TProps {
 const ShopDetails = memo((props: TProps) => {
   return (
     <div className="flex h-full flex-col overflow-y-auto">
-      <PanelHeader shop={props.shop} bar={props.foo}/>
+      <SearchBar value={props.shop.properties.name} onClose={props.foo} shop={props.shop}/>
+      <PanelHeader shop={props.shop} />
       <PanelContent handleNearbyShopClick={props.handlePanelContentClick} shop={props.shop} />
       <PanelFooter shop={props.shop} />
     </div>

@@ -4,12 +4,11 @@ import { useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
-import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
   shop: TShop
-  bar: () => void
 }
 
 export default function PanelHeader(props: IProps) {
@@ -34,19 +33,6 @@ export default function PanelHeader(props: IProps) {
 
   return (
     <>
-      <div className="flex absolute shadow-md items-center px-2 bg-white top-2 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
-        <input
-          className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"
-          value={props.shop.properties.name}
-        />
-        <button
-          onClick={() => {
-            props.bar()
-          }}
-        >
-          <XMarkIcon className="h-6 w-6 ml-auto" />
-        </button>
-      </div>
       <div id="header" data-testid="header">
         <div
           className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${hasPhoto ? 'cursor-pointer' : ''}`}
