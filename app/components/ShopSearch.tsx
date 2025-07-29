@@ -13,7 +13,7 @@ export default function ShopSearch(props: IProps) {
   const { coffeeShops } = useShopsStore()
   const plausible = usePlausible()
   const inputRef = useRef<HTMLInputElement>(null)
-  let [filter, setFilter] = useState('')
+  let [filter, setFilter] = useState(props.filter)
 
   const handleFilterClear = () => {
     setFilter('')

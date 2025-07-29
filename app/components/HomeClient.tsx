@@ -15,7 +15,7 @@ import SearchFAB from '@/app/components/SearchFAB'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { coffeeShops, fetchCoffeeShops } = useShopsStore()
+  const { coffeeShops, fetchCoffeeShops, searchValue } = useShopsStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
@@ -47,7 +47,14 @@ export default function HomeClient() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} foo={handleSearchClick} />)
+    setPanelContent(
+      <ShopDetails
+        shop={shop}
+        handlePanelContentClick={handleNearbyShopClick}
+        emitClose={handleClose}
+        foo={handleSearchClick}
+      />,
+    )
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
     }
@@ -142,6 +149,13 @@ export default function HomeClient() {
     [currentShop],
   )
 
+  useEffect(() => {
+    console.log('Search value changed:', searchValue)
+    if (searchValue && searchValue !== currentShop.properties.name) {
+      setPanelContent(<ShopSearch filter={searchValue} handleResultClick={handleNearbyShopClick} />)
+    }
+  }, [searchValue])
+
   return (
     <>
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
@@ -165,10 +179,7 @@ export default function HomeClient() {
       />
       <SearchFAB handleClick={handleSearchClick} />
       <Footer />
-      <ShopPanel
-        handlePanelContentClick={handleNearbyShopClick}
-        shop={currentShop}
-      >
+      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop}>
         {panelContent}
       </ShopPanel>
     </>
