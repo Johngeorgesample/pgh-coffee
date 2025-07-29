@@ -47,7 +47,7 @@ export default function HomeClient() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} foo={handleSearchClick} />)
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
     }

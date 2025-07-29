@@ -4,10 +4,12 @@ import { useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
-import { PhotoIcon } from '@heroicons/react/24/outline'
+import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
   shop: TShop
+  bar: () => void
 }
 
 export default function PanelHeader(props: IProps) {
@@ -31,27 +33,40 @@ export default function PanelHeader(props: IProps) {
   const hasPhoto = !!photo
 
   return (
-    <div id="header" data-testid="header">
-      <div
-        className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${
-          hasPhoto ? 'cursor-pointer' : ''
-        }`}
-        style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
-        onClick={hasPhoto ? handleHeaderClick : undefined}
-      >
-        { hasPhoto && (
-          <div
-            className="group-hover:inline-flex absolute bottom-0 m-2 hidden bg-black bg-opacity-50 text-white p-1 rounded-md"
-            role="button"
-            aria-label="open photo gallery"
-          >
-            <PhotoIcon className="w-6 pr-1" />
-
-            <p className="text-sm">See photos</p>
-          </div>
-        )}
+    <>
+      <div className="flex absolute shadow-md items-center px-2 bg-white top-2 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
+        <input
+          className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"
+          value={props.shop.properties.name}
+        />
+        <button
+          onClick={() => {
+            props.bar()
+          }}
+        >
+          <XMarkIcon className="h-6 w-6 ml-auto" />
+        </button>
       </div>
-      <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
-    </div>
+      <div id="header" data-testid="header">
+        <div
+          className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${hasPhoto ? 'cursor-pointer' : ''}`}
+          style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
+          onClick={hasPhoto ? handleHeaderClick : undefined}
+        >
+          {hasPhoto && (
+            <div
+              className="group-hover:inline-flex absolute bottom-0 m-2 hidden bg-black bg-opacity-50 text-white p-1 rounded-md"
+              role="button"
+              aria-label="open photo gallery"
+            >
+              <PhotoIcon className="w-6 pr-1" />
+
+              <p className="text-sm">See photos</p>
+            </div>
+          )}
+        </div>
+        <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
+      </div>
+    </>
   )
 }
