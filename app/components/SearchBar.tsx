@@ -5,9 +5,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface IProps {
-  value: string
   onClose: () => void
-  shop: TShop
+  shop?: TShop
 }
 
 export default function SearchBar(props: IProps) {
@@ -19,6 +18,7 @@ export default function SearchBar(props: IProps) {
         className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"
         value={searchValue}
         onChange={e => setSearchValue(e.target.value)}
+        placeholder="Search for a shop or neighborhood"
       />
       <button
         onClick={() => {

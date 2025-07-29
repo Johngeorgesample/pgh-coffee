@@ -52,7 +52,6 @@ export default function HomeClient() {
         shop={shop}
         handlePanelContentClick={handleNearbyShopClick}
         emitClose={handleClose}
-        foo={handleSearchClick}
       />,
     )
     if (Object.keys(shop).length) {
@@ -69,6 +68,9 @@ export default function HomeClient() {
   }
 
   const handleSearchClick = () => {
+    if (currentShop) {
+      removeSearchParam()
+    }
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
       setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
@@ -154,7 +156,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
-      setPanelContent(<ShopSearch filter={searchValue} handleResultClick={handleNearbyShopClick} />)
+      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
     }
   }, [searchValue, currentShop.properties?.name])
 
@@ -181,7 +183,7 @@ export default function HomeClient() {
       />
       <SearchFAB handleClick={handleSearchClick} />
       <Footer />
-      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop}>
+      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop} foo={handleSearchClick}>
         {panelContent}
       </ShopPanel>
     </>
