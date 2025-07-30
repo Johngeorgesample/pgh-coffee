@@ -15,7 +15,7 @@ import SearchFAB from '@/app/components/SearchFAB'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { coffeeShops, fetchCoffeeShops } = useShopsStore()
+  const { coffeeShops, fetchCoffeeShops, searchValue, setSearchValue } = useShopsStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
@@ -47,9 +47,18 @@ export default function HomeClient() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    setPanelContent(
+      <ShopDetails
+        shop={shop}
+        handlePanelContentClick={handleNearbyShopClick}
+        emitClose={handleClose}
+      />,
+    )
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
+      setSearchValue(shop.properties.name)
+    } else {
+      setSearchValue('')
     }
   }
 
@@ -59,6 +68,9 @@ export default function HomeClient() {
   }
 
   const handleSearchClick = () => {
+    if (currentShop) {
+      removeSearchParam()
+    }
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
       setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
@@ -142,6 +154,12 @@ export default function HomeClient() {
     [currentShop],
   )
 
+  useEffect(() => {
+    if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
+      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+    }
+  }, [searchValue, currentShop.properties?.name])
+
   return (
     <>
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
@@ -165,10 +183,7 @@ export default function HomeClient() {
       />
       <SearchFAB handleClick={handleSearchClick} />
       <Footer />
-      <ShopPanel
-        handlePanelContentClick={handleNearbyShopClick}
-        shop={currentShop}
-      >
+      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop} foo={handleSearchClick}>
         {panelContent}
       </ShopPanel>
     </>
