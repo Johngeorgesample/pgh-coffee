@@ -2,7 +2,7 @@
 
 import { TShop } from '@/types/shop-types'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import useShopsStore from '@/stores/coffeeShopsStore'
+import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
   onClose: () => void
@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export default function SearchBar(props: IProps) {
-  const { searchValue, setSearchValue } = useShopsStore()
+  const { searchValue, setSearchValue } = usePanelStore()
 
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-2 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">

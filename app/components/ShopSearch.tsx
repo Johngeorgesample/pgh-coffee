@@ -1,6 +1,7 @@
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import usePanelStore from '@/stores/panelStore'
 import ShopList from '@/app/components/ShopList'
 
 interface IProps {
@@ -8,7 +9,8 @@ interface IProps {
 }
 
 export default function ShopSearch(props: IProps) {
-  const { coffeeShops, searchValue } = useShopsStore()
+  const { coffeeShops } = useShopsStore()
+  const { searchValue } = usePanelStore()
   const plausible = usePlausible()
 
 
