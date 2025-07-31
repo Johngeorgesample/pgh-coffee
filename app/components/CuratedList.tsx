@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopList from './ShopList'
+import { formatDataToGeoJSON } from '../utils/utils'
 
 interface IProps {
   content: any
@@ -11,6 +13,7 @@ export const CuratedList = (props: IProps) => {
   const [shops, setShops] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { coffeeShops, fetchCoffeeShops, setCoffeeShops } = useShopsStore()
 
   useEffect(() => {
     const fetchShops = async () => {
@@ -19,25 +22,40 @@ export const CuratedList = (props: IProps) => {
         return
       }
 
+      let response: Response | null = null
+
       try {
         const idsParam = props.content.shopIds.join(',')
-        const response = await fetch(`/api/shops/batch?ids=${idsParam}`)
+        response = await fetch(`/api/shops/batch?ids=${idsParam}`)
 
         if (!response.ok) {
           throw new Error('Failed to fetch shops')
         }
 
-        const data = await response.json()
+        const cloned = response.clone()
+        const data = await cloned.json()
         setShops(data.features)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
       } finally {
         setLoading(false)
+
+        if (response) {
+          try {
+            console.log('Raw response text for debugging:')
+            const raw = await response.text() // Read as text to avoid double-read errors
+            setCoffeeShops(JSON.parse(raw))
+          } catch (e) {
+            console.error('Error reading response in finally block', e)
+          }
+        }
       }
     }
 
     fetchShops()
   }, [props.content.shopIds])
+
+  console.log(shops)
 
   if (loading) {
     return (
@@ -69,12 +87,10 @@ export const CuratedList = (props: IProps) => {
     )
   }
 
-  console.log(shops)
-
   return (
     <div className="mt-20">
       <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{props.content.title}</h1>
+        <h1 className="text-2xl font-bold text-gray-901 mb-2">{props.content.title}</h1>
         <p className="text-base text-gray-600 mb-4">{props.content.description}</p>
         <hr />
         {shops.length > 0 ? <ShopList coffeeShops={shops} handleCardClick={() => {}} /> : <div>No shops found</div>}

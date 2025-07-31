@@ -85,6 +85,7 @@ export default function HomeClient() { const plausible = usePlausible()
     if (Object.keys(currentShop).length) {
       return foo()
     }
+    fetchCoffeeShops()
     setPanelContent(<ExploreContent />)
   }
 
