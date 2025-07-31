@@ -64,8 +64,8 @@ export const CuratedList = (props: IProps) => {
   return (
     <div className="mt-20">
       <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
-        <div>{props.content.title}</div>
-        <div>{props.content.description}</div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{props.content.title}</h1>
+        <p className="text-base text-gray-600 mb-4">{props.content.description}</p>
         <hr />
         {shops.length > 0 ? <ShopList coffeeShops={shops} handleCardClick={() => {}} /> : <div>No shops found</div>}
       </div>

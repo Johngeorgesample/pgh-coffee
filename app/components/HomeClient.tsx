@@ -14,10 +14,8 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from '@/app/components/SearchFAB'
 import { ExploreContent } from './ExploreContent'
-import { CuratedListIndex } from './CuratedListIndex'
 
-export default function HomeClient() {
-  const plausible = usePlausible()
+export default function HomeClient() { const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const { searchValue, setSearchValue, panelContent, setPanelContent } = usePanelStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
