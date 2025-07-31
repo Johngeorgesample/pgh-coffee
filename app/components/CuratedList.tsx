@@ -42,9 +42,19 @@ export const CuratedList = (props: IProps) => {
   if (loading) {
     return (
       <div className="mt-20">
-        <div>{props.content.title}</div>
-        <div>{props.content.description}</div>
-        <div>Loading shops...</div>
+        <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">{props.content.title}</h1>
+          <p className="text-base text-gray-600 mb-4">{props.content.description}</p>
+          <ul className="">
+            <li className="relative mt-4 list-none rounded-sm overflow-hidden shadow-md cursor-pointer">
+              <div className="h-36 relative bg-yellow-200 bg-cover bg-center" />
+              <div className="px-6 py-2">
+                <p className="font-medium text-xl text-left block">foo</p>
+                <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">Neighborhood</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     )
   }
