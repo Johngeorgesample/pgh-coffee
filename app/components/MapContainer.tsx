@@ -4,7 +4,7 @@ import { MapMouseEvent } from 'mapbox-gl'
 import { TShop } from '@/types/shop-types'
 
 interface MapContainerProps {
-  dataSet: {
+  displayedShops: {
     type: string
     features: TShop[]
   }
@@ -12,7 +12,7 @@ interface MapContainerProps {
   onShopSelect: (properties: Record<string, any>, geometry: Record<string, any>, type: string) => void
 }
 
-export default function MapContainer({ dataSet, currentShopCoordinates, onShopSelect }: MapContainerProps) {
+export default function MapContainer({ displayedShops, currentShopCoordinates, onShopSelect }: MapContainerProps) {
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
 
@@ -71,7 +71,7 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
         onClick={handleMapClick}
         ref={mapRef}
       >
-        <Source id="my-data" type="geojson" data={dataSet}>
+        <Source id="my-data" type="geojson" data={displayedShops}>
           <Layer
             id={layerId}
             type="circle"

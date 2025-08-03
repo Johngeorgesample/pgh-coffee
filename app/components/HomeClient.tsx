@@ -8,7 +8,7 @@ import Footer from '@/app/components/Footer'
 import Panel from '@/app/components/Panel'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useShopSelection } from '@/hooks'
+import { useURLShopSync, useShopSelection, useHighlightCurrentShop } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 
@@ -16,7 +16,7 @@ export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
   const { searchValue, setSearchValue, panelContent, setPanelContent } = usePanelStore()
-  const [dataSet, setDataSet] = useState({
+  const [displayedShops, setDisplayedShops] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
@@ -32,30 +32,11 @@ export default function HomeClient() {
   }
 
   const handleClose = () => {
-    setDataSet(coffeeShops)
+    setDisplayedShops(coffeeShops)
     removeSearchParam()
   }
 
   useURLShopSync(handleClose)
-
-  const updateCurrentShopMarker = () => {
-    const newData = {
-      ...dataSet,
-      features: dataSet.features.map((f: TShop) => {
-        const isSelected =
-          f.properties.address === currentShop.properties?.address &&
-          f.properties.name === currentShop.properties?.name
-        return {
-          ...f,
-          properties: {
-            ...f.properties,
-            selected: isSelected,
-          },
-        }
-      }),
-    }
-    setDataSet(newData)
-  }
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -63,7 +44,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     if (coffeeShops) {
-      setDataSet(coffeeShops)
+      setDisplayedShops(coffeeShops)
     }
   }, [coffeeShops])
 
@@ -73,12 +54,12 @@ export default function HomeClient() {
     }
   }, [panelContent, setPanelContent])
 
-  useEffect(updateCurrentShopMarker, [currentShop])
+  useHighlightCurrentShop({currentShop, displayedShops, setDisplayedShops})
 
   return (
     <>
       <MapContainer
-        dataSet={dataSet}
+        displayedShops={displayedShops}
         currentShopCoordinates={[
           currentShop?.geometry?.coordinates[0],
           currentShop?.geometry?.coordinates[1],
