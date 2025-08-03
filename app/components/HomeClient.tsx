@@ -165,6 +165,12 @@ export default function HomeClient() {
     [currentShop],
   )
 
+  useEffect(() => {
+    if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
+      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+    }
+  }, [searchValue, currentShop.properties?.name])
+
   return (
     <>
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
