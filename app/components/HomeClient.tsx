@@ -6,31 +6,22 @@ import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
 import ShopPanel from '@/app/components/ShopPanel'
-import ShopDetails from '@/app/components/ShopDetails'
-import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
-import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
+import { ExploreContent } from './ExploreContent'
+import { useURLShopSync, useShopSelection } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
-import { ExploreContent } from './ExploreContent'
 
 export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
-  const { searchValue, setSearchValue, panelContent, panelMode, setPanelContent } = usePanelStore()
+  const { searchValue, setSearchValue, panelContent, setPanelContent } = usePanelStore()
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
   })
+  const { handleShopSelect } = useShopSelection()
   const router = useRouter()
-
-  const appendSearchParamToURL = (shop: TShop) => {
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
-    url.search = params.toString()
-    router.push(url.toString())
-  }
 
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
@@ -45,69 +36,15 @@ export default function HomeClient() {
     removeSearchParam()
   }
 
-  const handleUpdatingCurrentShop = (shop: TShop) => {
-    setCurrentShop(shop)
-    if (Object.keys(shop).length) {
-      appendSearchParamToURL(shop)
-      setSearchValue(shop.properties.name)
-    } else {
-      setSearchValue('')
-    }
-  }
-
-  const foo = () => {
-    // setCurrentShop({} as TShop)
-    handleSearchClick()
-  }
-
-  const handleSearchClick = () => {
-    if (currentShop) {
-      removeSearchParam()
-    }
-    if (Object.keys(coffeeShops).length) {
-      handleUpdatingCurrentShop({} as TShop)
-      setPanelContent(<ShopSearch />, 'search')
-
-      plausible('SearchClick', {
-        props: {},
-      })
-    }
-  }
-
-  const handlePanelClose = () => {
-    if (Object.keys(currentShop).length) {
-      return foo()
-    }
-    fetchCoffeeShops()
-    setPanelContent(<ExploreContent />, 'explore')
-  }
-
-  const fetchShopFromURL = async () => {
-    const params = new URLSearchParams(window.location.search)
-    const shop = params.get('shop')
-
-    if (shop) {
-      try {
-        const response = await fetch(`/api/shops/${shop}`)
-        if (!response.ok) throw new Error('Shop not found')
-
-        const data = await response.json()
-        setCurrentShop(data)
-        setPanelContent(<ShopDetails shop={data} emitClose={handleClose} />, 'shop')
-      } catch (err) {
-        console.log(err)
-      }
-    } else {
-      setCurrentShop({} as TShop)
-    }
-  }
+  useURLShopSync(handleClose)
 
   const updateCurrentShopMarker = () => {
     const newData = {
       ...dataSet,
       features: dataSet.features.map((f: TShop) => {
         const isSelected =
-          f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name
+          f.properties.address === currentShop.properties?.address &&
+          f.properties.name === currentShop.properties?.name
         return {
           ...f,
           properties: {
@@ -120,20 +57,6 @@ export default function HomeClient() {
     setDataSet(newData)
   }
 
-  const handleDefaultDistanceUnits = () => {
-    if (typeof window !== 'undefined') {
-      if (!window.localStorage.getItem('distanceUnits')) {
-        window.localStorage.setItem('distanceUnits', DISTANCE_UNITS.Miles)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (currentShop?.properties?.name) {
-      setPanelContent(<ShopDetails shop={currentShop} emitClose={handleClose} />, 'shop')
-    }
-  }, [currentShop])
-
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
@@ -145,55 +68,25 @@ export default function HomeClient() {
   }, [coffeeShops])
 
   useEffect(() => {
-    fetchShopFromURL()
-    window.addEventListener('popstate', fetchShopFromURL)
-    return () => window.removeEventListener('popstate', fetchShopFromURL)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(handleDefaultDistanceUnits, [])
-
-  useEffect(() => {
     if (!panelContent) {
       setPanelContent(<ExploreContent />, 'explore')
     }
-  }, [])
+  }, [panelContent, setPanelContent])
 
-  useEffect(
-    updateCurrentShopMarker,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentShop],
-  )
-
-  useEffect(() => {
-    if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
-    }
-  }, [searchValue, currentShop.properties?.name])
+  useEffect(updateCurrentShopMarker, [currentShop])
 
   return (
     <>
-      {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
       <MapContainer
         dataSet={dataSet}
-        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
-        onShopSelect={(properties, geometry, type) => {
-          const shop = {
-            properties,
-            geometry,
-            type,
-          } as TShop
-          handleUpdatingCurrentShop(shop)
-          plausible('FeaturePointClick', {
-            props: {
-              shopName: properties.name,
-              neighborhood: properties.neighborhood,
-            },
-          })
-        }}
+        currentShopCoordinates={[
+          currentShop?.geometry?.coordinates[0],
+          currentShop?.geometry?.coordinates[1],
+        ]}
+        onShopSelect={handleShopSelect}
       />
       <Footer />
-      <ShopPanel shop={currentShop} foo={handlePanelClose}>
+      <ShopPanel shop={currentShop} foo={handleClose}>
         {panelContent}
       </ShopPanel>
     </>
