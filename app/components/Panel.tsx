@@ -9,7 +9,7 @@ interface IProps {
   foo: any
 }
 
-export default function ShopPanel(props: IProps) {
+export default function Panel(props: IProps) {
   return (
     <div data-testid="shop-panel" className="relative z-10">
       <div className="fixed overflow-hidden">

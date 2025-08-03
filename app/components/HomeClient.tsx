@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
-import ShopPanel from '@/app/components/ShopPanel'
+import Panel from '@/app/components/Panel'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
 import { useURLShopSync, useShopSelection } from '@/hooks'
@@ -86,9 +86,9 @@ export default function HomeClient() {
         onShopSelect={handleShopSelect}
       />
       <Footer />
-      <ShopPanel shop={currentShop} foo={handleClose}>
+      <Panel shop={currentShop} foo={handleClose}>
         {panelContent}
-      </ShopPanel>
+      </Panel>
     </>
   )
 }

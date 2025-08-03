@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import ShopPanel from '@/app/components/ShopPanel'
+import Panel from '@/app/components/Panel'
 import { TShop } from '@/types/shop-types'
 
 beforeAll(() => {
@@ -14,7 +14,7 @@ beforeAll(() => {
     }
 })
 
-describe('ShopPanel Component', () => {
+describe('Panel Component', () => {
   const mockShop: TShop = {
     type: 'Feature',
     properties: {
@@ -42,15 +42,15 @@ describe('ShopPanel Component', () => {
   }
 
   it('renders the panel content', () => {
-    render(<ShopPanel {...defaultProps} />)
+    render(<Panel {...defaultProps} />)
     expect(screen.getByText('Panel Content')).toBeInTheDocument()
   })
 
   it('supports interactions with child content', () => {
     render(
-      <ShopPanel {...defaultProps}>
+      <Panel {...defaultProps}>
         <button onClick={() => mockHandlePanelContentClick(mockShop)}>Click Me</button>
-      </ShopPanel>,
+      </Panel>,
     )
 
     const button = screen.getByText('Click Me')
