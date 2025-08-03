@@ -8,7 +8,6 @@ import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 import ShopList from '@/app/components/ShopList'
 
 interface IProps {
-  handleClick: (shop: TShop) => void
   shop: TShop
 }
 
@@ -70,13 +69,14 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
   }, [coffeeShops, shop, calculateDistance])
 
   const handleCardClick = (shop: TShop) => {
-    handleClick(shop)
-    plausible('NearbyCardClick', {
-      props: {
-        shopName: shop.properties.name,
-        neighborhood: shop.properties.neighborhood,
-      },
-    })
+    // handleClick(shop)
+    // plausible('NearbyCardClick', {
+    //   props: {
+    //     shopName: shop.properties.name,
+    //     neighborhood: shop.properties.neighborhood,
+    //   },
+    // })
+    console.log('dancers')
   }
 
   if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
@@ -88,7 +88,6 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
       <ShopList
         coffeeShops={sortedShopsWithDistances.shops}
         distances={sortedShopsWithDistances.distances}
-        handleCardClick={handleCardClick}
         units={units}
       />
     </section>

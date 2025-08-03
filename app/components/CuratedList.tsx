@@ -13,7 +13,7 @@ export const CuratedList = (props: IProps) => {
   const [shops, setShops] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { coffeeShops, fetchCoffeeShops, setCoffeeShops } = useShopsStore()
+  const { coffeeShops, fetchCoffeeShops, setCoffeeShops, setCurrentShop } = useShopsStore()
 
   useEffect(() => {
     const fetchShops = async () => {
@@ -93,7 +93,7 @@ export const CuratedList = (props: IProps) => {
         <h1 className="text-2xl font-bold text-gray-901 mb-2">{props.content.title}</h1>
         <p className="text-base text-gray-600 mb-4">{props.content.description}</p>
         <hr />
-        {shops.length > 0 ? <ShopList coffeeShops={shops} handleCardClick={() => {}} /> : <div>No shops found</div>}
+        {shops.length > 0 ? <ShopList coffeeShops={shops} /> : <div>No shops found</div>}
       </div>
     </div>
   )

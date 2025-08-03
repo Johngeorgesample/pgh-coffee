@@ -15,7 +15,7 @@ export const CuratedListIndex = (props: IProps) => {
         {curatedLists.map((list) => (
           <button
             key={list.id}
-            onClick={() => setPanelContent(<CuratedList content={list} />)}
+            onClick={() => setPanelContent(<CuratedList content={list} />, 'list')}
             className="text-left p-4 hover:bg-gray-50 transition"
           >
             <div className="font-semibold text-gray-900">{list.title}</div>

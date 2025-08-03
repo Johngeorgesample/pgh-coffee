@@ -13,8 +13,8 @@ export const ExploreContent = (props: IProps) => {
     { label: '🔥 Trending shops', onClick: () => {} },
     { label: '📍 Explore by neighborhood', onClick: () => {} },
     { label: '🆕 What\'s new', onClick: () => {} },
-    { label: '☕️ Curated Lists', onClick: () => setPanelContent(<CuratedListIndex />) },
-    { label: '🗺️ View all shops', onClick: () => setPanelContent(<ShopSearch />) },
+    { label: '☕️ Curated Lists', onClick: () => setPanelContent(<CuratedListIndex />, 'list') },
+    { label: '🗺️ View all shops', onClick: () => setPanelContent(<ShopSearch />, 'search') },
   ]
 
   return (

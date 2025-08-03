@@ -15,10 +15,10 @@ import usePanelStore from '@/stores/panelStore'
 import SearchFAB from '@/app/components/SearchFAB'
 import { ExploreContent } from './ExploreContent'
 
-export default function HomeClient() { const plausible = usePlausible()
-  const { coffeeShops, fetchCoffeeShops } = useShopsStore()
-  const { searchValue, setSearchValue, panelContent, setPanelContent } = usePanelStore()
-  const [currentShop, setCurrentShop] = useState({} as TShop)
+export default function HomeClient() {
+  const plausible = usePlausible()
+  const { coffeeShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
+  const { searchValue, setSearchValue, panelContent, panelMode, setPanelContent } = usePanelStore()
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
@@ -48,7 +48,6 @@ export default function HomeClient() { const plausible = usePlausible()
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
       setSearchValue(shop.properties.name)
@@ -57,13 +56,17 @@ export default function HomeClient() { const plausible = usePlausible()
     }
   }
 
+  const updateShop = () => {
+    setPanelContent(<ShopDetails shop={currentShop} emitClose={handleClose} />, 'shop')
+  }
+
   const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
     handleUpdatingCurrentShop(shopFromShopPanel)
     document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   const foo = () => {
-    setCurrentShop({} as TShop)
+    // setCurrentShop({} as TShop)
     handleSearchClick()
   }
 
@@ -73,7 +76,7 @@ export default function HomeClient() { const plausible = usePlausible()
     }
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+      setPanelContent(<ShopSearch />, 'search')
 
       plausible('SearchClick', {
         props: {},
@@ -86,13 +89,12 @@ export default function HomeClient() { const plausible = usePlausible()
       return foo()
     }
     fetchCoffeeShops()
-    setPanelContent(<ExploreContent />)
+    setPanelContent(<ExploreContent />, 'explore')
   }
 
   const fetchShopFromURL = async () => {
     const params = new URLSearchParams(window.location.search)
     const shop = params.get('shop')
-    const pathname = window.location.pathname
 
     if (shop) {
       try {
@@ -101,9 +103,7 @@ export default function HomeClient() { const plausible = usePlausible()
 
         const data = await response.json()
         setCurrentShop(data)
-        setPanelContent(
-          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
-        )
+        setPanelContent(<ShopDetails shop={data} emitClose={handleClose} />, 'shop')
       } catch (err) {
         console.log(err)
       }
@@ -139,6 +139,12 @@ export default function HomeClient() { const plausible = usePlausible()
   }
 
   useEffect(() => {
+    if (currentShop?.properties?.name) {
+      setPanelContent(<ShopDetails shop={currentShop} emitClose={handleClose} />, 'shop')
+    }
+  }, [currentShop])
+
+  useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
 
@@ -159,7 +165,7 @@ export default function HomeClient() { const plausible = usePlausible()
 
   useEffect(() => {
     if (!panelContent) {
-      setPanelContent(<ExploreContent />)
+      setPanelContent(<ExploreContent />, 'explore')
     }
   }, [])
 
@@ -168,12 +174,6 @@ export default function HomeClient() { const plausible = usePlausible()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentShop],
   )
-
-  useEffect(() => {
-    if (searchValue && searchValue.trim() && !currentShop.properties?.name?.includes(searchValue)) {
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
-    }
-  }, [searchValue, currentShop.properties?.name])
 
   return (
     <>
@@ -196,9 +196,8 @@ export default function HomeClient() { const plausible = usePlausible()
           })
         }}
       />
-      <SearchFAB handleClick={handleSearchClick} />
       <Footer />
-      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop} foo={handlePanelClose}>
+      <ShopPanel shop={currentShop} foo={handlePanelClose}>
         {panelContent}
       </ShopPanel>
     </>

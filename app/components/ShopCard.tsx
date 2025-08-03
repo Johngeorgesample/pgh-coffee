@@ -1,13 +1,12 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface IProps {
   distance?: string
-  handleCardClick: (shop: TShop) => any
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
   units?: TUnits
-
 }
 
 export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
@@ -21,10 +20,11 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 }
 
 export default function ShopCard(props: IProps) {
+  const { setCurrentShop } = useShopsStore()
   return (
     <li
       className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
-      onClick={() => props.handleCardClick(props.shop)}
+      onClick={() => setCurrentShop(props.shop)}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
       role="button"
