@@ -12,7 +12,6 @@ import MapContainer from './MapContainer'
 import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
-import SearchFAB from '@/app/components/SearchFAB'
 import { ExploreContent } from './ExploreContent'
 
 export default function HomeClient() {
@@ -54,15 +53,6 @@ export default function HomeClient() {
     } else {
       setSearchValue('')
     }
-  }
-
-  const updateShop = () => {
-    setPanelContent(<ShopDetails shop={currentShop} emitClose={handleClose} />, 'shop')
-  }
-
-  const handleNearbyShopClick = (shopFromShopPanel: TShop) => {
-    handleUpdatingCurrentShop(shopFromShopPanel)
-    document.getElementById('header')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   const foo = () => {
