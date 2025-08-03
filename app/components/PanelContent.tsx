@@ -7,7 +7,6 @@ import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
-  handleNearbyShopClick: (shop: TShop) => void
   shop: TShop
 }
 
@@ -53,7 +52,7 @@ export default function PanelContent(props: IProps) {
           </div>
         </div>
       </section>
-      <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
+      <NearbyShops shop={props.shop} />
     </>
   )
 }

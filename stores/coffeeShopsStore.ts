@@ -7,12 +7,13 @@ interface CoffeeShopsState {
   searchValue: string
   fetchCoffeeShops: () => Promise<void>
   setCoffeeShops: (data: TShop[]) => void
-  setSearchValue: (value: string) => void
+  currentShop: TShop
+  setCurrentShop: (data: TShop) => void
 }
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
-    (set) => ({
+    set => ({
       coffeeShops: {},
       searchValue: '',
 
@@ -28,10 +29,14 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         } catch (error) {
           console.error('Error fetching coffee shops:', error)
         }
-      }
+      },
+
+      currentShop: {} as TShop,
+
+      setCurrentShop: (data: TShop) => set({ currentShop: data }),
     }),
-    { name: 'ShopsStore' }
-  )
+    { name: 'ShopsStore' },
+  ),
 )
 
 export default useCoffeeShopsStore

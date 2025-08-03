@@ -6,7 +6,6 @@ import SearchBar from './SearchBar'
 interface IProps {
   children: any
   shop: TShop
-  handlePanelContentClick: (shop: TShop) => void
   foo: any
 }
 
