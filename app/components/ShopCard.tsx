@@ -1,6 +1,7 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import {useShopSelection} from '@/hooks'
 
 interface IProps {
   distance?: string
@@ -20,11 +21,11 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 }
 
 export default function ShopCard(props: IProps) {
-  const { setCurrentShop } = useShopsStore()
+  const { handleShopSelect } = useShopSelection()
   return (
     <li
       className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
-      onClick={() => setCurrentShop(props.shop)}
+      onClick={() => handleShopSelect(props.shop)}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
       role="button"
