@@ -3,10 +3,10 @@ import { devtools } from 'zustand/middleware'
 import { TShop } from '@/types/shop-types'
 
 interface CoffeeShopsState {
-  coffeeShops: any
+  allShops: {}
   searchValue: string
   fetchCoffeeShops: () => Promise<void>
-  setCoffeeShops: (data: TShop[]) => void
+  setAllShops: (data: TShop[]) => void
   currentShop: TShop
   setCurrentShop: (data: TShop) => void
 }
@@ -14,10 +14,13 @@ interface CoffeeShopsState {
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
     set => ({
-      coffeeShops: {},
+      allShops: {
+        type: 'FeatureCollection',
+        features: [],
+      },
       searchValue: '',
 
-      setCoffeeShops: (data: TShop[]) => set({ coffeeShops: data }),
+      setAllShops: (data: TShop[]) => set({ allShops: data }),
 
       setSearchValue: (value: string) => set({ searchValue: value }),
 
@@ -25,7 +28,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         try {
           const response = await fetch('/api/shops/geojson')
           const data = await response.json()
-          set({ coffeeShops: data })
+          set({ allShops: data })
         } catch (error) {
           console.error('Error fetching coffee shops:', error)
         }

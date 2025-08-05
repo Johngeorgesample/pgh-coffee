@@ -15,7 +15,7 @@ import usePanelStore from '@/stores/panelStore'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { coffeeShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
+  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
   const { panelContent, setSearchValue, panelMode, setPanelContent } = usePanelStore()
   const [displayedShops, setDisplayedShops] = useState({
     type: 'FeatureCollection',
@@ -32,8 +32,7 @@ export default function HomeClient() {
   }
 
   const handleClose = () => {
-    console.log('hello?')
-    setDisplayedShops(coffeeShops)
+    setDisplayedShops(allShops)
     setCurrentShop({} as TShop)
     removeSearchParam()
     if (panelMode === 'shop') {
@@ -51,10 +50,11 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
-    if (coffeeShops) {
-      setDisplayedShops(coffeeShops)
+    if (allShops) {
+      setDisplayedShops(allShops)
     }
-  }, [coffeeShops])
+  }, [allShops])
+
 
   useEffect(() => {
     if (!panelContent) {

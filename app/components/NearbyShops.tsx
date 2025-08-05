@@ -25,7 +25,7 @@ const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ handleClick, shop }: IProps) {
   const plausible = usePlausible()
-  const { coffeeShops } = useShopsStore()
+  const { allShops } = useShopsStore()
 
   const [units, setUnits] = useState<TUnits>('miles')
   useEffect(() => {
@@ -44,9 +44,9 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
     shops: TShop[]
     distances: number[]
   }>(() => {
-    if (!coffeeShops.features) return { shops: [], distances: [] }
+    if (!allShops.features) return { shops: [], distances: [] }
 
-    return coffeeShops.features
+    return allShops.features
       .filter((s: TShop) => {
         const isDifferentShop =
           s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
@@ -66,7 +66,7 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         },
         { shops: [] as TShop[], distances: [] as number[] },
       )
-  }, [coffeeShops, shop, calculateDistance])
+  }, [allShops, shop, calculateDistance])
 
   const handleCardClick = (shop: TShop) => {
     // handleClick(shop)
