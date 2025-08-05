@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
-import { TShop } from '@/types/shop-types'
+import { TFeatureCollection, TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -17,9 +17,9 @@ export default function HomeClient() {
   const plausible = usePlausible()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
   const { panelContent, setSearchValue, panelMode, setPanelContent } = usePanelStore()
-  const [displayedShops, setDisplayedShops] = useState({
+  const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
     type: 'FeatureCollection',
-    features: [] as TShop[],
+    features: [],
   })
   const router = useRouter()
 

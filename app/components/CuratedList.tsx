@@ -13,7 +13,7 @@ export const CuratedList = (props: IProps) => {
   const [shops, setShops] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { coffeeShops, fetchCoffeeShops, setCoffeeShops, setCurrentShop } = useShopsStore()
+  const { setAllShops } = useShopsStore()
 
   useEffect(() => {
     const fetchShops = async () => {
@@ -44,7 +44,7 @@ export const CuratedList = (props: IProps) => {
           try {
             console.log('Raw response text for debugging:')
             const raw = await response.text() // Read as text to avoid double-read errors
-            setCoffeeShops(JSON.parse(raw))
+            setAllShops(JSON.parse(raw))
           } catch (e) {
             console.error('Error reading response in finally block', e)
           }

@@ -1,5 +1,10 @@
 import { TNeighborhood } from './neighborhood-types'
 
+export interface TFeatureCollection {
+  type: 'FeatureCollection'
+  features: TShop[]
+}
+
 export interface TShop {
   type: string,
   properties: {

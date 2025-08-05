@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { TShop } from '@/types/shop-types'
+import { TFeatureCollection, TShop } from '@/types/shop-types'
 
 interface CoffeeShopsState {
-  allShops: {}
+  allShops: TFeatureCollection
   searchValue: string
   fetchCoffeeShops: () => Promise<void>
   setAllShops: (data: TShop[]) => void
@@ -20,14 +20,20 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       },
       searchValue: '',
 
-      setAllShops: (data: TShop[]) => set({ allShops: data }),
+      setAllShops: (data: TShop[]) =>
+        set({
+          allShops: {
+            type: 'FeatureCollection',
+            features: data,
+          },
+        }),
 
       setSearchValue: (value: string) => set({ searchValue: value }),
 
       fetchCoffeeShops: async () => {
         try {
           const response = await fetch('/api/shops/geojson')
-          const data = await response.json()
+          const data: TFeatureCollection = await response.json()
           set({ allShops: data })
         } catch (error) {
           console.error('Error fetching coffee shops:', error)
