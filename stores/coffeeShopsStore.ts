@@ -9,6 +9,8 @@ interface CoffeeShopsState {
   setAllShops: (data: TShop[]) => void
   currentShop: TShop
   setCurrentShop: (data: TShop) => void
+  hoveredShop: TShop | null
+  setHoveredShop: (shop: TShop | null) => void
 }
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
@@ -43,6 +45,8 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       currentShop: {} as TShop,
 
       setCurrentShop: (data: TShop) => set({ currentShop: data }),
+      hoveredShop: null,
+      setHoveredShop: shop => set({ hoveredShop: shop }),
     }),
     { name: 'ShopsStore' },
   ),

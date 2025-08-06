@@ -8,6 +8,8 @@ interface IProps {
   handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
   units?: TUnits
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
@@ -24,6 +26,8 @@ export default function ShopCard(props: IProps) {
   const { handleShopSelect } = useShopSelection()
   return (
     <li
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
       className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
       onClick={() => handleShopSelect(props.shop)}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}

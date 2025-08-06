@@ -15,7 +15,7 @@ import usePanelStore from '@/stores/panelStore'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop } = useShopsStore()
+  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop } = useShopsStore()
   const { panelContent, setSearchValue, panelMode, setPanelContent } = usePanelStore()
   const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
     type: 'FeatureCollection',
@@ -42,19 +42,26 @@ export default function HomeClient() {
       setPanelContent(<ExploreContent />, 'explore')
     }
   }
+  useEffect(() => {
+    if (allShops) {
+      setDisplayedShops({
+        ...allShops,
+        features: allShops.features.map(shop => ({
+          ...shop,
+          properties: {
+            ...shop.properties,
+            hovered: hoveredShop ? JSON.stringify(shop) === JSON.stringify(hoveredShop) : false,
+          },
+        })),
+      })
+    }
+  }, [allShops, hoveredShop])
 
   useURLShopSync(handleClose)
 
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
-
-  useEffect(() => {
-    if (allShops) {
-      setDisplayedShops(allShops)
-    }
-  }, [allShops])
-
 
   useEffect(() => {
     if (!panelContent) {
