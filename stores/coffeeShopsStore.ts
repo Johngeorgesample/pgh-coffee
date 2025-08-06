@@ -22,12 +22,18 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       },
       searchValue: '',
 
-      setAllShops: (data: TShop[]) =>
-        set({
-          allShops: {
-            type: 'FeatureCollection',
-            features: data,
-          },
+      setAllShops: (data: TShop[] | { type: string; features: TShop[] }) =>
+        set(prev => {
+          const isGeoJSON = typeof data === 'object' && 'type' in data && 'features' in data
+
+          return {
+            allShops: isGeoJSON
+              ? (data as TFeatureCollection)
+              : {
+                  ...prev.allShops,
+                  features: data as TShop[],
+                },
+          }
         }),
 
       setSearchValue: (value: string) => set({ searchValue: value }),
