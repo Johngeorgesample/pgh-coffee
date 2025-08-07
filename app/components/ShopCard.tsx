@@ -24,10 +24,11 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 
 export default function ShopCard(props: IProps) {
   const { handleShopSelect } = useShopSelection()
+const { setHoveredShop } = useShopsStore()
   return (
     <li
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
+      onMouseEnter={() => setHoveredShop(props.shop)}
+      onMouseLeave={() => setHoveredShop(null)}
       className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
       onClick={() => handleShopSelect(props.shop)}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}

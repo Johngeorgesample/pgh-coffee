@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export default function ShopList(props: IProps) {
-const { setCurrentShop,  setHoveredShop } = useShopsStore()
+  const { setCurrentShop } = useShopsStore()
   const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -35,8 +35,6 @@ const { setCurrentShop,  setHoveredShop } = useShopsStore()
         if (doesShopMatchFilter(shop) || !props.filter) {
           return (
             <ShopCard
-              onMouseEnter={() => setHoveredShop(shop)}
-              onMouseLeave={() => setHoveredShop(null)}
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               handleKeyPress={handleKeyPress}
