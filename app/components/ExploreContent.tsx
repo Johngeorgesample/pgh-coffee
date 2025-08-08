@@ -3,6 +3,7 @@
 import { CuratedListIndex } from './CuratedListIndex'
 import usePanelStore from '@/stores/panelStore'
 import ShopSearch from '@/app/components/ShopSearch'
+import { News } from '@/app/components/News'
 
 interface IProps {}
 
@@ -12,7 +13,7 @@ export const ExploreContent = (props: IProps) => {
   const sections = [
     { label: '🔥 Trending shops', onClick: () => {} },
     { label: '📍 Explore by neighborhood', onClick: () => {} },
-    { label: '🆕 What\'s new', onClick: () => {} },
+    { label: '🆕 What\'s new', onClick: () => setPanelContent(<News />, 'news')},
     { label: '☕️ Curated Lists', onClick: () => setPanelContent(<CuratedListIndex />, 'list') },
     { label: '🗺️ View all shops', onClick: () => setPanelContent(<ShopSearch />, 'search') },
   ]
