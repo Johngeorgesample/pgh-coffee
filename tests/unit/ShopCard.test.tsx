@@ -17,13 +17,11 @@ describe('roundDistance', () => {
 
 describe('generateDistanceText', () => {
   it('formats distance with Miles correctly', () => {
-    expect(generateDistanceText({ units: 'Miles', distance: '1.23456' }))
-      .toBe('1.23 miles away')
+    expect(generateDistanceText({ units: 'Miles', distance: '1.23456' })).toBe('1.23 miles away')
   })
 
   it('formats distance with Meters correctly', () => {
-    expect(generateDistanceText({ units: 'Meters', distance: '1234.56' }))
-      .toBe('1235 meters away')
+    expect(generateDistanceText({ units: 'Meters', distance: '1234.56' })).toBe('1235 meters away')
   })
 })
 
@@ -49,7 +47,7 @@ describe('ShopCard', () => {
   const defaultProps = {
     shop: mockShop,
     handleCardClick: mockHandleCardClick,
-    handleKeyPress: mockHandleKeyPress
+    handleKeyPress: mockHandleKeyPress,
   }
 
   beforeEach(() => {
@@ -58,20 +56,14 @@ describe('ShopCard', () => {
 
   it('renders shop name and neighborhood', () => {
     render(<ShopCard {...defaultProps} />)
-    
+
     expect(screen.getByText('Test Shop')).toBeTruthy()
     expect(screen.getByText('Downtown')).toBeTruthy()
   })
 
   it('renders distance when distance and units are provided', () => {
-    render(
-      <ShopCard
-        {...defaultProps}
-        distance="1.23456"
-        units="Miles"
-      />
-    )
-    
+    render(<ShopCard {...defaultProps} distance="1.23456" units="Miles" />)
+
     expect(screen.getByText('1.23 miles away')).toBeTruthy()
   })
 
@@ -88,14 +80,14 @@ describe('ShopCard', () => {
 
   it('sets background image when photo is provided', () => {
     render(<ShopCard {...defaultProps} />)
-    const bgElement = screen.getByRole('button').querySelector('.h-36') as HTMLElement
-    expect(bgElement?.style.backgroundImage).toContain("url(test-photo-url.jpg)")
+    const imgElement = screen.getByRole('button').querySelector('.h-36') as HTMLElement
+    expect(imgElement).toHaveAttribute('src', expect.stringContaining('test-photo-url.jpg'))
   })
 
   it('does not set background image when photo is missing', () => {
     const shopWithoutPhoto = {
       ...mockShop,
-      properties: { ...mockShop.properties, photo: undefined }
+      properties: { ...mockShop.properties, photo: undefined },
     }
     render(<ShopCard {...defaultProps} shop={shopWithoutPhoto} />)
     const bgElement = screen.getByRole('button').querySelector('.h-36') as HTMLElement
