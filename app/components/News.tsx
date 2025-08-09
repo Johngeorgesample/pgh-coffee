@@ -1,5 +1,5 @@
 import { data } from '@/data/news'
-import { NewsItem, NewsEntry} from '@/types/news-types'
+import { NewsEntry } from '@/types/news-types'
 import { fmtYMD } from '@/app/utils/utils'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
@@ -19,28 +19,35 @@ const Tags = ({ entry }: { entry: NewsEntry }) => {
 export const News = () => {
   return (
     <div className="mt-20 px-4 sm:px-6">
-      {data.map((item: NewsItem) => (
-        <div key={item.date} className="mb-8">
-          <p className="text-sm text-gray-500 mb-2">Posted {fmtYMD(item.date)}</p>
+      {data.map((entry: NewsEntry, idx: number) => (
+        <div key={idx} className="mb-8">
+          <p className="text-sm text-gray-500 mb-2">
+            Posted {fmtYMD(entry.postDate)}
+          </p>
 
-          <ul className="space-y-1">
-            {item.entries.map((entry, idx) => (
-              <li key={idx} className="text-base">
-                <p className="font-semibold">{entry.title}</p>
+          <p className="font-semibold">{entry.title}</p>
+          <Tags entry={entry} />
+          {entry.eventDate && (
+            <p className="text-sm text-gray-500">
+              Event date: {fmtYMD(entry.eventDate)}
+            </p>
+          )}
+          {entry.description && <p>{entry.description}</p>}
 
-                <Tags entry={entry} />
-                {entry.eventDate && <p className="text-sm text-gray-500">Event date: {fmtYMD(entry.eventDate)}</p>}
-                {entry.description && <p>{entry.description}</p>}
-
-                {entry.url && (
-                  <a className="text-blue-500 flex items-center" href={entry.url} target="_blank">
-                    Source
-                    <ArrowTopRightOnSquareIcon className="ml-1 h-4 w-4" aria-hidden="true" />
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
+          {entry.url && (
+            <a
+              className="text-blue-500 flex items-center"
+              href={entry.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Source
+              <ArrowTopRightOnSquareIcon
+                className="ml-1 h-4 w-4"
+                aria-hidden="true"
+              />
+            </a>
+          )}
         </div>
       ))}
     </div>
