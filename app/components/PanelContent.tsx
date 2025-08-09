@@ -3,6 +3,7 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
+import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
@@ -52,10 +53,7 @@ export default function PanelContent(props: IProps) {
           </div>
         </div>
       </section>
-      <hr className="w-1/2 m-auto mt-2 mb-2" />
-      <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
-        <p className="mb-2 text-gray-700">News</p>
-      </div>
+      <ShopNews shop={props.shop} />
       <NearbyShops shop={props.shop} />
     </>
   )
