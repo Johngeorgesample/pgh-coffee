@@ -1,5 +1,5 @@
 export interface NewsItem {
-  date: string // ISO format, e.g. "2025-08-07"
+  date: string
   entries: NewsEntry[]
 }
 
@@ -10,4 +10,5 @@ export interface NewsEntry {
   description?: string
   shopId?: string
   url?: string
+  eventDate?: string
 }
