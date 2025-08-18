@@ -32,24 +32,37 @@ const EventDatePill = ({ date }: { date: string }) => (
   </span>
 )
 
+const NewPill = () => (
+  <span className="ml-2 inline-flex items-center rounded-full bg-yellow-400/20 px-2 py-0.5 text-xs font-medium text-yellow-500">
+    New
+  </span>
+)
+
 const DayHeader = ({ date }: { date: string }) => (
   <div className="sticky top-0 isolate -mx-4 px-4 py-2 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/60">
     <p className="text-xs font-semibold tracking-wide text-gray-500">Posted {fmtYMD(date)}</p>
   </div>
 )
 
+const isNew = date => {
+  const created = new Date(date).getTime()
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+  return created > sevenDaysAgo
+}
 
 const foo = async () => {
-  const response = await fetch('/api/updates')
+  const response = await fetch('/api/events')
   return await response.json()
 }
 
-export const News = () => {
-  const [ updates, setUpdates ] = useState([])
+export const Events = () => {
+  const [updates, setUpdates] = useState([])
 
   useEffect(() => {
     foo().then(setUpdates)
   }, [])
+
+  console.log(updates)
 
   // ensure newest first
   const items = [...updates].sort((a, b) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
@@ -64,7 +77,6 @@ export const News = () => {
     <div className="px-4 py-3 leading-relaxed">
       {Object.entries(groups).map(([day, entries]) => (
         <section key={day} className="mb-4">
-          <DayHeader date={day} />
           <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
             {entries.map((entry, i) => (
               <li key={i} className="p-3">
@@ -86,6 +98,7 @@ export const News = () => {
 
                 <div className="mt-1 flex flex-wrap items-center gap-2">
                   {entry.event_date && <EventDatePill date={entry.event_date} />}
+                  {isNew(entry.post_date) && <NewPill />}
                   {entry.tags?.map(t => <TagBadge key={t} label={t} />)}
                 </div>
 

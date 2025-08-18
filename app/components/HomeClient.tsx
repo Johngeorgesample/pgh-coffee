@@ -40,6 +40,8 @@ export default function HomeClient() {
       setPanelContent(<ShopSearch />, 'search')
     } else {
       setPanelContent(<ExploreContent />, 'explore')
+      console.log(allShops)
+      setDisplayedShops(allShops)
     }
   }
   useEffect(() => {
