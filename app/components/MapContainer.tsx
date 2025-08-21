@@ -63,7 +63,7 @@ export default function MapContainer({ displayedShops, currentShopCoordinates }:
   }
 
   return (
-    <div data-testid="map-container" className="w-2/3">
+    <div data-testid="map-container" className="w-full lg:w-2/3">
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}

@@ -16,7 +16,7 @@ import usePanelStore from '@/stores/panelStore'
 export default function HomeClient() {
   const plausible = usePlausible()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop } = useShopsStore()
-  const { panelContent, setSearchValue, panelMode, setPanelContent } = usePanelStore()
+  const { panelContent, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
   const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
     type: 'FeatureCollection',
     features: [],
@@ -39,7 +39,7 @@ export default function HomeClient() {
       setSearchValue('')
       setPanelContent(<ShopSearch />, 'search')
     } else {
-      setPanelContent(<ExploreContent />, 'explore')
+      usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
       console.log(allShops)
       setDisplayedShops(allShops)
     }
@@ -60,6 +60,20 @@ export default function HomeClient() {
   }, [allShops, hoveredShop])
 
   useURLShopSync(handleClose)
+
+useEffect(() => {
+  // No search value, nothing to do
+  if (!searchValue) return;
+
+  // If a shop is selected AND the searchValue was just set to its name,
+  // treat it as a shop click → don't switch to search panel
+  if (currentShop?.properties?.uuid && searchValue === currentShop.properties?.name) {
+    return;
+  }
+
+  // Otherwise (typed, chip, whatever) → show search panel
+  setPanelContent(<ShopSearch />, 'search');
+}, [searchValue, currentShop, setPanelContent]);
 
   useEffect(() => {
     fetchCoffeeShops()

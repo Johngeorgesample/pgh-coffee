@@ -1,11 +1,12 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import Hours from './Hours'
 
 interface IProps {
   shop: TShop
@@ -50,6 +51,14 @@ export default function PanelContent(props: IProps) {
               <address className="text-sm hover:underline">{address}</address>
               <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
             </a>
+          </div>
+          <div className="flex mt-2">
+            <ClockIcon className="w-4 mr-1" />
+            <div
+              className="group text-sm flex items-center"
+            >
+            {/* <Hours /> */}
+            </div>
           </div>
         </div>
       </section>
