@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode } from 'react'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events'
 
 type PanelEntry = {
   mode: PanelMode
