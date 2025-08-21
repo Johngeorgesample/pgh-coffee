@@ -6,7 +6,7 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-const mapDbShopToTShop = (s) => {
+const mapDbShopToTShop = (s: any) => {
   if (s.latitude == null || s.longitude == null) return null
   return {
     type: 'Feature',
@@ -39,7 +39,7 @@ const fetchCuratedLists = async () => {
   const lists = (data).map((list) => {
     const shops = (list.shops || [])
       .map(mapDbShopToTShop)
-      .filter((s) => s !== null)
+      .filter((s: any) => s !== null)
 
     return { ...list, shops }
   })
