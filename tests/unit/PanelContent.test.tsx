@@ -26,6 +26,7 @@ describe('PanelContent', () => {
       address: '456 Murray Ave, Pittsburgh, PA 15217',
       photo: 'https://example.com/photo.jpg',
       website: 'https://testshop.com',
+      uuid: '1234'
     },
     geometry: {
       type: 'Point',

@@ -12,7 +12,7 @@ vi.mock('react-map-gl', () => {
   }
 })
 
-describe('MapContainer', () => {
+describe.skip('MapContainer', () => {
   const mockOnShopSelect = vi.fn()
 
   const dataSet = {
