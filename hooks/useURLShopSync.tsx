@@ -1,6 +1,5 @@
 // Fetches the shop if `?shop=...` is in the URL and updates currentShop + panel
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
@@ -8,7 +7,6 @@ import ShopDetails from '@/app/components/ShopDetails'
 export const useURLShopSync = (handleClose: () => void) => {
   const { setCurrentShop } = useShopsStore()
   const { setPanelContent } = usePanelStore()
-  const router = useRouter()
 
   const fetchShopFromURL = async () => {
     const params = new URLSearchParams(window.location.search)

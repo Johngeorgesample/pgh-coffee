@@ -1,7 +1,7 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import {useShopSelection} from '@/hooks'
+import { useShopSelection } from '@/hooks'
 
 interface IProps {
   distance?: string
@@ -10,6 +10,7 @@ interface IProps {
   units?: TUnits
   onMouseEnter?: () => void
   onMouseLeave?: () => void
+  featured?: boolean
 }
 
 export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
@@ -24,28 +25,41 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 
 export default function ShopCard(props: IProps) {
   const { handleShopSelect } = useShopSelection()
-const { setHoveredShop } = useShopsStore()
+  const { setHoveredShop } = useShopsStore()
   return (
     <li
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
-      className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
+      className={`${props.featured ? 'h-46' : 'h-36'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
       onClick={() => handleShopSelect(props.shop)}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
       role="button"
     >
-      <div
-        className="h-36 relative bg-yellow-200 bg-cover bg-center"
-        style={props.shop.properties.photo ? { backgroundImage: `url('${props.shop.properties.photo}')` } : {}}
-      />
-      <div className="px-6 py-2">
-        <p className="font-medium text-xl text-left block">{props.shop.properties.name}</p>
-        <p className="w-fit mb-1 text-left text-gray-700 border border-transparent">
+      {props.shop?.properties?.photo ? (
+        <img
+          className="h-full w-full relative object-cover object-center"
+          decoding="async"
+          loading="lazy"
+          src={props.shop.properties.photo}
+        />
+      ) : (
+        <div className="h-full relative bg-yellow-200 bg-cover bg-center" />
+      )}
+      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_70%)]"></div>
+      <div className="px-6 py-2 absolute bottom-0">
+        <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
+        <p className="w-fit mb-1 text-left text-white border border-transparent">
           {props.shop.properties.neighborhood}
+
+          {/*
+          <span className="ml-2 inline-flex items-center rounded-full bg-yellow-400/20 px-2 py-0.5 text-xs font-medium text-yellow-500">
+            Sponsored
+          </span>
+          */}
         </p>
         {props.distance && props.units && (
-          <p className="italic text-sm text-gray-700">
+          <p className="italic text-sm text-white">
             {generateDistanceText({ units: props.units, distance: props.distance })}
           </p>
         )}

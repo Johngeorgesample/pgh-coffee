@@ -13,6 +13,7 @@ export interface TShop {
     address: string
     photo?: string
     website: string
+    uuid: string
   }
   geometry: {
     type: string,

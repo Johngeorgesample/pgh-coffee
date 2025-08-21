@@ -15,6 +15,7 @@ export const formatDataToGeoJSON = (shops: any[]) => {
         address: shop.address,
         roaster: shop.roaster,
         photo: shop.photo,
+        uuid: shop.uuid
       },
       geometry: {
         type: 'Point',
@@ -25,3 +26,13 @@ export const formatDataToGeoJSON = (shops: any[]) => {
 
   return myObj
 }
+
+export const parseYMDLocal = (ymd: string) => {
+  const [y, m, d] = ymd.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
+export const fmtYMD = (ymd?: string) =>
+  ymd
+    ? new Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(parseYMDLocal(ymd))
+    : ''
