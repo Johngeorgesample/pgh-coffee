@@ -15,7 +15,7 @@ const hours = {
 export default function Hours(props: IProps) {
   return (
     <div>
-      {Object.entries(hours).map(([day, info]) => (
+      {Object.entries(hours).map(([day, info]: any) => (
         <div key={day} className="flex gap-2">
           <p className="mr-auto">{day}</p>
           {info.status === 'open' ? (
