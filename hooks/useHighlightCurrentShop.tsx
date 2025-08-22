@@ -16,7 +16,7 @@ export function useHighlightCurrentShop({
   useEffect(() => {
     if (!currentShop || !Array.isArray(displayedShops?.features) || displayedShops.features.length === 0) return
 
-    const updatedFeatures = displayedShops.features.map((f) => {
+    const updatedFeatures = displayedShops.features.map((f: any) => {
       const isSelected =
         f.properties.address === currentShop.properties?.address &&
         f.properties.name === currentShop.properties?.name

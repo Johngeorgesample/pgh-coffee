@@ -26,6 +26,7 @@ describe.skip('MapContainer', () => {
           address: '123 Fake St, Pittsburgh, PA 15218',
           website: '',
           photo: 'foo',
+          uuid: '1234',
         },
         geometry: {
           type: 'Point',
@@ -35,10 +36,8 @@ describe.skip('MapContainer', () => {
     ],
   }
 
-  const currentShop: TShop = dataSet.features[0]
-
   it('renders the MapContainer component and displays the map', () => {
-    render(<MapContainer dataSet={dataSet} currentShop={currentShop} onShopSelect={mockOnShopSelect} />)
+    render(<MapContainer displayedShops={dataSet} currentShopCoordinates={dataSet.features[0].geometry.coordinates} />)
 
     const mapContainer = screen.getByTestId('map-container')
 

@@ -23,6 +23,7 @@ describe('Panel Component', () => {
       address: '123 Test St.',
       photo: '',
       website: '',
+      uuid: '1234',
     },
     geometry: {
       type: 'Point',
@@ -39,6 +40,7 @@ describe('Panel Component', () => {
     panelIsOpen: true,
     emitClose: mockEmitClose,
     handlePanelContentClick: mockHandlePanelContentClick,
+    foo: () => {},
   }
 
   it('renders the panel content', () => {
