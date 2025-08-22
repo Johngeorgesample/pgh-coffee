@@ -23,7 +23,7 @@ interface ISortedShopsResults {
 
 const MILES_CONVERSION_FACTOR = 0.000621371
 
-export default function NearbyShops({ handleClick, shop }: IProps) {
+export default function NearbyShops({ shop }: IProps) {
   const plausible = usePlausible()
   const { allShops } = useShopsStore()
 
@@ -67,17 +67,6 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         { shops: [] as TShop[], distances: [] as number[] },
       )
   }, [allShops, shop, calculateDistance])
-
-  const handleCardClick = (shop: TShop) => {
-    // handleClick(shop)
-    // plausible('NearbyCardClick', {
-    //   props: {
-    //     shopName: shop.properties.name,
-    //     neighborhood: shop.properties.neighborhood,
-    //   },
-    // })
-    console.log('dancers')
-  }
 
   if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
 

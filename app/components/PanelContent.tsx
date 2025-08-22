@@ -52,14 +52,16 @@ export default function PanelContent(props: IProps) {
               <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
             </a>
           </div>
+          {/*
           <div className="flex mt-2">
             <ClockIcon className="w-4 mr-1" />
             <div
               className="group text-sm flex items-center"
             >
-            {/* <Hours /> */}
+             <Hours /> 
             </div>
           </div>
+          */}
         </div>
       </section>
       <ShopNews shop={props.shop} />
