@@ -52,10 +52,10 @@ export const News = () => {
   }, [])
 
   // ensure newest first
-  const items = [...updates].sort((a, b) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
+  const items = [...updates].sort((a: any, b: any) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
 
   // group by day
-  const groups = items.reduce<Record<string, typeof items>>((acc, it) => {
+  const groups = items.reduce<Record<string, typeof items>>((acc: any, it: any) => {
     ;(acc[it.post_date] ||= []).push(it)
     return acc
   }, {})
@@ -66,7 +66,7 @@ export const News = () => {
         <section key={day} className="mb-4">
           <DayHeader date={day} />
           <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-            {entries.map((entry, i) => (
+            {entries.map((entry: any, i: any) => (
               <li key={i} className="p-3">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="font-semibold text-gray-900">{entry.title}</h3>
@@ -86,7 +86,7 @@ export const News = () => {
 
                 <div className="mt-1 flex flex-wrap items-center gap-2">
                   {entry.event_date && <EventDatePill date={entry.event_date} />}
-                  {entry.tags?.map(t => <TagBadge key={t} label={t} />)}
+                  {entry.tags?.map((t: any) => <TagBadge key={t} label={t} />)}
                 </div>
 
                 {entry.description && <p className="mt-2 text-sm text-gray-700">{entry.description}</p>}
