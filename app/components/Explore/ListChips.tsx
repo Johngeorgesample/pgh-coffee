@@ -51,7 +51,7 @@ export const ListChips = () => {
           {lists.map(list => (
             <button
               key={list.id}
-              className="px-3 py-1 rounded-full bg-neutral-100 text-xs text-neutral-700"
+              className="px-3 py-1 rounded-full bg-neutral-200 hover:bg-neutral-300 text-xs text-neutral-700"
               onClick={() => setPanelContent(<CuratedList content={list} />, 'list')}
             >
               {list.title}
