@@ -18,7 +18,7 @@ export default function Panel(props: IProps) {
   const [presented, setPresented] = useState(false)
 
   useEffect(() => {
-    if (currentShop) {
+    if (currentShop && Object.keys(currentShop).length) {
       setPresented(true)
     } else {
       setPresented(false)
