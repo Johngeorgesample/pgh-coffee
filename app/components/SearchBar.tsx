@@ -15,7 +15,7 @@ export default function SearchBar(props: IProps) {
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-2 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
       <button onClick={() => usePanelStore.getState().back()}>
-      {panelMode !== 'explore' && <ArrowLeftIcon className="h-4 w-4 mr-auto" />}
+        {panelMode !== 'explore' && <ArrowLeftIcon className="h-4 w-4 mr-auto" />}
       </button>
       <input
         className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"
@@ -23,13 +23,15 @@ export default function SearchBar(props: IProps) {
         onChange={e => setSearchValue(e.target.value)}
         placeholder="Search for a shop or neighborhood"
       />
-      <button
-        onClick={() => {
-          props.onClose()
-        }}
-      >
-        <XMarkIcon className="h-6 w-6 ml-auto" />
-      </button>
+      {panelMode !== 'explore' && (
+        <button
+          onClick={() => {
+            props.onClose()
+          }}
+        >
+          <XMarkIcon className="h-6 w-6 ml-auto" />
+        </button>
+      )}
     </div>
   )
 }
