@@ -1,3 +1,4 @@
+@import "@silk-hq/components/unlayered-styles" layer(silk);
 @import 'tailwindcss';
 
 @config '../tailwind.config.ts';
