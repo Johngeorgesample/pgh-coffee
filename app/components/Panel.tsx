@@ -44,10 +44,10 @@ export default function Panel(props: IProps) {
       presented={presented}
       onPresentedChange={next => {
         setPresented(next)
-        if (!next) {
-          // optionally clear shop when sheet closes
-          useShopStore.getState().setCurrentShop({} as TShop)
-        }
+        // if (!next) {
+        //   // optionally clear shop when sheet closes
+        //   useShopStore.getState().setCurrentShop({} as TShop)
+        // }
       }}
       license="commercial"
     >
@@ -57,7 +57,7 @@ export default function Panel(props: IProps) {
           <Sheet.Content className="h-[90%] bg-neutral-50">
             <Sheet.Handle
               action="dismiss"
-              className="block mx-auto focus:outline-none focus:ring-0 mt-2 mb-3 bg-gray-300"
+              className="block mx-auto focus:outline-none focus:ring-0 bg-gray-300"
             >
               Drag to expand
             </Sheet.Handle>
