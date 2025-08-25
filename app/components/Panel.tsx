@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -16,64 +17,74 @@ export default function Panel(props: IProps) {
   const currentShop = useShopStore(s => s.currentShop)
   const [presented, setPresented] = useState(false)
 
-  // two detents: 60vh and full screen
+  // detents: middle (60vh) -> full
   const detents = ['60vh'] as const
-  const lastDetentIndex = detents.length + 1 // 2 detents -> last = 2
-  const middleDetentIndex = lastDetentIndex - 1
+  const lastDetentIndex = detents.length + 1 // 2
+  const middleDetentIndex = lastDetentIndex - 1 // 1
   const [activeDetent, setActiveDetent] = useState<number | undefined>()
-
   const isMax = (activeDetent ?? 1) === lastDetentIndex
 
   const contentRef = useRef<HTMLDivElement | null>(null)
+  const touchStartY = useRef<number | null>(null)
   const largeViewport = useClientMediaQuery('(min-width: 1024px)')
 
-  // follow currentShop
+  // detect touch device once
+  const [isTouch, setIsTouch] = useState(false)
+  useEffect(() => {
+    const touch =
+      (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) ||
+      (typeof window !== 'undefined' &&
+        window.matchMedia?.('(pointer: coarse)').matches)
+    setIsTouch(Boolean(touch))
+  }, [])
+
+  // open sheet when we have a shop
   useEffect(() => {
     setPresented(Boolean(currentShop && Object.keys(currentShop).length))
   }, [currentShop])
 
-  // expand to max if user scrolls on middle detent
+  // Touch-only: if user scrolls DOWN while on middle detent, expand to full
   useEffect(() => {
+    if (!isTouch) return
     const el = contentRef.current
     if (!el) return
 
-    const expandToMax = () => {
-      if (activeDetent === middleDetentIndex) {
-        setActiveDetent(lastDetentIndex)
-      }
-    }
-
-    const onWheel = (e: WheelEvent) => {
-      if (activeDetent === middleDetentIndex) {
-        e.preventDefault()
-        expandToMax()
-      }
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0]?.clientY ?? null
     }
 
     const onTouchMove = (e: TouchEvent) => {
-      if (activeDetent === middleDetentIndex) {
-        e.preventDefault()
-        expandToMax()
+      if (activeDetent !== middleDetentIndex) return
+      const startY = touchStartY.current
+      const currY = e.touches[0]?.clientY
+      if (startY == null || currY == null) return
+
+      const deltaY = currY - startY
+      // Finger moves UP (deltaY < 0) => content would scroll DOWN.
+      // Trigger expand only on that gesture, with a tiny threshold to avoid noise.
+      if (deltaY < -6) {
+        e.preventDefault() // stop the partial scroll
+        setActiveDetent(lastDetentIndex)
       }
+      // If deltaY >= 0 (pulling down), do nothing (allow normal behavior)
     }
 
-    const onScroll = () => {
-      if (activeDetent === middleDetentIndex && el.scrollTop > 0) {
-        el.scrollTop = 0
-        expandToMax()
-      }
+    const onTouchEnd = () => {
+      touchStartY.current = null
     }
 
-    el.addEventListener('wheel', onWheel, { passive: false })
-    el.addEventListener('touchmove', onTouchMove, { passive: false })
-    el.addEventListener('scroll', onScroll, { passive: true })
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: false }) // must be non-passive to preventDefault
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    el.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
     return () => {
-      el.removeEventListener('wheel', onWheel as any)
+      el.removeEventListener('touchstart', onTouchStart as any)
       el.removeEventListener('touchmove', onTouchMove as any)
-      el.removeEventListener('scroll', onScroll as any)
+      el.removeEventListener('touchend', onTouchEnd as any)
+      el.removeEventListener('touchcancel', onTouchEnd as any)
     }
-  }, [activeDetent, middleDetentIndex, lastDetentIndex])
+  }, [isTouch, activeDetent, middleDetentIndex, lastDetentIndex])
 
   if (largeViewport) {
     return (
