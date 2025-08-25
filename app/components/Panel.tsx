@@ -52,7 +52,7 @@ export default function Panel(props: IProps) {
       license="commercial"
     >
       <Sheet.Portal>
-        <Sheet.View className="BottomSheet-view" nativeEdgeSwipePrevention>
+        <Sheet.View className="BottomSheet-view" detents={['60vh']} nativeEdgeSwipePrevention>
           <Sheet.Backdrop themeColorDimming="auto" />
           <Sheet.Content className="h-[90%] bg-neutral-50">
             <Sheet.Handle
