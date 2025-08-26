@@ -126,7 +126,6 @@ export default function Panel(props: IProps) {
               Drag to expand
             </Sheet.Handle>
 
-            {!isMax && <SearchBar onClose={props.foo} />}
             {props.children}
 
             <Sheet.BleedingBackground className="BottomSheet-bleedingBackground" />

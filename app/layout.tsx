@@ -40,7 +40,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PlausibleProvider domain="pgh.coffee" trackOutboundLinks />
       </head>
       <body className={inter.className}>
-        <Nav />
         <main>{children}</main>
       </body>
     </html>

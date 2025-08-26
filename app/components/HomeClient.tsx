@@ -12,6 +12,7 @@ import { ExploreContent } from './ExploreContent'
 import { useURLShopSync, useHighlightCurrentShop } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
+import SearchBar from './SearchBar'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -89,6 +90,8 @@ useEffect(() => {
 
   return (
     <>
+
+      <SearchBar onClose={handleClose} />
       <MapContainer
         displayedShops={displayedShops}
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
