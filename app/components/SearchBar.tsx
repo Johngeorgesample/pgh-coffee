@@ -13,7 +13,7 @@ export default function SearchBar(props: IProps) {
   const { searchValue, setSearchValue, panelMode } = usePanelStore()
 
   return (
-    <div className="flex absolute shadow-md items-center px-2 bg-white top-5 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
+    <div className="flex absolute shadow-md items-center px-2 bg-white top-5 lg:top-3 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
       <button onClick={() => usePanelStore.getState().back()}>
         {panelMode !== 'explore' && <ArrowLeftIcon className="h-4 w-4 mr-auto" />}
       </button>

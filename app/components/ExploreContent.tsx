@@ -7,12 +7,12 @@ import { CTAPhotoGrid } from './Explore/CTAPhotoGrid'
 
 export const ExploreContent = () => {
   return (
-    <div className="flex h-full overflow-y-auto flex-col sm:grid sm:grid-cols-2 gap-4  px-4 sm:px-6">
+    <div className="flex h-full overflow-y-auto flex-col sm:grid sm:grid-cols-2 gap-4 px-6 lg:px-4 lg:mt-16">
       <CTAPhotoGrid />
       <ListChips />
       <EventsCTA />
       <FeaturedShop />
-      <p>lorem ipsum</p>
+      <p>korem ipsum</p>
     </div>
   )
 }
