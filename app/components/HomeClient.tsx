@@ -13,11 +13,14 @@ import { useURLShopSync, useHighlightCurrentShop } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchBar from './SearchBar'
+import { useClientMediaQuery } from '@silk-hq/components'
 
 export default function HomeClient() {
   const plausible = usePlausible()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop } = useShopsStore()
   const { panelContent, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
+
+  const largeViewport = useClientMediaQuery('(min-width: 1024px)')
   const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
     type: 'FeatureCollection',
     features: [],
@@ -62,19 +65,19 @@ export default function HomeClient() {
 
   useURLShopSync(handleClose)
 
-useEffect(() => {
-  // No search value, nothing to do
-  if (!searchValue) return;
+  useEffect(() => {
+    // No search value, nothing to do
+    if (!searchValue) return
 
-  // If a shop is selected AND the searchValue was just set to its name,
-  // treat it as a shop click → don't switch to search panel
-  if (currentShop?.properties?.uuid && searchValue === currentShop.properties?.name) {
-    return;
-  }
+    // If a shop is selected AND the searchValue was just set to its name,
+    // treat it as a shop click → don't switch to search panel
+    if (currentShop?.properties?.uuid && searchValue === currentShop.properties?.name) {
+      return
+    }
 
-  // Otherwise (typed, chip, whatever) → show search panel
-  setPanelContent(<ShopSearch />, 'search');
-}, [searchValue, currentShop, setPanelContent]);
+    // Otherwise (typed, chip, whatever) → show search panel
+    setPanelContent(<ShopSearch />, 'search')
+  }, [searchValue, currentShop, setPanelContent])
 
   useEffect(() => {
     fetchCoffeeShops()
@@ -90,8 +93,7 @@ useEffect(() => {
 
   return (
     <>
-
-      <SearchBar onClose={handleClose} />
+      {!largeViewport && <SearchBar onClose={handleClose} />}
       <MapContainer
         displayedShops={displayedShops}
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
