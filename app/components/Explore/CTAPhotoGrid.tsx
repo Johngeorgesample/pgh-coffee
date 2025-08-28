@@ -37,9 +37,9 @@ export const CTAPhotoGrid = () => {
 
   const generateClass = (idx: number) => {
     if (idx === 0) {
-      return 'relative col-span-1 sm:col-span-2 h-48 sm:h-64 rounded-md overflow-hidden group'
+      return 'relative col-span-1 sm:col-span-2 h-48 sm:h-64 min-h-40 rounded-md overflow-hidden group'
     }
-    return 'relative h-40 rounded-md overflow-hidden group'
+    return 'relative h-40 min-h-40 rounded-md overflow-hidden group'
   }
 
   return (
