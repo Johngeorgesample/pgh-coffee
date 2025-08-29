@@ -30,6 +30,17 @@ export function useShopSelection() {
       appendSearchParamToURL(shop)
       setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
 
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches
+
+      if (isDesktop) {
+        document.querySelectorAll('*').forEach(el => {
+          if (el.scrollTop > 0) {
+            el.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+        })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
       plausible('FeaturePointClick', {
         props: {
           shopName: shop.properties.name,
