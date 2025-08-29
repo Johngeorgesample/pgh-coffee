@@ -57,9 +57,7 @@ const usePanelStore = create<PanelState>()(
 
       back: () =>
         set(state => {
-          if (state.history.length <= 1) return state
-
-          // pop current
+          // pop current if present
           let history = state.history.slice(0, -1)
 
           // keep popping while previous is also a shop
@@ -67,7 +65,7 @@ const usePanelStore = create<PanelState>()(
             history = history.slice(0, -1)
           }
 
-          // safety: if we popped to nothing, go home
+          // if nothing left, go home
           if (history.length === 0) {
             return { history: [], panelMode: 'explore', panelContent: null }
           }
@@ -82,7 +80,7 @@ const usePanelStore = create<PanelState>()(
           return { history: [base], panelMode: base.mode, panelContent: base.content, searchValue: '' }
         }),
 
-      clearHistory: (opts) =>
+      clearHistory: opts =>
         set(state => {
           if (opts?.keepCurrent && state.panelMode) {
             const current: PanelEntry = { mode: state.panelMode, content: state.panelContent }
