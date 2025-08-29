@@ -38,26 +38,20 @@ export default function Panel(props: IProps) {
     setIsTouch(Boolean(touch))
   }, [])
 
-  // open sheet when we have a shop
   useEffect(() => {
     setPresented(Boolean(currentShop && Object.keys(currentShop).length))
   }, [currentShop])
 
-  // scroll to top when sheet is fully presented
   useEffect(() => {
     if (presented && currentShop && Object.keys(currentShop).length > 0) {
-      const timer = setTimeout(() => {
         if (largeViewport && contentRef.current) {
           contentRef.current.scrollTop = 0
         } else {
-          // Target the specific scrollable container in the sheet
           const scrollableContainer = document.querySelector('.flex.h-full.flex-col.overflow-y-auto')
           if (scrollableContainer) {
             scrollableContainer.scrollTop = 0
           }
         }
-      }, 400)
-      return () => clearTimeout(timer)
     }
   }, [presented, currentShop, largeViewport])
 
