@@ -23,6 +23,9 @@ interface PanelState {
   // nav
   back: () => void
   reset: (root?: PanelEntry) => void
+
+  /** Clears the navigation history. Pass { keepCurrent: true } to keep the current panel as the only entry. */
+  clearHistory: (opts?: { keepCurrent?: boolean }) => void
 }
 
 const usePanelStore = create<PanelState>()(
@@ -77,6 +80,15 @@ const usePanelStore = create<PanelState>()(
         set(() => {
           const base = root ?? { mode: 'explore' as PanelMode, content: null }
           return { history: [base], panelMode: base.mode, panelContent: base.content, searchValue: '' }
+        }),
+
+      clearHistory: (opts) =>
+        set(state => {
+          if (opts?.keepCurrent && state.panelMode) {
+            const current: PanelEntry = { mode: state.panelMode, content: state.panelContent }
+            return { history: [current] }
+          }
+          return { history: [] }
         }),
     }),
     { name: 'PanelStore' },
