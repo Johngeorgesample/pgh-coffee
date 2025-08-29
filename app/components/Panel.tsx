@@ -43,6 +43,24 @@ export default function Panel(props: IProps) {
     setPresented(Boolean(currentShop && Object.keys(currentShop).length))
   }, [currentShop])
 
+  // scroll to top when sheet is fully presented
+  useEffect(() => {
+    if (presented && currentShop && Object.keys(currentShop).length > 0) {
+      const timer = setTimeout(() => {
+        if (largeViewport && contentRef.current) {
+          contentRef.current.scrollTop = 0
+        } else {
+          // Target the specific scrollable container in the sheet
+          const scrollableContainer = document.querySelector('.flex.h-full.flex-col.overflow-y-auto')
+          if (scrollableContainer) {
+            scrollableContainer.scrollTop = 0
+          }
+        }
+      }, 400)
+      return () => clearTimeout(timer)
+    }
+  }, [presented, currentShop, largeViewport])
+
   // Touch-only: if user scrolls DOWN while on middle detent, expand to full
   useEffect(() => {
     if (!isTouch) return
@@ -92,7 +110,7 @@ export default function Panel(props: IProps) {
         <div className="fixed overflow-hidden">
           <div className="absolute overflow-hidden">
             <div className="w-full bottom-0 h-full pointer-events-none fixed lg:w-1/3 lg:h-[calc(100%-4rem-3.5rem)] lg:inset-y-0 lg:top-16 lg:right-0 flex max-w-full">
-              <div className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-4xl">
+              <div ref={contentRef} className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-4xl">
                 <SearchBar onClose={props.foo} />
                 {props.children}
               </div>
