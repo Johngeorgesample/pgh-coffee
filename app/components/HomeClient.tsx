@@ -18,7 +18,7 @@ import { useClientMediaQuery } from '@silk-hq/components'
 export default function HomeClient() {
   const plausible = usePlausible()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop } = useShopsStore()
-  const { panelContent, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
+  const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useClientMediaQuery('(min-width: 1024px)')
   const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
@@ -42,10 +42,12 @@ export default function HomeClient() {
     if (panelMode === 'shop') {
       setSearchValue('')
       setPanelContent(<ShopSearch />, 'search')
+      clearHistory()
     } else {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
       console.log(allShops)
       setDisplayedShops(allShops)
+      clearHistory()
     }
   }
   useEffect(() => {
