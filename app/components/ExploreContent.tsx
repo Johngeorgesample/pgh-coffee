@@ -19,7 +19,6 @@ export const ExploreContent = () => {
       <ListChips />
       <EventsCTA />
       <FeaturedShop />
-      <p>korem ipsum</p>
     </div>
   )
 }
