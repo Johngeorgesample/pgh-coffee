@@ -29,6 +29,7 @@ export function useShopSelection() {
       // @TODO
       // setSearchValue(shop.properties.name)
       appendSearchParamToURL(shop)
+      console.log(shop)
       setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
 
       const isDesktop = window.matchMedia('(min-width: 1024px)').matches
@@ -49,7 +50,7 @@ export function useShopSelection() {
         },
       })
     },
-    [setCurrentShop, setSearchValue, setPanelContent, appendSearchParamToURL, plausible],
+    [setCurrentShop, setPanelContent, appendSearchParamToURL, plausible],
   )
 
   return { handleShopSelect }
