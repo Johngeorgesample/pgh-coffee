@@ -41,8 +41,7 @@ const usePanelStore = create<PanelState>()(
       setPanelContent: (content, mode, opts) =>
         set(state => {
           const pushRequested = opts?.push ?? true
-          const isLateralShop = state.panelMode === 'shop' && mode === 'shop'
-          const shouldPush = pushRequested && !isLateralShop
+          const shouldPush = pushRequested
 
           const next: PanelEntry = { mode, content }
 
@@ -60,17 +59,22 @@ const usePanelStore = create<PanelState>()(
           // pop current if present
           let history = state.history.slice(0, -1)
 
-          // keep popping while previous is also a shop
-          while (history.length > 0 && history[history.length - 1].mode === 'shop') {
-            history = history.slice(0, -1)
-          }
-
           // if nothing left, go home
           if (history.length === 0) {
             return { history: [], panelMode: 'explore', panelContent: null }
           }
 
           const top = history[history.length - 1]
+
+          const url = new URL(window.location.href)
+          const params = new URLSearchParams(url.search)
+          params.set(
+            'shop',
+            `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
+          )
+          url.search = params.toString()
+          console.log(url.toString())
+          window.history.replaceState({}, '', url.toString())
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
 
