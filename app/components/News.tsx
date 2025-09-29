@@ -39,6 +39,7 @@ const DayHeader = ({ date }: { date: string }) => (
 )
 
 
+// @TODO
 const foo = async () => {
   const response = await fetch('/api/updates')
   return await response.json()
@@ -61,7 +62,7 @@ export const News = () => {
   }, {})
 
   return (
-    <div className="px-4 py-3 leading-relaxed">
+    <div className="mt-20 px-4 py-3 leading-relaxed">
       {Object.entries(groups).map(([day, entries]) => (
         <section key={day} className="mb-4">
           <DayHeader date={day} />

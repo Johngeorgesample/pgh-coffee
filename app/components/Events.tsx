@@ -74,7 +74,7 @@ export const Events = () => {
   }, {})
 
   return (
-    <div className="px-4 py-3 leading-relaxed">
+    <div className="mt-20 px-4 py-3 leading-relaxed">
       {Object.entries(groups).map(([day, entries]) => (
         <section key={day} className="mb-4">
           <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">

@@ -26,7 +26,8 @@ export function useShopSelection() {
   const handleShopSelect = useCallback(
     (shop: TShop) => {
       setCurrentShop(shop)
-      setSearchValue(shop.properties.name)
+      // @TODO
+      // setSearchValue(shop.properties.name)
       appendSearchParamToURL(shop)
       setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
 
