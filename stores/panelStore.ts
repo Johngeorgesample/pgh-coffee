@@ -68,13 +68,18 @@ const usePanelStore = create<PanelState>()(
 
           const url = new URL(window.location.href)
           const params = new URLSearchParams(url.search)
-          params.set(
-            'shop',
-            `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
-          )
-          url.search = params.toString()
-          console.log(url.toString())
-          window.history.replaceState({}, '', url.toString())
+          if (top.content?.props?.shop?.properties?.name) {
+            params.set(
+              'shop',
+              `${top.content?.props.shop.properties.name}_${top.content?.props.shop.properties.neighborhood}`,
+            )
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else {
+            params.delete('shop')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          }
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
 
