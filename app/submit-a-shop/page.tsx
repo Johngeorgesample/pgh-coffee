@@ -58,7 +58,9 @@ export default function SubmitAShop() {
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Submit a shop</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
-                Either one that&apos;s missing or a correction for an existing one
+                pgh.coffee highlights independently owned coffee shops headquartered or founded in the Pittsburgh
+                region. We currently only list shops located within Allegheny County. Chains or franchises headquartered
+                elsewhere are not included.
               </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
