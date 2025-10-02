@@ -56,7 +56,7 @@ export default function Nav() {
       </div>
 
       <div
-        className={`${hamburgerIsOpen ? 'z-10 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
+        className={`${hamburgerIsOpen ? 'z-20 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
       >
         <div className="flex flex-col items-center pt-8">
           <Link className="text-2xl" href="https://github.com/Johngeorgesample/pgh-coffee">
