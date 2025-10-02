@@ -14,7 +14,7 @@ export const ExploreContent = () => {
     setSearchValue('')
   }, [])
   return (
-    <div className="flex h-full overflow-y-auto flex-col sm:grid sm:grid-cols-2 gap-4 px-6 lg:px-4 lg:mt-16">
+    <div className="flex overflow-y-auto flex-col sm:grid sm:grid-cols-2 gap-4 px-6 lg:px-4 lg:mt-16">
       <CTAPhotoGrid />
       <ListChips />
       <EventsCTA />
