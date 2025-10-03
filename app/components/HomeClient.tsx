@@ -76,7 +76,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     // No search value, nothing to do
-    // if (!searchValue) return
+    if (!searchValue) return
 
     // Otherwise (typed, chip, whatever) → show search panel
     setPanelContent(<ShopSearch />, 'search')
