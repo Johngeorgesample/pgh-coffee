@@ -40,16 +40,10 @@ const usePanelStore = create<PanelState>()(
 
       setPanelContent: (content, mode, opts) =>
         set(state => {
-          const pushRequested = opts?.push ?? true
-          const shouldPush = pushRequested
 
           const next: PanelEntry = { mode, content }
 
-          const history = shouldPush
-            ? [...state.history, next]
-            : state.history.length
-              ? [...state.history.slice(0, -1), next]
-              : [next]
+          const history = [...state.history, next]
 
           return { panelContent: content, panelMode: mode, history }
         }),
@@ -58,6 +52,11 @@ const usePanelStore = create<PanelState>()(
         set(state => {
           // pop current if present
           let history = state.history.slice(0, -1)
+
+          if (state.searchValue) {
+              set({ searchValue: '' })
+          }
+
 
           // if nothing left, go home
           if (history.length === 0) {
