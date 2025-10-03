@@ -48,9 +48,20 @@ export default function HomeClient() {
   }
   useEffect(() => {
     if (allShops) {
+      const filteredFeatures = allShops.features.filter(shop => {
+        if (searchValue) {
+          const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')}`
+          return shopCardText.includes(searchValue.toLowerCase())
+        }
+        return true
+      })
+
       setDisplayedShops({
         ...allShops,
-        features: allShops.features.map(shop => ({
+        features: filteredFeatures.map(shop => ({
           ...shop,
           properties: {
             ...shop.properties,
@@ -59,19 +70,13 @@ export default function HomeClient() {
         })),
       })
     }
-  }, [allShops, hoveredShop])
+  }, [allShops, hoveredShop, searchValue])
 
   useURLShopSync(handleClose)
 
   useEffect(() => {
     // No search value, nothing to do
-    if (!searchValue) return
-
-    // If a shop is selected AND the searchValue was just set to its name,
-    // treat it as a shop click → don't switch to search panel
-    if (currentShop?.properties?.uuid && searchValue === currentShop.properties?.name) {
-      return
-    }
+    // if (!searchValue) return
 
     // Otherwise (typed, chip, whatever) → show search panel
     setPanelContent(<ShopSearch />, 'search')
