@@ -26,10 +26,10 @@ export function useShopSelection() {
   const handleShopSelect = useCallback(
     (shop: TShop) => {
       // @TODO uncommenting this line makes it so search results need double clicked
-      // setCurrentShop(shop)
+      setCurrentShop(shop)
       // @TODO uncommenting this fixes ^^^ ?
       // setSearchValue(shop.properties.name)
-      // appendSearchParamToURL(shop)
+      appendSearchParamToURL(shop)
       console.log(shop)
       setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
 
