@@ -3,16 +3,14 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import { TShop } from '@/types/shop-types'
 import { useShopSelection } from '@/hooks'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface MapContainerProps {
-  displayedShops: {
-    type: string
-    features: TShop[]
-  }
   currentShopCoordinates: [number, number]
 }
 
-export default function MapContainer({ displayedShops, currentShopCoordinates }: MapContainerProps) {
+export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
+  const { displayedShops } = useShopsStore()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'

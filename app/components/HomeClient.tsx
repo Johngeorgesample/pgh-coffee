@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
-import { TFeatureCollection, TShop } from '@/types/shop-types'
+import { TShop } from '@/types/shop-types'
 import Footer from '@/app/components/Footer'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -17,14 +17,10 @@ import { useClientMediaQuery } from '@silk-hq/components'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop } = useShopsStore()
+  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop, displayedShops, setDisplayedShops } = useShopsStore()
   const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useClientMediaQuery('(min-width: 1024px)')
-  const [displayedShops, setDisplayedShops] = useState<TFeatureCollection>({
-    type: 'FeatureCollection',
-    features: [],
-  })
   const router = useRouter()
 
   const removeSearchParam = () => {
@@ -97,7 +93,6 @@ export default function HomeClient() {
     <>
       {!largeViewport && <SearchBar onClose={handleClose} />}
       <MapContainer
-        displayedShops={displayedShops}
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
       <Footer />

@@ -10,6 +10,8 @@ interface CoffeeShopsState {
   setCurrentShop: (data: TShop) => void
   hoveredShop: TShop | null
   setHoveredShop: (shop: TShop | null) => void
+  displayedShops: TFeatureCollection
+  setDisplayedShops: (shops: TFeatureCollection) => void
 }
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
@@ -49,6 +51,12 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       setCurrentShop: (data: TShop) => set({ currentShop: data }),
       hoveredShop: null,
       setHoveredShop: shop => set({ hoveredShop: shop }),
+
+      displayedShops: {
+        type: 'FeatureCollection',
+        features: [],
+      },
+      setDisplayedShops: (shops: TFeatureCollection) => set({ displayedShops: shops }),
     }),
     { name: 'ShopsStore' },
   ),
