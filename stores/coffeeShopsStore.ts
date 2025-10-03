@@ -4,7 +4,6 @@ import { TFeatureCollection, TShop } from '@/types/shop-types'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
-  searchValue: string
   fetchCoffeeShops: () => Promise<void>
   setAllShops: (data: TShop[]) => void
   currentShop: TShop
@@ -20,7 +19,6 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         type: 'FeatureCollection',
         features: [],
       },
-      searchValue: '',
 
       setAllShops: (data: TShop[] | { type: string; features: TShop[] }) =>
         set(prev => {
@@ -35,8 +33,6 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
                 },
           }
         }),
-
-      setSearchValue: (value: string) => set({ searchValue: value }),
 
       fetchCoffeeShops: async () => {
         try {
