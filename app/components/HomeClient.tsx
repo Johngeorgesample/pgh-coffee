@@ -100,7 +100,6 @@ export default function HomeClient() {
       <MapContainer
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
-      <Footer />
       <Panel shop={currentShop} foo={handleClose}>
         {panelContent}
       </Panel>
