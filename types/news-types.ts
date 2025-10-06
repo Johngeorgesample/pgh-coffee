@@ -8,3 +8,16 @@ export interface NewsEntry {
   url?: string
   eventDate?: string
 }
+
+export interface Event {
+  postDate: string
+  type: string
+  tags?: string[]
+  title: string
+  description?: string
+  shopId?: string
+  shop: any
+  url?: string
+  event_date?: string
+  id: string
+}
