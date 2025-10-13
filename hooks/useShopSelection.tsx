@@ -30,7 +30,6 @@ export function useShopSelection() {
       // @TODO uncommenting this fixes ^^^ ?
       // setSearchValue(shop.properties.name)
       appendSearchParamToURL(shop)
-      console.log(shop)
       setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
 
       const isDesktop = window.matchMedia('(min-width: 1024px)').matches

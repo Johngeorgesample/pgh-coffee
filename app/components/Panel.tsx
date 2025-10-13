@@ -2,10 +2,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Sheet, useClientMediaQuery } from '@silk-hq/components'
+import { Sheet } from '@silk-hq/components'
 import { TShop } from '@/types/shop-types'
 import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
+import { useMediaQuery } from '@/hooks'
 
 interface IProps {
   children: any
@@ -26,7 +27,7 @@ export default function Panel(props: IProps) {
 
   const contentRef = useRef<HTMLDivElement | null>(null)
   const touchStartY = useRef<number | null>(null)
-  const largeViewport = useClientMediaQuery('(min-width: 1024px)')
+  const largeViewport = useMediaQuery('(min-width: 1024px)')
 
   // detect touch device once
   const [isTouch, setIsTouch] = useState(false)

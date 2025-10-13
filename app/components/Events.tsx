@@ -62,8 +62,6 @@ export const Events = () => {
     foo().then(setUpdates)
   }, [])
 
-  console.log(updates)
-
   // ensure newest first
   const items = [...updates].sort((a: any, b: any) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
 

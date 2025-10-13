@@ -9,18 +9,17 @@ import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useHighlightCurrentShop } from '@/hooks'
+import { useURLShopSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchBar from './SearchBar'
-import { useClientMediaQuery } from '@silk-hq/components'
 
 export default function HomeClient() {
   const plausible = usePlausible()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop, displayedShops, setDisplayedShops } = useShopsStore()
   const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
-  const largeViewport = useClientMediaQuery('(min-width: 1024px)')
+  const largeViewport = useMediaQuery('(min-width: 1024px)')
   const router = useRouter()
 
   const removeSearchParam = () => {

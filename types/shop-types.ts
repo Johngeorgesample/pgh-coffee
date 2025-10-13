@@ -6,7 +6,7 @@ export interface TFeatureCollection {
 }
 
 export interface TShop {
-  type: string,
+  type: string
   properties: {
     name: string
     neighborhood: TNeighborhood
@@ -16,7 +16,19 @@ export interface TShop {
     uuid: string
   }
   geometry: {
-    type: string,
+    type: string
     coordinates: [number, number]
   }
+}
+
+export interface TList {
+  id: string
+  title: string
+  description: string
+  featured: boolean
+  created_by: string
+  created_at: string
+  updated_at: string
+  header?: string
+  shops: TShop[]
 }
