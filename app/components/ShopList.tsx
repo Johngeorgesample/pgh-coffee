@@ -1,16 +1,18 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import ShopCard from '@/app/components/ShopCard'
+import useSearchStore from '@/stores/searchStore'
 
 interface IProps {
   coffeeShops: TShop[]
   distances?: number[]
-  filter?: string
   handleCardClick: (shop: TShop) => void
   units?: TUnits
 }
 
 export default function ShopList(props: IProps) {
+  const { getFilteredShops } = useSearchStore()
+  
   const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -18,32 +20,21 @@ export default function ShopList(props: IProps) {
     }
   }
 
-  const doesShopMatchFilter = (shop: TShop) => {
-    if (props.filter) {
-      const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')}`
-      return shopCardText.includes(props.filter.toLowerCase())
-    }
-  }
+  const filteredShops = getFilteredShops(props.coffeeShops)
 
   return (
     <ul className="relative mt-6 flex-1">
-      {props.coffeeShops.map((shop: TShop, index) => {
-        if (doesShopMatchFilter(shop) || !props.filter) {
-          return (
-            <ShopCard
-              key={shop.properties.name + shop.properties.address}
-              distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
-              handleCardClick={props.handleCardClick}
-              handleKeyPress={handleKeyPress}
-              shop={shop}
-              units={props.units}
-            />
-          )
-        }
-        return null
+      {filteredShops.map((shop: TShop, index) => {
+        return (
+          <ShopCard
+            key={shop.properties.name + shop.properties.address}
+            distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
+            handleCardClick={props.handleCardClick}
+            handleKeyPress={handleKeyPress}
+            shop={shop}
+            units={props.units}
+          />
+        )
       })}
     </ul>
   )

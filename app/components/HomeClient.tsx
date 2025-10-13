@@ -11,6 +11,8 @@ import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import useSearchStore from '@/stores/searchStore'
+import { usePanelStore } from '@/stores/panelStore'
 import SearchFAB from '@/app/components/SearchFAB'
 import { Explore } from '@/app/components/Explore'
 import SearchBar from './SearchBar'
@@ -18,8 +20,9 @@ import SearchBar from './SearchBar'
 export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
+  const { searchValue, getFilteredShops } = useSearchStore()
+  const { setPanel, content: panelContent } = usePanelStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
-  const [panelContent, setPanelContent] = useState<React.ReactNode>(<Explore />)
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
@@ -49,7 +52,7 @@ export default function HomeClient() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanelContent(<ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    setPanel('shop', <ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
     }
@@ -63,7 +66,7 @@ export default function HomeClient() {
   const handleSearchClick = () => {
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
-      setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
+      setPanel('search', <ShopSearch handleResultClick={handleNearbyShopClick} />)
 
       plausible('SearchClick', {
         props: {},
@@ -82,8 +85,8 @@ export default function HomeClient() {
 
         const data = await response.json()
         setCurrentShop(data)
-        setPanelContent(
-          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
+        setPanel('shop',
+          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />
         )
       } catch (err) {
         console.log(err)
@@ -94,9 +97,11 @@ export default function HomeClient() {
   }
 
   const updateCurrentShopMarker = () => {
+    const filteredFeatures = getFilteredShops(coffeeShops.features || [])
+    
     const newData = {
       ...dataSet,
-      features: dataSet.features.map((f: TShop) => {
+      features: filteredFeatures.map((f: TShop) => {
         const isSelected =
           f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name
         return {
@@ -124,6 +129,12 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
+    if (!panelContent) {
+      setPanel('explore', <Explore />)
+    }
+  }, [])
+
+  useEffect(() => {
     if (coffeeShops) {
       setDataSet(coffeeShops)
     }
@@ -141,8 +152,16 @@ export default function HomeClient() {
   useEffect(
     updateCurrentShopMarker,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentShop],
+    [currentShop, searchValue],
   )
+
+  useEffect(() => {
+    if (searchValue.trim()) {
+      setPanel('search', <ShopSearch handleResultClick={handleNearbyShopClick} />)
+    } else {
+      setPanel('explore', <Explore />)
+    }
+  }, [searchValue, setPanel])
 
   return (
     <div className="relative">
