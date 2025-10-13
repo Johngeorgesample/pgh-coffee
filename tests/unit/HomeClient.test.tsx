@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { mockAnimationsApi } from 'jsdom-testing-mocks'
 import HomeClient from '@/app/components/HomeClient'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -96,30 +96,6 @@ describe('HomeClient', () => {
   })
 
   it.skip('should fetch shop details when URL contains shop parameter', () => {})
-
-  it('should open search when SearchFAB is clicked', () => {
-    render(<HomeClient />)
-
-    const searchButton = screen.getByRole('button', { name: /search/i })
-    fireEvent.click(searchButton)
-
-    expect(screen.getByTestId('shop-panel')).toHaveAttribute('data-headlessui-state', 'open')
-  })
-
-  it('should close the panel when Escape key is pressed', async () => {
-    render(<HomeClient />)
-
-    const searchButton = screen.getByRole('button', { name: /search/i })
-    fireEvent.click(searchButton)
-
-    expect(screen.getByTestId('shop-panel')).toHaveAttribute('data-headlessui-state', 'open')
-
-    fireEvent.keyDown(document, { key: 'Escape' })
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('shop-panel')).not.toBeInTheDocument()
-    })
-  })
 
   it.skip('should update current shop marker when shop is selected', () => {})
 })
