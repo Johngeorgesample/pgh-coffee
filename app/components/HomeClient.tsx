@@ -164,7 +164,6 @@ export default function HomeClient() {
         }}
       />
       <SearchFAB handleClick={handleSearchClick} />
-      <Footer />
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
         shop={currentShop}
