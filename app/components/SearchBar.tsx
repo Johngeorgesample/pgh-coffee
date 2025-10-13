@@ -12,7 +12,7 @@ interface IProps {
 export default function SearchBar(props: IProps) {
   const { setSearchValue } = useSearchStore()
   return (
-    <div className="flex absolute shadow-md items-center px-2 bg-white lg:top-5 z-10 h-10 w-[calc(66.666667%_-_20px)] rounded-xl">
+    <div className="flex absolute shadow-md items-center px-2 bg-white lg:top-5 z-10 h-10 w-[90%] rounded-xl left-1/2 -translate-x-1/2">
       <button onClick={() => {}}>{1 > 2 && <ArrowLeftIcon className="h-4 w-4 mr-auto" />}</button>
       <input
         className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"

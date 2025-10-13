@@ -20,7 +20,7 @@ import SearchBar from './SearchBar'
 export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
-  const { searchValue, getFilteredShops } = useSearchStore()
+  const { searchValue } = useSearchStore()
   const { setPanel, content: panelContent } = usePanelStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [dataSet, setDataSet] = useState({
@@ -52,7 +52,10 @@ export default function HomeClient() {
 
   const handleUpdatingCurrentShop = (shop: TShop) => {
     setCurrentShop(shop)
-    setPanel('shop', <ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />)
+    setPanel(
+      'shop',
+      <ShopDetails shop={shop} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
+    )
     if (Object.keys(shop).length) {
       appendSearchParamToURL(shop)
     }
@@ -85,8 +88,9 @@ export default function HomeClient() {
 
         const data = await response.json()
         setCurrentShop(data)
-        setPanel('shop',
-          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />
+        setPanel(
+          'shop',
+          <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
         )
       } catch (err) {
         console.log(err)
@@ -97,11 +101,9 @@ export default function HomeClient() {
   }
 
   const updateCurrentShopMarker = () => {
-    const filteredFeatures = getFilteredShops(coffeeShops.features || [])
-    
     const newData = {
       ...dataSet,
-      features: filteredFeatures.map((f: TShop) => {
+      features: dataSet.features.map((f: TShop) => {
         const isSelected =
           f.properties.address === currentShop.properties?.address && f.properties.name === currentShop.properties?.name
         return {
@@ -152,7 +154,7 @@ export default function HomeClient() {
   useEffect(
     updateCurrentShopMarker,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentShop, searchValue],
+    [currentShop],
   )
 
   useEffect(() => {
@@ -164,30 +166,32 @@ export default function HomeClient() {
   }, [searchValue, setPanel])
 
   return (
-    <div className="relative">
+    <>
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
-      <MapContainer
-        dataSet={dataSet}
-        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
-        onShopSelect={(properties, geometry, type) => {
-          const shop = {
-            properties,
-            geometry,
-            type,
-          } as TShop
-          handleUpdatingCurrentShop(shop)
-          plausible('FeaturePointClick', {
-            props: {
-              shopName: properties.name,
-              neighborhood: properties.neighborhood,
-            },
-          })
-        }}
-      />
-      <SearchBar />
+      <div className="relative w-full lg:w-2/3">
+        <SearchBar />
+        <MapContainer
+          dataSet={dataSet}
+          currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
+          onShopSelect={(properties, geometry, type) => {
+            const shop = {
+              properties,
+              geometry,
+              type,
+            } as TShop
+            handleUpdatingCurrentShop(shop)
+            plausible('FeaturePointClick', {
+              props: {
+                shopName: properties.name,
+                neighborhood: properties.neighborhood,
+              },
+            })
+          }}
+        />
+      </div>
       <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop}>
         {panelContent}
       </ShopPanel>
-    </div>
+    </>
   )
 }
