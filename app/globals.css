@@ -34,7 +34,7 @@ body {
 }
 
 .mapboxgl-canvas-container {
-  height: calc(100vh - 64px - 56px);
+  height: calc(100vh - 64px);
 }
 
 canvas {
