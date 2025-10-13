@@ -12,12 +12,13 @@ import MapContainer from './MapContainer'
 import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import SearchFAB from '@/app/components/SearchFAB'
+import { Explore } from '@/app/components/Explore'
 
 export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
   const [currentShop, setCurrentShop] = useState({} as TShop)
-  const [panelContent, setPanelContent] = useState<React.ReactNode>()
+  const [panelContent, setPanelContent] = useState<React.ReactNode>(<Explore />)
   const [dataSet, setDataSet] = useState({
     type: 'FeatureCollection',
     features: [] as TShop[],
@@ -163,10 +164,7 @@ export default function HomeClient() {
           })
         }}
       />
-      <ShopPanel
-        handlePanelContentClick={handleNearbyShopClick}
-        shop={currentShop}
-      >
+      <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop}>
         {panelContent}
       </ShopPanel>
     </>
