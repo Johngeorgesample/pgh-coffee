@@ -16,7 +16,6 @@ import SearchFAB from '@/app/components/SearchFAB'
 export default function HomeClient() {
   const plausible = usePlausible()
   const { coffeeShops, fetchCoffeeShops } = useShopsStore()
-  const [isOpen, setIsOpen] = useState(false)
   const [currentShop, setCurrentShop] = useState({} as TShop)
   const [panelContent, setPanelContent] = useState<React.ReactNode>()
   const [dataSet, setDataSet] = useState({
@@ -42,7 +41,6 @@ export default function HomeClient() {
   }
 
   const handleClose = () => {
-    setIsOpen(false)
     setDataSet(coffeeShops)
     removeSearchParam()
   }
@@ -63,7 +61,6 @@ export default function HomeClient() {
   const handleSearchClick = () => {
     if (Object.keys(coffeeShops).length) {
       handleUpdatingCurrentShop({} as TShop)
-      setIsOpen(true)
       setPanelContent(<ShopSearch handleResultClick={handleNearbyShopClick} />)
 
       plausible('SearchClick', {
@@ -82,7 +79,6 @@ export default function HomeClient() {
         if (!response.ok) throw new Error('Shop not found')
 
         const data = await response.json()
-        setIsOpen(true)
         setCurrentShop(data)
         setPanelContent(
           <ShopDetails shop={data} handlePanelContentClick={handleNearbyShopClick} emitClose={handleClose} />,
@@ -92,7 +88,6 @@ export default function HomeClient() {
       }
     } else {
       setCurrentShop({} as TShop)
-      setIsOpen(false)
     }
   }
 
@@ -159,7 +154,6 @@ export default function HomeClient() {
             geometry,
             type,
           } as TShop
-          setIsOpen(true)
           handleUpdatingCurrentShop(shop)
           plausible('FeaturePointClick', {
             props: {
@@ -174,8 +168,6 @@ export default function HomeClient() {
       <ShopPanel
         handlePanelContentClick={handleNearbyShopClick}
         shop={currentShop}
-        panelIsOpen={isOpen}
-        emitClose={handleClose}
       >
         {panelContent}
       </ShopPanel>
