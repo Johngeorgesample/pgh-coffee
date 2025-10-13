@@ -13,6 +13,7 @@ import { DISTANCE_UNITS } from '../settings/DistanceUnitsDialog'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import SearchFAB from '@/app/components/SearchFAB'
 import { Explore } from '@/app/components/Explore'
+import SearchBar from './SearchBar'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -144,7 +145,7 @@ export default function HomeClient() {
   )
 
   return (
-    <>
+    <div className="relative">
       {/* @TODO currentShop is only used for coordinates (and properties to avoid rendering search) */}
       <MapContainer
         dataSet={dataSet}
@@ -164,9 +165,10 @@ export default function HomeClient() {
           })
         }}
       />
+      <SearchBar />
       <ShopPanel handlePanelContentClick={handleNearbyShopClick} shop={currentShop}>
         {panelContent}
       </ShopPanel>
-    </>
+    </div>
   )
 }
