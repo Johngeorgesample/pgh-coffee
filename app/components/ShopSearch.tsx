@@ -12,7 +12,6 @@ interface IProps {
 }
 
 export default function ShopSearch(props: IProps) {
-  const { coffeeShops } = useShopsStore()
   const { searchValue } = useSearchStore()
   const { setPanel } = usePanelStore()
   const plausible = usePlausible()
@@ -20,6 +19,7 @@ export default function ShopSearch(props: IProps) {
 
 
   const handleCardClick = (shop: TShop) => {
+    // @TODO reset filtered shops
     props.handleResultClick(shop)
     plausible('ShopSearchClick', {
       props: {
@@ -35,7 +35,7 @@ export default function ShopSearch(props: IProps) {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
-      <ShopList coffeeShops={coffeeShops.features} handleCardClick={handleCardClick} />
+      <ShopList handleCardClick={handleCardClick} />
     </div>
   )
 }

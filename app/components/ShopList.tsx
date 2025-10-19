@@ -2,6 +2,7 @@ import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import ShopCard from '@/app/components/ShopCard'
 import useSearchStore from '@/stores/searchStore'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface IProps {
   coffeeShops: TShop[]
@@ -20,11 +21,12 @@ export default function ShopList(props: IProps) {
     }
   }
 
-  const filteredShops = getFilteredShops(props.coffeeShops)
+  const { coffeeShops } = useShopsStore()
+  const filteredShops = getFilteredShops(coffeeShops.features)
 
   return (
     <ul className="relative mt-6 flex-1">
-      {filteredShops.map((shop: TShop, index) => {
+      {filteredShops?.map((shop: TShop, index) => {
         return (
           <ShopCard
             key={shop.properties.name + shop.properties.address}

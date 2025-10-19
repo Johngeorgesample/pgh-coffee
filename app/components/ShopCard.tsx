@@ -1,3 +1,4 @@
+import useCurrentShopStore from '@/stores/currentShopStore'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 
@@ -20,10 +21,14 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 }
 
 export default function ShopCard(props: IProps) {
+  const { setCurrentShop } = useCurrentShopStore()
+  const handleClick = () => {
+    setCurrentShop(props.shop)
+  }
   return (
     <li
       className="relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer"
-      onClick={() => props.handleCardClick(props.shop)}
+      onClick={handleClick}
       onKeyDown={event => props.handleKeyPress(event, props.shop)}
       tabIndex={0}
       role="button"
