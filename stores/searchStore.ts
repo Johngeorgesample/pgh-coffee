@@ -16,13 +16,13 @@ const useSearchStore = create<SearchState>()(
       history: [],
 
       setSearchValue: value => set({ searchValue: value }),
-      
+
       getFilteredShops: (shops: TShop[]) => {
         const { searchValue } = get()
         if (!searchValue.trim()) {
           return shops
         }
-        
+
         return shops.filter((shop: TShop) => {
           const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
             .toLowerCase()

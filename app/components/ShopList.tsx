@@ -7,26 +7,27 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 interface IProps {
   coffeeShops: TShop[]
   distances?: number[]
-  handleCardClick: (shop: TShop) => void
+  handleCardClick?: (shop: TShop) => void
   units?: TUnits
 }
 
 export default function ShopList(props: IProps) {
   const { getFilteredShops } = useSearchStore()
-  
+
   const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
-      props.handleCardClick(shop)
+      // props.handleCardClick(shop)
     }
   }
 
   const { coffeeShops } = useShopsStore()
   const filteredShops = getFilteredShops(coffeeShops.features)
 
+  const foo = props.coffeeShops ?? filteredShops
   return (
     <ul className="relative mt-6 flex-1">
-      {filteredShops?.map((shop: TShop, index) => {
+      {foo?.map((shop: TShop, index) => {
         return (
           <ShopCard
             key={shop.properties.name + shop.properties.address}

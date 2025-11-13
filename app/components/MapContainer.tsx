@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
+import useCurrentShopStore from '@/stores/currentShopStore'
 import { TShop } from '@/types/shop-types'
 
 interface MapContainerProps {
@@ -14,6 +15,7 @@ interface MapContainerProps {
 
 export default function MapContainer({ dataSet, currentShopCoordinates, onShopSelect }: MapContainerProps) {
   const mapRef = useRef<MapRef | null>(null)
+  const { setCurrentShop } = useCurrentShopStore()
   const layerId = 'myPoint'
 
   const MAP_CONSTANTS = {
@@ -57,7 +59,8 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
     }) as unknown as GeoJSON.Feature[] | undefined
 
     if (features?.length && features[0].properties) {
-      onShopSelect(features[0].properties, features[0].geometry, features[0].type)
+      console.log(features[0].properties.name)
+      setCurrentShop(features[0])
     }
   }
 

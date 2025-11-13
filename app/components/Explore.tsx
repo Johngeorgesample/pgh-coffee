@@ -10,6 +10,7 @@ export const Explore = () => {
 
   return (
     <div className="flex overflow-y-auto flex-col sm:grid gap-4 px-6 lg:px-4">
+    <p>Explore</p>
       <ShopList handleResultClick={() => {}}/>
     </div>
   )
