@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Nav from '@/app/components/Nav'
+import { FaroInit } from '@/app/components/FaroInit'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#FDE047'
+  themeColor: '#FDE047',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PlausibleProvider domain="pgh.coffee" trackOutboundLinks />
       </head>
       <body className={inter.className}>
+        <FaroInit />
         <Nav />
         <main>{children}</main>
       </body>
