@@ -10,6 +10,8 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@grafana/faro-web-sdk": "^1.19.0",
+    "@grafana/faro-web-tracing": "^1.19.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.1",
     "@next/bundle-analyzer": "^15.1.7",
