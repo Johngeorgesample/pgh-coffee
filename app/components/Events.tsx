@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { fmtYMD } from '@/app/utils/utils'
-import {
-  ArrowTopRightOnSquareIcon,
-  CalendarIcon,
-  ClockIcon,
-  MapPinIcon,
-  TagIcon,
-} from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, CalendarIcon, ClockIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -114,14 +108,32 @@ const EventCard = ({ entry }: { entry: EventRow }) => {
               >
                 {fmtYMD(entry.event_date)}
               </span>
+              <ClockIcon className="h-3.5 w-3.5" />
+              <span
+                className={eventIsPast ? '' : 'font-semibold'}
+              >
+                time
+              </span>
             </span>
           </div>
         )}
 
+        {/* JGS Meta info */}
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
+          <span className="flex items-center gap-1.5">
+            <MapPinIcon className="h-3.5 w-3.5" />
+            <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
+            {entry.shop.name}
+            </span>
+            •<span>{entry.shop.neighborhood}</span>
+          </span>
+        </div>
+
         {/* Tags */}
         {entry.tags && entry.tags.length > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {entry.tags.map((t) => (
+            {entry.tags.map(t => (
               <TagBadge key={t} label={t} />
             ))}
           </div>
@@ -130,11 +142,7 @@ const EventCard = ({ entry }: { entry: EventRow }) => {
         {/* Description */}
         {entry.description && (
           <>
-            <p
-              className={`mt-3 text-sm leading-relaxed text-stone-600 ${
-                expanded ? '' : 'line-clamp-2'
-              }`}
-            >
+            <p className={`mt-3 text-sm leading-relaxed text-stone-600 ${expanded ? '' : 'line-clamp-2'}`}>
               {entry.description}
             </p>
             {shouldTruncate && (
@@ -160,8 +168,8 @@ export const Events = () => {
     fetchEvents().then(setEvents)
   }, [])
 
-  const upcomingEvents = events.filter((e) => !e.event_date || !isPast(e.event_date))
-  const pastEvents = events.filter((e) => e.event_date && isPast(e.event_date))
+  const upcomingEvents = events.filter(e => !e.event_date || !isPast(e.event_date))
+  const pastEvents = events.filter(e => e.event_date && isPast(e.event_date))
 
   return (
     <div className="mt-20 px-4 py-3">
@@ -169,14 +177,12 @@ export const Events = () => {
       {upcomingEvents.length > 0 && (
         <>
           <div className="mb-3 flex items-center gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              Upcoming
-            </h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming</h2>
             <div className="h-px flex-1 bg-stone-200" />
           </div>
 
           <ul className="space-y-3">
-            {upcomingEvents.map((entry) => (
+            {upcomingEvents.map(entry => (
               <EventCard key={entry.id} entry={entry} />
             ))}
           </ul>
@@ -192,7 +198,7 @@ export const Events = () => {
           </div>
 
           <ul className="space-y-3">
-            {pastEvents.map((entry) => (
+            {pastEvents.map(entry => (
               <EventCard key={entry.id} entry={entry} />
             ))}
           </ul>
