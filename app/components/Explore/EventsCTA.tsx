@@ -10,7 +10,7 @@ export const EventsCTA = () => {
   const { setPanelContent } = usePanelStore()
 
   const foo = async () => {
-    const response = await fetch('/api/events')
+  const response = await fetch('/api/events', { cache: 'no-store' })
     return await response.json()
   }
 
@@ -20,7 +20,7 @@ export const EventsCTA = () => {
     foo().then(setUpdates)
   }, [])
 
-  const lastTwo = updates.slice(-2)
+  const lastTwo = updates.slice(0,2)
 
   const openEvents = () => setPanelContent(<Events />, 'events')
 

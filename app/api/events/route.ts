@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const fetchEvents = async (shopID?: string) => {
-  let query = supabase.from('events_with_shops').select('*').order('event_date', { ascending: true })
+  let query = supabase.from('events_with_shops').select('*').order('event_date', { ascending: false })
 
   if (shopID) {
     query = query.eq('shop_id', shopID)

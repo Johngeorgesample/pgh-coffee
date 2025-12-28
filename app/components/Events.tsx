@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { fmtYMD, parseYMDLocal } from '@/app/utils/utils'
+import { fmtYMD } from '@/app/utils/utils'
 import { ArrowTopRightOnSquareIcon, CalendarIcon, TagIcon } from '@heroicons/react/24/outline'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
@@ -38,74 +38,65 @@ const NewPill = () => (
   </span>
 )
 
-const DayHeader = ({ date }: { date: string }) => (
-  <div className="sticky top-0 isolate -mx-4 px-4 py-2 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-    <p className="text-xs font-semibold tracking-wide text-gray-500">Posted {fmtYMD(date)}</p>
-  </div>
-)
-
-const isNew = (date: any) => {
+const isNew = (date: string) => {
   const created = new Date(date).getTime()
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
   return created > sevenDaysAgo
 }
 
-const foo = async () => {
-  const response = await fetch('/api/events')
-  return await response.json()
+type EventRow = {
+  id: string
+  title: string
+  description?: string | null
+  url?: string | null
+  tags?: string[] | null
+  post_date: string
+  event_date?: string | null
+}
+
+const fetchEvents = async (): Promise<EventRow[]> => {
+  const res = await fetch('/api/events', { cache: 'no-store' })
+  return res.json()
 }
 
 export const Events = () => {
-  const [updates, setUpdates] = useState([])
+  const [events, setEvents] = useState<EventRow[]>([])
 
   useEffect(() => {
-    foo().then(setUpdates)
+    fetchEvents().then(setEvents)
   }, [])
-
-  // ensure newest first
-  const items = [...updates].sort((a: any, b: any) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
-
-  // group by day
-  const groups = items.reduce<Record<string, typeof items>>((acc: any, it: any) => {
-    ;(acc[it.post_date] ||= []).push(it)
-    return acc
-  }, {})
 
   return (
     <div className="mt-20 px-4 py-3 leading-relaxed">
-      {Object.entries(groups).map(([day, entries]) => (
-        <section key={day} className="mb-4">
-          <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-            {entries.map((entry: any, i) => (
-              <li key={i} className="p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-semibold text-gray-900">{entry.title}</h3>
-                  {entry.url && (
-                    <a
-                      href={entry.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 text-gray-500 hover:text-gray-700"
-                      aria-label="Source"
-                      title="Source"
-                    >
-                      <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                    </a>
-                  )}
-                </div>
+      <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
+        {events.map((entry) => (
+          <li key={entry.id} className="p-3">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-semibold text-gray-900">{entry.title}</h3>
+              {entry.url && (
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 text-gray-500 hover:text-gray-700"
+                  aria-label="Source"
+                  title="Source"
+                >
+                  <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                </a>
+              )}
+            </div>
 
-                <div className="mt-1 flex flex-wrap items-center gap-2">
-                  {entry.event_date && <EventDatePill date={entry.event_date} />}
-                  {isNew(entry.post_date) && <NewPill />}
-                  {entry.tags?.map((t: any) => <TagBadge key={t} label={t} />)}
-                </div>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              {entry.event_date && <EventDatePill date={entry.event_date} />}
+              {isNew(entry.post_date) && <NewPill />}
+              {entry.tags?.map((t) => <TagBadge key={t} label={t} />)}
+            </div>
 
-                {entry.description && <p className="mt-2 text-sm text-gray-700">{entry.description}</p>}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+            {entry.description && <p className="mt-2 text-sm text-gray-700">{entry.description}</p>}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
