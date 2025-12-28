@@ -1,36 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TShop } from '@/types/shop-types'
 import { data as newsData } from '@/data/news'
-import { fmtYMD } from '@/app/utils/utils'
-import { ArrowTopRightOnSquareIcon, CalendarIcon, TagIcon } from '@heroicons/react/24/outline'
-
-type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
-const TAG_STYLES: Record<TagKey, string> = {
-  opening: 'bg-green-100 text-green-800',
-  closure: 'bg-red-100 text-red-800',
-  'coming soon': 'bg-amber-100 text-amber-800',
-  throwdown: 'bg-purple-100 text-purple-800',
-  event: 'bg-blue-100 text-blue-800',
-  seasonal: 'bg-pink-100 text-pink-800',
-  menu: 'bg-slate-100 text-slate-800',
-}
-
-const TagBadge = ({ label }: { label: string }) => {
-  const cls = TAG_STYLES[label as TagKey] ?? 'bg-gray-100 text-gray-800'
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${cls}`}>
-      <TagIcon className="h-3 w-3" />
-      {label}
-    </span>
-  )
-}
-
-const EventDatePill = ({ date }: { date: string }) => (
-  <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 text-sky-800 px-2 py-0.5 text-[11px]">
-    <CalendarIcon className="h-3 w-3" />
-    {fmtYMD(date)}
-  </span>
-)
+import { EventCard, type EventCardData } from './EventCard'
 
 type UpdateEntry = {
   id?: string | number
@@ -46,14 +17,14 @@ type UpdateEntry = {
   shopId?: string | null
 }
 
-const normalize = (u: UpdateEntry) => ({
+const normalize = (u: UpdateEntry): EventCardData => ({
+  id: String(u.id ?? u.title),
   title: u.title,
   description: u.description ?? undefined,
   url: u.url ?? undefined,
-  postDate: (u.postDate ?? u.post_date) || undefined,
-  eventDate: (u.eventDate ?? u.event_date) || undefined,
+  post_date: (u.postDate ?? u.post_date) || undefined,
+  event_date: (u.eventDate ?? u.event_date) || undefined,
   tags: (u.tags as string[] | null) ?? undefined,
-  shopId: (u.shopId ?? u.shop_id) || undefined,
 })
 
 type Props = { shop: TShop }
@@ -95,14 +66,15 @@ export const ShopNews = ({ shop }: Props) => {
 
   const relevantNews = useMemo(() => {
     if (!updates) return []
-    const list = updates.map(normalize)
-    // Only show updates tied to THIS shop
-    const filtered = shopId ? list.filter(e => e.shopId === String(shopId)) : list
+    // Filter before normalizing - only show updates tied to THIS shop
+    const filtered = shopId
+      ? updates.filter(e => (e.shopId ?? e.shop_id) === String(shopId))
+      : updates
     return filtered
-      .slice()
+      .map(normalize)
       .sort((a, b) => {
-        const aDate = new Date(a.postDate ?? a.eventDate ?? 0).getTime()
-        const bDate = new Date(b.postDate ?? b.eventDate ?? 0).getTime()
+        const aDate = new Date(a.post_date ?? a.event_date ?? 0).getTime()
+        const bDate = new Date(b.post_date ?? b.event_date ?? 0).getTime()
         return bDate - aDate
       })
   }, [updates, shopId])
@@ -115,38 +87,9 @@ export const ShopNews = ({ shop }: Props) => {
       <hr className="w-1/2 m-auto mt-2 mb-2" />
       <p className="mb-2 text-gray-700">Recent updates</p>
 
-      <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-        {relevantNews.map((entry, i) => (
-          <li key={entry.title + i} className="p-3">
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="font-semibold text-gray-900">{entry.title}</h3>
-              {entry.url && (
-                <a
-                  href={entry.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 text-gray-500 hover:text-gray-700"
-                  aria-label="Source"
-                  title="Source"
-                >
-                  <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-
-            <div className="mt-1 flex flex-wrap items-center gap-2">
-              {(entry.eventDate ?? entry.postDate) && (
-                <EventDatePill date={(entry.eventDate ?? entry.postDate)!} />
-              )}
-              {entry.tags?.map(t => (
-                <TagBadge key={t} label={t} />
-              ))}
-            </div>
-
-            {entry.description && (
-              <p className="mt-2 text-sm text-gray-700">{entry.description}</p>
-            )}
-          </li>
+      <ul className="flex flex-col gap-3">
+        {relevantNews.map((entry) => (
+          <EventCard key={entry.id} entry={entry} hideShopInfo={true} showTime={false} />
         ))}
       </ul>
     </section>

@@ -63,6 +63,7 @@ interface EventCardProps {
   showDescription?: boolean
   showTime?: boolean
   showNewPill?: boolean
+  hideShopInfo?: boolean
 }
 
 export const EventCard = ({
@@ -71,6 +72,7 @@ export const EventCard = ({
   showDescription = true,
   showTime = true,
   showNewPill = true,
+  hideShopInfo = false,
 }: EventCardProps) => {
   const [expanded, setExpanded] = useState(false)
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
@@ -139,7 +141,7 @@ export const EventCard = ({
         )}
 
         {/* Shop info */}
-        {entry.shop && (
+        {!hideShopInfo && entry.shop && (
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
             <span className="flex items-center gap-1.5">
               <MapPinIcon className="h-3.5 w-3.5" />
