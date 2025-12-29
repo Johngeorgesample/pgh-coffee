@@ -1,11 +1,12 @@
-export const formatDataToGeoJSON = (shops: any[]) => {
-  const myObj = {
+import { DbShop, TFeatureCollection } from '@/types/shop-types'
+
+export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
+  const myObj: TFeatureCollection = {
     type: 'FeatureCollection',
     features: [],
   }
 
   shops.forEach(shop => {
-    // @ts-ignore-next-line
     myObj.features.push({
       type: 'Feature',
       properties: {
@@ -13,13 +14,12 @@ export const formatDataToGeoJSON = (shops: any[]) => {
         neighborhood: shop.neighborhood,
         website: shop.website,
         address: shop.address,
-        roaster: shop.roaster,
-        photo: shop.photo,
+        photo: shop.photo ?? undefined,
         uuid: shop.uuid
       },
       geometry: {
         type: 'Point',
-        coordinates: [shop.longitude, shop.latitude],
+        coordinates: [shop.longitude ?? 0, shop.latitude ?? 0],
       },
     })
   })

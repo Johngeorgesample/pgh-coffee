@@ -1,12 +1,23 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { ReactNode } from 'react'
+import { ReactNode, isValidElement, ReactElement } from 'react'
+import { TShop } from '@/types/shop-types'
 
 type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events'
 
 type PanelEntry = {
   mode: PanelMode
   content: ReactNode
+}
+
+// Type guard to check if content is a ReactElement with shop props
+function hasShopProps(content: ReactNode): content is ReactElement<{ shop: TShop }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'shop' in content.props
+  )
 }
 
 interface PanelState {
@@ -65,12 +76,10 @@ const usePanelStore = create<PanelState>()(
 
           const url = new URL(window.location.href)
           const params = new URLSearchParams(url.search)
-          // @ts-expect-error
-          if (top.content?.props?.shop?.properties?.name) {
+          if (hasShopProps(top.content) && top.content.props.shop?.properties?.name) {
             params.set(
               'shop',
-              // @ts-expect-error
-              `${top.content?.props.shop.properties.name}_${top.content?.props.shop.properties.neighborhood}`,
+              `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
             )
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
