@@ -42,7 +42,7 @@ export function useShopSelection() {
         },
       })
     },
-    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, setPanelContent],
+    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, setPanelContent, allShops, setDisplayedShops],
   )
 
   return { handleShopSelect }
