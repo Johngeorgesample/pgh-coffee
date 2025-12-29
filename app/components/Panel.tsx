@@ -9,7 +9,7 @@ import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
 
 interface IProps {
-  children: any
+  children?: React.ReactNode
   shop: TShop
   foo: any
 }

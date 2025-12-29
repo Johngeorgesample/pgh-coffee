@@ -71,7 +71,7 @@ export default function HomeClient() {
     }
   }, [allShops, hoveredShop, searchValue])
 
-  useURLShopSync(handleClose)
+  useURLShopSync()
 
   useEffect(() => {
     // No search value, nothing to do

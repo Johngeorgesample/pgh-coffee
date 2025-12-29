@@ -4,7 +4,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
 
-export const useURLShopSync = (handleClose: () => void) => {
+export const useURLShopSync = () => {
   const { setCurrentShop } = useShopsStore()
   const { setPanelContent } = usePanelStore()
 
@@ -21,7 +21,7 @@ export const useURLShopSync = (handleClose: () => void) => {
       if (!res.ok) throw new Error('Shop not found')
       const data = await res.json()
       setCurrentShop(data)
-      setPanelContent(<ShopDetails shop={data} emitClose={handleClose} />, 'shop')
+      setPanelContent(<ShopDetails shop={data}  />, 'shop')
     } catch (e) {
       console.error(e)
     }
