@@ -80,7 +80,6 @@ describe('Panel Component', () => {
     panelIsOpen: true,
     emitClose: mockEmitClose,
     handlePanelContentClick: mockHandlePanelContentClick,
-    foo: () => {},
   }
 
   it('renders the panel content', () => {

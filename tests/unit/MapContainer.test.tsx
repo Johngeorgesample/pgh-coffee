@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import MapContainer from '@/app/components/MapContainer'
-import { TShop } from '@/types/shop-types'
 import { TNeighborhood } from '@/types/neighborhood-types'
+import useShopsStore from '@/stores/coffeeShopsStore'
+import { useShopSelection } from '@/hooks'
 
 vi.mock('react-map-gl', () => {
   return {
@@ -11,6 +12,14 @@ vi.mock('react-map-gl', () => {
     Layer: ({ children }: any) => <div>{children}</div>,
   }
 })
+
+vi.mock('@/stores/coffeeShopsStore', () => ({
+  default: vi.fn(),
+}))
+
+vi.mock('@/hooks', () => ({
+  useShopSelection: vi.fn(),
+}))
 
 describe.skip('MapContainer', () => {
   const mockOnShopSelect = vi.fn()
@@ -37,8 +46,23 @@ describe.skip('MapContainer', () => {
   }
 
   it('renders the MapContainer component and displays the map', () => {
-    // @ts-expect-error
-    render(<MapContainer displayedShops={dataSet} currentShopCoordinates={dataSet.features[0].geometry.coordinates} />)
+    vi.mocked(useShopsStore).mockReturnValue({
+      displayedShops: dataSet,
+      allShops: dataSet,
+      fetchCoffeeShops: vi.fn(),
+      setAllShops: vi.fn(),
+      currentShop: dataSet.features[0],
+      setCurrentShop: vi.fn(),
+      hoveredShop: null,
+      setHoveredShop: vi.fn(),
+      setDisplayedShops: vi.fn(),
+    })
+
+    vi.mocked(useShopSelection).mockReturnValue({
+      handleShopSelect: mockOnShopSelect,
+    })
+
+    render(<MapContainer currentShopCoordinates={dataSet.features[0].geometry.coordinates} />)
 
     const mapContainer = screen.getByTestId('map-container')
 
