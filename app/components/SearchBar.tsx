@@ -1,12 +1,10 @@
 'use client'
 
-import { TShop } from '@/types/shop-types'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
   onClose: () => void
-  shop?: TShop
 }
 
 export default function SearchBar(props: IProps) {
