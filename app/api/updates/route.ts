@@ -6,8 +6,6 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-console.log('hello')
-
 const fetchUpdates = async (shopID?: string) => {
   let query = supabase.from('updates').select('*').order('event_date', { ascending: true })
 
