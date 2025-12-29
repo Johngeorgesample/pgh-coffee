@@ -16,7 +16,8 @@ export const ExploreContent = () => {
     fetchCoffeeShops()
     setCurrentShop({} as TShop)
     setHoveredShop({} as TShop)
-    // eslint-disable-next-line only run on mount
+    // only run on mount
+    // eslint-disable-next-line
   }, [])
 
   return (

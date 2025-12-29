@@ -30,6 +30,7 @@ export const useURLShopSync = () => {
     fetchShopFromURL()
     window.addEventListener('popstate', fetchShopFromURL)
     return () => window.removeEventListener('popstate', fetchShopFromURL)
-    // eslint-disable-next-line only run on mount
+    // only run on mount
+    // eslint-disable-next-line
   }, [])
 }
