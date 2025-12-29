@@ -75,7 +75,7 @@ export const ShopNews = ({ shop }: Props) => {
       cancelled = true
       ac.abort()
     }
-  }, [shopId])
+  }, [shop, shopId])
 
   const relevantNews = useMemo(() => {
     if (!updates) return []

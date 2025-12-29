@@ -21,17 +21,6 @@ export default function SearchBar(props: IProps) {
         onChange={e => setSearchValue(e.target.value)}
         placeholder="Search for a shop or neighborhood"
       />
-      {/*
-      {panelMode !== 'explore' && (
-        <button
-          onClick={() => {
-            props.onClose()
-          }}
-        >
-          <XMarkIcon className="h-6 w-6 ml-auto" />
-        </button>
-      )}
-      */}
     </div>
   )
 }
