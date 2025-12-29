@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
