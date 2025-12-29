@@ -6,9 +6,6 @@ import SearchBar from '@/app/components/SearchBar'
 const mockUsePanelStore = vi.fn()
 vi.mock('@/stores/panelStore', () => ({
   __esModule: true,
-  default: () => mockUsePanelStore(),
-  // If you end up calling usePanelStore.getState().back() in the component,
-  // you can also expose a static getState on the mock like below:
   default: Object.assign(() => mockUsePanelStore(), {
     getState: () => ({ back: vi.fn() }),
   }),

@@ -40,7 +40,6 @@ const usePanelStore = create<PanelState>()(
 
       setPanelContent: (content, mode, opts) =>
         set(state => {
-
           const next: PanelEntry = { mode, content }
 
           const history = [...state.history, next]
@@ -54,9 +53,8 @@ const usePanelStore = create<PanelState>()(
           let history = state.history.slice(0, -1)
 
           if (state.searchValue) {
-              set({ searchValue: '' })
+            set({ searchValue: '' })
           }
-
 
           // if nothing left, go home
           if (history.length === 0) {
@@ -67,9 +65,11 @@ const usePanelStore = create<PanelState>()(
 
           const url = new URL(window.location.href)
           const params = new URLSearchParams(url.search)
+          // @ts-expect-error
           if (top.content?.props?.shop?.properties?.name) {
             params.set(
               'shop',
+              // @ts-expect-error
               `${top.content?.props.shop.properties.name}_${top.content?.props.shop.properties.neighborhood}`,
             )
             url.search = params.toString()

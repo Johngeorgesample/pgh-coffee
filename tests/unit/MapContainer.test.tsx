@@ -37,6 +37,7 @@ describe.skip('MapContainer', () => {
   }
 
   it('renders the MapContainer component and displays the map', () => {
+    // @ts-expect-error
     render(<MapContainer displayedShops={dataSet} currentShopCoordinates={dataSet.features[0].geometry.coordinates} />)
 
     const mapContainer = screen.getByTestId('map-container')
