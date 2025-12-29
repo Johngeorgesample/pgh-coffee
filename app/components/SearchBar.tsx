@@ -1,7 +1,7 @@
 'use client'
 
 import { TShop } from '@/types/shop-types'
-import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
