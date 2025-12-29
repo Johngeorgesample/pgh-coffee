@@ -102,7 +102,7 @@ describe('ShopCard', () => {
       properties: { ...mockShop.properties, photo: undefined },
     }
     render(<ShopCard {...defaultProps} shop={shopWithoutPhoto} />)
-    const bgElement = screen.getByRole('button').querySelector(' bg-yellow-200 bg-cover') as HTMLElement
+    const bgElement = screen.getByRole('button').querySelector('.bg-yellow-200 bg-cover') as HTMLElement
     expect(bgElement?.style.backgroundImage).toBe(undefined)
   })
 
