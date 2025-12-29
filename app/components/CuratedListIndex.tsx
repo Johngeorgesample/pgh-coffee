@@ -6,9 +6,7 @@ import usePanelStore from '@/stores/panelStore'
 import { CuratedList } from './CuratedList'
 import {TList} from '@/types/shop-types'
 
-interface IProps {}
-
-export const CuratedListIndex = (props: IProps) => {
+export const CuratedListIndex = () => {
   const { setPanelContent } = usePanelStore()
   const [lists, setLists] = useState<TList[]>([])
   const [loading, setLoading] = useState(true)

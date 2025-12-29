@@ -68,7 +68,7 @@ export default function HomeClient() {
         })),
       })
     }
-  }, [allShops, hoveredShop, searchValue])
+  }, [allShops, hoveredShop, searchValue, setDisplayedShops])
 
   useURLShopSync()
 

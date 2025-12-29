@@ -132,6 +132,7 @@ export const EventCard = ({
                 <>
                   <ClockIcon className="h-3.5 w-3.5" />
                   <span className={eventIsPast ? '' : 'font-semibold'}>
+                  {/* @TODO get time for event */}
                     time
                   </span>
                 </>
