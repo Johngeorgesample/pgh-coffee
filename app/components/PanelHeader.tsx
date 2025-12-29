@@ -5,8 +5,6 @@ import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
 import { PhotoIcon } from '@heroicons/react/24/outline'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-
 interface IProps {
   shop: TShop
 }
