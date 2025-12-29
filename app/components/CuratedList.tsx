@@ -13,7 +13,7 @@ export const CuratedList = (props: IProps) => {
   const { setAllShops } = useShopsStore()
   useEffect(() => {
     setAllShops(props.content.shops)
-  }, [])
+  }, [setAllShops, props.content.shops])
   return (
     <div className="mt-20">
       <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">

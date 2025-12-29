@@ -16,6 +16,7 @@ export const ExploreContent = () => {
     fetchCoffeeShops()
     setCurrentShop({} as TShop)
     setHoveredShop({} as TShop)
+    // eslint-disable-next-line only run on mount
   }, [])
 
   return (
@@ -27,7 +28,6 @@ export const ExploreContent = () => {
         <EventsCTA />
       </div>
       <div>
-        <h3 className="uppercase text-xs">Featured shop</h3>
         <FeaturedShop />
       </div>
     </div>

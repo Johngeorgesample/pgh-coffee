@@ -1,4 +1,3 @@
-// Fetches the shop if `?shop=...` is in the URL and updates currentShop + panel
 import { useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
@@ -31,5 +30,6 @@ export const useURLShopSync = () => {
     fetchShopFromURL()
     window.addEventListener('popstate', fetchShopFromURL)
     return () => window.removeEventListener('popstate', fetchShopFromURL)
+    // eslint-disable-next-line only run on mount
   }, [])
 }

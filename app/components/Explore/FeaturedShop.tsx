@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import ShopCard from '../ShopCard'
-import {TShop} from '@/types/shop-types'
+import { TShop } from '@/types/shop-types'
 
 export default function FeaturedShop() {
   const [shop, setShop] = useState<TShop | null>(null)
@@ -33,7 +33,7 @@ export default function FeaturedShop() {
 
   return (
     <div className="sm:col-span-2">
-      <h3 className="text-lg font-bold mb-2">Featured shop</h3>
+      <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Featured shop</h3>
       <div className="list-none">
         <ShopCard featured shop={shop} handleKeyPress={() => {}} />
       </div>
