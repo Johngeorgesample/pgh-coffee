@@ -61,10 +61,7 @@ export const ShopNews = ({ shop }: Props) => {
     ;(async () => {
       try {
         const qs = new URLSearchParams({ shop_id: String(shopId) })
-        const res = await fetch(`/api/events?${qs.toString()}`, {
-          cache: 'no-store',
-          signal: ac.signal,
-        })
+        const res = await fetch(`/api/events?${qs.toString()}`)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: UpdateEntry[] = await res.json()
         if (!cancelled) setUpdates(data)
