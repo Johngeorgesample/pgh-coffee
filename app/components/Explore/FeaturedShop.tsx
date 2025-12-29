@@ -35,7 +35,7 @@ export default function FeaturedShop() {
     <div className="sm:col-span-2">
       <h3 className="text-lg font-bold mb-2">Featured shop</h3>
       <div className="list-none">
-        <ShopCard featured shop={shop as any} handleKeyPress={() => {}} />
+        <ShopCard featured shop={shop} handleKeyPress={() => {}} />
       </div>
     </div>
   )
