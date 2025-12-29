@@ -1,5 +1,17 @@
 import { TNeighborhood } from './neighborhood-types'
 
+export interface DbShop {
+  name: string
+  neighborhood: TNeighborhood
+  address: string
+  photo: string | null
+  website: string
+  uuid: string
+  latitude: number | null
+  longitude: number | null
+  roaster?: boolean | string
+}
+
 export interface TFeatureCollection {
   type: 'FeatureCollection'
   features: TShop[]

@@ -18,7 +18,6 @@ const fetchShopsByIds = async (ids: string[]) => {
     console.error('Error fetching shops by IDs:', error.message)
     return null
   }
-  console.log(data)
   return data
 }
 
