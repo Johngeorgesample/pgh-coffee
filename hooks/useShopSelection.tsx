@@ -9,7 +9,7 @@ import ShopDetails from '@/app/components/ShopDetails'
 export function useShopSelection() {
   const plausible = usePlausible()
   const router = useRouter()
-  const { setCurrentShop } = useShopsStore()
+  const { allShops, setCurrentShop, setDisplayedShops } = useShopsStore()
   const { setSearchValue, setPanelContent } = usePanelStore()
 
   const appendSearchParamToURL = useCallback(
@@ -25,24 +25,16 @@ export function useShopSelection() {
 
   const handleShopSelect = useCallback(
     (shop: TShop) => {
-      // @TODO uncommenting this line makes it so search results need double clicked
       setCurrentShop(shop)
-      // @TODO uncommenting this fixes ^^^ ?
-      // setSearchValue(shop.properties.name)
+      setSearchValue('')
       appendSearchParamToURL(shop)
-      setPanelContent(<ShopDetails shop={shop} emitClose={() => {}} />, 'shop')
+      setPanelContent(<ShopDetails shop={shop} />, 'shop')
 
-      const isDesktop = window.matchMedia('(min-width: 1024px)').matches
-
-      if (isDesktop) {
-        document.querySelectorAll('*').forEach(el => {
-          if (el.scrollTop > 0) {
-            el.scrollTo({ top: 0, behavior: 'smooth' })
-          }
-        })
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-
+      document.getElementById('header')?.parentElement?.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+      setDisplayedShops(allShops)
       plausible('FeaturePointClick', {
         props: {
           shopName: shop.properties.name,
@@ -50,7 +42,7 @@ export function useShopSelection() {
         },
       })
     },
-    [setCurrentShop, setPanelContent, appendSearchParamToURL, plausible],
+    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, setPanelContent],
   )
 
   return { handleShopSelect }

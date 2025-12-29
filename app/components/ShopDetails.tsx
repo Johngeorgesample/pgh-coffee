@@ -6,7 +6,6 @@ import PanelFooter from './PanelFooter'
 
 interface TProps {
   shop: TShop
-  emitClose: () => void
 }
 
 const ShopDetails = memo((props: TProps) => {

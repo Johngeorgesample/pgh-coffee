@@ -51,12 +51,6 @@ export default function ShopCard(props: IProps) {
         <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
         <p className="w-fit mb-1 text-left text-white border border-transparent">
           {props.shop.properties.neighborhood}
-
-          {/*
-          <span className="ml-2 inline-flex items-center rounded-full bg-yellow-400/20 px-2 py-0.5 text-xs font-medium text-yellow-500">
-            Sponsored
-          </span>
-          */}
         </p>
         {props.distance && props.units && (
           <p className="italic text-sm text-white">

@@ -5,6 +5,8 @@ import { TShop } from '@/types/shop-types'
 import { ListChips } from './Explore/ListChips'
 import FeaturedShop from './Explore/FeaturedShop'
 import { EventsCTA } from './Explore/EventsCTA'
+import { NewsCTA } from './Explore/NewsCTA'
+import { News } from './News'
 import { CTAPhotoGrid } from './Explore/CTAPhotoGrid'
 import usePanelStore from '@/stores/panelStore'
 
@@ -33,6 +35,9 @@ export const ExploreContent = () => {
         {/*
         <CuratedListIndex />
         */}
+      </div>
+      <div>
+        <NewsCTA />
       </div>
       <div>
         <EventsCTA />
