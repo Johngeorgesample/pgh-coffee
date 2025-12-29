@@ -5,7 +5,6 @@ import { useShopSelection } from '@/hooks'
 
 interface IProps {
   distance?: string
-  handleKeyPress: (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => any
   shop: TShop
   units?: TUnits
   onMouseEnter?: () => void
@@ -26,13 +25,21 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 export default function ShopCard(props: IProps) {
   const { handleShopSelect } = useShopSelection()
   const { setHoveredShop } = useShopsStore()
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleShopSelect(props.shop)
+    }
+  }
+
   return (
     <li
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
       className={`${props.featured ? 'h-46' : 'h-36'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
       onClick={() => handleShopSelect(props.shop)}
-      onKeyDown={event => props.handleKeyPress(event, props.shop)}
+      onKeyDown={handleKeyPress}
       tabIndex={0}
       role="button"
     >

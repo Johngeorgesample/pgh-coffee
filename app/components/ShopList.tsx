@@ -1,7 +1,6 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import ShopCard from '@/app/components/ShopCard'
-import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface IProps {
   coffeeShops: TShop[]
@@ -11,14 +10,6 @@ interface IProps {
 }
 
 export default function ShopList(props: IProps) {
-  const { setCurrentShop } = useShopsStore()
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>, shop: TShop) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setCurrentShop(shop)
-    }
-  }
-
   const doesShopMatchFilter = (shop: TShop) => {
     if (props.filter) {
       const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
@@ -37,7 +28,6 @@ export default function ShopList(props: IProps) {
             <ShopCard
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
-              handleKeyPress={handleKeyPress}
               shop={shop}
               units={props.units}
             />

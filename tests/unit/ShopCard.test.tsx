@@ -12,7 +12,9 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => ({ setHoveredShop: setHoveredShopMock }),
+  default: () => ({
+    setHoveredShop: setHoveredShopMock,
+  }),
 }))
 
 describe('roundDistance', () => {
@@ -54,11 +56,8 @@ describe('ShopCard', () => {
     },
   }
 
-  const mockHandleKeyPress = vi.fn()
-
   const defaultProps = {
     shop: mockShop,
-    handleKeyPress: mockHandleKeyPress,
   }
 
   beforeEach(() => {
@@ -106,11 +105,11 @@ describe('ShopCard', () => {
     expect(bgElement?.style.backgroundImage).toBe(undefined)
   })
 
-  it('calls handleKeyPress when key is pressed', () => {
+  it('calls handleShopSelect when Enter key is pressed', () => {
     render(<ShopCard {...defaultProps} />)
     const keyEvent = { key: 'Enter' }
     fireEvent.keyDown(screen.getByRole('button'), keyEvent)
-    expect(mockHandleKeyPress).toHaveBeenCalledWith(expect.any(Object), mockShop)
+    expect(handleShopSelectMock).toHaveBeenCalledWith(mockShop)
   })
 
   it('has correct accessibility attributes', () => {
