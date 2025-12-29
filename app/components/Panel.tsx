@@ -23,7 +23,6 @@ export default function Panel(props: IProps) {
   const lastDetentIndex = detents.length + 1 // 2
   const middleDetentIndex = lastDetentIndex - 1 // 1
   const [activeDetent, setActiveDetent] = useState<number | undefined>()
-  const isMax = (activeDetent ?? 1) === lastDetentIndex
 
   const contentRef = useRef<HTMLDivElement | null>(null)
   const touchStartY = useRef<number | null>(null)

@@ -1,46 +1,35 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import ShopCard from '../ShopCard';
-
-type ShopFeature = {
-  type: 'Feature';
-  properties: {
-    name: string;
-    neighborhood: string;
-    website: string;
-    address: string;
-    roaster?: string;
-    photo?: string;
-    uuid: string;
-  };
-  geometry: { type: 'Point'; coordinates: [number, number] };
-};
+import { useEffect, useState } from 'react'
+import ShopCard from '../ShopCard'
+import {TShop} from '@/types/shop-types'
 
 export default function FeaturedShop() {
-  const [shop, setShop] = useState<ShopFeature | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [shop, setShop] = useState<TShop | null>(null)
+  const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false
 
     const fetchFeatured = async () => {
       try {
-        const res = await fetch('/api/featured-shop', { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: ShopFeature = await res.json();
-        if (!cancelled) setShop(data);
+        const res = await fetch('/api/featured-shop', { cache: 'no-store' })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data: TShop = await res.json()
+        if (!cancelled) setShop(data)
       } catch (e: any) {
-        if (!cancelled) setErr(e?.message ?? 'Failed to load featured shop');
+        if (!cancelled) setErr(e?.message ?? 'Failed to load featured shop')
       }
-    };
+    }
 
-    fetchFeatured();
-    return () => { cancelled = true; };
-  }, []);
+    fetchFeatured()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
-  if (err) return null; // or render a tiny fallback
-  if (!shop) return null; // or a skeleton
+  if (err) return null
+  if (!shop) return null
 
   return (
     <div className="sm:col-span-2">
@@ -49,5 +38,5 @@ export default function FeaturedShop() {
         <ShopCard featured shop={shop as any} handleKeyPress={() => {}} />
       </div>
     </div>
-  );
+  )
 }
