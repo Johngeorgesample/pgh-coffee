@@ -29,6 +29,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
         address: shopData[0].address,
         photo: shopData[0].photo,
         website: shopData[0].website,
+        uuid: shopData[0].uuid
       },
       geometry: {
         type: 'Point',

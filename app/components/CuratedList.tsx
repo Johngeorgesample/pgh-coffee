@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopList from './ShopList'
-import { formatDataToGeoJSON } from '../utils/utils'
 
 interface IProps {
   content: any
