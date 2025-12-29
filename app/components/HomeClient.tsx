@@ -40,7 +40,6 @@ export default function HomeClient() {
       clearHistory()
     } else {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
-      console.log(allShops)
       setDisplayedShops(allShops)
       clearHistory()
     }
