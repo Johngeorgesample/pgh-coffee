@@ -18,9 +18,16 @@ vi.mock('next-plausible', () => ({
   usePlausible: () => mockPlausible,
 }))
 
+const mockSetDisplayedShops = vi.fn()
+const mockAllShops: TShop[] = []
+
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => ({ setCurrentShop: mockSetCurrentShop }),
+  default: () => ({
+    setCurrentShop: mockSetCurrentShop,
+    setDisplayedShops: mockSetDisplayedShops,
+    allShops: mockAllShops
+  }),
 }))
 
 vi.mock('@/stores/panelStore', () => ({
@@ -81,6 +88,7 @@ describe('useShopSelection', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockSetDisplayedShops.mockClear()
     // Reset matchMedia mock to default
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
