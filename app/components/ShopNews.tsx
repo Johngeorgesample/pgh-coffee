@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TShop } from '@/types/shop-types'
-import { data as newsData } from '@/data/news'
 import { ArrowTopRightOnSquareIcon, CalendarIcon, TagIcon } from '@heroicons/react/24/outline'
 import { fmtYMD } from '@/app/utils/utils'
 
@@ -69,10 +68,7 @@ export const ShopNews = ({ shop }: Props) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: UpdateEntry[] = await res.json()
         if (!cancelled) setUpdates(data)
-      } catch {
-        // fallback to bundled data if API fails
-        if (!cancelled) setUpdates((newsData as any[]) ?? [])
-      }
+      } catch {}
     })()
 
     return () => {
