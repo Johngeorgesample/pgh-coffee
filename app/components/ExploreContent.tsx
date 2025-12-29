@@ -30,12 +30,12 @@ export const ExploreContent = () => {
       <EventsCTA />
       <FeaturedShop />
       */}
+        {/*
       <div>
         <h3 className="uppercase text-xs">Curated lists</h3>
-        {/*
         <CuratedListIndex />
-        */}
       </div>
+        */}
       <div>
         <NewsCTA />
       </div>
