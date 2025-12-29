@@ -12,7 +12,6 @@ vi.mock('@/stores/panelStore', () => ({
 }))
 
 describe('SearchBar', () => {
-  const mockOnClose = vi.fn()
 
   const defaultStoreState = {
     searchValue: '',
@@ -26,14 +25,14 @@ describe('SearchBar', () => {
   })
 
   it('renders search input with placeholder text', () => {
-    render(<SearchBar onClose={mockOnClose} />)
+    render(<SearchBar />)
     expect(
       screen.getByPlaceholderText('Search for a shop or neighborhood')
     ).toBeInTheDocument()
   })
 
   it('updates the store when the user types (drives filtering upstream)', () => {
-    render(<SearchBar onClose={mockOnClose} />)
+    render(<SearchBar />)
     const input = screen.getByPlaceholderText('Search for a shop or neighborhood')
 
     fireEvent.change(input, { target: { value: 'Lawrenceville' } })
@@ -41,13 +40,13 @@ describe('SearchBar', () => {
   })
 
   it('reflects the current store value in the input (controlled)', () => {
-    const { rerender } = render(<SearchBar onClose={mockOnClose} />)
+    const { rerender } = render(<SearchBar />)
     // Simulate store changing outside the component by returning a new value
     mockUsePanelStore.mockReturnValue({
       ...defaultStoreState,
       searchValue: 'Ineffable Cà Phê',
     })
-    rerender(<SearchBar onClose={mockOnClose} />)
+    rerender(<SearchBar />)
 
     expect(
       screen.getByPlaceholderText('Search for a shop or neighborhood')

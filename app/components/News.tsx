@@ -39,8 +39,7 @@ const DayHeader = ({ date }: { date: string }) => (
 )
 
 
-// @TODO
-const foo = async () => {
+const fetchUpdates = async () => {
   const response = await fetch('/api/updates')
   return await response.json()
 }
@@ -49,7 +48,7 @@ export const News = () => {
   const [ updates, setUpdates ] = useState([])
 
   useEffect(() => {
-    foo().then(setUpdates)
+    fetchUpdates().then(setUpdates)
   }, [])
 
   // ensure newest first

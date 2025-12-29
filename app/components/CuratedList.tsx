@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopList from './ShopList'
 
 interface IProps {
+  // @TODO
   content: any
 }
 

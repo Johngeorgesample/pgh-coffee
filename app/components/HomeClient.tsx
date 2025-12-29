@@ -94,11 +94,11 @@ export default function HomeClient() {
 
   return (
     <>
-      {!largeViewport && <SearchBar onClose={handleClose} />}
+      {!largeViewport && <SearchBar />}
       <MapContainer
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
-      <Panel shop={currentShop} foo={handleClose}>
+      <Panel shop={currentShop}>
         {panelContent}
       </Panel>
     </>

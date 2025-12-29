@@ -3,11 +3,8 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 
-interface IProps {
-  onClose: () => void
-}
 
-export default function SearchBar(props: IProps) {
+export default function SearchBar() {
   const { searchValue, setSearchValue, panelMode } = usePanelStore()
 
   return (

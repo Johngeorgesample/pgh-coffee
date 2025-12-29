@@ -17,21 +17,11 @@ export const ListChips = () => {
   const { setPanelContent } = usePanelStore()
 
   const [lists, setLists] = useState<CuratedListType[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     const fetchLists = async () => {
-      try {
-        const res = await fetch('/api/curated-lists')
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data: CuratedListType[] = await res.json()
-        setLists(data)
-      } catch (err) {
-        console.error('Error fetching curated lists:', err)
-        setError('Failed to load curated lists')
-      } finally {
-        setLoading(false)
-      }
+      const res = await fetch('/api/curated-lists')
+      const data: CuratedListType[] = await res.json()
+      setLists(data)
     }
 
     fetchLists()
