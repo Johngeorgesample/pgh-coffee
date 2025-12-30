@@ -34,7 +34,7 @@ export default function FeaturedShop() {
   return (
     <div className="sm:col-span-2">
       <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Featured shop</h3>
-      <div className="list-none">
+      <div className="list-none mt-3">
         <ShopCard featured shop={shop} />
       </div>
     </div>
