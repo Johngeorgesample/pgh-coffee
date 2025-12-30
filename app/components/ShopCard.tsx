@@ -1,4 +1,5 @@
 import { usePlausible } from 'next-plausible'
+import { MapPinIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -73,7 +74,8 @@ export default function ShopCard(props: IProps) {
         {!props.hideShopName && (
           <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
         )}
-        <p className="w-fit mb-1 text-left text-white border border-transparent">
+        <p className="w-fit mb-1 text-left text-white border border-transparent flex items-center gap-1">
+          <MapPinIcon className="h-4 w-4" />
           {props.shop.properties.neighborhood}
         </p>
         {props.distance && props.units && (
