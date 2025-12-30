@@ -1,6 +1,46 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import ShopPanel from '@/app/components/ShopPanel'
+import Panel from '@/app/components/Panel'
 import { TShop } from '@/types/shop-types'
+
+// Mock the Silk components
+vi.mock('@silk-hq/components', () => ({
+  Sheet: {
+    Root: ({ children, presented }: any) => presented ? <div data-testid="sheet-root">{children}</div> : null,
+    Portal: ({ children }: any) => <div data-testid="sheet-portal">{children}</div>,
+    View: ({ children }: any) => <div data-testid="sheet-view">{children}</div>,
+    Backdrop: () => <div data-testid="sheet-backdrop" />,
+    Content: ({ children, ref }: any) => <div data-testid="sheet-content" ref={ref}>{children}</div>,
+    Handle: ({ children }: any) => <div data-testid="sheet-handle">{children}</div>,
+    BleedingBackground: () => <div data-testid="sheet-bleeding-background" />,
+  },
+  useClientMediaQuery: vi.fn(() => true), // Mock as large viewport by default
+}))
+
+// Mock the shop store
+vi.mock('@/stores/coffeeShopsStore', () => ({
+  default: vi.fn(() => ({
+    currentShop: {
+      type: 'Feature',
+      properties: {
+        name: 'Test Shop',
+        neighborhood: 'Lower Lawrenceville',
+        address: '123 Test St.',
+        photo: '',
+        website: '',
+        uuid: '1234',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [-79.9253955, 40.4855015],
+      },
+    }
+  }))
+}))
+
+// Mock SearchBar component
+vi.mock('@/app/components/SearchBar', () => ({
+  default: ({ onClose }: any) => <div data-testid="search-bar">Search Bar</div>
+}))
 
 beforeAll(() => {
   globalThis.matchMedia =
@@ -14,7 +54,7 @@ beforeAll(() => {
     }
 })
 
-describe('ShopPanel Component', () => {
+describe('Panel Component', () => {
   const mockShop: TShop = {
     type: 'Feature',
     properties: {
@@ -23,6 +63,7 @@ describe('ShopPanel Component', () => {
       address: '123 Test St.',
       photo: '',
       website: '',
+      uuid: '1234',
     },
     geometry: {
       type: 'Point',
@@ -41,44 +82,16 @@ describe('ShopPanel Component', () => {
     handlePanelContentClick: mockHandlePanelContentClick,
   }
 
-  it('renders the panel content when open', () => {
-    render(<ShopPanel {...defaultProps} />)
-    expect(screen.getByText('Panel Content')).toBeInTheDocument()
-  })
-
-  it('does not render the panel content when closed', () => {
-    render(<ShopPanel {...defaultProps} panelIsOpen={false} />)
-    expect(screen.queryByText('Panel Content')).not.toBeInTheDocument()
-  })
-
-  it('calls emitClose when the dialog is closed', () => {
-    render(<ShopPanel {...defaultProps} />)
-
-    const dialog = screen.getByRole('dialog')
-    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
-
-    expect(mockEmitClose).toHaveBeenCalled()
-  })
-
-  it('applies correct animation based on screen size', () => {
-    window.matchMedia = vi.fn().mockImplementation(query => {
-      return {
-        matches: query === '(min-width: 1024px)',
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-      }
-    })
-
-    render(<ShopPanel {...defaultProps} />)
-
+  it('renders the panel content', () => {
+    render(<Panel {...defaultProps} />)
     expect(screen.getByText('Panel Content')).toBeInTheDocument()
   })
 
   it('supports interactions with child content', () => {
     render(
-      <ShopPanel {...defaultProps}>
+      <Panel {...defaultProps}>
         <button onClick={() => mockHandlePanelContentClick(mockShop)}>Click Me</button>
-      </ShopPanel>,
+      </Panel>,
     )
 
     const button = screen.getByText('Click Me')

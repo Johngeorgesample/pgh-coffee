@@ -47,16 +47,16 @@ export default function Nav() {
       </div>
 
       <div
-        className={`${hamburgerIsOpen ? 'z-10 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
+        className={`${hamburgerIsOpen ? 'z-20 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
       >
         <div className="flex flex-col items-center pt-8">
-          <Link className="text-2xl" href="/about">
+          <Link className="text-2xl" href="/about" onClick={() => setHamburgerIsOpen(false)}>
             About
           </Link>
-          <Link className="text-2xl" href="/submit-a-shop">
+          <Link className="text-2xl" href="/submit-a-shop" onClick={() => setHamburgerIsOpen(false)}>
             Submit a shop
           </Link>
-          <Link className="text-2xl" href="/settings">
+          <Link className="text-2xl" href="/settings" onClick={() => setHamburgerIsOpen(false)}>
             Settings
           </Link>
         </div>

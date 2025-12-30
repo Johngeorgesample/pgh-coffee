@@ -8,7 +8,6 @@ import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 import ShopList from '@/app/components/ShopList'
 
 interface IProps {
-  handleClick: (shop: TShop) => void
   shop: TShop
 }
 
@@ -24,9 +23,9 @@ interface ISortedShopsResults {
 
 const MILES_CONVERSION_FACTOR = 0.000621371
 
-export default function NearbyShops({ handleClick, shop }: IProps) {
+export default function NearbyShops({ shop }: IProps) {
   const plausible = usePlausible()
-  const { coffeeShops } = useShopsStore()
+  const { allShops } = useShopsStore()
 
   const [units, setUnits] = useState<TUnits>('miles')
   useEffect(() => {
@@ -45,9 +44,9 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
     shops: TShop[]
     distances: number[]
   }>(() => {
-    if (!coffeeShops.features) return { shops: [], distances: [] }
+    if (!allShops.features) return { shops: [], distances: [] }
 
-    return coffeeShops.features
+    return allShops.features
       .filter((s: TShop) => {
         const isDifferentShop =
           s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
@@ -67,17 +66,7 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
         },
         { shops: [] as TShop[], distances: [] as number[] },
       )
-  }, [coffeeShops, shop, calculateDistance])
-
-  const handleCardClick = (shop: TShop) => {
-    handleClick(shop)
-    plausible('NearbyCardClick', {
-      props: {
-        shopName: shop.properties.name,
-        neighborhood: shop.properties.neighborhood,
-      },
-    })
-  }
+  }, [allShops, shop, calculateDistance])
 
   if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
 
@@ -88,7 +77,6 @@ export default function NearbyShops({ handleClick, shop }: IProps) {
       <ShopList
         coffeeShops={sortedShopsWithDistances.shops}
         distances={sortedShopsWithDistances.distances}
-        handleCardClick={handleCardClick}
         units={units}
       />
     </section>

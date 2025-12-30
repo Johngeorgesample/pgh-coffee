@@ -1,18 +1,19 @@
+'use client'
+
 import { useRef, useEffect } from 'react'
 import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import { TShop } from '@/types/shop-types'
+import { useShopSelection } from '@/hooks'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 interface MapContainerProps {
-  dataSet: {
-    type: string
-    features: TShop[]
-  }
   currentShopCoordinates: [number, number]
-  onShopSelect: (properties: Record<string, any>, geometry: Record<string, any>, type: string) => void
 }
 
-export default function MapContainer({ dataSet, currentShopCoordinates, onShopSelect }: MapContainerProps) {
+export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
+  const { displayedShops } = useShopsStore()
+  const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
 
@@ -57,12 +58,12 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
     }) as unknown as GeoJSON.Feature[] | undefined
 
     if (features?.length && features[0].properties) {
-      onShopSelect(features[0].properties, features[0].geometry, features[0].type)
+      handleShopSelect(features[0] as TShop)
     }
   }
 
   return (
-    <div data-testid="map-container">
+    <div data-testid="map-container" className="w-full lg:w-2/3">
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
@@ -71,13 +72,38 @@ export default function MapContainer({ dataSet, currentShopCoordinates, onShopSe
         onClick={handleMapClick}
         ref={mapRef}
       >
-        <Source id="my-data" type="geojson" data={dataSet}>
+        <Source id="my-data" type="geojson" data={displayedShops}>
+          {/* White border layer */}
+          <Layer
+            id="shop-border"
+            type="circle"
+            paint={{
+              'circle-color': [
+                'case',
+                ['boolean', ['get', 'hovered'], false],
+                '#ffffff', // white border for hovered
+                ['boolean', ['get', 'selected'], false],
+                '#ffffff', // white border for selected
+                'transparent', // fallback (no border)
+              ],
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius + 2]), // +2 for border
+              ],
+            }}
+          />
+
+          {/* Yellow dot layer */}
           <Layer
             id={layerId}
             type="circle"
             paint={{
               'circle-color': [
                 'case',
+                ['boolean', ['get', 'hovered'], false],
+                '#FDE047', // or another hover color if you choose
                 ['boolean', ['get', 'selected'], false],
                 MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
                 MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,

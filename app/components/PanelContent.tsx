@@ -3,11 +3,11 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
+import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
-  handleNearbyShopClick: (shop: TShop) => void
   shop: TShop
 }
 
@@ -53,7 +53,8 @@ export default function PanelContent(props: IProps) {
           </div>
         </div>
       </section>
-      <NearbyShops shop={props.shop} handleClick={props.handleNearbyShopClick} />
+      <ShopNews shop={props.shop} />
+      <NearbyShops shop={props.shop} />
     </>
   )
 }

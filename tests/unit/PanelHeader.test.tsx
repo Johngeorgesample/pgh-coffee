@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, test } from 'vitest'
+import { describe, vi, Mock } from 'vitest'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PanelHeader from '@/app/components/PanelHeader'
@@ -18,6 +18,7 @@ describe.skip('PanelHeader', () => {
       address: '456 Murray Ave, Pittsburgh, PA 15217',
       photo: 'https://example.com/photo.jpg',
       website: 'https://testshop.com',
+      uuid: '1234',
     },
     geometry: {
       type: 'Point',
@@ -27,7 +28,7 @@ describe.skip('PanelHeader', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(usePlausible as vi.Mock).mockReturnValue(mockPlausible)
+    ;(usePlausible as Mock).mockReturnValue(mockPlausible)
   })
 
   it('renders shop photo in a dialog when clicked', () => {
