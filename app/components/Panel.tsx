@@ -15,7 +15,7 @@ interface IProps {
 
 export default function Panel(props: IProps) {
   const currentShop = useShopStore(s => s.currentShop)
-  const [presented, setPresented] = useState(false)
+  const [presented, setPresented] = useState(true)
 
   // detents: middle (60vh) -> full
   const detents = ['60vh'] as const
@@ -36,10 +36,6 @@ export default function Panel(props: IProps) {
         window.matchMedia?.('(pointer: coarse)').matches)
     setIsTouch(Boolean(touch))
   }, [])
-
-  useEffect(() => {
-    setPresented(Boolean(currentShop && Object.keys(currentShop).length))
-  }, [currentShop])
 
   useEffect(() => {
     if (presented && currentShop && Object.keys(currentShop).length > 0) {
