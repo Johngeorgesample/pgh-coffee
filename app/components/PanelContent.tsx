@@ -19,7 +19,7 @@ export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: num
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
   const { setPanelContent } = usePanelStore()
-  const { name, neighborhood, website, address } = props.shop.properties
+  const { name, neighborhood, website, address, company } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
@@ -27,7 +27,9 @@ export default function PanelContent(props: IProps) {
       <section>
         <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
           <p className="font-medium">{name}</p>
-          <button onClick={() => setPanelContent(<Company />, 'news')}>See company</button>
+          {company?.slug && (
+            <button onClick={() => setPanelContent(<Company slug={company.slug} />, 'news')}>See company</button>
+          )}
           <p className="text-lg text-gray-600">{neighborhood}</p>
         </div>
         <div className="relative text-gray-700 px-4 sm:px-6">
