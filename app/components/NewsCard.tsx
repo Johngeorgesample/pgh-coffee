@@ -1,11 +1,19 @@
-'use client'
-
 import { ArrowTopRightOnSquareIcon, CalendarIcon, TagIcon } from '@heroicons/react/24/outline'
 import { fmtYMD } from '@/app/utils/utils'
 
+export type NewsCardData = {
+  title: string
+  description?: string | null
+  url?: string | null
+  tags?: string[] | null
+  post_date?: string | null
+  event_date?: string | null
+  eventDate?: string | null
+}
+
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
-const TAG_STYLES: Record<TagKey, string> = {
+export const TAG_STYLES: Record<TagKey, string> = {
   opening: 'bg-green-100 text-green-800',
   closure: 'bg-red-100 text-red-800',
   'coming soon': 'bg-amber-100 text-amber-800',
@@ -15,7 +23,7 @@ const TAG_STYLES: Record<TagKey, string> = {
   menu: 'bg-slate-100 text-slate-800',
 }
 
-const TagBadge = ({ label }: { label: string }) => {
+export const TagBadge = ({ label }: { label: string }) => {
   const cls = TAG_STYLES[label as TagKey] ?? 'bg-gray-100 text-gray-800'
   return (
     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${cls}`}>
@@ -32,89 +40,75 @@ const EventDatePill = ({ date }: { date: string }) => (
   </span>
 )
 
-export type NewsCardData = {
-  title: string
-  description?: string
-  url?: string
-  tags?: string[]
-  post_date: string
-  event_date?: string
+const isPast = (date: string) => {
+  return new Date(date).getTime() < Date.now()
 }
 
 interface NewsCardProps {
-  entry: NewsCardData
-  asLink?: boolean
+  item: NewsCardData
+  variant?: 'pill' | 'inline'
+  clampDescription?: boolean
+  showPastOpacity?: boolean
 }
 
-export const NewsCard = ({ entry, asLink = false }: NewsCardProps) => {
-  const cardContent = (
-    <div
-      className="
-        relative overflow-hidden rounded-xl border border-stone-200 bg-white
-        shadow-sm transition-all duration-200 hover:border-stone-300 hover:shadow-md
-      "
-    >
-      {/* Accent bar */}
-      <div
-        className="absolute bottom-0 left-0 top-0 w-1"
-        style={{ backgroundColor: 'lab(89.7033 -0.480294 84.4917)' }}
-      />
+export const NewsCard = ({
+  item,
+  variant = 'pill',
+  clampDescription = false,
+  showPastOpacity = false,
+}: NewsCardProps) => {
+  const eventDate = item.eventDate ?? item.event_date
+  const eventIsPast = eventDate ? isPast(eventDate) : false
 
-      <div className="p-4 pl-5">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-semibold leading-tight text-stone-900">
-            {entry.title}
-          </h3>
-          {entry.url && !asLink && (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0 text-stone-400 transition-colors hover:text-stone-600"
-              aria-label="Source"
-              title="Source"
-            >
-              <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-            </a>
-          )}
-          {asLink && (
-            <ArrowTopRightOnSquareIcon className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-600" />
-          )}
-        </div>
-
-        {/* Tags and event date */}
-        {(entry.event_date || (entry.tags && entry.tags.length > 0)) && (
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {entry.event_date && <EventDatePill date={entry.event_date} />}
-            {entry.tags?.map(t => (
-              <TagBadge key={t} label={t} />
-            ))}
-          </div>
-        )}
-
-        {/* Description */}
-        {entry.description && (
-          <p className="mt-2 text-sm leading-relaxed text-stone-600 line-clamp-2">
-            {entry.description}
-          </p>
+  return (
+    <li className={`p-3 ${showPastOpacity && eventIsPast ? 'opacity-50' : ''}`}>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-semibold text-gray-900">{item.title}</h3>
+        {item.url && (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 text-gray-500 hover:text-gray-700"
+            aria-label="Source"
+            title="Source"
+          >
+            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+          </a>
         )}
       </div>
-    </div>
+
+      {variant === 'pill' ? (
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          {eventDate && <EventDatePill date={eventDate} />}
+          {item.tags?.map((t) => <TagBadge key={t} label={t} />)}
+        </div>
+      ) : (
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
+          {eventDate && (
+            <span className="flex items-center gap-1.5">
+              <CalendarIcon className="h-3.5 w-3.5" />
+              <span
+                className={eventIsPast ? '' : 'font-semibold'}
+                style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
+              >
+                {fmtYMD(eventDate)}
+              </span>
+            </span>
+          )}
+          {item.tags && item.tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {item.tags.map((t) => <TagBadge key={t} label={t} />)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {item.description && (
+        <p className={`mt-2 text-sm text-gray-700 ${clampDescription ? 'line-clamp-2' : ''}`}>
+          {item.description}
+        </p>
+      )}
+    </li>
   )
-
-  if (asLink && entry.url) {
-    return (
-      <a
-        href={entry.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-      >
-        {cardContent}
-      </a>
-    )
-  }
-
-  return cardContent
 }
