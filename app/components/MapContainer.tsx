@@ -58,7 +58,16 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     }) as unknown as GeoJSON.Feature[] | undefined
 
     if (features?.length && features[0].properties) {
-      handleShopSelect(features[0] as TShop)
+      // queryRenderedFeatures strips nested objects like 'company'
+      // Look up the full shop data from the store using uuid
+      const clickedUuid = features[0].properties.uuid
+      const fullShop = displayedShops.features.find(
+        shop => shop.properties.uuid === clickedUuid
+      )
+
+      if (fullShop) {
+        handleShopSelect(fullShop)
+      }
     }
   }
 
