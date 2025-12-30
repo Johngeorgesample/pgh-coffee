@@ -35,7 +35,7 @@ export const Events = () => {
 
             <ul className="space-y-3">
               {upcomingEvents.map(entry => (
-                <EventCard key={entry.id} entry={entry} />
+                <EventCard key={entry.id} asLink={true} entry={entry} />
               ))}
             </ul>
           </>
@@ -51,7 +51,7 @@ export const Events = () => {
 
             <ul className="space-y-3">
               {pastEvents.map(entry => (
-                <EventCard key={entry.id} entry={entry} />
+                <EventCard key={entry.id} asLink={true} entry={entry} />
               ))}
             </ul>
           </>

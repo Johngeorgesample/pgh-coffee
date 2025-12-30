@@ -70,7 +70,7 @@ export const EventCard = ({
   entry,
   asLink = false,
   showDescription = true,
-  showTime = true,
+  showTime = false,
   showNewPill = true,
   hideShopInfo = false,
 }: EventCardProps) => {
