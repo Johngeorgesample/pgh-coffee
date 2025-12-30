@@ -4,6 +4,7 @@ export interface DbShop {
   name: string
   neighborhood: TNeighborhood
   address: string
+  company: any
   photo: string | null
   website: string
   uuid: string
@@ -20,6 +21,7 @@ export interface TFeatureCollection {
 export interface TShop {
   type: string
   properties: {
+    company: any
     name: string
     neighborhood: TNeighborhood
     address: string

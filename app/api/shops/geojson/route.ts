@@ -8,9 +8,10 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const fetchShops = async () => {
-  let query = supabase.from('shops').select('*').order('name', { ascending: true })
-
-  const { data, error } = await query
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*, company:company_id(*)')
+    .order('name', { ascending: true })
   if (error) {
     console.error('Error fetching shops:', error.message)
     return []

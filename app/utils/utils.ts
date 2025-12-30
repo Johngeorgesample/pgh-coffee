@@ -11,6 +11,7 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
       type: 'Feature',
       properties: {
         name: shop.name,
+        company: shop.company,
         neighborhood: shop.neighborhood,
         website: shop.website,
         address: shop.address,
