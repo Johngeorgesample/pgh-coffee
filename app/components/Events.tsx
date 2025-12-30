@@ -23,38 +23,40 @@ export const Events = () => {
   const pastEvents = events.filter(e => e.event_date && isPast(e.event_date))
 
   return (
-    <div className="mt-20 px-4 py-3">
-      {/* Upcoming events */}
-      {upcomingEvents.length > 0 && (
-        <>
-          <div className="mb-3 flex items-center gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming</h2>
-            <div className="h-px flex-1 bg-stone-200" />
-          </div>
+    <div className="flex h-full flex-col overflow-y-auto">
+      <div className="mt-20 px-4 py-3">
+        {/* Upcoming events */}
+        {upcomingEvents.length > 0 && (
+          <>
+            <div className="mb-3 flex items-center gap-3">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming</h2>
+              <div className="h-px flex-1 bg-stone-200" />
+            </div>
 
-          <ul className="space-y-3">
-            {upcomingEvents.map(entry => (
-              <EventCard key={entry.id} entry={entry} />
-            ))}
-          </ul>
-        </>
-      )}
+            <ul className="space-y-3">
+              {upcomingEvents.map(entry => (
+                <EventCard key={entry.id} entry={entry} />
+              ))}
+            </ul>
+          </>
+        )}
 
-      {/* Past events */}
-      {pastEvents.length > 0 && (
-        <>
-          <div className="mb-3 mt-6 flex items-center gap-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Past</h2>
-            <div className="h-px flex-1 bg-stone-200" />
-          </div>
+        {/* Past events */}
+        {pastEvents.length > 0 && (
+          <>
+            <div className="mb-3 mt-6 flex items-center gap-3">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Past</h2>
+              <div className="h-px flex-1 bg-stone-200" />
+            </div>
 
-          <ul className="space-y-3">
-            {pastEvents.map(entry => (
-              <EventCard key={entry.id} entry={entry} />
-            ))}
-          </ul>
-        </>
-      )}
+            <ul className="space-y-3">
+              {pastEvents.map(entry => (
+                <EventCard key={entry.id} entry={entry} />
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
     </div>
   )
 }

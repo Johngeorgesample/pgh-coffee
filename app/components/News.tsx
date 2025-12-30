@@ -61,40 +61,42 @@ export const News = () => {
   }, {})
 
   return (
-    <div className="mt-20 px-4 py-3 leading-relaxed">
-      {Object.entries(groups).map(([day, entries]) => (
-        <section key={day} className="mb-4">
-          <DayHeader date={day} />
-          <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-            {entries.map((entry: any, i: any) => (
-              <li key={i} className="p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-semibold text-gray-900">{entry.title}</h3>
-                  {entry.url && (
-                    <a
-                      href={entry.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 text-gray-500 hover:text-gray-700"
-                      aria-label="Source"
-                      title="Source"
-                    >
-                      <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                    </a>
-                  )}
-                </div>
+    <div className="flex h-full flex-col overflow-y-auto">
+      <div className="mt-20 px-4 py-3 leading-relaxed">
+        {Object.entries(groups).map(([day, entries]) => (
+          <section key={day} className="mb-4">
+            <DayHeader date={day} />
+            <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
+              {entries.map((entry: any, i: any) => (
+                <li key={i} className="p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="font-semibold text-gray-900">{entry.title}</h3>
+                    {entry.url && (
+                      <a
+                        href={entry.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 text-gray-500 hover:text-gray-700"
+                        aria-label="Source"
+                        title="Source"
+                      >
+                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
 
-                <div className="mt-1 flex flex-wrap items-center gap-2">
-                  {entry.event_date && <EventDatePill date={entry.event_date} />}
-                  {entry.tags?.map((t: any) => <TagBadge key={t} label={t} />)}
-                </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    {entry.event_date && <EventDatePill date={entry.event_date} />}
+                    {entry.tags?.map((t: any) => <TagBadge key={t} label={t} />)}
+                  </div>
 
-                {entry.description && <p className="mt-2 text-sm text-gray-700">{entry.description}</p>}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+                  {entry.description && <p className="mt-2 text-sm text-gray-700">{entry.description}</p>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </div>
   )
 }

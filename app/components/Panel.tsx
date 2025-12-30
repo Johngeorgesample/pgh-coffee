@@ -130,7 +130,7 @@ export default function Panel(props: IProps) {
           nativeEdgeSwipePrevention
         >
           <Sheet.Backdrop themeColorDimming="auto" />
-          <Sheet.Content ref={contentRef} className="h-[90%] bg-neutral-50">
+          <Sheet.Content ref={contentRef} className="h-[90%] bg-neutral-50 overflow-y-auto">
             <Sheet.Handle
               action="dismiss"
               className="block mx-auto focus:outline-none focus:ring-0 mt-2 mb-3 bg-gray-300"
