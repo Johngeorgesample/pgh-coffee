@@ -21,7 +21,7 @@ export const ExploreContent = () => {
   }, [])
 
   return (
-    <div className="flex overflow-y-auto flex-col sm:grid gap-4 px-6 lg:px-4 lg:mt-16">
+    <div className="flex overflow-y-auto flex-col sm:grid gap-4 px-6 lg:px-4 mt-24 lg:mt-16">
       <div>
         <NewsCTA />
       </div>
