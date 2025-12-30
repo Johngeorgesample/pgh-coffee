@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
@@ -11,7 +11,7 @@ import { ExploreContent } from './ExploreContent'
 import { useURLShopSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
-import SearchBar from './SearchBar'
+import SearchFAB from './SearchFAB'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -19,6 +19,7 @@ export default function HomeClient() {
   const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
+  const [presented, setPresented] = useState(false)
   const router = useRouter()
 
   const removeSearchParam = () => {
@@ -87,17 +88,29 @@ export default function HomeClient() {
     }
   }, [panelContent, setPanelContent])
 
+  useEffect(() => {
+    if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
+      setPresented(true)
+    }
+  }, [currentShop, largeViewport])
+
+  useEffect(() => {
+    if (!largeViewport && !presented && currentShop && Object.keys(currentShop).length > 0) {
+      handleClose()
+    }
+  }, [presented, largeViewport])
+
   useHighlightCurrentShop({ currentShop, displayedShops, setDisplayedShops })
 
   return (
-    <>
-      {!largeViewport && <SearchBar />}
+    <div className="relative w-full h-full">
+      {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
       <MapContainer
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
-      <Panel shop={currentShop}>
+      <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>
         {panelContent}
       </Panel>
-    </>
+    </div>
   )
 }

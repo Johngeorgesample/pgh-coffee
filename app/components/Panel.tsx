@@ -11,11 +11,16 @@ import { useMediaQuery } from '@/hooks'
 interface IProps {
   children?: React.ReactNode
   shop: TShop
+  presented?: boolean
+  onPresentedChange?: (presented: boolean) => void
 }
 
 export default function Panel(props: IProps) {
   const currentShop = useShopStore(s => s.currentShop)
-  const [presented, setPresented] = useState(true)
+  const [internalPresented, setInternalPresented] = useState(true)
+
+  const presented = props.presented !== undefined ? props.presented : internalPresented
+  const setPresented = props.onPresentedChange || setInternalPresented
 
   // detents: middle (60vh) -> full
   const detents = ['60vh'] as const
@@ -133,6 +138,7 @@ export default function Panel(props: IProps) {
               Drag to expand
             </Sheet.Handle>
 
+            <SearchBar />
             {props.children}
 
             <Sheet.BleedingBackground className="BottomSheet-bleedingBackground" />
