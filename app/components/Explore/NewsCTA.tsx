@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import usePanelStore from '@/stores/panelStore'
 import { News } from '@/app/components/News'
 import { parseYMDLocal, fmtYMD } from '@/app/utils/utils'
@@ -45,6 +46,7 @@ const EventDatePill = ({ date }: { date: string }) => (
 )
 
 export const NewsCTA = () => {
+  const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
 
   const fetchNews = async () => {
@@ -63,7 +65,10 @@ export const NewsCTA = () => {
     .sort((a, b) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
     .slice(0, 3)
 
-  const openNews = () => setPanelContent(<News />, 'news')
+  const openNews = () => {
+    plausible('ViewAllClick', { props: { section: 'news' } })
+    setPanelContent(<News />, 'news')
+  }
 
   return (
     <>

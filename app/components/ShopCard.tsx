@@ -1,3 +1,4 @@
+import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -23,13 +24,26 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 }
 
 export default function ShopCard(props: IProps) {
+  const plausible = usePlausible()
   const { handleShopSelect } = useShopSelection()
   const { setHoveredShop } = useShopsStore()
+
+  const handleClick = () => {
+    if (props.featured) {
+      plausible('FeaturedShopClick', {
+        props: {
+          shopName: props.shop.properties.name,
+          neighborhood: props.shop.properties.neighborhood,
+        },
+      })
+    }
+    handleShopSelect(props.shop)
+  }
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLLIElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
-      handleShopSelect(props.shop)
+      handleClick()
     }
   }
 
@@ -38,7 +52,7 @@ export default function ShopCard(props: IProps) {
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
       className={`${props.featured ? 'h-46' : 'h-36'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
-      onClick={() => handleShopSelect(props.shop)}
+      onClick={handleClick}
       onKeyDown={handleKeyPress}
       tabIndex={0}
       role="button"

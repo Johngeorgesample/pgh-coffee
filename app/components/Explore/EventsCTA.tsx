@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import usePanelStore from '@/stores/panelStore'
 import { Events } from '@/app/components/Events'
 import { EventCard, EventCardData } from '@/app/components/EventCard'
 
 export const EventsCTA = () => {
+  const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
 
   const fetchEvents = async () => {
@@ -20,7 +22,10 @@ export const EventsCTA = () => {
   }, [])
 
   const lastTwo = updates.slice(0, 2)
-  const openEvents = () => setPanelContent(<Events />, 'events')
+  const openEvents = () => {
+    plausible('ViewAllClick', { props: { section: 'events' } })
+    setPanelContent(<Events />, 'events')
+  }
 
   return (
     <>
