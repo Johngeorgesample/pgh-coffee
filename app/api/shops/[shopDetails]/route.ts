@@ -7,13 +7,16 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const getShop = async (name: string, neighborhood: string) => {
-  const { data, error } = await supabase.from('shops').select('*').eq('name', name).eq('neighborhood', neighborhood)
-
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*, company:company_id(*)')
+    .eq('name', name)
+    .eq('neighborhood', neighborhood)
   return data
 }
 
 export async function GET(req: NextRequest, props: { params: Promise<{ shopDetails: string }> }) {
-  const params = await props.params;
+  const params = await props.params
   const { shopDetails } = params
 
   const [name, neighborhood] = shopDetails.split('_').map(part => part.replace(/\+/g, ' '))
@@ -29,7 +32,8 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
         address: shopData[0].address,
         photo: shopData[0].photo,
         website: shopData[0].website,
-        uuid: shopData[0].uuid
+        uuid: shopData[0].uuid,
+        company: shopData[0].company,
       },
       geometry: {
         type: 'Point',
