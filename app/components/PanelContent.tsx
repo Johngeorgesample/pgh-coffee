@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import usePanelStore from '@/stores/panelStore'
 import NearbyShops from './NearbyShops'
@@ -27,12 +27,20 @@ export default function PanelContent(props: IProps) {
       <section>
         <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
           <p className="font-medium">{name}</p>
-          {company?.slug && (
-            <button onClick={() => setPanelContent(<Company slug={company.slug} />, 'news')}>See company</button>
-          )}
           <p className="text-lg text-gray-600">{neighborhood}</p>
         </div>
         <div className="relative text-gray-700 px-4 sm:px-6">
+          {company?.slug && (
+            <div className="flex mt-2">
+              <BuildingStorefrontIcon className="w-4 mr-1" />
+              <button
+                onClick={() => setPanelContent(<Company slug={company.slug} />, 'news')}
+                className="text-sm flex items-center hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                View all locations
+              </button>
+            </div>
+          )}
           {website && (
             <div className="flex mt-2">
               <GlobeAltIcon className="w-4 mr-1" />
