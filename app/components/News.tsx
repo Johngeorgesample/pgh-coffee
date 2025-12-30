@@ -40,7 +40,7 @@ export const News = () => {
             <DayHeader date={day} />
             <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
               {entries.map((entry: NewsCardData, i: number) => (
-                <NewsCard key={i} item={entry} variant="pill" />
+                <NewsCard key={i} asLink={true} item={entry} variant="pill" />
               ))}
             </ul>
           </section>

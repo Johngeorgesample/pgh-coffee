@@ -49,7 +49,7 @@ export const NewsCTA = () => {
 
       <ul className="mt-3 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
         {latestThree.map((newsItem, index) => (
-          <NewsCard key={index} item={newsItem} variant="pill" clampDescription />
+          <NewsCard key={index} asLink={true} item={newsItem} variant="pill" clampDescription />
         ))}
       </ul>
     </>

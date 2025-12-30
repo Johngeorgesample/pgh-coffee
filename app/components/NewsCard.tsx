@@ -49,6 +49,7 @@ interface NewsCardProps {
   variant?: 'pill' | 'inline'
   clampDescription?: boolean
   showPastOpacity?: boolean
+  asLink?: boolean
 }
 
 export const NewsCard = ({
@@ -56,15 +57,16 @@ export const NewsCard = ({
   variant = 'pill',
   clampDescription = false,
   showPastOpacity = false,
+  asLink = false,
 }: NewsCardProps) => {
   const eventDate = item.eventDate ?? item.event_date
   const eventIsPast = eventDate ? isPast(eventDate) : false
 
-  return (
-    <li className={`p-3 ${showPastOpacity && eventIsPast ? 'opacity-50' : ''}`}>
+  const cardContent = (
+    <div className={`p-3 ${showPastOpacity && eventIsPast ? 'opacity-50' : ''}`}>
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-semibold text-gray-900">{item.title}</h3>
-        {item.url && (
+        {item.url && !asLink && (
           <a
             href={item.url}
             target="_blank"
@@ -75,6 +77,9 @@ export const NewsCard = ({
           >
             <ArrowTopRightOnSquareIcon className="h-4 w-4" />
           </a>
+        )}
+        {asLink && item.url && (
+          <ArrowTopRightOnSquareIcon className="h-4 w-4 shrink-0 text-gray-500 transition-colors group-hover:text-gray-700" />
         )}
       </div>
 
@@ -109,6 +114,21 @@ export const NewsCard = ({
           {item.description}
         </p>
       )}
-    </li>
+    </div>
   )
+
+  if (asLink && item.url) {
+    return (
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block rounded-lg transition-colors hover:bg-gray-50"
+      >
+        {cardContent}
+      </a>
+    )
+  }
+
+  return <li>{cardContent}</li>
 }

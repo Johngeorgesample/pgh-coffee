@@ -72,6 +72,7 @@ export const ShopNews = ({ shop }: Props) => {
         {relevantNews.map((entry) => (
           <NewsCard
             key={entry.id ?? entry.title}
+            asLink={true}
             item={entry as NewsCardData}
             variant="inline"
             showPastOpacity
