@@ -7,6 +7,7 @@ interface IProps {
   distances?: number[]
   filter?: string
   units?: TUnits
+  hideShopNames?: boolean
 }
 
 export default function ShopList(props: IProps) {
@@ -28,6 +29,7 @@ export default function ShopList(props: IProps) {
             <ShopCard
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
+              hideShopName={props.hideShopNames}
               shop={shop}
               units={props.units}
             />

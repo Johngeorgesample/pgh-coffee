@@ -7,6 +7,7 @@ import { useShopSelection } from '@/hooks'
 interface IProps {
   distance?: string
   shop: TShop
+  hideShopName?: boolean
   units?: TUnits
   onMouseEnter?: () => void
   onMouseLeave?: () => void
@@ -69,7 +70,9 @@ export default function ShopCard(props: IProps) {
       )}
       <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]"></div>
       <div className="px-6 py-2 absolute bottom-0">
-        <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
+        {!props.hideShopName && (
+          <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
+        )}
         <p className="w-fit mb-1 text-left text-white border border-transparent">
           {props.shop.properties.neighborhood}
         </p>

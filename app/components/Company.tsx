@@ -40,7 +40,7 @@ export const Company = ({ slug }: { slug: string }) => {
       <img src={company.logo} />
       <p>{company.shops?.length || 0} shops</p>
 
-      <ShopList coffeeShops={shopsGeoJSON.features} />
+      <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
 }
