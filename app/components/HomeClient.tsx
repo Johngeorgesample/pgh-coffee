@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
-import Footer from '@/app/components/Footer'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
@@ -73,10 +72,8 @@ export default function HomeClient() {
   useURLShopSync()
 
   useEffect(() => {
-    // No search value, nothing to do
     if (!searchValue) return
 
-    // Otherwise (typed, chip, whatever) → show search panel
     setPanelContent(<ShopSearch />, 'search')
   }, [searchValue, currentShop, setPanelContent])
 
