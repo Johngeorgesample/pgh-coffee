@@ -8,7 +8,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
 
 export const Company = ({ slug }: { slug: string }) => {
-  const { allShops, setCurrentShop, setDisplayedShops } = useShopsStore()
+  const { setDisplayedShops } = useShopsStore()
   const [company, setCompany] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -24,6 +24,12 @@ export const Company = ({ slug }: { slug: string }) => {
     }
     fetchCompany()
   }, [slug])
+
+  useEffect(() => {
+    if (company?.name) {
+      window.history.pushState(null, '', `/company/${company.slug}`)
+    }
+  }, [company])
 
   useEffect(() => {
     if (company?.shops) {
@@ -47,7 +53,7 @@ export const Company = ({ slug }: { slug: string }) => {
           <div className="h-4 bg-gray-200 rounded w-3/4"></div>
         </div>
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3].map(i => (
             <div key={i} className="h-16 bg-gray-200 rounded"></div>
           ))}
         </div>
