@@ -39,7 +39,7 @@ export const Company = ({ slug }: { slug: string }) => {
 
   return (
     <div className="px-6 lg:px-4 mt-24 lg:mt-16 flex flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-2">
         <h2 className="font-medium text-2xl">{company.name}</h2>
 
         <div className="flex gap-2">
@@ -52,7 +52,6 @@ export const Company = ({ slug }: { slug: string }) => {
         </div>
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
-      <p>{company.shops?.length || 0} shops</p>
       <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
