@@ -6,10 +6,13 @@ import ShopList from '@/app/components/ShopList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
+import {EventsList} from './EventsList'
 
 export const Company = ({ slug }: { slug: string }) => {
   const { setDisplayedShops } = useShopsStore()
   const [company, setCompany] = useState<any>(null)
+  const [events, setEvents] = useState<any>(null)
+  const [news, setNews] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -18,6 +21,14 @@ export const Company = ({ slug }: { slug: string }) => {
         const response = await fetch(`/api/companies/${slug}`)
         const data = await response.json()
         setCompany(data)
+
+        const eventsResponse = await fetch(`/api/companies/${slug}/events`)
+        const eventsData = await eventsResponse.json()
+        setEvents(eventsData)
+
+        const newsResponse = await fetch(`/api/companies/${slug}/news`)
+        const newsData = await newsResponse.json()
+        setNews(newsData)
       } finally {
         setLoading(false)
       }
@@ -84,6 +95,8 @@ export const Company = ({ slug }: { slug: string }) => {
         </div>
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
+      {JSON.stringify(news, null, 2)}
+      <EventsList events={events}/>
       <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
