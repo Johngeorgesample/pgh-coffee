@@ -16,7 +16,7 @@ interface EventsListProps {
 export const EventsList = ({
   events,
   title,
-  asLink = false,
+  asLink = true,
   showDescription = true,
   showTime = false,
   showNewPill = true,
