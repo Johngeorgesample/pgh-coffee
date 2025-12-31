@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { Instagram } from 'lucide-react'
 import ShopList from '@/app/components/ShopList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -41,14 +42,16 @@ export const Company = ({ slug }: { slug: string }) => {
       <div className="flex items-center justify-between">
         <h2 className="font-medium text-2xl">{company.name}</h2>
 
-        <a href={company.website} target="_blank">
-          <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-        </a>
+        <div className="flex gap-2">
+          <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank" className="">
+            <Instagram className="h-4 w-4" />
+          </a>
+          <a href={company.website} target="_blank">
+            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+          </a>
+        </div>
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
-      <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank">
-        {company.instagram_handle}
-      </a>
       <p>{company.shops?.length || 0} shops</p>
       <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>

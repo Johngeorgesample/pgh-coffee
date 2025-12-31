@@ -22,6 +22,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "haversine-distance": "^1.2.3",
     "jsdom-testing-mocks": "^1.13.1",
+    "lucide-react": "^0.562.0",
     "mapbox-gl": "^3.6.0",
     "next": "15.5.7",
     "next-plausible": "^3.12.4",
