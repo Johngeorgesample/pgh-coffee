@@ -1,10 +1,13 @@
 'use client'
-import ShopList from '@/app/components/ShopList'
 
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import ShopList from '@/app/components/ShopList'
 import { useState, useEffect } from 'react'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
 
 export const Company = ({ slug }: { slug: string }) => {
+  const { allShops, setCurrentShop, setDisplayedShops } = useShopsStore()
   const [company, setCompany] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -18,9 +21,15 @@ export const Company = ({ slug }: { slug: string }) => {
         setLoading(false)
       }
     }
-
     fetchCompany()
   }, [slug])
+
+  useEffect(() => {
+    if (company?.shops) {
+      const shopsGeoJSON = formatDataToGeoJSON(company.shops)
+      setDisplayedShops(shopsGeoJSON)
+    }
+  }, [company, setDisplayedShops])
 
   if (loading) return <p>Loading...</p>
   if (!company) return <p>Company not found</p>
@@ -29,17 +38,18 @@ export const Company = ({ slug }: { slug: string }) => {
 
   return (
     <div className="px-6 lg:px-4 mt-24 lg:mt-16 flex flex-col">
-      <h2>{company.name}</h2>
-      <p>{company.description}</p>
-      <a href={company.website} target="_blank">
-        {company.website}
-      </a>
+      <div className="flex items-center justify-between">
+        <h2 className="font-medium text-2xl">{company.name}</h2>
+
+        <a href={company.website} target="_blank">
+          <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+        </a>
+      </div>
+      <p className="text-sm text-gray-600">{company.description}</p>
       <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank">
         {company.instagram_handle}
       </a>
-      <img src={company.logo} />
       <p>{company.shops?.length || 0} shops</p>
-
       <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
