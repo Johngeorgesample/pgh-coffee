@@ -20,6 +20,16 @@ function hasShopProps(content: ReactNode): content is ReactElement<{ shop: TShop
   )
 }
 
+// Type guard to check if content is a ReactElement with company slug props
+function hasCompanyProps(content: ReactNode): content is ReactElement<{ slug: string }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'slug' in content.props
+  )
+}
+
 interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
@@ -76,15 +86,23 @@ const usePanelStore = create<PanelState>()(
 
           const url = new URL(window.location.href)
           const params = new URLSearchParams(url.search)
+
           if (hasShopProps(top.content) && top.content.props.shop?.properties?.name) {
             params.set(
               'shop',
               `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
             )
+            params.delete('company')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (hasCompanyProps(top.content) && top.content.props.slug) {
+            params.set('company', top.content.props.slug)
+            params.delete('shop')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
             params.delete('shop')
+            params.delete('company')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

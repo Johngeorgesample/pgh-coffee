@@ -27,6 +27,7 @@ export default function HomeClient() {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.delete('shop')
+    params.delete('company')
     url.search = params.toString()
     router.replace(url.toString())
   }
