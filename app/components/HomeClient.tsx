@@ -12,6 +12,7 @@ import { useURLShopSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
+import {useURLCompanySync} from '@/hooks/useURLCompanySync'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -71,6 +72,7 @@ export default function HomeClient() {
   }, [allShops, hoveredShop, searchValue, setDisplayedShops])
 
   useURLShopSync()
+  useURLCompanySync()
 
   useEffect(() => {
     if (!searchValue) return

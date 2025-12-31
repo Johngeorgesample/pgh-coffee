@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company'
 
 type PanelEntry = {
   mode: PanelMode

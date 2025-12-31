@@ -26,8 +26,13 @@ export const Company = ({ slug }: { slug: string }) => {
   }, [slug])
 
   useEffect(() => {
-    if (company?.name) {
-      window.history.pushState(null, '', `/company/${company.slug}`)
+    if (company?.slug) {
+      const url = new URL(window.location.href)
+      const params = new URLSearchParams(url.search)
+      params.delete('shop')
+      params.set('company', company.slug)
+      url.search = params.toString()
+      window.history.pushState(null, '', url.toString())
     }
   }, [company])
 
