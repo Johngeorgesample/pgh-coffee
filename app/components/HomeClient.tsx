@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
@@ -45,31 +45,29 @@ export default function HomeClient() {
       clearHistory()
     }
   }
-  useEffect(() => {
-    if (allShops) {
-      const filteredFeatures = allShops.features.filter(shop => {
-        if (searchValue) {
-          const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')}`
-          return shopCardText.includes(searchValue.toLowerCase())
-        }
-        return true
-      })
+  const filteredShops = useMemo(() => {
+    if (!allShops) return { type: 'FeatureCollection' as const, features: [] }
 
-      setDisplayedShops({
-        ...allShops,
-        features: filteredFeatures.map(shop => ({
-          ...shop,
-          properties: {
-            ...shop.properties,
-            hovered: hoveredShop ? JSON.stringify(shop) === JSON.stringify(hoveredShop) : false,
-          },
-        })),
-      })
+    const filteredFeatures = allShops.features.filter(shop => {
+      if (searchValue) {
+        const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')}`
+        return shopCardText.includes(searchValue.toLowerCase())
+      }
+      return true
+    })
+
+    return {
+      ...allShops,
+      features: filteredFeatures,
     }
-  }, [allShops, hoveredShop, searchValue, setDisplayedShops])
+  }, [allShops, searchValue])
+
+  useEffect(() => {
+    setDisplayedShops(filteredShops)
+  }, [filteredShops, setDisplayedShops])
 
   useURLShopSync()
   useURLCompanySync()
