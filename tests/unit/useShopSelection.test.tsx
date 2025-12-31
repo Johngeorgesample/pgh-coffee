@@ -73,6 +73,7 @@ describe('useShopSelection', () => {
   const mockShop: TShop = {
     type: 'shop',
     properties: {
+      company: null,
       name: 'Test Coffee Shop',
       neighborhood: 'Downtown',
       address: '123 Main St, Pittsburgh, PA 15213',

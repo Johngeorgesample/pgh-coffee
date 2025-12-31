@@ -12,6 +12,7 @@ const mapDbShopToTShop = (s: DbShop): TShop | null => {
   return {
     type: 'Feature',
     properties: {
+      company: s.company,
       name: s.name,
       neighborhood: s.neighborhood,
       address: s.address,

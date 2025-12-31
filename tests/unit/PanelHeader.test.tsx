@@ -13,6 +13,7 @@ describe.skip('PanelHeader', () => {
   const mockShop: TShop = {
     type: 'shop',
     properties: {
+      company: null,
       name: 'Test Shop',
       neighborhood: 'Squirrel Hill South',
       address: '456 Murray Ave, Pittsburgh, PA 15217',
