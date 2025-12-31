@@ -32,7 +32,28 @@ export const Company = ({ slug }: { slug: string }) => {
     }
   }, [company, setDisplayedShops])
 
-  if (loading) return <p>Loading...</p>
+  if (loading) {
+    return (
+      <div className="px-6 lg:px-4 mt-24 lg:mt-16 flex flex-col animate-pulse">
+        <div className="flex items-center justify-between mb-2">
+          <div className="h-8 bg-gray-200 rounded w-48"></div>
+          <div className="flex gap-2">
+            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        <div className="space-y-2 mb-4">
+          <div className="h-4 bg-gray-200 rounded w-full"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        </div>
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 bg-gray-200 rounded"></div>
+          ))}
+        </div>
+      </div>
+    )
+  }
   if (!company) return <p>Company not found</p>
 
   const shopsGeoJSON = formatDataToGeoJSON(company.shops)
