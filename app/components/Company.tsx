@@ -6,8 +6,8 @@ import ShopList from '@/app/components/ShopList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
-import {EventsList} from './EventsList'
-import {NewsList} from './NewsList'
+import { EventsList } from './EventsList'
+import { NewsList } from './NewsList'
 
 export const Company = ({ slug }: { slug: string }) => {
   const { setDisplayedShops } = useShopsStore()
@@ -97,14 +97,10 @@ export const Company = ({ slug }: { slug: string }) => {
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
 
-        <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">
-          Latest News
-        </h3>
-      <NewsList news={news}/>
-        <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">
-          Events
-        </h3>
-      <EventsList events={events}/>
+      <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Latest News</h3>
+      <NewsList news={news} />
+      <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Events</h3>
+      <EventsList events={events} />
       <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
