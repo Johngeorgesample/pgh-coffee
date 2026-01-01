@@ -3,6 +3,16 @@ import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useShopSelection } from '@/hooks'
 
+export type NewsCardData = {
+  title: string
+  description?: string | null
+  url?: string | null
+  tags?: string[] | null
+  post_date?: string | null
+  event_date?: string | null
+  eventDate?: string | null
+}
+
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
 const TAG_LABELS: Record<TagKey, string> = {
