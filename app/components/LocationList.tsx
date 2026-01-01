@@ -1,0 +1,42 @@
+import { TShop } from '@/types/shop-types'
+import { TUnits } from '@/types/unit-types'
+import LocationCard from '@/app/components/LocationCard'
+
+interface IProps {
+  coffeeShops: TShop[]
+  distances?: number[]
+  filter?: string
+  units?: TUnits
+  hideShopNames?: boolean
+}
+
+export default function LocationList(props: IProps) {
+  const doesShopMatchFilter = (shop: TShop) => {
+    if (props.filter) {
+      const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')}`
+      return shopCardText.includes(props.filter.toLowerCase())
+    }
+  }
+
+  return (
+    <ul className="relative mt-6 flex-1">
+      {props.coffeeShops.map((shop: TShop, index) => {
+        if (doesShopMatchFilter(shop) || !props.filter) {
+          return (
+            <LocationCard
+              key={shop.properties.name + shop.properties.address}
+              distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
+              hideShopName={props.hideShopNames}
+              shop={shop}
+              units={props.units}
+            />
+          )
+        }
+        return null
+      })}
+    </ul>
+  )
+}
