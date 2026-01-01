@@ -97,10 +97,6 @@ export const Company = ({ slug }: { slug: string }) => {
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
 
-      <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Latest News</h3>
-      <NewsList news={news} />
-      <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Events</h3>
-      <EventsList events={events} />
       <LocationList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
