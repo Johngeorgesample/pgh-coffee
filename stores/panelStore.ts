@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
+import useCoffeeShopsStore from './coffeeShopsStore'
 
 type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company'
 
@@ -95,6 +96,10 @@ const usePanelStore = create<PanelState>()(
             params.delete('company')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
+
+            // Reset displayed shops to show all shops when going back to shop page
+            const { allShops, setDisplayedShops } = useCoffeeShopsStore.getState()
+            setDisplayedShops(allShops)
           } else if (hasCompanyProps(top.content) && top.content.props.slug) {
             params.set('company', top.content.props.slug)
             params.delete('shop')
