@@ -2,7 +2,7 @@
 
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
-import ShopList from '@/app/components/ShopList'
+import LocationList from '@/app/components/LocationList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
@@ -101,7 +101,7 @@ export const Company = ({ slug }: { slug: string }) => {
       <NewsList news={news} />
       <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Events</h3>
       <EventsList events={events} />
-      <ShopList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
+      <LocationList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
 }
