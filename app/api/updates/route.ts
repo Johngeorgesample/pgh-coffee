@@ -8,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchUpdates = async (shopID?: string) => {
   let query = supabase
     .from('updates')
-    .select('*, shop:shops(*)')
+    .select('*, shop:shops(*, company:company_id(*))')
     .order('post_date', { ascending: false })
 
   if (shopID) {

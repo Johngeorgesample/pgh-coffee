@@ -10,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchShopsByIds = async (ids: string[]) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*')
+    .select('*, company:company_id(*)')
     .in('uuid', ids)
     .order('name', { ascending: true })
 

@@ -17,7 +17,7 @@ const getCompany = async (slug: string) => {
 const getCompanyEvents = async (companyId: string) => {
   const { data, error } = await supabase
     .from('events')
-    .select('*, shops!inner()')
+    .select('*, shop:shops!inner(*, company:company_id(*))')
     .eq('shops.company_id', companyId)
   return data
 }
