@@ -96,7 +96,6 @@ export const Company = ({ slug }: { slug: string }) => {
         </div>
       </div>
       <p className="text-sm text-gray-600">{company.description}</p>
-
       <LocationList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
