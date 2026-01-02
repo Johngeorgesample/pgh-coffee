@@ -8,6 +8,7 @@ import { Company } from '@/app/components/Company'
 import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import {ShopEvents} from './ShopEvents'
 
 interface IProps {
   shop: TShop
@@ -68,6 +69,7 @@ export default function PanelContent(props: IProps) {
         </div>
       </section>
       <ShopNews shop={props.shop} />
+      <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
     </>
   )
