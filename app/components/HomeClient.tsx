@@ -96,6 +96,12 @@ export default function HomeClient() {
   }, [currentShop, largeViewport])
 
   useEffect(() => {
+    if (!largeViewport && panelMode === 'company') {
+      setPresented(true)
+    }
+  }, [panelMode, largeViewport])
+
+  useEffect(() => {
     if (!largeViewport && !presented && currentShop && Object.keys(currentShop).length > 0) {
       handleClose()
     }
