@@ -1,6 +1,6 @@
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
-import LocationCard from '@/app/components/LocationCard'
+import ShopCard from '@/app/components/ShopCard'
 
 interface IProps {
   coffeeShops: TShop[]
@@ -26,10 +26,11 @@ export default function LocationList(props: IProps) {
       {props.coffeeShops.map((shop: TShop, index) => {
         if (doesShopMatchFilter(shop) || !props.filter) {
           return (
-            <LocationCard
+            <ShopCard
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               hideShopName={props.hideShopNames}
+              showAddress={true}
               shop={shop}
               units={props.units}
             />

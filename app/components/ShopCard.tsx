@@ -9,6 +9,7 @@ interface IProps {
   distance?: string
   shop: TShop
   hideShopName?: boolean
+  showAddress?: boolean
   units?: TUnits
   onMouseEnter?: () => void
   onMouseLeave?: () => void
@@ -78,6 +79,11 @@ export default function ShopCard(props: IProps) {
           <MapPinIcon className="h-4 w-4" />
           {props.shop.properties.neighborhood}
         </p>
+        {props.showAddress && (
+          <p className="w-fit mb-1 text-left text-white">
+            {props.shop.properties.address}
+          </p>
+        )}
         {props.distance && props.units && (
           <p className="italic text-sm text-white">
             {generateDistanceText({ units: props.units, distance: props.distance })}
