@@ -22,6 +22,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
     currentShop: {
       type: 'Feature',
       properties: {
+        company: null,
         name: 'Test Shop',
         neighborhood: 'Lower Lawrenceville',
         address: '123 Test St.',
@@ -58,6 +59,7 @@ describe('Panel Component', () => {
   const mockShop: TShop = {
     type: 'Feature',
     properties: {
+      company: null,
       name: 'Test Shop',
       neighborhood: 'Lower Lawrenceville',
       address: '123 Test St.',

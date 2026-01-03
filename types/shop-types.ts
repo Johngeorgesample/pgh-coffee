@@ -1,9 +1,22 @@
 import { TNeighborhood } from './neighborhood-types'
 
+export interface TCompany {
+  id: string
+  slug: string
+  name: string
+  website: string
+  description: string
+  instagram_handle: string
+  shops?: DbShop[]
+}
+
+export type TCompanyReference = Omit<TCompany, 'shops'>
+
 export interface DbShop {
   name: string
   neighborhood: TNeighborhood
   address: string
+  company: TCompanyReference | null
   photo: string | null
   website: string
   uuid: string
@@ -20,6 +33,7 @@ export interface TFeatureCollection {
 export interface TShop {
   type: string
   properties: {
+    company: TCompanyReference | null
     name: string
     neighborhood: TNeighborhood
     address: string

@@ -10,7 +10,7 @@ interface IProps {
   hideShopNames?: boolean
 }
 
-export default function ShopList(props: IProps) {
+export default function LocationList(props: IProps) {
   const doesShopMatchFilter = (shop: TShop) => {
     if (props.filter) {
       const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
@@ -30,6 +30,7 @@ export default function ShopList(props: IProps) {
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               hideShopName={props.hideShopNames}
+              showAddress={true}
               shop={shop}
               units={props.units}
             />

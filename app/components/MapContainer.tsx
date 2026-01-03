@@ -1,9 +1,8 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
-import { TShop } from '@/types/shop-types'
 import { useShopSelection } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 
@@ -12,10 +11,11 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
-  const { displayedShops } = useShopsStore()
+  const { displayedShops, hoveredShop } = useShopsStore()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
+  const hoveredUUID = hoveredShop?.properties?.uuid || null
 
   const MAP_CONSTANTS = {
     INITIAL_VIEW: {
@@ -51,6 +51,21 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   useEffect(panToCurrentShop, [currentShopCoordinates])
 
+  const shopsWithHoverState = useMemo(() => {
+    if (!displayedShops?.features) return displayedShops
+
+    return {
+      ...displayedShops,
+      features: displayedShops.features.map(shop => ({
+        ...shop,
+        properties: {
+          ...shop.properties,
+          hovered: hoveredUUID === shop.properties.uuid,
+        },
+      })),
+    }
+  }, [displayedShops, hoveredUUID])
+
   const handleMapClick = (event: MapMouseEvent) => {
     const map = mapRef.current?.getMap()
     const features = map?.queryRenderedFeatures(event.point, {
@@ -58,7 +73,16 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     }) as unknown as GeoJSON.Feature[] | undefined
 
     if (features?.length && features[0].properties) {
-      handleShopSelect(features[0] as TShop)
+      // queryRenderedFeatures strips nested objects like 'company'
+      // Look up the full shop data from the store using uuid
+      const clickedUuid = features[0].properties.uuid
+      const fullShop = displayedShops.features.find(
+        shop => shop.properties.uuid === clickedUuid
+      )
+
+      if (fullShop) {
+        handleShopSelect(fullShop)
+      }
     }
   }
 
@@ -72,7 +96,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         ref={mapRef}
       >
-        <Source id="my-data" type="geojson" data={displayedShops}>
+        <Source id="my-data" type="geojson" data={shopsWithHoverState}>
           {/* White border layer */}
           <Layer
             id="shop-border"

@@ -34,7 +34,7 @@ export const ShopNews = ({ shop }: Props) => {
     ;(async () => {
       try {
         const qs = new URLSearchParams({ shop_id: String(shopId) })
-        const res = await fetch(`/api/events?${qs.toString()}`)
+        const res = await fetch(`/api/updates?${qs.toString()}`)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: UpdateEntry[] = await res.json()
         if (!cancelled) setUpdates(data)
@@ -66,7 +66,7 @@ export const ShopNews = ({ shop }: Props) => {
   return (
     <section className="flex flex-col mt-4 px-4 sm:px-6">
       <hr className="w-1/2 m-auto mt-2 mb-2" />
-      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Recent updates</p>
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Updates</p>
 
       <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
         {relevantNews.map((entry) => (

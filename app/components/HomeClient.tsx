@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
@@ -12,6 +12,7 @@ import { useURLShopSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
+import {useURLCompanySync} from '@/hooks/useURLCompanySync'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -26,6 +27,7 @@ export default function HomeClient() {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.delete('shop')
+    params.delete('company')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -44,33 +46,32 @@ export default function HomeClient() {
       clearHistory()
     }
   }
-  useEffect(() => {
-    if (allShops) {
-      const filteredFeatures = allShops.features.filter(shop => {
-        if (searchValue) {
-          const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')}`
-          return shopCardText.includes(searchValue.toLowerCase())
-        }
-        return true
-      })
+  const filteredShops = useMemo(() => {
+    if (!allShops) return { type: 'FeatureCollection' as const, features: [] }
 
-      setDisplayedShops({
-        ...allShops,
-        features: filteredFeatures.map(shop => ({
-          ...shop,
-          properties: {
-            ...shop.properties,
-            hovered: hoveredShop ? JSON.stringify(shop) === JSON.stringify(hoveredShop) : false,
-          },
-        })),
-      })
+    const filteredFeatures = allShops.features.filter(shop => {
+      if (searchValue) {
+        const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')}`
+        return shopCardText.includes(searchValue.toLowerCase())
+      }
+      return true
+    })
+
+    return {
+      ...allShops,
+      features: filteredFeatures,
     }
-  }, [allShops, hoveredShop, searchValue, setDisplayedShops])
+  }, [allShops, searchValue])
+
+  useEffect(() => {
+    setDisplayedShops(filteredShops)
+  }, [filteredShops, setDisplayedShops])
 
   useURLShopSync()
+  useURLCompanySync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -93,6 +94,12 @@ export default function HomeClient() {
       setPresented(true)
     }
   }, [currentShop, largeViewport])
+
+  useEffect(() => {
+    if (!largeViewport && panelMode === 'company') {
+      setPresented(true)
+    }
+  }, [panelMode, largeViewport])
 
   useEffect(() => {
     if (!largeViewport && !presented && currentShop && Object.keys(currentShop).length > 0) {

@@ -21,6 +21,7 @@ describe('PanelContent', () => {
   const mockShop: TShop = {
     type: 'shop',
     properties: {
+      company: null,
       name: 'Test Shop',
       neighborhood: 'Downtown',
       address: '456 Murray Ave, Pittsburgh, PA 15217',

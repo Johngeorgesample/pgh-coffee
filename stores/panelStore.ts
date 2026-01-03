@@ -2,8 +2,9 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
+import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company'
 
 type PanelEntry = {
   mode: PanelMode
@@ -17,6 +18,16 @@ function hasShopProps(content: ReactNode): content is ReactElement<{ shop: TShop
     typeof content.props === 'object' &&
     content.props !== null &&
     'shop' in content.props
+  )
+}
+
+// Type guard to check if content is a ReactElement with company slug props
+function hasCompanyProps(content: ReactNode): content is ReactElement<{ slug: string }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'slug' in content.props
   )
 }
 
@@ -76,15 +87,27 @@ const usePanelStore = create<PanelState>()(
 
           const url = new URL(window.location.href)
           const params = new URLSearchParams(url.search)
+
           if (hasShopProps(top.content) && top.content.props.shop?.properties?.name) {
             params.set(
               'shop',
               `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
             )
+            params.delete('company')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+
+            // Reset displayed shops to show all shops when going back to shop page
+            const { allShops, setDisplayedShops } = useCoffeeShopsStore.getState()
+            setDisplayedShops(allShops)
+          } else if (hasCompanyProps(top.content) && top.content.props.slug) {
+            params.set('company', top.content.props.slug)
+            params.delete('shop')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
             params.delete('shop')
+            params.delete('company')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

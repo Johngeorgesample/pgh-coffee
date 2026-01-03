@@ -11,6 +11,7 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
       type: 'Feature',
       properties: {
         name: shop.name,
+        company: shop.company,
         neighborhood: shop.neighborhood,
         website: shop.website,
         address: shop.address,
@@ -25,6 +26,27 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
   })
 
   return myObj
+}
+
+export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['features'][number] => {
+  return (
+    {
+      type: 'Feature',
+      properties: {
+        name: shop.name,
+        company: shop.company,
+        neighborhood: shop.neighborhood,
+        website: shop.website,
+        address: shop.address,
+        photo: shop.photo ?? undefined,
+        uuid: shop.uuid
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [shop.longitude ?? 0, shop.latitude ?? 0],
+      }
+    }
+  )
 }
 
 export const parseYMDLocal = (ymd: string) => {

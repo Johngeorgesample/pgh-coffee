@@ -1,11 +1,15 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
+import usePanelStore from '@/stores/panelStore'
 import NearbyShops from './NearbyShops'
+import { Company } from '@/app/components/Company'
 import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import {ShopEvents} from './ShopEvents'
+import { usePlausible } from 'next-plausible'
 
 interface IProps {
   shop: TShop
@@ -16,7 +20,9 @@ export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: num
 
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
-  const { name, neighborhood, website, address } = props.shop.properties
+  const { setPanelContent } = usePanelStore()
+  const plausible = usePlausible()
+  const { name, neighborhood, website, address, company } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
@@ -27,6 +33,22 @@ export default function PanelContent(props: IProps) {
           <p className="text-lg text-gray-600">{neighborhood}</p>
         </div>
         <div className="relative text-gray-700 px-4 sm:px-6">
+          {company?.slug && (
+            <div className="flex mt-2">
+              <BuildingStorefrontIcon className="w-4 mr-1" />
+              <button
+                onClick={() => {
+                  plausible('ViewAllLocationsClick', {
+                    props: { company: company.slug },
+                  })
+                  setPanelContent(<Company slug={company.slug} />, 'company')
+                }}
+                className="text-sm flex items-center hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                View all locations
+              </button>
+            </div>
+          )}
           {website && (
             <div className="flex mt-2">
               <GlobeAltIcon className="w-4 mr-1" />
@@ -54,6 +76,7 @@ export default function PanelContent(props: IProps) {
         </div>
       </section>
       <ShopNews shop={props.shop} />
+      <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
     </>
   )

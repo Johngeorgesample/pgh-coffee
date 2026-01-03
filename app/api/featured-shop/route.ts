@@ -72,7 +72,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('uuid,name,neighborhood,address,website,photo,roaster,latitude,longitude')
+    .select('uuid,name,neighborhood,address,website,photo,roaster,latitude,longitude,company:company_id(*)')
     .order('name', { ascending: true })
     .range(idx, idx)
 
@@ -85,6 +85,7 @@ export async function GET() {
     type: 'Feature',
     properties: {
       name: s.name,
+      company: s.company,
       neighborhood: s.neighborhood,
       website: s.website,
       address: s.address,
