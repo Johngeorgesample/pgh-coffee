@@ -2,6 +2,7 @@
 import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useShopSelection } from '@/hooks'
+import { DbShop } from '@/types/shop-types'
 
 export type NewsCardData = {
   title: string
@@ -11,6 +12,11 @@ export type NewsCardData = {
   post_date?: string | null
   event_date?: string | null
   eventDate?: string | null
+}
+
+export type NewsCardItem = NewsCardData & {
+  shop_id?: string
+  shop?: DbShop
 }
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
@@ -25,7 +31,14 @@ const TAG_LABELS: Record<TagKey, string> = {
   menu: 'Menu Update',
 }
 
-export const NewsCard = ({ item }: any) => {
+type NewsCardProps = {
+  item: NewsCardItem
+  asLink?: boolean
+  variant?: string
+  showPastOpacity?: boolean
+}
+
+export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
   const primaryTag = item.tags?.[0] as TagKey | undefined
   const label = primaryTag ? (TAG_LABELS[primaryTag] ?? primaryTag.toUpperCase()) : 'News'
@@ -42,7 +55,7 @@ export const NewsCard = ({ item }: any) => {
 
       <p className="mt-2 text-gray-900">{item.description ?? item.title}</p>
 
-      {item.shop_id && (
+      {item.shop_id && item.shop && (
         <button
           onClick={handleShopClick}
           className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-amber-700 hover:text-amber-900"
