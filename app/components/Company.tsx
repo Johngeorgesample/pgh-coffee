@@ -70,21 +70,23 @@ export const Company = ({ slug }: { slug: string }) => {
   const shopsGeoJSON = formatDataToGeoJSON(company.shops)
 
   return (
-    <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="font-medium text-2xl">{company.name}</h2>
+    <div className="flex h-full flex-col overflow-y-auto">
+      <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-medium text-2xl">{company.name}</h2>
 
-        <div className="flex gap-2">
-          <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank" className="">
-            <Instagram className="h-4 w-4" />
-          </a>
-          <a href={company.website} target="_blank">
-            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-          </a>
+          <div className="flex gap-2">
+            <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank" className="">
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a href={company.website} target="_blank">
+              <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+            </a>
+          </div>
         </div>
+        <p className="text-sm text-gray-600">{company.description}</p>
+        <LocationList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
       </div>
-      <p className="text-sm text-gray-600">{company.description}</p>
-      <LocationList coffeeShops={shopsGeoJSON.features} hideShopNames={true} />
     </div>
   )
 }
