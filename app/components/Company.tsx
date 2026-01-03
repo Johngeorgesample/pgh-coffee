@@ -6,10 +6,11 @@ import LocationList from '@/app/components/LocationList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
+import { TCompany } from '@/types/shop-types'
 
 export const Company = ({ slug }: { slug: string }) => {
   const { setDisplayedShops } = useShopsStore()
-  const [company, setCompany] = useState<any>(null)
+  const [company, setCompany] = useState<TCompany | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export const Company = ({ slug }: { slug: string }) => {
   }
   if (!company) return <p>Company not found</p>
 
-  const shopsGeoJSON = formatDataToGeoJSON(company.shops)
+  const shopsGeoJSON = formatDataToGeoJSON(company.shops || [])
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
@@ -76,10 +77,15 @@ export const Company = ({ slug }: { slug: string }) => {
           <h2 className="font-medium text-2xl">{company.name}</h2>
 
           <div className="flex gap-2">
-            <a href={`https://www.instagram.com/${company.instagram_handle}/`} target="_blank" className="">
+            <a
+              href={`https://www.instagram.com/${company.instagram_handle}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className=""
+            >
               <Instagram className="h-4 w-4" />
             </a>
-            <a href={company.website} target="_blank">
+            <a href={company.website} target="_blank" rel="noopener noreferrer">
               <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </a>
           </div>
