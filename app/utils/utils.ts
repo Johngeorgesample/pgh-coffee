@@ -28,7 +28,7 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
   return myObj
 }
 
-export const formatDBShopAsFeature = (shop: DbShop): any => {
+export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['features'][number] => {
   return (
     {
       type: 'Feature',
