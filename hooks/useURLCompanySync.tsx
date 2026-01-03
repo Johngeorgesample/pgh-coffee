@@ -16,7 +16,7 @@ export const useURLCompanySync = () => {
     try {
       const res = await fetch(`/api/companies/${companySlug}`)
       if (!res.ok) throw new Error('Company not found')
-      await res.json() // Validate the response
+      await res.json()
       setPanelContent(<Company slug={companySlug} />, 'company')
     } catch (e) {
       console.error(e)
