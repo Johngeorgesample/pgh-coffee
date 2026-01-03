@@ -70,7 +70,7 @@ export const Company = ({ slug }: { slug: string }) => {
   const shopsGeoJSON = formatDataToGeoJSON(company.shops)
 
   return (
-    <div className="px-6 lg:px-4 mt-24 lg:mt-16 flex flex-col">
+    <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h2 className="font-medium text-2xl">{company.name}</h2>
 
