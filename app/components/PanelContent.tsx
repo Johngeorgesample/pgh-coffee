@@ -9,6 +9,7 @@ import { ShopNews } from './ShopNews'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import {ShopEvents} from './ShopEvents'
+import { usePlausible } from 'next-plausible'
 
 interface IProps {
   shop: TShop
@@ -20,6 +21,7 @@ export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: num
 // @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
   const { setPanelContent } = usePanelStore()
+  const plausible = usePlausible()
   const { name, neighborhood, website, address, company } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
@@ -35,7 +37,12 @@ export default function PanelContent(props: IProps) {
             <div className="flex mt-2">
               <BuildingStorefrontIcon className="w-4 mr-1" />
               <button
-                onClick={() => setPanelContent(<Company slug={company.slug} />, 'news')}
+                onClick={() => {
+                  plausible('ViewAllLocationsClick', {
+                    props: { company: company.slug },
+                  })
+                  setPanelContent(<Company slug={company.slug} />, 'news')
+                }}
                 className="text-sm flex items-center hover:underline cursor-pointer bg-transparent border-none p-0"
               >
                 View all locations
