@@ -41,7 +41,7 @@ export default function PanelContent(props: IProps) {
                   plausible('ViewAllLocationsClick', {
                     props: { company: company.slug },
                   })
-                  setPanelContent(<Company slug={company.slug} />, 'news')
+                  setPanelContent(<Company slug={company.slug} />, 'company')
                 }}
                 className="text-sm flex items-center hover:underline cursor-pointer bg-transparent border-none p-0"
               >
