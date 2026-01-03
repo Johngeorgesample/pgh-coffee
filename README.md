@@ -2,7 +2,8 @@
 
 <https://pgh.coffee/>
 
-![image](https://github.com/user-attachments/assets/01c7834c-80b5-4dea-b86f-c3ea548cbb64)
+<img width="3537" height="2055" alt="Screenshot of UI" src="https://github.com/user-attachments/assets/d77d3b31-169a-4117-b63e-0b5a78be2eb2" />
+
 
 This repository contains the source code for pgh.coffee — a website focused on helping users discover coffee shops in Pittsburgh, PA. The site uses Next.js, Supabase for its PostgreSQL database, Zustand for state management, and Tailwind CSS for styling.
 
