@@ -12,6 +12,12 @@ const getCompany = async (slug: string) => {
     .select('*')
     .eq('slug', slug)
     .single()
+
+  if (error) {
+    console.error('Error fetching company:', error.message)
+    return null
+  }
+
   return data
 }
 
@@ -20,6 +26,12 @@ const getCompanyShops = async (companyId: string) => {
     .from('shops')
     .select('*, company:company_id(*)')
     .eq('company_id', companyId)
+
+  if (error) {
+    console.error('Error fetching company shops:', error.message)
+    return null
+  }
+
   return data
 }
 
@@ -35,8 +47,12 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
 
   const shops = await getCompanyShops(companyData.id)
 
+  if (shops === null) {
+    return NextResponse.json({ error: 'Error fetching company shops' }, { status: 500 })
+  }
+
   return NextResponse.json({
     ...companyData,
-    shops: shops || []
+    shops
   })
 }
