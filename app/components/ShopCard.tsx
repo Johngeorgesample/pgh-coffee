@@ -9,7 +9,6 @@ interface IProps {
   distance?: string
   shop: TShop
   hideShopName?: boolean
-  showAddress?: boolean
   units?: TUnits
   onMouseEnter?: () => void
   onMouseLeave?: () => void
@@ -54,7 +53,7 @@ export default function ShopCard(props: IProps) {
     <li
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
-      className={`${props.featured ? 'h-46' : 'h-24'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
+      className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
       onClick={handleClick}
       onKeyDown={handleKeyPress}
       tabIndex={0}
@@ -71,24 +70,21 @@ export default function ShopCard(props: IProps) {
         <div className="h-full relative bg-yellow-200 bg-cover bg-center" />
       )}
       <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]"></div>
-      <div className="px-6 py-2 absolute bottom-0">
+      <div className="px-2 py-1 absolute bottom-0 w-full">
         {!props.hideShopName && (
           <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
         )}
-        <p className="w-fit mb-1 text-left text-white border border-transparent flex items-center gap-1">
-          <MapPinIcon className="h-4 w-4" />
-          {props.shop.properties.neighborhood}
-        </p>
-        {props.showAddress && (
-          <p className="w-fit mb-1 text-left text-white">
-            {props.shop.properties.address}
+        <div className="flex justify-between mt-1">
+          <p className="w-fit text-sm mb-1 text-left text-white border border-transparent flex items-center gap-1">
+            <MapPinIcon className="h-4 w-4" />
+            {props.shop.properties.neighborhood}
           </p>
-        )}
-        {props.distance && props.units && (
-          <p className="italic text-sm text-white">
-            {generateDistanceText({ units: props.units, distance: props.distance })}
-          </p>
-        )}
+          {props.distance && props.units && (
+            <p className="italic text-sm text-white">
+              {generateDistanceText({ units: props.units, distance: props.distance })}
+            </p>
+          )}
+        </div>
       </div>
     </li>
   )

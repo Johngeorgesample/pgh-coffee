@@ -30,7 +30,6 @@ export default function LocationList(props: IProps) {
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               hideShopName={props.hideShopNames}
-              showAddress={true}
               shop={shop}
               units={props.units}
             />
