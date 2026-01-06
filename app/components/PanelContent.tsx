@@ -18,34 +18,24 @@ export default function PanelContent(props: IProps) {
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar coordinates={coordinates} website={website} />
 
-      {/* Info Cards */}
-      <div className="grid grid-cols-2 gap-3 px-4 sm:px-6 py-5">
-        {/* Address Card */}
-        <div className="bg-white rounded-xl p-4 border border-stone-200">
-          <div className="text-xs text-stone-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
-            <span>📍</span> Address
-          </div>
-          <a
-            href={getGoogleMapsUrl({
-              latitude: coordinates[0],
-              longitude: coordinates[1],
-            })}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block group"
-          >
-            <address className="not-italic text-sm font-medium text-stone-800 group-hover:text-amber-700 transition-colors leading-snug">
-              {address}
-            </address>
-          </a>
-        </div>
+      <div className="px-4 sm:px-6 py-5">
+        <a
+          href={getGoogleMapsUrl({
+            latitude: coordinates[0],
+            longitude: coordinates[1],
+          })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block group"
+        >
+          <address className="not-italic text-sm font-medium text-stone-800 group-hover:text-amber-700 transition-colors leading-snug">
+            {address}
+          </address>
+        </a>
 
-        {/* Hours Card */}
-        <div className="bg-white rounded-xl p-4 border border-stone-200">
-          <div className="text-xs text-stone-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
-            <span>🕐</span> Hours
-          </div>
+        <div className="flex gap-1 items-center">
           <p className="text-sm font-medium text-emerald-600">Open</p>
+          <p className="text-xs text-stone-700">•</p>
           <p className="text-sm text-stone-400">Hours vary</p>
         </div>
       </div>
