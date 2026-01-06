@@ -1,23 +1,25 @@
 'use client'
-
 import { useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
-import { PhotoIcon } from '@heroicons/react/24/outline'
+import { PhotoIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import usePanelStore from '@/stores/panelStore'
+import { Company } from '@/app/components/Company'
+
 interface IProps {
   shop: TShop
 }
 
 export default function PanelHeader(props: IProps) {
-  const { name, neighborhood, photo } = props.shop.properties
+  const { name, neighborhood, photo, company } = props.shop.properties
   const plausible = usePlausible()
+  const { setPanelContent } = usePanelStore()
   const [photoDialogIsOpen, setPhotoDialogIsOpen] = useState(false)
 
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       setPhotoDialogIsOpen(true)
-
       plausible('PanelHeaderClick', {
         props: {
           shopName: name,
@@ -33,21 +35,55 @@ export default function PanelHeader(props: IProps) {
     <>
       <div id="header" data-testid="header">
         <div
-          className={`group h-56 relative bg-yellow-200 bg-cover bg-center ${hasPhoto ? 'cursor-pointer' : ''}`}
+          className={`group h-56 sm:h-64 relative bg-stone-300 bg-cover bg-center ${hasPhoto ? 'cursor-pointer' : ''}`}
           style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
           onClick={hasPhoto ? handleHeaderClick : undefined}
         >
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+          {/* See photos button */}
           {hasPhoto && (
             <div
-              className="group-hover:inline-flex absolute bottom-0 m-2 hidden bg-black bg-opacity-50 text-white p-1 rounded-md"
+              className="group-hover:inline-flex absolute top-3 right-3 hidden bg-black/50 backdrop-blur-sm text-white px-2 py-1.5 rounded-lg items-center gap-1.5"
               role="button"
               aria-label="open photo gallery"
             >
-              <PhotoIcon className="w-6 pr-1" />
-
-              <p className="text-sm">See photos</p>
+              <PhotoIcon className="w-4 h-4" />
+              <p className="text-sm font-medium">See photos</p>
             </div>
           )}
+
+          {/* Content Overlay */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
+            {/* Company badge */}
+            {company?.slug && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  plausible('ViewAllLocationsClick', {
+                    props: { company: company.slug },
+                  })
+                  setPanelContent(<Company slug={company.slug} />, 'company')
+                }}
+                className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm
+                           hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full 
+                           text-xs text-white/90 mb-3 cursor-pointer border-none"
+              >
+                <BuildingStorefrontIcon className="w-3.5 h-3.5" />
+                <span className="opacity-80">Part of</span>
+                <span className="font-semibold">{company.name || 'Company'}</span>
+              </button>
+            )}
+
+            {/* Shop name and neighborhood */}
+            <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">
+              {name}
+            </h1>
+            <p className="text-base text-white/80 mt-0.5">
+              {neighborhood}
+            </p>
+          </div>
         </div>
         <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
       </div>
