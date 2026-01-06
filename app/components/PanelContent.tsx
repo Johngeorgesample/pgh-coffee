@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { website, address } = props.shop.properties
+  const { website, address, photos } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
@@ -45,7 +45,7 @@ export default function PanelContent(props: IProps) {
       <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
 
       {/* Child components */}
-      <PhotoGrid />
+      {photos && <PhotoGrid photos={photos} />}
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
