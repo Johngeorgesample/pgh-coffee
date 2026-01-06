@@ -27,8 +27,7 @@ export default function PanelContent(props: IProps) {
           })}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 bg-stone-800 hover:bg-stone-900 
-                     text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-lg text-sm font-medium border border-stone-200 transition-colors"
         >
           <MapPinIcon className="w-4 h-4" />
           Directions
@@ -75,12 +74,8 @@ export default function PanelContent(props: IProps) {
           <div className="text-xs text-stone-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
             <span>🕐</span> Hours
           </div>
-          <p className="text-sm font-medium text-emerald-600">
-            Open
-          </p>
-          <p className="text-sm text-stone-400">
-            Hours vary
-          </p>
+          <p className="text-sm font-medium text-emerald-600">Open</p>
+          <p className="text-sm text-stone-400">Hours vary</p>
         </div>
       </div>
 

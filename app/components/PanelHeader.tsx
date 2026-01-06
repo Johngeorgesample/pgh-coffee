@@ -35,7 +35,7 @@ export default function PanelHeader(props: IProps) {
     <>
       <div id="header" data-testid="header">
         <div
-          className={`group h-56 sm:h-64 relative bg-stone-300 bg-cover bg-center ${hasPhoto ? 'cursor-pointer' : ''}`}
+          className="group h-56 sm:h-64 relative bg-stone-300 bg-cover bg-center"
           style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
           onClick={hasPhoto ? handleHeaderClick : undefined}
         >
@@ -59,7 +59,7 @@ export default function PanelHeader(props: IProps) {
             {/* Company badge */}
             {company?.slug && (
               <button
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   plausible('ViewAllLocationsClick', {
                     props: { company: company.slug },
@@ -77,12 +77,8 @@ export default function PanelHeader(props: IProps) {
             )}
 
             {/* Shop name and neighborhood */}
-            <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">
-              {name}
-            </h1>
-            <p className="text-base text-white/80 mt-0.5">
-              {neighborhood}
-            </p>
+            <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">{name}</h1>
+            <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
           </div>
         </div>
         <PhotoDialog shop={props.shop} isOpen={photoDialogIsOpen} handleClose={() => setPhotoDialogIsOpen(false)} />
