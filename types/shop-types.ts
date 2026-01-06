@@ -1,5 +1,9 @@
 import { TNeighborhood } from './neighborhood-types'
 
+export interface Photo {
+  path: string
+}
+
 export interface TCompany {
   id: string
   slug: string
@@ -38,6 +42,7 @@ export interface TShop {
     neighborhood: TNeighborhood
     address: string
     photo?: string
+    photos?: Photo[]
     website: string
     uuid: string
   }
