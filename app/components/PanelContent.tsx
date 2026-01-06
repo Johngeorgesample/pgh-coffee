@@ -3,7 +3,8 @@ import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
-import QuickActionsBar, { getGoogleMapsUrl } from './QuickActionsBar'
+import QuickActionsBar from './QuickActionsBar'
+import { getGoogleMapsUrl } from './DirectionsButton'
 
 interface IProps {
   shop: TShop
