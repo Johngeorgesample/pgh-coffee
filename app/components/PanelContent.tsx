@@ -5,6 +5,7 @@ import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
+import PhotoGrid from './PhotoGrid'
 
 interface IProps {
   shop: TShop
@@ -44,6 +45,7 @@ export default function PanelContent(props: IProps) {
       <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
 
       {/* Child components */}
+      <PhotoGrid />
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
