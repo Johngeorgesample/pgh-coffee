@@ -37,7 +37,7 @@ export default function Nav() {
         <Settings className="w-4 h-4" />
           Settings
         </Link>
-        <Link className="flex gap-1 items-center text-md rounded-2xl px-1.5 py-1 bg-black text-yellow-300 hover:bg-neutral-800" href="/submit-a-shop">
+        <Link className="flex gap-1 items-center text-md rounded-2xl px-2 py-1 bg-black text-yellow-300 hover:bg-neutral-800" href="/submit-a-shop">
         <PlusIcon className="w-4 h-4" />
           Submit a shop
         </Link>
