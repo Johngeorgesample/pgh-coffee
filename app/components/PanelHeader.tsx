@@ -42,18 +42,6 @@ export default function PanelHeader(props: IProps) {
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-          {/* See photos button */}
-          {hasPhoto && (
-            <div
-              className="group-hover:inline-flex absolute top-3 right-3 hidden bg-black/50 backdrop-blur-sm text-white px-2 py-1.5 rounded-lg items-center gap-1.5"
-              role="button"
-              aria-label="open photo gallery"
-            >
-              <PhotoIcon className="w-4 h-4" />
-              <p className="text-sm font-medium">See photos</p>
-            </div>
-          )}
-
           {/* Content Overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
             {/* Company badge */}
