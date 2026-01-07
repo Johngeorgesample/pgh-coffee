@@ -22,7 +22,7 @@ export interface DbShop {
   address: string
   company: TCompanyReference | null
   photo: string | null
-  photos: string | null
+  photos: Photo[] | null
   website: string
   uuid: string
   latitude: number | null

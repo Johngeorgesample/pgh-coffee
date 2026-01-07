@@ -44,7 +44,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
       neighborhood: shopData[0].neighborhood,
       address: shopData[0].address,
       photo: shopData[0].photo,
-      photos: shopData[0].photos,
+      photos: shopData[0].photos ?? undefined,
       website: shopData[0].website,
       uuid: shopData[0].uuid,
       company: shopData[0].company,
