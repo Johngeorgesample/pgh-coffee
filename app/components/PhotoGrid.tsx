@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Photo } from '@/types/shop-types'
 
 const BUCKET_URL = 'https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos'
@@ -11,6 +11,10 @@ interface PhotoGridProps {
 
 export default function PhotoGrid({ photos }: PhotoGridProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    setExpandedIndex(null)
+  }, [photos])
 
   const handleImageClick = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index)
