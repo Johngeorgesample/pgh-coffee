@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import {PlusIcon, Settings} from 'lucide-react'
 
 export default function Nav() {
   const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false)
@@ -28,15 +29,17 @@ export default function Nav() {
           <h1 className="flex items-center text-2xl">pgh.coffee</h1>
         </Link>
       </span>
-      <div className="hidden sm:flex items-center gap-4">
-        <Link className="text-lg" href="/about">
+      <div className="hidden sm:flex items-center gap-6">
+        <Link className="flex gap-1 text-md hover:bg-black/5 p-2 hover:rounded-lg" href="/about">
           About
         </Link>
-        <Link className="text-lg" href="/submit-a-shop">
-          Submit a shop
-        </Link>
-        <Link className="text-lg" href="/settings">
+        <Link className="flex gap-1 items-center text-md hover:bg-black/5 p-2 hover:rounded-lg" href="/settings">
+        <Settings className="w-4 h-4" />
           Settings
+        </Link>
+        <Link className="flex gap-1 items-center text-md rounded-2xl px-2 py-1 bg-black text-yellow-300 hover:bg-neutral-800" href="/submit-a-shop">
+        <PlusIcon className="w-4 h-4" />
+          Submit a shop
         </Link>
       </div>
 
