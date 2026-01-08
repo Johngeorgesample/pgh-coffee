@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
-import { PhotoIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 import { Company } from '@/app/components/Company'
 
