@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, vi } from 'vitest'
-import PanelContent, { getGoogleMapsUrl } from '@/app/components/PanelContent'
+import PanelContent from '@/app/components/PanelContent'
+import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
 import type { TShop } from '@/types/shop-types'
 
 describe('getGoogleMapsUrl', () => {
@@ -46,25 +47,24 @@ describe('PanelContent', () => {
     vi.clearAllMocks()
   })
 
-  it('renders shop name and neighborhood', () => {
+  it('renders quick action buttons', () => {
     render(<PanelContent {...defaultProps} />)
 
-    expect(screen.getByText(mockShop.properties.name)).toBeTruthy()
-    expect(screen.getByText(mockShop.properties.neighborhood)).toBeTruthy()
+    expect(screen.getByText('Directions')).toBeTruthy()
+    expect(screen.getByText('Website')).toBeTruthy()
   })
 
   it('renders the shop address', () => {
-    render(<PanelContent {...defaultProps} />)
-
     const { container } = render(<PanelContent {...defaultProps} />)
     const addressElement = container.querySelector('address')
     expect(addressElement).toBeInTheDocument()
     expect(addressElement).toHaveTextContent(mockShop.properties.address)
   })
 
-  it('renders link to website when provided URL', () => {
+  it('renders website link when provided', () => {
     render(<PanelContent {...defaultProps} />)
 
-    expect(screen.getByText(mockShop.properties.website)).toBeTruthy()
+    const websiteLink = screen.getByText('Website').closest('a')
+    expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
   })
 })

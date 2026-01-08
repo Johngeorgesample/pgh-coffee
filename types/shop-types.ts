@@ -1,5 +1,9 @@
 import { TNeighborhood } from './neighborhood-types'
 
+export interface Photo {
+  path: string
+}
+
 export interface TCompany {
   id: string
   slug: string
@@ -18,6 +22,7 @@ export interface DbShop {
   address: string
   company: TCompanyReference | null
   photo: string | null
+  photos: Photo[] | null
   website: string
   uuid: string
   latitude: number | null
@@ -38,6 +43,7 @@ export interface TShop {
     neighborhood: TNeighborhood
     address: string
     photo?: string
+    photos?: Photo[]
     website: string
     uuid: string
   }

@@ -72,7 +72,6 @@ export default function NearbyShops({ shop }: IProps) {
 
   return (
     <section className="relative mt-3 flex-1 px-4 sm:px-6">
-      <hr className="w-1/2 m-auto mt-2 mb-2" />
       <p className="mb-2 text-gray-700">Nearby shops</p>
       <ShopList
         coffeeShops={sortedShopsWithDistances.shops}

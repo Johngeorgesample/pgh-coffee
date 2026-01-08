@@ -16,6 +16,7 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
         website: shop.website,
         address: shop.address,
         photo: shop.photo ?? undefined,
+        photos: shop.photos ?? undefined,
         uuid: shop.uuid
       },
       geometry: {
@@ -39,6 +40,7 @@ export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['feature
         website: shop.website,
         address: shop.address,
         photo: shop.photo ?? undefined,
+        photos: shop.photos ?? undefined,
         uuid: shop.uuid
       },
       geometry: {

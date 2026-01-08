@@ -1,83 +1,56 @@
 'use client'
-
-import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
-import usePanelStore from '@/stores/panelStore'
 import NearbyShops from './NearbyShops'
-import { Company } from '@/app/components/Company'
 import { ShopNews } from './ShopNews'
-import { GlobeAltIcon } from '@heroicons/react/24/outline'
-import { MapPinIcon } from '@heroicons/react/24/outline'
-import {ShopEvents} from './ShopEvents'
-import { usePlausible } from 'next-plausible'
+import { ShopEvents } from './ShopEvents'
+import QuickActionsBar from './QuickActionsBar'
+import { getGoogleMapsUrl } from './DirectionsButton'
+import PhotoGrid from './PhotoGrid'
 
 interface IProps {
   shop: TShop
 }
 
-export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: number }) =>
-  `https://www.google.com/maps?q=${coordinates.longitude},${coordinates.latitude}`
-
-// @TODO PanelBody might be a better name?
 export default function PanelContent(props: IProps) {
-  const { setPanelContent } = usePanelStore()
-  const plausible = usePlausible()
-  const { name, neighborhood, website, address, company } = props.shop.properties
+  const { website, address, photos } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
-    <>
-      <section>
-        <div className="flex flex-col mt-4 text-2xl px-4 sm:px-6">
-          <p className="font-medium">{name}</p>
-          <p className="text-lg text-gray-600">{neighborhood}</p>
+    <div className="bg-[#FAF9F7]">
+      <QuickActionsBar coordinates={coordinates} website={website} />
+
+      <div className="px-4 sm:px-6 py-5">
+        <a
+          href={getGoogleMapsUrl({
+            latitude: coordinates[0],
+            longitude: coordinates[1],
+          })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block group"
+        >
+          <address className="not-italic text-sm font-medium text-stone-800 group-hover:text-amber-700 transition-colors leading-snug">
+            {address}
+          </address>
+        </a>
+
+        {/*
+        <div className="flex gap-1 items-center">
+          <p className="text-sm font-medium text-emerald-600">Open</p>
+          <p className="text-xs text-stone-700">•</p>
+          <p className="text-sm text-stone-400">Hours vary</p>
         </div>
-        <div className="relative text-gray-700 px-4 sm:px-6">
-          {company?.slug && (
-            <div className="flex mt-2">
-              <BuildingStorefrontIcon className="w-4 mr-1" />
-              <button
-                onClick={() => {
-                  plausible('ViewAllLocationsClick', {
-                    props: { company: company.slug },
-                  })
-                  setPanelContent(<Company slug={company.slug} />, 'company')
-                }}
-                className="text-sm flex items-center hover:underline cursor-pointer bg-transparent border-none p-0"
-              >
-                View all locations
-              </button>
-            </div>
-          )}
-          {website && (
-            <div className="flex mt-2">
-              <GlobeAltIcon className="w-4 mr-1" />
-              <a className="group text-sm flex items-center hover:underline " href={website} target="_blank">
-                {website}
-                <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
-              </a>
-            </div>
-          )}
-          <div className="flex mt-2">
-            <MapPinIcon className="w-4 mr-1" />
-            <a
-              className="group text-sm flex items-center hover:underline"
-              href={getGoogleMapsUrl({
-                latitude: coordinates[0],
-                longitude: coordinates[1],
-              })}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <address className="text-sm hover:underline">{address}</address>
-              <ArrowTopRightOnSquareIcon className="hidden group-hover:inline ml-1 h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-      </section>
+        */}
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
+
+      {/* Child components */}
+      {photos && <PhotoGrid photos={photos} />}
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
-    </>
+    </div>
   )
 }
