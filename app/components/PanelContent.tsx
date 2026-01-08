@@ -34,11 +34,13 @@ export default function PanelContent(props: IProps) {
           </address>
         </a>
 
+        {/*
         <div className="flex gap-1 items-center">
           <p className="text-sm font-medium text-emerald-600">Open</p>
           <p className="text-xs text-stone-700">•</p>
           <p className="text-sm text-stone-400">Hours vary</p>
         </div>
+        */}
       </div>
 
       {/* Divider */}
