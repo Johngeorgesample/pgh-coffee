@@ -39,6 +39,8 @@ export default function PhotoGrid({ photos }: PhotoGridProps) {
               ${expandedIndex === index ? 'col-span-3 aspect-[4/3]' : 'aspect-square'}
               hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
             `}
+            aria-label={`Toggle photo expansion for coffee shop photo ${index + 1}`}
+            aria-pressed={expandedIndex === index}
           >
             <img
               src={getPhotoUrl(photo)}
