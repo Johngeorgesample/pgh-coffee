@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePlausible } from 'next-plausible'
 import { Photo } from '@/types/shop-types'
 
 const BUCKET_URL = 'https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos'
@@ -10,6 +11,7 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos }: PhotoGridProps) {
+  const plausible = usePlausible()
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
   useEffect(() => {
@@ -17,10 +19,19 @@ export default function PhotoGrid({ photos }: PhotoGridProps) {
   }, [photos])
 
   const handleImageClick = (index: number) => {
+    const isExpanding = expandedIndex !== index
+
+    plausible('PhotoGridClick', {
+      props: {
+        photoUrl: getPhotoUrl(photos[index]),
+        action: isExpanding ? 'expand' : 'collapse',
+      },
+    })
+
     setExpandedIndex(expandedIndex === index ? null : index)
   }
 
-  const getPhotoUrl = (photo: Photo | string): string => {
+  const getPhotoUrl = (photo: Photo | string) => {
     if (typeof photo === 'string') {
       return photo
     }
