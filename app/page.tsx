@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import HomeClient from './components/HomeClient'
 
 export async function generateMetadata({
@@ -10,7 +11,12 @@ export async function generateMetadata({
   const shopParam = params.shop
 
   if (shopParam) {
-    const ogUrl = `/api/og?shop=${encodeURIComponent(shopParam)}`
+    const headersList = await headers()
+    const host = headersList.get('host') || 'pgh.coffee'
+    const protocol = headersList.get('x-forwarded-proto') || 'https'
+    const baseUrl = `${protocol}://${host}`
+
+    const ogUrl = `${baseUrl}/api/og?shop=${encodeURIComponent(shopParam)}`
     return {
       openGraph: {
         images: [ogUrl],
