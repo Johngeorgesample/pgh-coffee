@@ -16,7 +16,7 @@ export const useURLShopSync = () => {
     }
 
     try {
-      const res = await fetch(`/api/shops/${shop}`)
+      const res = await fetch(`/api/shops/${encodeURIComponent(shop)}`)
       if (!res.ok) throw new Error('Shop not found')
       const data = await res.json()
       setCurrentShop(data)

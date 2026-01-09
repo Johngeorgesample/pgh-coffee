@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
   const params = await props.params
   const { shopDetails } = params
 
-  const [name, neighborhood] = shopDetails.split('_').map(part => part.replace(/\+/g, ' '))
+  const [name, neighborhood] = shopDetails.split('_')
 
   const shopData = await getShop(name, neighborhood)
 
