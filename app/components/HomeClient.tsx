@@ -13,6 +13,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import {useURLCompanySync} from '@/hooks/useURLCompanySync'
+import { doesShopMatchFilter } from '@/app/utils/utils'
 
 export default function HomeClient() {
   const plausible = usePlausible()
@@ -50,14 +51,7 @@ export default function HomeClient() {
     if (!allShops) return { type: 'FeatureCollection' as const, features: [] }
 
     const filteredFeatures = allShops.features.filter(shop => {
-      if (searchValue) {
-        const shopCardText = `${shop.properties.neighborhood.toLowerCase()} ${shop.properties.name
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')}`
-        return shopCardText.includes(searchValue.toLowerCase())
-      }
-      return true
+      return doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)
     })
 
     return {
