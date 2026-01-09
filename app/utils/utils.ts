@@ -119,7 +119,7 @@ export const getSynonyms = (term: string): string[] => {
 }
 
 /**
- * Normalizes text for search by removing diacritical marks.
+ * Normalizes text for search by converting to lowercase and removing diacritical marks.
  * This is used to match text with accents (e.g., 'café') to text without (e.g., 'cafe').
  */
 export const normalizeSearchText = (text: string): string => {
