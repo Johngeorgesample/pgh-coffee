@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { EventCard, EventCardData } from './EventCard'
-
-const isPast = (date: string) => {
-  return new Date(date).getTime() < Date.now()
-}
+import { isPast } from '@/app/utils/utils'
 
 const fetchEvents = async (): Promise<EventCardData[]> => {
   const res = await fetch('/api/events', { cache: 'no-store' })

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ArrowTopRightOnSquareIcon, CalendarIcon, ClockIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
-import { fmtYMD } from '@/app/utils/utils'
+import { fmtYMD, isPast } from '@/app/utils/utils'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -36,14 +36,6 @@ const isNew = (date: string) => {
   const created = new Date(date).getTime()
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
   return created > sevenDaysAgo
-}
-
-const isPast = (date: string) => {
-  const eventDate = new Date(date)
-  eventDate.setHours(0, 0, 0, 0)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return eventDate.getTime() < today.getTime()
 }
 
 export type EventCardData = {
@@ -170,7 +162,6 @@ export const EventCard = ({
             <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
               {entry.roaster.name}
             </span>
-            <p>{entry.description}</p>
           </div>
         )}
 
