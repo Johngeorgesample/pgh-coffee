@@ -48,7 +48,7 @@ export const EventsCTA = () => {
             key={event.id}
             entry={event}
             asLink={true}
-            showDescription={false}
+            showDescription={true}
             showTime={false}
             showNewPill={false}
           />
