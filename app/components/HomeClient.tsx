@@ -13,6 +13,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import {useURLCompanySync} from '@/hooks/useURLCompanySync'
+import {useURLRoasterSync} from '@/hooks/useURLRoasterSync'
 import { doesShopMatchFilter } from '@/app/utils/utils'
 
 export default function HomeClient() {
@@ -29,6 +30,7 @@ export default function HomeClient() {
     const params = new URLSearchParams(url.search)
     params.delete('shop')
     params.delete('company')
+    params.delete('roaster')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -66,6 +68,7 @@ export default function HomeClient() {
 
   useURLShopSync()
   useURLCompanySync()
+  useURLRoasterSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -90,7 +93,7 @@ export default function HomeClient() {
   }, [currentShop, largeViewport])
 
   useEffect(() => {
-    if (!largeViewport && panelMode === 'company') {
+    if (!largeViewport && (panelMode === 'company' || panelMode === 'roaster')) {
       setPresented(true)
     }
   }, [panelMode, largeViewport])

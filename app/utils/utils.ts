@@ -62,6 +62,19 @@ export const fmtYMD = (ymd?: string) =>
     : ''
 
 /**
+ * Checks if a date is in the past.
+ * Normalizes both dates to midnight for date-only comparison.
+ * An event today is considered NOT past.
+ */
+export const isPast = (date: string) => {
+  const eventDate = new Date(date)
+  eventDate.setHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return eventDate.getTime() < today.getTime()
+}
+
+/**
  * Synonym map for search functionality.
  * Each key maps to an array of alternative terms.
  * The map is automatically made bidirectional by expandSynonymMap().

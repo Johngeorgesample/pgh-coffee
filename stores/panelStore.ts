@@ -4,7 +4,7 @@ import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster'
 
 type PanelEntry = {
   mode: PanelMode
@@ -23,6 +23,16 @@ function hasShopProps(content: ReactNode): content is ReactElement<{ shop: TShop
 
 // Type guard to check if content is a ReactElement with company slug props
 function hasCompanyProps(content: ReactNode): content is ReactElement<{ slug: string }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'slug' in content.props
+  )
+}
+
+// Type guard to check if content is a ReactElement with roaster slug props
+function hasRoasterProps(content: ReactNode): content is ReactElement<{ slug: string }> {
   return (
     isValidElement(content) &&
     typeof content.props === 'object' &&
@@ -94,20 +104,29 @@ const usePanelStore = create<PanelState>()(
               `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
             )
             params.delete('company')
+            params.delete('roaster')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
 
             // Reset displayed shops to show all shops when going back to shop page
             const { allShops, setDisplayedShops } = useCoffeeShopsStore.getState()
             setDisplayedShops(allShops)
-          } else if (hasCompanyProps(top.content) && top.content.props.slug) {
+          } else if (hasCompanyProps(top.content) && top.content.props.slug && top.mode === 'company') {
             params.set('company', top.content.props.slug)
             params.delete('shop')
+            params.delete('roaster')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (hasRoasterProps(top.content) && top.content.props.slug && top.mode === 'roaster') {
+            params.set('roaster', top.content.props.slug)
+            params.delete('shop')
+            params.delete('company')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
             params.delete('shop')
             params.delete('company')
+            params.delete('roaster')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

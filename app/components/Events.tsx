@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { EventCard, EventCardData } from './EventCard'
-
-const isPast = (date: string) => {
-  return new Date(date).getTime() < Date.now()
-}
+import { isPast } from '@/app/utils/utils'
 
 const fetchEvents = async (): Promise<EventCardData[]> => {
   const res = await fetch('/api/events', { cache: 'no-store' })
@@ -33,7 +30,7 @@ export const Events = () => {
               <div className="h-px flex-1 bg-stone-200" />
             </div>
 
-            <ul className="space-y-3">
+            <ul className="list-none space-y-3">
               {upcomingEvents.map(entry => (
                 <EventCard key={entry.id} asLink={true} entry={entry} />
               ))}
@@ -49,7 +46,7 @@ export const Events = () => {
               <div className="h-px flex-1 bg-stone-200" />
             </div>
 
-            <ul className="space-y-3">
+            <ul className="list-none space-y-3">
               {pastEvents.map(entry => (
                 <EventCard key={entry.id} asLink={true} entry={entry} />
               ))}
