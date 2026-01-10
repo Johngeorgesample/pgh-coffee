@@ -39,7 +39,11 @@ const isNew = (date: string) => {
 }
 
 const isPast = (date: string) => {
-  return new Date(date).getTime() < Date.now()
+  const eventDate = new Date(date)
+  eventDate.setHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return eventDate.getTime() < today.getTime()
 }
 
 export type EventCardData = {
@@ -54,6 +58,9 @@ export type EventCardData = {
   shop?: {
     name: string
     neighborhood: string
+  }
+  roaster?: {
+    name: string
   }
 }
 
@@ -132,7 +139,7 @@ export const EventCard = ({
                 <>
                   <ClockIcon className="h-3.5 w-3.5" />
                   <span className={eventIsPast ? '' : 'font-semibold'}>
-                  {/* @TODO get time for event */}
+                    {/* @TODO get time for event */}
                     time
                   </span>
                 </>
@@ -146,11 +153,24 @@ export const EventCard = ({
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
             <span className="flex items-center gap-1.5">
               <MapPinIcon className="h-3.5 w-3.5" />
-              <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
+              <span
+                className={eventIsPast ? '' : 'font-semibold'}
+                style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
+              >
                 {entry.shop.name}
               </span>
               •<span>{entry.shop.neighborhood}</span>
             </span>
+          </div>
+        )}
+
+        {/* Roaster info */}
+        {entry.roaster && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
+            <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
+              {entry.roaster.name}
+            </span>
+            <p>{entry.description}</p>
           </div>
         )}
 
@@ -186,12 +206,7 @@ export const EventCard = ({
 
   if (asLink && entry.url) {
     return (
-      <a
-        href={entry.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-      >
+      <a href={entry.url} target="_blank" rel="noopener noreferrer" className="group block">
         {cardContent}
       </a>
     )
