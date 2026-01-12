@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overscroll-none">
       <head>
         <PlausibleProvider domain="pgh.coffee" trackOutboundLinks />
       </head>
