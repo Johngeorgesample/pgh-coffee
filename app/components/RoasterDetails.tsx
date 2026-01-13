@@ -3,6 +3,7 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { usePlausible } from 'next-plausible'
 
 interface TRoaster {
   id: string
@@ -22,6 +23,7 @@ interface TRoaster {
 export const RoasterDetails = ({ slug }: { slug: string }) => {
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
+  const plausible = usePlausible()
 
   useEffect(() => {
     const fetchRoaster = async () => {
@@ -29,12 +31,15 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
         const response = await fetch(`/api/roasters/${slug}`)
         const data = await response.json()
         setRoaster(data)
+        plausible('RoasterView', {
+          props: { roasterName: data.name, roasterSlug: slug },
+        })
       } finally {
         setLoading(false)
       }
     }
     fetchRoaster()
-  }, [slug])
+  }, [slug, plausible])
 
   useEffect(() => {
     if (roaster?.slug) {
@@ -90,12 +95,26 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
                 href={`https://www.instagram.com/${roaster.instagram}/`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  plausible('RoasterInstagramClick', {
+                    props: { roasterName: roaster.name, roasterSlug: roaster.slug },
+                  })
+                }
               >
                 <Instagram className="h-4 w-4" />
               </a>
             )}
             {roaster.website && (
-              <a href={roaster.website} target="_blank" rel="noopener noreferrer">
+              <a
+                href={roaster.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  plausible('RoasterWebsiteClick', {
+                    props: { roasterName: roaster.name, roasterSlug: roaster.slug },
+                  })
+                }
+              >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
               </a>
             )}
