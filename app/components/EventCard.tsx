@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { ArrowTopRightOnSquareIcon, CalendarIcon, ClockIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
-import { fmtYMD } from '@/app/utils/utils'
+import { usePlausible } from 'next-plausible'
+import { fmtYMD, isPast } from '@/app/utils/utils'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -38,10 +39,6 @@ const isNew = (date: string) => {
   return created > sevenDaysAgo
 }
 
-const isPast = (date: string) => {
-  return new Date(date).getTime() < Date.now()
-}
-
 export type EventCardData = {
   id: string
   title: string
@@ -54,6 +51,10 @@ export type EventCardData = {
   shop?: {
     name: string
     neighborhood: string
+  }
+  roaster?: {
+    name: string
+    slug: string
   }
 }
 
@@ -75,15 +76,45 @@ export const EventCard = ({
   hideShopInfo = false,
 }: EventCardProps) => {
   const [expanded, setExpanded] = useState(false)
+  const plausible = usePlausible()
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
   const shouldTruncate = entry.description && entry.description.length > 120
   const postDate = entry.post_date || entry.postDate
 
+  const handleCardClick = () => {
+    if (entry.shop) {
+      const shopParam = `${entry.shop.name}_${entry.shop.neighborhood}`
+      plausible('EventCardClick', {
+        props: {
+          eventTitle: entry.title,
+          shopName: entry.shop.name,
+          neighborhood: entry.shop.neighborhood,
+        },
+      })
+      window.location.href = `?shop=${encodeURIComponent(shopParam)}`
+    } else if (entry.roaster?.slug) {
+      plausible('EventCardClick', {
+        props: {
+          eventTitle: entry.title,
+          roasterName: entry.roaster.name,
+          roasterSlug: entry.roaster.slug,
+        },
+      })
+      window.location.href = `?roaster=${encodeURIComponent(entry.roaster.slug)}`
+    }
+  }
+
+  const handleExternalLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   const cardContent = (
-    <div
+    <button
+      onClick={handleCardClick}
       className={`
         relative overflow-hidden rounded-xl border border-stone-200 bg-white
         shadow-sm transition-all duration-200 hover:border-stone-300 hover:shadow-md
+        cursor-pointer text-left
         ${eventIsPast ? 'opacity-50' : ''}
       `}
     >
@@ -100,20 +131,18 @@ export const EventCard = ({
             {entry.title}
             {showNewPill && postDate && isNew(postDate) && <NewPill />}
           </h3>
-          {entry.url && !asLink && (
+          {entry.url && (
             <a
               href={entry.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleExternalLinkClick}
               className="shrink-0 text-stone-400 transition-colors hover:text-stone-600"
               aria-label="Source"
               title="Source"
             >
               <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </a>
-          )}
-          {asLink && (
-            <ArrowTopRightOnSquareIcon className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-600" />
           )}
         </div>
 
@@ -132,7 +161,7 @@ export const EventCard = ({
                 <>
                   <ClockIcon className="h-3.5 w-3.5" />
                   <span className={eventIsPast ? '' : 'font-semibold'}>
-                  {/* @TODO get time for event */}
+                    {/* @TODO get time for event */}
                     time
                   </span>
                 </>
@@ -146,10 +175,22 @@ export const EventCard = ({
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
             <span className="flex items-center gap-1.5">
               <MapPinIcon className="h-3.5 w-3.5" />
-              <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
+              <span
+                className={eventIsPast ? '' : 'font-semibold'}
+                style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
+              >
                 {entry.shop.name}
               </span>
               •<span>{entry.shop.neighborhood}</span>
+            </span>
+          </div>
+        )}
+
+        {/* Roaster info */}
+        {entry.roaster && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
+            <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
+              {entry.roaster.name}
             </span>
           </div>
         )}
@@ -171,7 +212,10 @@ export const EventCard = ({
             </p>
             {shouldTruncate && !asLink && (
               <button
-                onClick={() => setExpanded(!expanded)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setExpanded(!expanded)
+                }}
                 className="mt-1.5 text-sm font-medium transition-colors hover:opacity-80"
                 style={{ color: 'lab(45 10 50)' }}
               >
@@ -181,21 +225,8 @@ export const EventCard = ({
           </>
         )}
       </div>
-    </div>
+    </button>
   )
 
-  if (asLink && entry.url) {
-    return (
-      <a
-        href={entry.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-      >
-        {cardContent}
-      </a>
-    )
-  }
-
-  return <li>{cardContent}</li>
+  return cardContent
 }

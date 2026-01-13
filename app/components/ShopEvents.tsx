@@ -47,7 +47,7 @@ export const ShopEvents = ({ shop }: Props) => {
     <section className="flex flex-col mt-4 px-4 sm:px-6">
       <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Events</p>
 
-      <ul className="flex flex-col gap-3">
+      <ul className="list-none flex flex-col gap-3">
         {events.map((entry) => (
           <EventCard
             key={entry.id}
