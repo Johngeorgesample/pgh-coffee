@@ -114,7 +114,7 @@ export const EventCard = ({
       className={`
         relative overflow-hidden rounded-xl border border-stone-200 bg-white
         shadow-sm transition-all duration-200 hover:border-stone-300 hover:shadow-md
-        cursor-pointer
+        cursor-pointer text-left
         ${eventIsPast ? 'opacity-50' : ''}
       `}
     >
