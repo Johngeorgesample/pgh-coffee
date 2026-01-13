@@ -82,8 +82,8 @@ export const isPast = (date: string) => {
 const baseSynonymMap: Record<string, string[]> = {
   '&': ['and'],
   'café': ['cafe', 'caffe'],
-  'coffee': ['cofee'], // Common misspelling
-  'tea': ['tee'], // Common misspelling
+  'coffee': ['cofee'],
+  'ghost': ['trace'],
 }
 
 /**
