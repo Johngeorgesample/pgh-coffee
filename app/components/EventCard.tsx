@@ -109,7 +109,7 @@ export const EventCard = ({
   }
 
   const cardContent = (
-    <div
+    <button
       onClick={handleCardClick}
       className={`
         relative overflow-hidden rounded-xl border border-stone-200 bg-white
@@ -225,7 +225,7 @@ export const EventCard = ({
           </>
         )}
       </div>
-    </div>
+    </button>
   )
 
   return cardContent
