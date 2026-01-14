@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { ArrowTopRightOnSquareIcon, CalendarIcon, ClockIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
 import { usePlausible } from 'next-plausible'
 import { fmtYMD, isPast } from '@/app/utils/utils'
+import usePanelStore from '@/stores/panelStore'
+import { EventDetails } from './EventDetails'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -77,35 +79,33 @@ export const EventCard = ({
 }: EventCardProps) => {
   const [expanded, setExpanded] = useState(false)
   const plausible = usePlausible()
+  const { setPanelContent } = usePanelStore()
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
   const shouldTruncate = entry.description && entry.description.length > 120
   const postDate = entry.post_date || entry.postDate
 
   const handleCardClick = () => {
-    if (entry.shop) {
-      const shopParam = `${entry.shop.name}_${entry.shop.neighborhood}`
-      plausible('EventCardClick', {
-        props: {
-          eventTitle: entry.title,
-          shopName: entry.shop.name,
-          neighborhood: entry.shop.neighborhood,
-        },
-      })
-      window.location.href = `?shop=${encodeURIComponent(shopParam)}`
-    } else if (entry.roaster?.slug) {
-      plausible('EventCardClick', {
-        props: {
-          eventTitle: entry.title,
-          roasterName: entry.roaster.name,
-          roasterSlug: entry.roaster.slug,
-        },
-      })
-      window.location.href = `?roaster=${encodeURIComponent(entry.roaster.slug)}`
-    }
-  }
+    plausible('EventCardClick', {
+      props: {
+        eventTitle: entry.title,
+        eventId: entry.id,
+        shopName: entry.shop?.name,
+        neighborhood: entry.shop?.neighborhood,
+        roasterName: entry.roaster?.name,
+        roasterSlug: entry.roaster?.slug,
+      },
+    })
 
-  const handleExternalLinkClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    // Update URL
+    const url = new URL(window.location.href)
+    url.searchParams.set('event', entry.id)
+    url.searchParams.delete('shop')
+    url.searchParams.delete('company')
+    url.searchParams.delete('roaster')
+    window.history.pushState(null, '', url.toString())
+
+    // Open event details panel
+    setPanelContent(<EventDetails event={entry} />, 'event')
   }
 
   const cardContent = (
@@ -131,19 +131,6 @@ export const EventCard = ({
             {entry.title}
             {showNewPill && postDate && isNew(postDate) && <NewPill />}
           </h3>
-          {entry.url && (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleExternalLinkClick}
-              className="shrink-0 text-stone-400 transition-colors hover:text-stone-600"
-              aria-label="Source"
-              title="Source"
-            >
-              <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-            </a>
-          )}
         </div>
 
         {/* Meta info */}
