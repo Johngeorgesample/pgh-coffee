@@ -6,7 +6,7 @@ export default function JoinTheCommunity() {
       <div className="max-w-4xl mx-auto text-center space-y-4">
         <h2 className="text-4xl font-black tracking-tight">Join the Community</h2>
         <p className="text-slate-600  text-lg">
-          Want to help make Pittsburgh's coffee scene even better? Here are a few ways you can get involved.
+          Want to help make Pittsburgh&apos;s coffee scene even better? Here are a few ways you can get involved.
         </p>
       </div>
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -28,7 +28,7 @@ export default function JoinTheCommunity() {
           </div>
           <h3 className="font-bold text-xl">Provide Feedback</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
-            Have an idea to improve the site? I'm always listening to how the site can serve you better.
+            Have an idea to improve the site? I&apos;m always listening to how the site can serve you better.
           </p>
           <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Share ideas

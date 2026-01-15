@@ -3,7 +3,7 @@ export default function InTheMedia() {
     <article className="flex flex-col align-center items-center space-y-8 bg-black p-12 rounded-3xl text-white">
       <span className="text-primary text-yellow-400 text-sm font-bold uppercase tracking-widest">Recognition</span>
       <h2 className="text-4xl font-display italic font-serif">
-        &quot;There's a host of little reasons why a smaller or newer shop isn't known that could easily be answered by
+        &quot;There&apos;s a host of little reasons why a smaller or newer shop isn&apos;t known that could easily be answered by
         storytelling like pgh.coffee.&quot;
       </h2>
       <p className="text-slate-400">

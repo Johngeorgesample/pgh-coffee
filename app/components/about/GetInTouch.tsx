@@ -6,7 +6,7 @@ export default function GetInTouch() {
       <div className="text-center">
         <h2 className="text-4xl font-black tracking-tight mb-4">Get in Touch</h2>
         <p className="text-slate-600 text-lg">
-          Whether you have feedback, suggestions, or just want to chat about coffee, don't hesitate to reach out.
+          Whether you have feedback, suggestions, or just want to chat about coffee, don&apos;t hesitate to reach out.
         </p>
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-center">

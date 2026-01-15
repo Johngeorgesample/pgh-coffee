@@ -29,9 +29,9 @@ export default function FrequentlyAskedQuestions() {
         <div className="p-6 border border-slate-200  rounded-2xl hover:bg-slate-50  transition-colors">
           <h4 className="font-bold text-lg mb-2">Why should I use pgh.coffee instead of Google Maps?</h4>
           <p className="text-slate-600">
-            Google Maps shows you almost any business if you search "coffee", chains, gas stations, places that closed
+            Google Maps shows you almost any business if you search &quot;coffee&quot;, chains, gas stations, places that closed
             months ago. pgh.coffee is curated. Every shop is independently owned, and I track news about openings,
-            closings, specials, and events that Maps won't surface. It's built by someone who's actually visited these
+            closings, specials, and events that Maps won&apos;t surface. It&apos;s built by someone who&apos;s actually visited these
             places, not an algorithm.
           </p>
         </div>
