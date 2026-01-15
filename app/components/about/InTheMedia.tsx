@@ -8,7 +8,7 @@ export default function InTheMedia() {
         storytelling like pgh.coffee.&quot;
       </h2>
       <p className="text-slate-400">
-        - TJ Fairchild, owner of Commonplace Coffee, in {' '}
+        - TJ Fairchild, owner of Commonplace Coffee, in{' '}
         <a className="text-yellow-300 underline decoration-dashed underline-offset-6 hover:text-slate-500" href="https://technical.ly/software-development/pittsburgh-coffee-shops-interactive-map-open-source/" target="_blank" rel="noopener noreferrer">
           Technical.ly
         </a>

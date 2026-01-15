@@ -10,7 +10,7 @@ export default function Hero() {
 
         <div className="relative">
           <img
-            alt="Top down view of latte art in a cozy cafe"
+            alt="Top down view of latte art in a coffee shop"
             className="rounded-2xl shadow-2xl object-cover h-[500px] w-full"
             src="/hero.png"
           />

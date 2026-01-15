@@ -2,7 +2,7 @@ import { MessagesSquare, Share2, Store } from 'lucide-react'
 
 export default function JoinTheCommunity() {
   return (
-    <section className="space-y-12 bg-yellow-500/9 px-6 py-20 rounded-[3rem]">
+    <section className="space-y-12 bg-yellow-500/10 px-6 py-20 rounded-[3rem]">
       <div className="max-w-4xl mx-auto text-center space-y-4">
         <h2 className="text-4xl font-black tracking-tight">Join the Community</h2>
         <p className="text-slate-600 text-lg">
@@ -46,8 +46,16 @@ export default function JoinTheCommunity() {
             <h3 className="font-bold text-xl">Spread the Word</h3>
           </div>
           <p className="text-slate-500 text-sm leading-relaxed">
-            Encourage others to explore local. Follow pgh.coffee and share your visits with the tag #pghcoffee.
+            Encourage others to explore local. Follow pgh.coffee.
           </p>
+          <a
+            href="https://www.instagram.com/pgh.coffee"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity"
+          >
+            Follow on Instagram
+          </a>
         </div>
       </div>
     </section>
