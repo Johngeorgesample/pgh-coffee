@@ -15,15 +15,6 @@ export default function Footer() {
           <h1 className="flex items-center text-2xl">pgh.coffee</h1>
         </div>
 
-        <div className="flex gap-8 text-sm font-medium text-slate-500">
-          <Link className="hover:text-slate-900" href="/">
-            Home
-          </Link>
-          <a className="hover:text-slate-900" href="#contact">
-            Contact
-          </a>
-        </div>
-
         <p className="text-xs text-slate-400 italic">© 2026 Crafted with ❤️ and ☕ in Pittsburgh.</p>
       </div>
     </footer>
