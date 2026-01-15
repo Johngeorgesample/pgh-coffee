@@ -1,4 +1,5 @@
 import { MessagesSquare, Share2, Store } from 'lucide-react'
+import Link from 'next/link'
 
 export default function JoinTheCommunity() {
   return (
@@ -20,9 +21,9 @@ export default function JoinTheCommunity() {
           <p className="text-slate-500 text-sm leading-relaxed">
             Know a hidden gem I missed? Tell me about it and help others find their next favorite spot.
           </p>
-          <a href="/submit-a-shop" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+          <Link href="/submit-a-shop" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Tell me
-          </a>
+          </Link>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
           <div className="flex items-center gap-3">

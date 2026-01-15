@@ -1,4 +1,5 @@
 import { Coffee } from 'lucide-react'
+import Link from 'next/link'
 
 export default function SubmitAShopCTA() {
   return (
@@ -8,12 +9,12 @@ export default function SubmitAShopCTA() {
         <p className="text-xl mb-12 opacity-80 max-w-2xl mx-auto">
           Help me build the ultimate directory of Pittsburgh&apos;s vibrant coffee scene. One shop at a time.
         </p>
-        <a href="/submit-a-shop"
+        <Link href="/submit-a-shop"
           className="w-fit bg-black text-white px-10 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform flex items-center gap-3 mx-auto shadow-xl"
         >
           <Coffee />
           Submit a Shop Now
-        </a>
+        </Link>
       </div>
     </section>
   )
