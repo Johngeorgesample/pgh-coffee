@@ -3,13 +3,9 @@ export default function Hero() {
     <header className="max-w-7xl mx-auto px-6 py-20">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <span className="inline-block px-4 py-1 rounded-full bg-yellow-400/20 text-yellow-700 font-bold text-sm mb-6 uppercase tracking-widest">
-            My Story
-          </span>
-
           <h1 className="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">
 
-            Pittsburgh coffee starts here.
+            Pittsburgh&nbsp;coffee starts here.
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">Discover Pittsburgh&apos;s best independent coffee shops.</p>

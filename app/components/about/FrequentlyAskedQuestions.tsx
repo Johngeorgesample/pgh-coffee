@@ -1,6 +1,6 @@
 export default function FrequentlyAskedQuestions() {
   return (
-    <section className="space-y-8">
+    <section className="max-w-4xl mx-auto px-6 mb-32 space-y-8">
       <h2 className="text-3xl font-display font-bold text-center">Frequently Asked</h2>
 
       <div className="grid gap-6">

@@ -2,7 +2,7 @@ import { MessagesSquare, Share2, Store } from 'lucide-react'
 
 export default function JoinTheCommunity() {
   return (
-    <section className="space-y-12 bg-yellow-400/5  -mx-6 px-6 py-20 rounded-[3rem]">
+    <section className="space-y-12 bg-yellow-400/5 px-6 py-20 rounded-[3rem]">
       <div className="max-w-4xl mx-auto text-center space-y-4">
         <h2 className="text-4xl font-black tracking-tight">Join the Community</h2>
         <p className="text-slate-600  text-lg">

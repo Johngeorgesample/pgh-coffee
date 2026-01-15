@@ -2,7 +2,7 @@ import { HeartPlus, Instagram, Mail } from 'lucide-react'
 
 export default function GetInTouch() {
   return (
-    <section className="max-w-4xl mx-auto space-y-12">
+    <section className="max-w-4xl mx-auto px-6 py-20 space-y-12">
       <div className="text-center">
         <h2 className="text-4xl font-black tracking-tight mb-4">Get in Touch</h2>
         <p className="text-slate-600 text-lg">

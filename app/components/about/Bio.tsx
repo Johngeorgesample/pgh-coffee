@@ -1,6 +1,6 @@
 export default function Bio() {
   return (
-    <section className="grid md:grid-cols-2 gap-12 items-center">
+    <section className="max-w-5xl mx-auto px-6 mb-32 grid md:grid-cols-2 gap-12 items-center">
       <div className="relative group">
         <div className="absolute -inset-4 bg-yellow-400 rounded-3xl transform rotate-3 group-hover:rotate-1 transition-transform"></div>
         <img
