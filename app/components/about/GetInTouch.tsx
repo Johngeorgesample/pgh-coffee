@@ -11,17 +11,19 @@ export default function GetInTouch() {
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <a
-          className="flex-1 flex items-center justify-center gap-3 bg-slate-900  text-white  py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
+          className="flex-1 flex items-center justify-center gap-3 bg-slate-900 text-white py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
           href="mailto:johngeorgesample@gmail.com"
           target="_blank"
+          rel="noopener noreferrer"
         >
           <Mail />
           Email me
         </a>
         <a
-          className="flex-1 flex items-center justify-center gap-3 bg-yellow-300 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
+          className="flex-1 flex items-center justify-center gap-3 bg-yellow-300 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-yellow-300/20"
           href="https://www.instagram.com/pgh.coffee/"
           target="_blank"
+          rel="noopener noreferrer"
         >
           <Instagram />
           Follow on Instagram
@@ -30,6 +32,7 @@ export default function GetInTouch() {
           className="flex-1 flex items-center justify-center gap-3 border-2 border-gray-300 text-gray-700 py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
           href="https://buymeacoffee.com/johngeorgesample"
           target="_blank"
+          rel="noopener noreferrer"
         >
           <Heart />
           Support the project

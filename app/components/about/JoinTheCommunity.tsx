@@ -34,7 +34,7 @@ export default function JoinTheCommunity() {
           <p className="text-slate-500  text-sm leading-relaxed">
             Have an idea to improve the site? I&apos;m always listening to how the site can serve you better.
           </p>
-          <a href="mailto:johngeorgesample@gmail.com" target="_blank" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+          <a href="mailto:johngeorgesample@gmail.com" target="_blank" rel="noopener noreferrer" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Share ideas
           </a>
         </div>
