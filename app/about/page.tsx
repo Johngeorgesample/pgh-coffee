@@ -17,15 +17,19 @@ export default function About() {
     <div>
       <Hero />
       <Stats />
-      <main className="max-w-4xl mx-auto px-6 space-y-16 mb-32">
+      <div className="max-w-5xl mx-auto px-6 mb-32">
         <Bio />
+      </div>
+      <div className="max-w-4xl mx-auto px-6 space-y-16 mb-32">
         <InTheMedia />
-        <article className="grid md:grid-cols-2 gap-16">
-          <JoinTheCommunity />
-          <GetInTouch />
-        </article>
+      </div>
+      <JoinTheCommunity />
+      <div className="space-y-12 mx-6 px-6 py-20">
+        <GetInTouch />
+      </div>
+      <div className="max-w-4xl mx-auto px-6 space-y-16 mb-32">
         <FrequentlyAskedQuestions />
-      </main>
+      </div>
       <SubmitAShopCTA />
       <Footer />
     </div>

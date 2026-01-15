@@ -1,20 +1,18 @@
 export default function InTheMedia() {
   return (
-    <article className="text-center space-y-8 bg-black p-12 rounded-3xl text-white">
-      <span className="text-primary text-sm font-bold uppercase tracking-widest">
-        Recognition
-      </span>
-      <h2 className="text-4xl font-display italic">
-        &quot;Connecting the community through the perfect cup.&quot;
+    <article className="flex flex-col align-center items-center space-y-8 bg-black p-12 rounded-3xl text-white">
+      <span className="text-primary text-yellow-400 text-sm font-bold uppercase tracking-widest">Recognition</span>
+      <h2 className="text-4xl font-display italic font-serif">
+        &quot;There's a host of little reasons why a smaller or newer shop isn't known that could easily be answered by
+        storytelling like pgh.coffee.&quot;
       </h2>
-      <p className="max-w-xl mx-auto text-slate-400 text-lg">
-        The project was recently featured on{' '}
-        <a className="text-primary hover:underline" href="#">
+      <p className="text-slate-400">
+        - TJ Fairchild, owner of Commonplace Coffee, in {' '}
+        <a className="text-primary underline decoration-dashed underline-offset-6 hover:text-slate-500" href="https://technical.ly/software-development/pittsburgh-coffee-shops-interactive-map-open-source/" target="_blank">
           Technical.ly
         </a>
-        , where we discussed how digital tools are helping Pittsburgh&apos;s local businesses
-        thrive.
       </p>
+      <p className="text-slate-400"></p>
     </article>
   )
 }

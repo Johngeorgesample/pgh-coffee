@@ -1,29 +1,30 @@
+import { Instagram, Mail } from 'lucide-react'
+
 export default function GetInTouch() {
   return (
-    <div className="bg-primary/5 rounded-3xl p-8 border border-primary/20">
-      <h3 className="text-xl font-bold mb-6">Get in Touch</h3>
-
-      <div className="space-y-6">
-        <div>
-          <p className="text-xs font-bold uppercase text-slate-400 mb-1">Email</p>
-          <a
-            className="text-lg font-medium hover:text-primary transition-colors underline decoration-primary/30"
-            href="mailto:johngeorgesample@gmail.com"
-          >
-            johngeorgesample@gmail.com
-          </a>
-        </div>
-
-        <div>
-          <p className="text-xs font-bold uppercase text-slate-400 mb-1">Social Media</p>
-          <a
-            className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-2"
-            href="#"
-          >
-            <span className="material-icons-outlined text-sm">camera_alt</span> @pgh.coffee
-          </a>
-        </div>
+    <section className="max-w-4xl mx-auto space-y-12">
+      <div className="text-center">
+        <h2 className="text-4xl font-black tracking-tight mb-4">Get in Touch</h2>
+        <p className="text-slate-600 text-lg">
+          Whether you have feedback, suggestions, or just want to chat about coffee, don't hesitate to reach out.
+        </p>
       </div>
-    </div>
+      <div className="flex flex-col md:flex-row gap-4 justify-center">
+        <a
+          className="flex-1 flex items-center justify-center gap-3 bg-slate-900  text-white  py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
+          href="mailto:hello@pgh.coffee"
+        >
+          <Mail />
+          Email John-George
+        </a>
+        <a
+          className="flex-1 flex items-center justify-center gap-3 bg-yellow-400 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
+          href="#"
+        >
+          <Instagram />
+          Follow on Instagram
+        </a>
+      </div>
+    </section>
   )
 }

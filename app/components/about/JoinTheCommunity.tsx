@@ -1,32 +1,52 @@
+import { MessagesSquare, Share2, Store } from 'lucide-react'
+
 export default function JoinTheCommunity() {
   return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-display font-bold">Join the Community</h2>
-      <p className="text-lg text-slate-600 dark:text-slate-400">
-        Want to help make Pittsburgh&apos;s coffee scene even better? We&apos;re a
-        community-driven platform and we rely on your local expertise.
-      </p>
-
-      <ul className="space-y-4">
-        <li className="flex gap-4">
-          <span className="material-icons-outlined text-primary">add_location_alt</span>
-          <p>
-            <strong>Submit a Shop:</strong> Found a hidden gem? Let us know.
+    <section className="space-y-12 bg-yellow-400/5  -mx-6 px-6 py-20 rounded-[3rem]">
+      <div className="max-w-4xl mx-auto text-center space-y-4">
+        <h2 className="text-4xl font-black tracking-tight">Join the Community</h2>
+        <p className="text-slate-600  text-lg">
+          Want to help make Pittsburgh's coffee scene even better? Here are a few ways you can get involved.
+        </p>
+      </div>
+      <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
+          <div className="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center">
+            <Store />
+          </div>
+          <h3 className="font-bold text-xl">Submit a Shop</h3>
+          <p className="text-slate-500  text-sm leading-relaxed">
+            Know a hidden gem we missed? Tell us about it and help others find their next favorite spot.
           </p>
-        </li>
-        <li className="flex gap-4">
-          <span className="material-icons-outlined text-primary">feedback</span>
-          <p>
-            <strong>Provide Feedback:</strong> Help us improve the experience.
+          <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+            Tell us
+          </button>
+        </div>
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
+          <div className="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center">
+            <MessagesSquare />
+          </div>
+          <h3 className="font-bold text-xl">Provide Feedback</h3>
+          <p className="text-slate-500  text-sm leading-relaxed">
+            Have an idea to improve the site? We're always listening to how we can serve you better.
           </p>
-        </li>
-        <li className="flex gap-4">
-          <span className="material-icons-outlined text-primary">share</span>
-          <p>
-            <strong>Spread the Word:</strong> Share your favorites on social media.
+          <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+            Share ideas
+          </button>
+        </div>
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
+          <div className="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center">
+            <Share2 />
+          </div>
+          <h3 className="font-bold text-xl">Spread the Word</h3>
+          <p className="text-slate-500  text-sm leading-relaxed">
+            Encourage others to explore local. Follow us and share your visits with the tag #pghcoffee.
           </p>
-        </li>
-      </ul>
-    </div>
+          <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+            Social Media
+          </button>
+        </div>
+      </div>
+    </section>
   )
 }
