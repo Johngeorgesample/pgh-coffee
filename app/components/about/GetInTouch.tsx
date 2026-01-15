@@ -1,4 +1,4 @@
-import { Instagram, Mail } from 'lucide-react'
+import { HeartPlus, Instagram, Mail } from 'lucide-react'
 
 export default function GetInTouch() {
   return (
@@ -12,17 +12,27 @@ export default function GetInTouch() {
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <a
           className="flex-1 flex items-center justify-center gap-3 bg-slate-900  text-white  py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
-          href="mailto:hello@pgh.coffee"
+          href="mailto:johngeorgesample@gmail.com"
+          target="_blank"
         >
           <Mail />
           Email John-George
         </a>
         <a
           className="flex-1 flex items-center justify-center gap-3 bg-yellow-400 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
-          href="#"
+          href="https://www.instagram.com/pgh.coffee/"
+          target="_blank"
         >
           <Instagram />
           Follow on Instagram
+        </a>
+        <a
+          className="flex-1 flex items-center justify-center gap-3 border-2 border-gray-300 text-gray-700 py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform"
+          href="https://buymeacoffee.com/johngeorgesample"
+          target="_blank"
+        >
+          <HeartPlus />
+          Support the project
         </a>
       </div>
     </section>

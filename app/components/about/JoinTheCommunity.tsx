@@ -16,10 +16,10 @@ export default function JoinTheCommunity() {
           </div>
           <h3 className="font-bold text-xl">Submit a Shop</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
-            Know a hidden gem we missed? Tell us about it and help others find their next favorite spot.
+            Know a hidden gem I missed? Tell me about it and help others find their next favorite spot.
           </p>
           <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
-            Tell us
+            Tell me
           </button>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
@@ -28,7 +28,7 @@ export default function JoinTheCommunity() {
           </div>
           <h3 className="font-bold text-xl">Provide Feedback</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
-            Have an idea to improve the site? We're always listening to how we can serve you better.
+            Have an idea to improve the site? I'm always listening to how the site can serve you better.
           </p>
           <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Share ideas
@@ -40,11 +40,8 @@ export default function JoinTheCommunity() {
           </div>
           <h3 className="font-bold text-xl">Spread the Word</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
-            Encourage others to explore local. Follow us and share your visits with the tag #pghcoffee.
+            Encourage others to explore local. Follow pgh.coffee and share your visits with the tag #pghcoffee.
           </p>
-          <button className="w-full py-2 bg-yellow-400 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
-            Social Media
-          </button>
         </div>
       </div>
     </section>

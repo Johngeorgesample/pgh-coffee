@@ -8,14 +8,11 @@ export default function Hero() {
           </span>
 
           <h1 className="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">
-            Brewing a{' '}
-            <span className="italic text-yellow-400">connected</span> community.
+
+            Pittsburgh coffee starts here.
           </h1>
 
-          <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">
-            What started as a personal quest to explore every shop in Pittsburgh became a mission
-            to unite the city&apos;s coffee lovers.
-          </p>
+          <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">Discover Pittsburgh&apos;s best independent coffee shops.</p>
         </div>
 
         <div className="relative">
