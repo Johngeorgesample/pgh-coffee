@@ -19,7 +19,7 @@ export default function GetInTouch() {
           Email John-George
         </a>
         <a
-          className="flex-1 flex items-center justify-center gap-3 bg-yellow-400 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
+          className="flex-1 flex items-center justify-center gap-3 bg-yellow-300 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
           href="https://www.instagram.com/pgh.coffee/"
           target="_blank"
         >
