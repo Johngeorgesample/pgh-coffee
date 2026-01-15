@@ -14,12 +14,12 @@ export default function Bio() {
           The Founder
         </div>
         <h2 className="text-4xl font-black tracking-tight">Meet John-George</h2>
-        <p className="text-lg text-slate-600  leading-relaxed">
+        <p className="text-lg text-slate-600 leading-relaxed">
           Hi, I&apos;m John-George, a coffee lover and software developer from Pittsburgh. For over a decade, I&apos;ve been captivated
           by the city&apos;s coffee scene. What started as a personal quest to explore every shop soon became a mission to
           connect the community and share my discoveries.
         </p>
-        <p className="text-lg text-slate-600  leading-relaxed">
+        <p className="text-lg text-slate-600 leading-relaxed">
           This project has helped thousands of users discover new spots and support Pittsburgh&apos;s small businesses.
           Whether it&apos;s suggesting a favorite shop or providing feedback, your contributions make this project better
           every day.

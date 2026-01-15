@@ -4,7 +4,7 @@ export default function SubmitAShopCTA() {
   return (
     <section className="bg-yellow-300 text-black py-24 text-center">
       <div className="max-w-4xl mx-auto px-6">
-        <h2 className="font-serif text-4xl md:text-6xl font-display font-bold mb-8">Know a coffee shop I missed?</h2>
+        <h2 className="font-serif text-4xl md:text-6xl font-bold mb-8">Know a coffee shop I missed?</h2>
         <p className="text-xl mb-12 opacity-80 max-w-2xl mx-auto">
           Help me build the ultimate directory of Pittsburgh&apos;s vibrant coffee scene. One shop at a time.
         </p>
