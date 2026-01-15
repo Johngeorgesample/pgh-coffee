@@ -5,7 +5,7 @@ export default function Hero() {
         <div>
           <h1 className="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">
 
-            Pittsburgh&nbsp;coffee starts here.
+            Pittsburgh coffee starts here.
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">Discover Pittsburgh&apos;s best independent coffee shops.</p>

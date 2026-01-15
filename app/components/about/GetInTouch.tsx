@@ -1,8 +1,8 @@
-import { HeartPlus, Instagram, Mail } from 'lucide-react'
+import { Heart, Instagram, Mail } from 'lucide-react'
 
 export default function GetInTouch() {
   return (
-    <section className="max-w-4xl mx-auto px-6 py-20 space-y-12">
+    <section className="max-w-4xl mx-auto px-6 py-20 space-y-12" id="contact">
       <div className="text-center">
         <h2 className="text-4xl font-black tracking-tight mb-4">Get in Touch</h2>
         <p className="text-slate-600 text-lg">
@@ -16,7 +16,7 @@ export default function GetInTouch() {
           target="_blank"
         >
           <Mail />
-          Email John-George
+          Email me
         </a>
         <a
           className="flex-1 flex items-center justify-center gap-3 bg-yellow-300 text-black py-4 px-8 rounded-2xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20"
@@ -31,7 +31,7 @@ export default function GetInTouch() {
           href="https://buymeacoffee.com/johngeorgesample"
           target="_blank"
         >
-          <HeartPlus />
+          <Heart />
           Support the project
         </a>
       </div>

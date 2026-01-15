@@ -7,7 +7,7 @@ export default function FrequentlyAskedQuestions() {
         <div className="p-6 border border-slate-200  rounded-2xl hover:bg-slate-50  transition-colors">
           <h4 className="font-bold text-lg mb-2">How can I contribute to the site?</h4>
           <p className="text-slate-600">
-            You can submit new shops through our submission form. I love hearing community suggestions!
+            You can submit new shops through the submission form. I love hearing community suggestions!
           </p>
         </div>
 

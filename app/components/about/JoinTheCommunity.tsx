@@ -2,7 +2,7 @@ import { MessagesSquare, Share2, Store } from 'lucide-react'
 
 export default function JoinTheCommunity() {
   return (
-    <section className="space-y-12 bg-yellow-300/5 px-6 py-20 rounded-[3rem]">
+    <section className="space-y-12 bg-yellow-500/9 px-6 py-20 rounded-[3rem]">
       <div className="max-w-4xl mx-auto text-center space-y-4">
         <h2 className="text-4xl font-black tracking-tight">Join the Community</h2>
         <p className="text-slate-600  text-lg">
@@ -20,9 +20,9 @@ export default function JoinTheCommunity() {
           <p className="text-slate-500  text-sm leading-relaxed">
             Know a hidden gem I missed? Tell me about it and help others find their next favorite spot.
           </p>
-          <button className="w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+          <a href="/submit-a-shop" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Tell me
-          </button>
+          </a>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
           <div className="flex items-center gap-3">
@@ -34,9 +34,9 @@ export default function JoinTheCommunity() {
           <p className="text-slate-500  text-sm leading-relaxed">
             Have an idea to improve the site? I&apos;m always listening to how the site can serve you better.
           </p>
-          <button className="w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
+          <a href="mailto:johngeorgesample@gmail.com" target="_blank" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
             Share ideas
-          </button>
+          </a>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
           <div className="flex items-center gap-3">
