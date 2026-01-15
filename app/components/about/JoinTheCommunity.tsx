@@ -11,10 +11,12 @@ export default function JoinTheCommunity() {
       </div>
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
-          <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center">
-            <Store />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+              <Store />
+            </div>
+            <h3 className="font-bold text-xl">Submit a Shop</h3>
           </div>
-          <h3 className="font-bold text-xl">Submit a Shop</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
             Know a hidden gem I missed? Tell me about it and help others find their next favorite spot.
           </p>
@@ -23,10 +25,12 @@ export default function JoinTheCommunity() {
           </button>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
-          <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center">
-            <MessagesSquare />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+              <MessagesSquare />
+            </div>
+            <h3 className="font-bold text-xl">Provide Feedback</h3>
           </div>
-          <h3 className="font-bold text-xl">Provide Feedback</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
             Have an idea to improve the site? I&apos;m always listening to how the site can serve you better.
           </p>
@@ -35,10 +39,12 @@ export default function JoinTheCommunity() {
           </button>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100  space-y-4">
-          <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center">
-            <Share2 />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+              <Share2 />
+            </div>
+            <h3 className="font-bold text-xl">Spread the Word</h3>
           </div>
-          <h3 className="font-bold text-xl">Spread the Word</h3>
           <p className="text-slate-500  text-sm leading-relaxed">
             Encourage others to explore local. Follow pgh.coffee and share your visits with the tag #pghcoffee.
           </p>
