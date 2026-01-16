@@ -41,6 +41,16 @@ function hasRoasterProps(content: ReactNode): content is ReactElement<{ slug: st
   )
 }
 
+// Type guard to check if content is a ReactElement with news id props
+function hasNewsProps(content: ReactNode): content is ReactElement<{ id: string }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'id' in content.props
+  )
+}
+
 interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
@@ -105,6 +115,7 @@ const usePanelStore = create<PanelState>()(
             )
             params.delete('company')
             params.delete('roaster')
+            params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
 
@@ -115,18 +126,28 @@ const usePanelStore = create<PanelState>()(
             params.set('company', top.content.props.slug)
             params.delete('shop')
             params.delete('roaster')
+            params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else if (hasRoasterProps(top.content) && top.content.props.slug && top.mode === 'roaster') {
             params.set('roaster', top.content.props.slug)
             params.delete('shop')
             params.delete('company')
+            params.delete('news')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (hasNewsProps(top.content) && top.content.props.id && top.mode === 'news') {
+            params.set('news', top.content.props.id)
+            params.delete('shop')
+            params.delete('company')
+            params.delete('roaster')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
+            params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }
