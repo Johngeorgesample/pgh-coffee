@@ -111,7 +111,6 @@ export default function SubmitForm() {
                   <ComboboxInput
                     id="neighborhood"
                     className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
-                    placeholder="Type to search"
                     displayValue={(value: string) => value}
                     onChange={event => {
                       setQuery(event.target.value)
@@ -143,7 +142,6 @@ export default function SubmitForm() {
                 id="website"
                 name="website"
                 type="url"
-                placeholder="https://"
                 className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
               />
             </div>
