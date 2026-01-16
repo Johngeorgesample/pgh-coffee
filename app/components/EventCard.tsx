@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { MapPinIcon } from '@heroicons/react/24/outline'
 import { usePlausible } from 'next-plausible'
 import { isPast } from '@/app/utils/utils'
 import usePanelStore from '@/stores/panelStore'

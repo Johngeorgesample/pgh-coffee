@@ -85,7 +85,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   }
 
   return (
-    <div className={`flex mt-24 lg:mt-16  h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
+    <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
         {/* Title Section with yellow accent bar */}
@@ -154,7 +154,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                 </svg>
               </div>
               <div>
-                <span className="block text-[10px] font-semibold text-amber-500 uppercase tracking-wider mb-1">
+                <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Roaster
                 </span>
                 <button
