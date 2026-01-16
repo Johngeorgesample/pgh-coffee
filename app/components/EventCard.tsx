@@ -1,37 +1,22 @@
 'use client'
 
-import { useState } from 'react'
-import { ArrowTopRightOnSquareIcon, CalendarIcon, ClockIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, MapPinIcon } from '@heroicons/react/24/outline'
 import { usePlausible } from 'next-plausible'
-import { fmtYMD, isPast } from '@/app/utils/utils'
+import { isPast } from '@/app/utils/utils'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from './EventDetails'
 
-type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
-
-const TAG_STYLES: Record<TagKey, string> = {
-  opening: 'bg-green-100 text-green-800',
-  closure: 'bg-red-100 text-red-800',
-  'coming soon': 'bg-amber-100 text-amber-800',
-  throwdown: 'bg-purple-100 text-purple-800',
-  event: 'bg-blue-100 text-blue-800',
-  seasonal: 'bg-pink-100 text-pink-800',
-  menu: 'bg-slate-100 text-slate-800',
+const formatDateParts = (dateStr: string) => {
+  const date = new Date(dateStr)
+  return {
+    month: date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+    day: date.getDate(),
+  }
 }
 
-const TagBadge = ({ label }: { label: string }) => {
-  const cls = TAG_STYLES[label as TagKey] ?? 'bg-gray-100 text-gray-800'
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${cls}`}>
-      <TagIcon className="h-3 w-3" />
-      {label}
-    </span>
-  )
-}
-
-const NewPill = () => (
-  <span className="inline-flex items-center rounded-full bg-yellow-400/20 px-2 py-0.5 text-xs font-medium text-yellow-600">
-    New
+const NewBadge = () => (
+  <span className="inline-flex items-center rounded-full bg-yellow-400/30 px-1.5 py-0.5 text-[10px] font-bold text-yellow-700">
+    NEW
   </span>
 )
 
@@ -62,27 +47,16 @@ export type EventCardData = {
 
 interface EventCardProps {
   entry: EventCardData
-  asLink?: boolean
-  showDescription?: boolean
-  showTime?: boolean
-  showNewPill?: boolean
   hideShopInfo?: boolean
 }
 
 export const EventCard = ({
   entry,
-  asLink = false,
-  showDescription = true,
-  showTime = false,
-  showNewPill = true,
   hideShopInfo = false,
 }: EventCardProps) => {
-  const [expanded, setExpanded] = useState(false)
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
-  const shouldTruncate = entry.description && entry.description.length > 120
-  const postDate = entry.post_date || entry.postDate
 
   const handleCardClick = () => {
     plausible('EventCardClick', {
@@ -108,112 +82,59 @@ export const EventCard = ({
     setPanelContent(<EventDetails event={entry} />, 'event')
   }
 
-  const cardContent = (
+  const dateParts = entry.event_date ? formatDateParts(entry.event_date) : null
+  const postDate = entry.post_date || entry.postDate
+
+  return (
     <button
       onClick={handleCardClick}
       className={`
-        relative overflow-hidden rounded-xl border border-stone-200 bg-white
-        shadow-sm transition-all duration-200 hover:border-stone-300 hover:shadow-md
+        group flex w-full bg-white rounded-xl border border-stone-200
+        overflow-hidden shadow-sm hover:shadow-md transition-all
         cursor-pointer text-left
         ${eventIsPast ? 'opacity-50' : ''}
       `}
     >
-      {/* Yellow accent bar */}
-      <div
-        className="absolute bottom-0 left-0 top-0 w-1"
-        style={{ backgroundColor: 'lab(89.7033 -0.480294 84.4917)' }}
-      />
+      {dateParts && (
+        <div className={`w-14 flex flex-col items-center justify-center py-4 shrink-0 ${eventIsPast ? 'bg-stone-300' : 'bg-yellow-300'}`}>
+          <span className="text-[10px] font-bold text-stone-500 leading-none">
+            {dateParts.month}
+          </span>
+          <span className="text-2xl font-black text-stone-900 leading-tight">
+            {dateParts.day}
+          </span>
+        </div>
+      )}
 
-      <div className="p-4 pl-5">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-semibold leading-tight text-stone-900">
+      <div className="flex-1 p-4 relative">
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="font-bold text-base leading-tight text-slate-900">
             {entry.title}
-            {showNewPill && postDate && isNew(postDate) && <NewPill />}
           </h3>
+          {postDate && isNew(postDate) && <NewBadge />}
         </div>
 
-        {/* Meta info */}
-        {entry.event_date && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
-            <span className="flex items-center gap-1.5">
-              <CalendarIcon className="h-3.5 w-3.5" />
-              <span
-                className={eventIsPast ? '' : 'font-semibold'}
-                style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
-              >
-                {fmtYMD(entry.event_date)}
-              </span>
-              {showTime && (
-                <>
-                  <ClockIcon className="h-3.5 w-3.5" />
-                  <span className={eventIsPast ? '' : 'font-semibold'}>
-                    {/* @TODO get time for event */}
-                    time
-                  </span>
-                </>
-              )}
-            </span>
-          </div>
-        )}
-
-        {/* Shop info */}
         {!hideShopInfo && entry.shop && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
-            <span className="flex items-center gap-1.5">
-              <MapPinIcon className="h-3.5 w-3.5" />
-              <span
-                className={eventIsPast ? '' : 'font-semibold'}
-                style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
-              >
-                {entry.shop.name}
-              </span>
-              •<span>{entry.shop.neighborhood}</span>
-            </span>
+          <div className="flex items-center text-xs text-slate-500 mb-2">
+            <MapPinIcon className="h-[14px] w-[14px] mr-1" />
+            <span className="font-medium text-slate-700">{entry.shop.name}</span>
+            <span className="mx-1">•</span>
+            <span>{entry.shop.neighborhood}</span>
           </div>
         )}
 
-        {/* Roaster info */}
         {entry.roaster && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
-            <span className={eventIsPast ? '' : 'font-semibold'} style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}>
-              {entry.roaster.name}
-            </span>
+          <div className="flex items-center text-xs text-slate-500 mb-2">
+            <span className="font-medium text-slate-700">{entry.roaster.name}</span>
           </div>
         )}
 
-        {/* Tags */}
-        {entry.tags && entry.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {entry.tags.map(t => (
-              <TagBadge key={t} label={t} />
-            ))}
-          </div>
-        )}
-
-        {/* Description */}
-        {showDescription && entry.description && (
-          <>
-            <p className={`mt-3 text-sm leading-relaxed text-stone-600 ${expanded ? '' : 'line-clamp-2'}`}>
-              {entry.description}
-            </p>
-            {shouldTruncate && !asLink && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setExpanded(!expanded)
-                }}
-                className="mt-1.5 text-sm font-medium transition-colors hover:opacity-80"
-                style={{ color: 'lab(45 10 50)' }}
-              >
-                {expanded ? 'Show less' : 'Read more'}
-              </button>
-            )}
-          </>
+        {entry.description && (
+          <p className="text-sm text-slate-600 line-clamp-1">
+            {entry.description}
+          </p>
         )}
       </div>
     </button>
   )
-
-  return cardContent
 }
