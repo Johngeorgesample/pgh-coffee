@@ -33,7 +33,7 @@ export default function SuccessDialog(props: TProps) {
                     Success!
                   </DialogTitle>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">Your submission has been received</p>
+                    <p className="text-sm text-gray-500">Your submission has been received. I manually check each submission, so it might take a few days to see your submission on the site.</p>
                   </div>
                 </div>
               </div>
