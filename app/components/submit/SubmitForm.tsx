@@ -110,6 +110,7 @@ export default function SubmitForm() {
                 <div className="relative">
                   <ComboboxInput
                     id="neighborhood"
+                    name="neighborhood"
                     className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
                     displayValue={(value: string) => value}
                     onChange={event => {
@@ -148,7 +149,7 @@ export default function SubmitForm() {
           </div>
 
           <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <InfoIcon className="w-4 h-4 shrink-0 mt-0.5 text-yellow-400" />
+            <InfoIcon aria-hidden="true" className="w-4 h-4 shrink-0 mt-0.5 text-yellow-400" />
             <p className="text-sm text-slate-600">
               We currently only list shops located within Allegheny County. Chains or franchises headquartered elsewhere
               are not included to maintain our focus on local independent businesses.
