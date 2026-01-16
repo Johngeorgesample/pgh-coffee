@@ -52,10 +52,7 @@ export const ShopEvents = ({ shop }: Props) => {
           <EventCard
             key={entry.id}
             entry={entry as EventCardData}
-            asLink={true}
-            showDescription={true}
-            showNewPill={true}
-            hideShopInfo={true}
+            hideShopInfo
           />
         ))}
       </ul>

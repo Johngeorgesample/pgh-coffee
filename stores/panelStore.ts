@@ -4,7 +4,7 @@ import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
 
 type PanelEntry = {
   mode: PanelMode
@@ -38,6 +38,16 @@ function hasRoasterProps(content: ReactNode): content is ReactElement<{ slug: st
     typeof content.props === 'object' &&
     content.props !== null &&
     'slug' in content.props
+  )
+}
+
+// Type guard to check if content is a ReactElement with event props
+function hasEventProps(content: ReactNode): content is ReactElement<{ event: { id: string } }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'event' in content.props
   )
 }
 
@@ -105,6 +115,7 @@ const usePanelStore = create<PanelState>()(
             )
             params.delete('company')
             params.delete('roaster')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
 
@@ -115,18 +126,28 @@ const usePanelStore = create<PanelState>()(
             params.set('company', top.content.props.slug)
             params.delete('shop')
             params.delete('roaster')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else if (hasRoasterProps(top.content) && top.content.props.slug && top.mode === 'roaster') {
             params.set('roaster', top.content.props.slug)
             params.delete('shop')
             params.delete('company')
+            params.delete('event')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (hasEventProps(top.content) && top.content.props.event?.id && top.mode === 'event') {
+            params.set('event', top.content.props.event.id)
+            params.delete('shop')
+            params.delete('company')
+            params.delete('roaster')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

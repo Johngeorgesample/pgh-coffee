@@ -26,13 +26,13 @@ export const Events = () => {
         {upcomingEvents.length > 0 && (
           <>
             <div className="mb-3 flex items-center gap-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming</h2>
-              <div className="h-px flex-1 bg-stone-200" />
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Upcoming</h2>
+              <div className="h-px flex-1 bg-slate-200" />
             </div>
 
             <ul className="list-none space-y-3">
               {upcomingEvents.map(entry => (
-                <EventCard key={entry.id} asLink={true} entry={entry} />
+                <EventCard key={entry.id} entry={entry} />
               ))}
             </ul>
           </>
@@ -42,13 +42,13 @@ export const Events = () => {
         {pastEvents.length > 0 && (
           <>
             <div className="mb-3 mt-6 flex items-center gap-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Past</h2>
-              <div className="h-px flex-1 bg-stone-200" />
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Past</h2>
+              <div className="h-px flex-1 bg-slate-200" />
             </div>
 
             <ul className="list-none space-y-3">
               {pastEvents.map(entry => (
-                <EventCard key={entry.id} asLink={true} entry={entry} />
+                <EventCard key={entry.id} entry={entry} />
               ))}
             </ul>
           </>
