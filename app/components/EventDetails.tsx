@@ -1,8 +1,8 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, CalendarIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline'
+import { Calendar, SquareArrowOutUpRight, MapPin } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
-import { fmtYMD, isPast } from '@/app/utils/utils'
+import { isPast } from '@/app/utils/utils'
 import { EventCardData } from './EventCard'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
@@ -20,11 +20,19 @@ const TAG_STYLES: Record<TagKey, string> = {
 const TagBadge = ({ label }: { label: string }) => {
   const cls = TAG_STYLES[label as TagKey] ?? 'bg-gray-100 text-gray-800'
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${cls}`}>
-      <TagIcon className="h-3 w-3" />
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${cls}`}>
       {label}
     </span>
   )
+}
+
+const formatEventDate = (dateStr: string) => {
+  const date = new Date(dateStr + 'T00:00:00')
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 interface EventDetailsProps {
@@ -64,85 +72,146 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
     window.location.href = `?roaster=${encodeURIComponent(event.roaster.slug)}`
   }
 
+  const handleExternalLink = () => {
+    if (!event.url) return
+
+    plausible('EventDetailsExternalClick', {
+      props: {
+        eventTitle: event.title,
+        eventId: event.id,
+        url: event.url,
+      },
+    })
+  }
+
   return (
-    <div className={`flex h-full flex-col overflow-y-auto ${eventIsPast ? 'opacity-50' : ''}`}>
-      <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <h2 className="font-medium text-2xl">{event.title}</h2>
+    <div className={`flex mt-24 lg:mt-16  h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
+      {/* Scrollable Content */}
+      <div className="flex-grow overflow-y-auto pb-56">
+        {/* Title Section with yellow accent bar */}
+        <div className="flex">
+          <div className="p-6 flex-1">
+            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
+              {event.title}
+            </h1>
+          </div>
+        </div>
+
+        {/* Details Section */}
+        <div className="px-6 space-y-6">
+          {/* Date and Time row */}
+          {event.event_date && (
+            <div className="flex gap-6">
+              {/* Date */}
+              <div className="flex items-start gap-3">
+                <div className="bg-yellow-100 p-2.5 rounded-lg">
+                  <Calendar className="w-4 h-4 text-yellow-500" />
+                </div>
+                <div>
+                  <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
+                    Date
+                  </span>
+                  <span className="text-slate-900 font-medium text-[15px]">
+                    {formatEventDate(event.event_date)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Location */}
+          {event.shop && (
+            <div className="flex items-start gap-3">
+              <div className="bg-yellow-100 p-2.5 rounded-lg">
+                <MapPin className="w-4 h-4 text-yellow-500" />
+              </div>
+              <div>
+                <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
+                  Location
+                </span>
+                <button
+                  onClick={handleShopClick}
+                  className="text-left hover:opacity-80 transition-opacity"
+                >
+                  <div className="text-slate-900 font-bold text-[15px]">
+                    {event.shop.name}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-0.5">
+                    {event.shop.neighborhood}
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Roaster */}
+          {event.roaster && (
+            <div className="flex items-start gap-3">
+              <div className="bg-yellow-100 p-2.5 rounded-lg">
+                <svg className="w-4 h-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-[10px] font-semibold text-amber-500 uppercase tracking-wider mb-1">
+                  Roaster
+                </span>
+                <button
+                  onClick={handleRoasterClick}
+                  className="text-left hover:opacity-80 transition-opacity"
+                >
+                  <div className="text-slate-900 font-bold text-[15px]">
+                    {event.roaster.name}
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Divider */}
+          <div className="border-t border-gray-200 pt-6">
+            <span className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              About the Event
+            </span>
+            {event.description && (
+              <p className="text-gray-600 leading-relaxed">
+                {event.description}
+              </p>
+            )}
+          </div>
+
+          {/* Tags */}
+          {event.tags && event.tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {event.tags.map(t => (
+                <TagBadge key={t} label={t} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Fixed Bottom Section */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+        <div className="flex flex-col gap-4">
           {event.url && (
             <a
               href={event.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 text-stone-400 transition-colors hover:text-stone-600"
-              aria-label="Source"
-              title="Source"
+              onClick={handleExternalLink}
+              className="w-full bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
             >
-              <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+              View Event Website
+              <SquareArrowOutUpRight className="w-5 h-5" />
             </a>
           )}
+
+          <p className="text-[11px] text-center text-gray-400 italic">
+            Information is provided by the organizer and may change.
+          </p>
         </div>
-
-        {/* Event date */}
-        {event.event_date && (
-          <div className="flex items-center gap-2 text-sm text-stone-600 mb-4">
-            <CalendarIcon className="h-4 w-4" />
-            <span
-              className={eventIsPast ? '' : 'font-semibold'}
-              style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
-            >
-              {fmtYMD(event.event_date)}
-            </span>
-          </div>
-        )}
-
-        {/* Shop info */}
-        {event.shop && (
-          <button
-            onClick={handleShopClick}
-            className="flex items-center gap-2 text-sm text-stone-600 mb-4 hover:text-stone-900 transition-colors text-left"
-          >
-            <MapPinIcon className="h-4 w-4" />
-            <span
-              className={eventIsPast ? '' : 'font-semibold'}
-              style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
-            >
-              {event.shop.name}
-            </span>
-            <span>•</span>
-            <span>{event.shop.neighborhood}</span>
-          </button>
-        )}
-
-        {/* Roaster info */}
-        {event.roaster && (
-          <button
-            onClick={handleRoasterClick}
-            className="flex items-center gap-2 text-sm text-stone-600 mb-4 hover:text-stone-900 transition-colors text-left"
-          >
-            <span
-              className={eventIsPast ? '' : 'font-semibold'}
-              style={eventIsPast ? {} : { color: 'lab(45 10 50)' }}
-            >
-              {event.roaster.name}
-            </span>
-          </button>
-        )}
-
-        {/* Tags */}
-        {event.tags && event.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 mb-4">
-            {event.tags.map(t => (
-              <TagBadge key={t} label={t} />
-            ))}
-          </div>
-        )}
-
-        {/* Description */}
-        {event.description && (
-          <p className="text-sm leading-relaxed text-stone-600">{event.description}</p>
-        )}
       </div>
     </div>
   )

@@ -97,7 +97,7 @@ export const EventCard = ({
     >
       {dateParts && (
         <div className={`w-14 flex flex-col items-center justify-center py-4 shrink-0 ${eventIsPast ? 'bg-stone-300' : 'bg-yellow-300'}`}>
-          <span className="text-[10px] font-bold text-stone-500 leading-none">
+          <span className="text-[10px] font-bold text-stone-600 leading-none">
             {dateParts.month}
           </span>
           <span className="text-2xl font-black text-stone-900 leading-tight">

@@ -47,10 +47,6 @@ export const EventsCTA = () => {
           <EventCard
             key={event.id}
             entry={event}
-            asLink={true}
-            showDescription={true}
-            showTime={false}
-            showNewPill={false}
           />
         ))}
       </div>
