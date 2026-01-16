@@ -35,7 +35,7 @@ const mockShops: TShop[] = [
     properties: {
       company: null,
       name: 'Café Elegance',
-      neighborhood: 'Oakland',
+      neighborhood: 'North Oakland',
       address: '456 Fifth Ave',
       website: 'https://example2.com',
       uuid: '2',
