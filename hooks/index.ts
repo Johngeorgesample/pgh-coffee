@@ -1,5 +1,6 @@
 export * from './useURLShopSync'
 export * from './useURLNewsSync'
+export * from './useURLEventSync'
 export * from './useShopSelection'
 export * from './useHighlightCurrentShop'
 export * from './useMediaQuery'

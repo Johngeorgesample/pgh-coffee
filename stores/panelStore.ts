@@ -4,7 +4,7 @@ import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster'
+type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
 
 type PanelEntry = {
   mode: PanelMode
@@ -48,6 +48,16 @@ function hasNewsProps(content: ReactNode): content is ReactElement<{ id: string 
     typeof content.props === 'object' &&
     content.props !== null &&
     'id' in content.props
+  )
+}
+
+// Type guard to check if content is a ReactElement with event props
+function hasEventProps(content: ReactNode): content is ReactElement<{ event: { id: string } }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'event' in content.props
   )
 }
 
@@ -116,6 +126,7 @@ const usePanelStore = create<PanelState>()(
             params.delete('company')
             params.delete('roaster')
             params.delete('news')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
 
@@ -127,6 +138,7 @@ const usePanelStore = create<PanelState>()(
             params.delete('shop')
             params.delete('roaster')
             params.delete('news')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else if (hasRoasterProps(top.content) && top.content.props.slug && top.mode === 'roaster') {
@@ -134,6 +146,7 @@ const usePanelStore = create<PanelState>()(
             params.delete('shop')
             params.delete('company')
             params.delete('news')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else if (hasNewsProps(top.content) && top.content.props.id && top.mode === 'news') {
@@ -141,6 +154,15 @@ const usePanelStore = create<PanelState>()(
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
+            params.delete('event')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (hasEventProps(top.content) && top.content.props.event?.id && top.mode === 'event') {
+            params.set('event', top.content.props.event.id)
+            params.delete('shop')
+            params.delete('company')
+            params.delete('roaster')
+            params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           } else {
@@ -148,6 +170,7 @@ const usePanelStore = create<PanelState>()(
             params.delete('company')
             params.delete('roaster')
             params.delete('news')
+            params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

@@ -8,7 +8,7 @@ import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
+import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
@@ -32,6 +32,7 @@ export default function HomeClient() {
     params.delete('company')
     params.delete('roaster')
     params.delete('news')
+    params.delete('event')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -71,6 +72,7 @@ export default function HomeClient() {
   useURLCompanySync()
   useURLRoasterSync()
   useURLNewsSync()
+  useURLEventSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -95,7 +97,7 @@ export default function HomeClient() {
   }, [currentShop, largeViewport])
 
   useEffect(() => {
-    if (!largeViewport && (panelMode === 'company' || panelMode === 'roaster')) {
+    if (!largeViewport && (panelMode === 'company' || panelMode === 'roaster' || panelMode === 'event')) {
       setPresented(true)
     }
   }, [panelMode, largeViewport])
