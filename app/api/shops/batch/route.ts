@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
 
+// Cache for 1 hour, revalidate in background
+export const revalidate = 3600
+
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -49,5 +52,9 @@ export async function GET(request: Request) {
   }
 
   const geojson = formatDataToGeoJSON(shops)
-  return NextResponse.json(geojson)
+  return NextResponse.json(geojson, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=60',
+    },
+  })
 }

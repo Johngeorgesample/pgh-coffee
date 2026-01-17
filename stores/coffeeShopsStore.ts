@@ -2,9 +2,13 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
 
+// Cache duration: 1 hour in milliseconds
+const CACHE_DURATION = 3600000
+
 interface CoffeeShopsState {
   allShops: TFeatureCollection
-  fetchCoffeeShops: () => Promise<void>
+  lastFetched: number | null
+  fetchCoffeeShops: (forceRefresh?: boolean) => Promise<void>
   setAllShops: (data: TShop[]) => void
   currentShop: TShop
   setCurrentShop: (data: TShop) => void
@@ -16,11 +20,13 @@ interface CoffeeShopsState {
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
-    set => ({
+    (set, get) => ({
       allShops: {
         type: 'FeatureCollection',
         features: [],
       },
+
+      lastFetched: null,
 
       setAllShops: (data: TShop[] | { type: string; features: TShop[] }) =>
         set(prev => {
@@ -33,14 +39,28 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
                   ...prev.allShops,
                   features: data as TShop[],
                 },
+            lastFetched: Date.now(),
           }
         }),
 
-      fetchCoffeeShops: async () => {
+      fetchCoffeeShops: async (forceRefresh = false) => {
+        const { lastFetched, allShops } = get()
+        const now = Date.now()
+
+        // Skip fetch if data exists and is still fresh (unless force refresh)
+        if (
+          !forceRefresh &&
+          lastFetched &&
+          allShops.features.length > 0 &&
+          now - lastFetched < CACHE_DURATION
+        ) {
+          return
+        }
+
         try {
           const response = await fetch('/api/shops/geojson')
           const data: TFeatureCollection = await response.json()
-          set({ allShops: data })
+          set({ allShops: data, lastFetched: now })
         } catch (error) {
           console.error('Error fetching coffee shops:', error)
         }
