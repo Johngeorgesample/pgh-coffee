@@ -28,7 +28,17 @@ export default function HomeClient() {
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
   const [presented, setPresented] = useState(false)
+  const [mapReady, setMapReady] = useState(false)
   const router = useRouter()
+
+  // Defer map loading until after initial paint to improve TTI
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => setMapReady(true), { timeout: 1000 })
+    } else {
+      setTimeout(() => setMapReady(true), 100)
+    }
+  }, [])
 
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
@@ -119,9 +129,13 @@ export default function HomeClient() {
   return (
     <div className="relative w-full h-full">
       {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
-      <MapContainer
-        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
-      />
+      {mapReady ? (
+        <MapContainer
+          currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-stone-100" />
+      )}
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>
         {panelContent}
       </Panel>
