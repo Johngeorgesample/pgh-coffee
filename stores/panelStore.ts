@@ -83,7 +83,7 @@ interface PanelState {
 const usePanelStore = create<PanelState>()(
   devtools(
     (set, get) => ({
-      panelMode: null,
+      panelMode: 'explore',
       panelContent: null,
       searchValue: '',
       history: [],
