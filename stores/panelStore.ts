@@ -110,6 +110,9 @@ const usePanelStore = create<PanelState>()(
 
           // if nothing left, go home
           if (history.length === 0) {
+            const url = new URL(window.location.href)
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl)
             return { history: [], panelMode: 'explore', panelContent: null }
           }
 
@@ -157,6 +160,10 @@ const usePanelStore = create<PanelState>()(
             params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
+          } else if (top.mode === 'news' && !hasNewsProps(top.content)) {
+            // News list (no id prop)
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl + '?news')
           } else if (hasEventProps(top.content) && top.content.props.event?.id && top.mode === 'event') {
             params.set('event', top.content.props.event.id)
             params.delete('shop')
@@ -165,12 +172,16 @@ const usePanelStore = create<PanelState>()(
             params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
+          } else if (top.mode === 'events') {
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl + '?events')
           } else {
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
             params.delete('news')
             params.delete('event')
+            params.delete('events')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

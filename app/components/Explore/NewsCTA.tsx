@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
+import { ChevronRight } from 'lucide-react';
 import usePanelStore from '@/stores/panelStore'
 import { News } from '@/app/components/News'
 import { NewsCard, type NewsCardItem } from '@/app/components/NewsCard'
@@ -34,11 +35,16 @@ export const NewsCTA = () => {
 
   const openNews = () => {
     plausible('ViewAllClick', { props: { section: 'news' } })
-    const url = new URL(window.location.href)
-    url.searchParams.delete('news')
-    const newUrl = url.toString() + (url.search ? '&' : '?') + 'news'
-    window.history.pushState({}, '', newUrl)
     setPanelContent(<News />, 'news')
+
+    const url = new URL(window.location.href)
+    url.searchParams.delete('shop')
+    url.searchParams.delete('company')
+    url.searchParams.delete('roaster')
+    url.searchParams.delete('event')
+    url.searchParams.delete('events')
+    const baseUrl = url.origin + url.pathname
+    window.history.replaceState({}, '', baseUrl + '?news')
   }
 
   const isLoading = updates === null
@@ -53,11 +59,12 @@ export const NewsCTA = () => {
           Latest news
         </h3>
         <button
-          className="text-sm font-medium transition-colors hover:opacity-80"
+          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80 bg"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openNews}
         >
           View all
+          <ChevronRight className="h-4.5 w-4.5"/>
         </button>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePlausible } from 'next-plausible'
+import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
 import { Events } from '@/app/components/Events'
 import { EventCard, EventCardData } from '@/app/components/EventCard'
@@ -45,20 +46,28 @@ export const EventsCTA = () => {
   const openEvents = () => {
     plausible('ViewAllClick', { props: { section: 'events' } })
     setPanelContent(<Events />, 'events')
+
+    const url = new URL(window.location.href)
+    url.searchParams.delete('shop')
+    url.searchParams.delete('company')
+    url.searchParams.delete('roaster')
+    url.searchParams.delete('news')
+    url.searchParams.delete('event')
+    const baseUrl = url.origin + url.pathname
+    window.history.replaceState({}, '', baseUrl + '?events')
   }
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">
-          Upcoming events
-        </h3>
+        <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming events</h3>
         <button
-          className="text-sm font-medium transition-colors hover:opacity-80"
+          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80 bg"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openEvents}
         >
           View all
+          <ChevronRight className="h-4.5 w-4.5" />
         </button>
       </div>
 
@@ -69,12 +78,7 @@ export const EventsCTA = () => {
             <EventCardSkeleton />
           </>
         ) : (
-          lastTwo.map((event) => (
-            <EventCard
-              key={event.id}
-              entry={event}
-            />
-          ))
+          lastTwo.map(event => <EventCard key={event.id} entry={event} />)
         )}
       </div>
     </>

@@ -23,13 +23,13 @@ export type NewsCardItem = NewsCardData & {
   shop?: DbShop
 }
 
-type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
+type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu'
 
 const TAG_LABELS: Record<TagKey, string> = {
   opening: 'New Shop',
   closure: 'Closing',
+  'temporary closure': 'Temporary Closure',
   'coming soon': 'Coming Soon',
-  throwdown: 'Throwdown',
   event: 'Event',
   seasonal: 'Seasonal',
   menu: 'Menu Update',
@@ -44,13 +44,13 @@ const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
     badge: 'bg-red-50 text-red-600 border-red-100',
     border: 'border-red-500',
   },
+  'temporary closure': {
+    badge: 'bg-amber-50 text-amber-600 border-amber-100',
+    border: 'border-amber-500',
+  },
   'coming soon': {
     badge: 'bg-blue-50 text-blue-600 border-blue-100',
     border: 'border-blue-500',
-  },
-  throwdown: {
-    badge: 'bg-purple-50 text-purple-600 border-purple-100',
-    border: 'border-purple-500',
   },
   event: {
     badge: 'bg-amber-50 text-amber-600 border-amber-100',
@@ -107,7 +107,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
       onClick={handleCardClick}
       className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex flex-col transition-all hover:shadow-md cursor-pointer"
     >
-      <div className={`p-5 border-l-[3px] ${styles.border}`}>
+      <div className={`p-5 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
           <span
             className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${styles.badge}`}

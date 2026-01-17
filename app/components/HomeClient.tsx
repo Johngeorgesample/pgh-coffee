@@ -33,6 +33,7 @@ export default function HomeClient() {
     params.delete('roaster')
     params.delete('news')
     params.delete('event')
+    params.delete('events')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -85,7 +86,9 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
-    if (!usePanelStore.getState().panelContent) {
+    // Check store directly to avoid race with URL sync hooks
+    const currentContent = usePanelStore.getState().panelContent
+    if (!currentContent) {
       setPanelContent(<ExploreContent />, 'explore')
     }
   }, [setPanelContent])

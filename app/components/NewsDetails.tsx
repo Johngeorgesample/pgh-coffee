@@ -7,13 +7,13 @@ import { useShopSelection } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { DbShop } from '@/types/shop-types'
 
-type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
+type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu'
 
 const TAG_STYLES: Record<TagKey, string> = {
   opening: 'bg-green-100 text-green-800',
   closure: 'bg-red-100 text-red-800',
-  'coming soon': 'bg-amber-100 text-amber-800',
-  throwdown: 'bg-purple-100 text-purple-800',
+  'temporary closure': 'bg-amber-100 text-amber-800',
+  'coming soon': 'bg-blue-100 text-blue-800',
   event: 'bg-blue-100 text-blue-800',
   seasonal: 'bg-pink-100 text-pink-800',
   menu: 'bg-slate-100 text-slate-800',
@@ -144,7 +144,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
         {/* Title Section */}
         <div className="flex">
           <div className="p-6 flex-1">
-            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
+            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
               {news.title}
             </h1>
           </div>
@@ -152,6 +152,14 @@ export const NewsDetails = ({ id }: { id: string }) => {
 
         {/* Details Section */}
         <div className="px-6 space-y-6">
+          {/* Tags */}
+          {news.tags && news.tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {news.tags.map(t => (
+                <TagBadge key={t} label={t} />
+              ))}
+            </div>
+          )}
           {/* Date */}
           {news.post_date && (
             <div className="flex items-start gap-3">
@@ -162,9 +170,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Posted
                 </span>
-                <span className="text-slate-900 font-medium text-[15px]">
-                  {formatNewsDate(news.post_date)}
-                </span>
+                <span className="text-slate-900 font-medium text-[15px]">{formatNewsDate(news.post_date)}</span>
               </div>
             </div>
           )}
@@ -179,17 +185,10 @@ export const NewsDetails = ({ id }: { id: string }) => {
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Location
                 </span>
-                <button
-                  onClick={handleShopClick}
-                  className="text-left hover:opacity-80 transition-opacity"
-                >
-                  <div className="text-slate-900 font-bold text-[15px]">
-                    {news.shop.name}
-                  </div>
+                <button onClick={handleShopClick} className="text-left hover:opacity-80 transition-opacity">
+                  <div className="text-slate-900 font-bold text-[15px]">{news.shop.name}</div>
                   {news.shop.neighborhood && (
-                    <div className="text-sm text-gray-500 mt-0.5">
-                      {news.shop.neighborhood}
-                    </div>
+                    <div className="text-sm text-gray-500 mt-0.5">{news.shop.neighborhood}</div>
                   )}
                 </button>
               </div>
@@ -198,24 +197,9 @@ export const NewsDetails = ({ id }: { id: string }) => {
 
           {/* Divider and Description */}
           <div className="border-t border-gray-200 pt-6">
-            <span className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
-              About
-            </span>
-            {news.description && (
-              <p className="text-gray-600 leading-relaxed">
-                {news.description}
-              </p>
-            )}
+            <span className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">About</span>
+            {news.description && <p className="text-gray-600 leading-relaxed">{news.description}</p>}
           </div>
-
-          {/* Tags */}
-          {news.tags && news.tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              {news.tags.map(t => (
-                <TagBadge key={t} label={t} />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

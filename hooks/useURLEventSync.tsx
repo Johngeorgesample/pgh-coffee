@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from '@/app/components/EventDetails'
+import { Events } from '@/app/components/Events'
 
 export const useURLEventSync = () => {
   const { setPanelContent } = usePanelStore()
@@ -9,6 +10,12 @@ export const useURLEventSync = () => {
     const fetchEventFromURL = async () => {
       const params = new URLSearchParams(window.location.search)
       const eventId = params.get('event')
+      const hasEventsList = params.has('events')
+
+      if (hasEventsList) {
+        setPanelContent(<Events />, 'events')
+        return
+      }
 
       if (!eventId) {
         return
