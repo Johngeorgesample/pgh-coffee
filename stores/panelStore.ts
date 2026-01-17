@@ -41,6 +41,16 @@ function hasRoasterProps(content: ReactNode): content is ReactElement<{ slug: st
   )
 }
 
+// Type guard to check if content is a ReactElement with news id props
+function hasNewsProps(content: ReactNode): content is ReactElement<{ id: string }> {
+  return (
+    isValidElement(content) &&
+    typeof content.props === 'object' &&
+    content.props !== null &&
+    'id' in content.props
+  )
+}
+
 // Type guard to check if content is a ReactElement with event props
 function hasEventProps(content: ReactNode): content is ReactElement<{ event: { id: string } }> {
   return (
@@ -73,7 +83,7 @@ interface PanelState {
 const usePanelStore = create<PanelState>()(
   devtools(
     (set, get) => ({
-      panelMode: null,
+      panelMode: 'explore',
       panelContent: null,
       searchValue: '',
       history: [],
@@ -91,17 +101,20 @@ const usePanelStore = create<PanelState>()(
 
       back: () =>
         set(state => {
-          // pop current if present
-          let history = state.history.slice(0, -1)
-
           if (state.searchValue) {
             set({ searchValue: '' })
           }
 
-          // if nothing left, go home
-          if (history.length === 0) {
+          // if nothing to go back to, just render explore
+          if (state.history.length <= 1) {
+            const url = new URL(window.location.href)
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl)
             return { history: [], panelMode: 'explore', panelContent: null }
           }
+
+          // pop current entry
+          const history = state.history.slice(0, -1)
 
           const top = history[history.length - 1]
 
@@ -115,6 +128,7 @@ const usePanelStore = create<PanelState>()(
             )
             params.delete('company')
             params.delete('roaster')
+            params.delete('news')
             params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
@@ -126,6 +140,7 @@ const usePanelStore = create<PanelState>()(
             params.set('company', top.content.props.slug)
             params.delete('shop')
             params.delete('roaster')
+            params.delete('news')
             params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
@@ -133,21 +148,40 @@ const usePanelStore = create<PanelState>()(
             params.set('roaster', top.content.props.slug)
             params.delete('shop')
             params.delete('company')
+            params.delete('news')
             params.delete('event')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
+          } else if (hasNewsProps(top.content) && top.content.props.id && top.mode === 'news') {
+            params.set('news', top.content.props.id)
+            params.delete('shop')
+            params.delete('company')
+            params.delete('roaster')
+            params.delete('event')
+            url.search = params.toString()
+            window.history.replaceState({}, '', url.toString())
+          } else if (top.mode === 'news' && !hasNewsProps(top.content)) {
+            // News list (no id prop)
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl + '?news')
           } else if (hasEventProps(top.content) && top.content.props.event?.id && top.mode === 'event') {
             params.set('event', top.content.props.event.id)
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
+            params.delete('news')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
+          } else if (top.mode === 'events') {
+            const baseUrl = url.origin + url.pathname
+            window.history.replaceState({}, '', baseUrl + '?events')
           } else {
             params.delete('shop')
             params.delete('company')
             params.delete('roaster')
+            params.delete('news')
             params.delete('event')
+            params.delete('events')
             url.search = params.toString()
             window.history.replaceState({}, '', url.toString())
           }

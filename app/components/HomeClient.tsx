@@ -8,7 +8,7 @@ import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useURLEventSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
+import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
@@ -31,7 +31,9 @@ export default function HomeClient() {
     params.delete('shop')
     params.delete('company')
     params.delete('roaster')
+    params.delete('news')
     params.delete('event')
+    params.delete('events')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -70,6 +72,7 @@ export default function HomeClient() {
   useURLShopSync()
   useURLCompanySync()
   useURLRoasterSync()
+  useURLNewsSync()
   useURLEventSync()
 
   useEffect(() => {
@@ -83,10 +86,10 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
-    if (!panelContent) {
+    if (!panelContent && panelMode === 'explore') {
       setPanelContent(<ExploreContent />, 'explore')
     }
-  }, [panelContent, setPanelContent])
+  }, [panelContent, panelMode, setPanelContent])
 
   useEffect(() => {
     if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
