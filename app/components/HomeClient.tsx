@@ -31,14 +31,14 @@ export default function HomeClient() {
   const [mapReady, setMapReady] = useState(false)
   const router = useRouter()
 
-  // Defer map loading until after initial paint to improve TTI
+  // Defer map loading - longer on mobile since panel covers the map
   useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => setMapReady(true), { timeout: 1000 })
-    } else {
-      setTimeout(() => setMapReady(true), 100)
-    }
-  }, [])
+    // Desktop: load map after short delay
+    // Mobile: load map after longer delay to prioritize panel interactivity
+    const delay = largeViewport ? 100 : 3000
+    const timer = setTimeout(() => setMapReady(true), delay)
+    return () => clearTimeout(timer)
+  }, [largeViewport])
 
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
