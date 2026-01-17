@@ -78,7 +78,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       },
       setDisplayedShops: (shops: TFeatureCollection) => set({ displayedShops: shops }),
     }),
-    { name: 'ShopsStore' },
+    { name: 'ShopsStore', enabled: process.env.NODE_ENV === 'development' },
   ),
 )
 
