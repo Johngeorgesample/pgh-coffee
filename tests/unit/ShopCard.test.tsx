@@ -47,7 +47,7 @@ describe('ShopCard', () => {
       name: 'Test Shop',
       neighborhood: 'Downtown',
       address: '456 Murray Ave, Pittsburgh, PA 15217',
-      photo: 'test-photo-url.jpg',
+      photo: 'https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos/test.jpg',
       website: 'https://testshop.com',
       uuid: '1234'
     },
