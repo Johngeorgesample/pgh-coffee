@@ -6,6 +6,24 @@ import usePanelStore from '@/stores/panelStore'
 import { Events } from '@/app/components/Events'
 import { EventCard, EventCardData } from '@/app/components/EventCard'
 
+const EventCardSkeleton = () => (
+  <div className="flex w-full bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm animate-pulse">
+    <div className="w-14 flex flex-col items-center justify-center py-4 shrink-0 bg-stone-200">
+      <div className="h-2 w-6 bg-stone-300 rounded mb-1" />
+      <div className="h-6 w-6 bg-stone-300 rounded" />
+    </div>
+    <div className="flex-1 p-4">
+      <div className="h-5 w-3/4 bg-stone-200 rounded mb-2" />
+      <div className="flex items-center gap-1 mb-2">
+        <div className="h-3 w-3 bg-stone-200 rounded" />
+        <div className="h-3 w-24 bg-stone-200 rounded" />
+        <div className="h-3 w-16 bg-stone-100 rounded ml-2" />
+      </div>
+      <div className="h-4 w-full bg-stone-100 rounded" />
+    </div>
+  </div>
+)
+
 export const EventsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
@@ -15,13 +33,15 @@ export const EventsCTA = () => {
     return await response.json()
   }
 
-  const [updates, setUpdates] = useState<EventCardData[]>([])
+  const [updates, setUpdates] = useState<EventCardData[] | null>(null)
 
   useEffect(() => {
     fetchEvents().then(setUpdates)
   }, [])
 
-  const lastTwo = updates.slice(0, 2)
+  const isLoading = updates === null
+  const lastTwo = updates?.slice(0, 2) ?? []
+
   const openEvents = () => {
     plausible('ViewAllClick', { props: { section: 'events' } })
     setPanelContent(<Events />, 'events')
@@ -43,12 +63,19 @@ export const EventsCTA = () => {
       </div>
 
       <div className="mt-3 space-y-3">
-        {lastTwo.map((event) => (
-          <EventCard
-            key={event.id}
-            entry={event}
-          />
-        ))}
+        {isLoading ? (
+          <>
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </>
+        ) : (
+          lastTwo.map((event) => (
+            <EventCard
+              key={event.id}
+              entry={event}
+            />
+          ))
+        )}
       </div>
     </>
   )

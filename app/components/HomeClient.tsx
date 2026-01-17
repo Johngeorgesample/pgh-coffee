@@ -85,10 +85,10 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
-    if (!panelContent) {
+    if (!usePanelStore.getState().panelContent) {
       setPanelContent(<ExploreContent />, 'explore')
     }
-  }, [panelContent, setPanelContent])
+  }, [setPanelContent])
 
   useEffect(() => {
     if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
