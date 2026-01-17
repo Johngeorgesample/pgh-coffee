@@ -62,12 +62,12 @@ export const EventsCTA = () => {
       <div className="flex items-center justify-between">
         <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming events</h3>
         <button
-          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80 bg"
+          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openEvents}
         >
           View all
-          <ChevronRight className="h-4.5 w-4.5" />
+          <ChevronRight className="h-5 w-5" />
         </button>
       </div>
 

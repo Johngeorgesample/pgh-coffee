@@ -9,7 +9,7 @@ import { NewsCard, type NewsCardItem } from '@/app/components/NewsCard'
 
 const NewsCardSkeleton = () => (
   <div className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden animate-pulse">
-    <div className="p-5 border-l-[3px] border-stone-200">
+    <div className="p-5 border-l-[2px] border-stone-200">
       <div className="mb-2">
         <div className="h-4 w-16 bg-stone-200 rounded" />
       </div>
@@ -59,12 +59,12 @@ export const NewsCTA = () => {
           Latest news
         </h3>
         <button
-          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80 bg"
+          className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openNews}
         >
           View all
-          <ChevronRight className="h-4.5 w-4.5"/>
+          <ChevronRight className="h-5 w-5"/>
         </button>
       </div>
 
