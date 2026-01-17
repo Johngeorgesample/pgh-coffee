@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState, useEffect } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useMemo, useState, useEffect } from 'react'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -24,21 +23,12 @@ interface ISortedShopsResults {
 const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ shop }: IProps) {
-  const plausible = usePlausible()
   const { allShops } = useShopsStore()
 
   const [units, setUnits] = useState<TUnits>('miles')
   useEffect(() => {
     setUnits(localStorage.getItem('distanceUnits') as TUnits)
   }, [])
-
-  const calculateDistance = useCallback(
-    (coordA: [number, number], coordB: [number, number]) => {
-      const meters = haversineDistance(coordA, coordB)
-      return units === DISTANCE_UNITS.Miles ? meters * MILES_CONVERSION_FACTOR : meters
-    },
-    [units],
-  )
 
   const sortedShopsWithDistances = useMemo<{
     shops: TShop[]
@@ -47,15 +37,18 @@ export default function NearbyShops({ shop }: IProps) {
     if (!allShops.features) return { shops: [], distances: [] }
 
     return allShops.features
-      .filter((s: TShop) => {
-        const isDifferentShop =
-          s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
-        const distance = haversineDistance(s.geometry.coordinates, shop.geometry.coordinates)
-        return isDifferentShop && distance < 1000
-      })
       .map((s: TShop) => ({
         shop: s,
-        distance: calculateDistance(shop.geometry.coordinates, s.geometry.coordinates),
+        distance: haversineDistance(s.geometry.coordinates, shop.geometry.coordinates),
+      }))
+      .filter(({ shop: s, distance }) => {
+        const isDifferentShop =
+          s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
+        return isDifferentShop && distance < 1000
+      })
+      .map(({ shop: s, distance }) => ({
+        shop: s,
+        distance: units === DISTANCE_UNITS.Miles ? distance * MILES_CONVERSION_FACTOR : distance,
       }))
       .sort((a: IShopWithDistance, b: IShopWithDistance) => a.distance - b.distance)
       .reduce(
@@ -66,7 +59,7 @@ export default function NearbyShops({ shop }: IProps) {
         },
         { shops: [] as TShop[], distances: [] as number[] },
       )
-  }, [allShops, shop, calculateDistance])
+  }, [allShops, shop, units])
 
   if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
 

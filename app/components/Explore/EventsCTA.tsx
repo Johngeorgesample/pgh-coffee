@@ -30,7 +30,7 @@ export const EventsCTA = () => {
   const { setPanelContent } = usePanelStore()
 
   const fetchEvents = async () => {
-    const response = await fetch('/api/events', { cache: 'no-store' })
+    const response = await fetch('/api/events', { next: { revalidate: 3600 } })
     return await response.json()
   }
 

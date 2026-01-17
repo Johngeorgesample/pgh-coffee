@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Image from 'next/image'
 import { usePlausible } from 'next-plausible'
 import { MapPinIcon } from '@heroicons/react/24/outline'
@@ -26,7 +27,7 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
   return `${roundDistance({ units, distance: parsedDistance })} ${units.toLowerCase()} away`
 }
 
-export default function ShopCard(props: IProps) {
+function ShopCard(props: IProps) {
   const plausible = usePlausible()
   const { handleShopSelect } = useShopSelection()
   const { setHoveredShop } = useShopsStore()
@@ -91,3 +92,5 @@ export default function ShopCard(props: IProps) {
     </li>
   )
 }
+
+export default memo(ShopCard)

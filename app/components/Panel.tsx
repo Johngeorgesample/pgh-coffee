@@ -1,12 +1,16 @@
-
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Sheet } from '@silk-hq/components'
+import dynamic from 'next/dynamic'
 import { TShop } from '@/types/shop-types'
 import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
+
+const MobileSheet = dynamic(() => import('./MobileSheet'), {
+  ssr: false,
+  loading: () => <div className="fixed inset-x-0 bottom-0 h-[60vh] bg-neutral-50 rounded-t-xl" />,
+})
 
 interface IProps {
   children?: React.ReactNode
@@ -29,7 +33,6 @@ export default function Panel(props: IProps) {
   const [activeDetent, setActiveDetent] = useState<number | undefined>()
 
   const contentRef = useRef<HTMLDivElement | null>(null)
-  const touchStartY = useRef<number | null>(null)
   const largeViewport = useMediaQuery('(min-width: 1024px)')
 
   // detect touch device once
@@ -55,49 +58,6 @@ export default function Panel(props: IProps) {
     }
   }, [presented, currentShop, largeViewport])
 
-  // Touch-only: if user scrolls DOWN while on middle detent, expand to full
-  useEffect(() => {
-    if (!isTouch) return
-    const el = contentRef.current
-    if (!el) return
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0]?.clientY ?? null
-    }
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (activeDetent !== middleDetentIndex) return
-      const startY = touchStartY.current
-      const currY = e.touches[0]?.clientY
-      if (startY == null || currY == null) return
-
-      const deltaY = currY - startY
-      // Finger moves UP (deltaY < 0) => content would scroll DOWN.
-      // Trigger expand only on that gesture, with a tiny threshold to avoid noise.
-      if (deltaY < -6) {
-        e.preventDefault() // stop the partial scroll
-        setActiveDetent(lastDetentIndex)
-      }
-      // If deltaY >= 0 (pulling down), do nothing (allow normal behavior)
-    }
-
-    const onTouchEnd = () => {
-      touchStartY.current = null
-    }
-
-    el.addEventListener('touchstart', onTouchStart, { passive: true })
-    el.addEventListener('touchmove', onTouchMove, { passive: false }) // must be non-passive to preventDefault
-    el.addEventListener('touchend', onTouchEnd, { passive: true })
-    el.addEventListener('touchcancel', onTouchEnd, { passive: true })
-
-    return () => {
-      el.removeEventListener('touchstart', onTouchStart as any)
-      el.removeEventListener('touchmove', onTouchMove as any)
-      el.removeEventListener('touchend', onTouchEnd as any)
-      el.removeEventListener('touchcancel', onTouchEnd as any)
-    }
-  }, [isTouch, activeDetent, middleDetentIndex, lastDetentIndex])
-
   if (largeViewport) {
     return (
       <div data-testid="shop-panel" className="relative z-10">
@@ -116,35 +76,18 @@ export default function Panel(props: IProps) {
   }
 
   return (
-    <Sheet.Root
+    <MobileSheet
       presented={presented}
       onPresentedChange={setPresented}
       activeDetent={activeDetent}
       onActiveDetentChange={setActiveDetent}
-      license="commercial"
+      detents={detents}
+      contentRef={contentRef}
+      middleDetentIndex={middleDetentIndex}
+      lastDetentIndex={lastDetentIndex}
+      isTouch={isTouch}
     >
-      <Sheet.Portal>
-        <Sheet.View
-          className="BottomSheet-view"
-          detents={detents as unknown as string[]}
-          nativeEdgeSwipePrevention
-        >
-          <Sheet.Backdrop themeColorDimming="auto" />
-          <Sheet.Content ref={contentRef} className="h-[90%] bg-neutral-50 overflow-y-auto">
-            <Sheet.Handle
-              action="dismiss"
-              className="block mx-auto focus:outline-none focus:ring-0 mt-2 mb-3 bg-gray-300"
-            >
-              Drag to expand
-            </Sheet.Handle>
-
-            <SearchBar />
-            {props.children}
-
-            <Sheet.BleedingBackground className="BottomSheet-bleedingBackground" />
-          </Sheet.Content>
-        </Sheet.View>
-      </Sheet.Portal>
-    </Sheet.Root>
+      {props.children}
+    </MobileSheet>
   )
 }
