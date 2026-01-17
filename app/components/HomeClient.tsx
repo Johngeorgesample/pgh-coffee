@@ -2,12 +2,17 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
-import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
+
+const MapContainer = dynamic(() => import('./MapContainer'), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-stone-100" />,
+})
 import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
