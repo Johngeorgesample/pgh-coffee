@@ -101,20 +101,20 @@ const usePanelStore = create<PanelState>()(
 
       back: () =>
         set(state => {
-          // pop current if present
-          let history = state.history.slice(0, -1)
-
           if (state.searchValue) {
             set({ searchValue: '' })
           }
 
-          // if nothing left, go home
-          if (history.length === 0) {
+          // if nothing to go back to, just render explore
+          if (state.history.length <= 1) {
             const url = new URL(window.location.href)
             const baseUrl = url.origin + url.pathname
             window.history.replaceState({}, '', baseUrl)
             return { history: [], panelMode: 'explore', panelContent: null }
           }
+
+          // pop current entry
+          const history = state.history.slice(0, -1)
 
           const top = history[history.length - 1]
 

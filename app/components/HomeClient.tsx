@@ -86,12 +86,10 @@ export default function HomeClient() {
   }, [fetchCoffeeShops])
 
   useEffect(() => {
-    // Check store directly to avoid race with URL sync hooks
-    const currentContent = usePanelStore.getState().panelContent
-    if (!currentContent) {
+    if (!panelContent && panelMode === 'explore') {
       setPanelContent(<ExploreContent />, 'explore')
     }
-  }, [setPanelContent])
+  }, [panelContent, panelMode, setPanelContent])
 
   useEffect(() => {
     if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
