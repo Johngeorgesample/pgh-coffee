@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { TShop } from '@/types/shop-types'
 
@@ -59,11 +60,15 @@ export default function PhotoDialog(props: TProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />{' '}
                 </svg>
               </button>
-              <img
-                alt={props.shop.properties.name}
-                className="max-w-[90%] max-h-[74vh] w-auto h-auto"
-                src={photos[currentPhotoIndex]}
-              />
+              <div className="relative max-w-[90%] max-h-[74vh] w-[800px] h-[600px]">
+                <Image
+                  alt={props.shop.properties.name}
+                  src={photos[currentPhotoIndex] || ''}
+                  fill
+                  sizes="90vw"
+                  className="object-contain"
+                />
+              </div>
               <button
                 className="h-12 w-12 disabled:hidden"
                 disabled={!(currentPhotoIndex < photos.length - 1)}

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { usePlausible } from 'next-plausible'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
@@ -60,11 +61,12 @@ export default function ShopCard(props: IProps) {
       role="button"
     >
       {props.shop?.properties?.photo ? (
-        <img
-          className="h-full w-full relative object-cover object-center"
-          decoding="async"
-          loading="lazy"
+        <Image
+          className="object-cover object-center"
           src={props.shop.properties.photo}
+          alt={props.shop.properties.name}
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
         />
       ) : (
         <div className="h-full relative bg-yellow-200 bg-cover bg-center" />

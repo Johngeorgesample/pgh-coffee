@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { usePlausible } from 'next-plausible'
 import { Photo } from '@/types/shop-types'
 
@@ -53,10 +54,12 @@ export default function PhotoGrid({ photos }: PhotoGridProps) {
             aria-label={`Toggle photo expansion for coffee shop photo ${index + 1}`}
             aria-pressed={expandedIndex === index}
           >
-            <img
+            <Image
               src={getPhotoUrl(photo)}
               alt={`Coffee shop photo ${index + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              sizes={expandedIndex === index ? '100vw' : '33vw'}
+              className="object-cover"
             />
           </button>
         ))}
