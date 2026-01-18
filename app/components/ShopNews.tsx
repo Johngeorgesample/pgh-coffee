@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TShop } from '@/types/shop-types'
-import { NewsCard, type NewsCardData } from '@/app/components/NewsCard'
+import { NewsCard } from '@/app/components/NewsCard'
+import { NewsItem } from '@/types/news-types'
 
 type UpdateEntry = {
   id?: string | number
@@ -73,7 +74,7 @@ export const ShopNews = ({ shop }: Props) => {
           <NewsCard
             key={entry.id ?? entry.title}
             asLink={true}
-            item={entry as NewsCardData}
+            item={entry as NewsItem}
             variant="inline"
             showPastOpacity
           />

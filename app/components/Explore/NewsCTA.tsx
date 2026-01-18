@@ -5,7 +5,8 @@ import { usePlausible } from 'next-plausible'
 import { ChevronRight } from 'lucide-react';
 import usePanelStore from '@/stores/panelStore'
 import { News } from '@/app/components/News'
-import { NewsCard, type NewsCardItem } from '@/app/components/NewsCard'
+import { NewsCard } from '@/app/components/NewsCard'
+import { NewsItem } from '@/types/news-types'
 
 const NewsCardSkeleton = () => (
   <div className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden animate-pulse">
@@ -25,7 +26,7 @@ export const NewsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
 
-  const [updates, setUpdates] = useState<NewsCardItem[] | null>(null)
+  const [updates, setUpdates] = useState<NewsItem[] | null>(null)
 
   useEffect(() => {
     fetch('/api/updates')

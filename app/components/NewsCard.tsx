@@ -2,77 +2,14 @@
 import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useShopSelection } from '@/hooks'
-import { DbShop } from '@/types/shop-types'
 import usePanelStore from '@/stores/panelStore'
 import { NewsDetails } from './NewsDetails'
 import { usePlausible } from 'next-plausible'
-
-export type NewsCardData = {
-  id?: string
-  title: string
-  description?: string | null
-  url?: string | null
-  tags?: string[] | null
-  post_date?: string | null
-  event_date?: string | null
-  eventDate?: string | null
-}
-
-export type NewsCardItem = NewsCardData & {
-  shop_id?: string
-  shop?: DbShop
-}
-
-type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu'
-
-const TAG_LABELS: Record<TagKey, string> = {
-  opening: 'New Shop',
-  closure: 'Closing',
-  'temporary closure': 'Temporary Closure',
-  'coming soon': 'Coming Soon',
-  event: 'Event',
-  seasonal: 'Seasonal',
-  menu: 'Menu Update',
-}
-
-const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
-  opening: {
-    badge: 'bg-green-50 text-green-600 border-green-100',
-    border: 'border-green-500',
-  },
-  closure: {
-    badge: 'bg-red-50 text-red-600 border-red-100',
-    border: 'border-red-500',
-  },
-  'temporary closure': {
-    badge: 'bg-amber-50 text-amber-600 border-amber-100',
-    border: 'border-amber-500',
-  },
-  'coming soon': {
-    badge: 'bg-blue-50 text-blue-600 border-blue-100',
-    border: 'border-blue-500',
-  },
-  event: {
-    badge: 'bg-amber-50 text-amber-600 border-amber-100',
-    border: 'border-amber-500',
-  },
-  seasonal: {
-    badge: 'bg-orange-50 text-orange-600 border-orange-100',
-    border: 'border-orange-500',
-  },
-  menu: {
-    badge: 'bg-teal-50 text-teal-600 border-teal-100',
-    border: 'border-teal-500',
-  },
-}
-
-const DEFAULT_STYLE = {
-  badge: 'bg-stone-50 text-stone-600 border-stone-100',
-  border: 'border-primary',
-}
+import { NewsItem, getTagStyle } from '@/types/news-types'
+import { TagBadge } from './TagBadge'
 
 type NewsCardProps = {
-  item: NewsCardItem
+  item: NewsItem
   asLink?: boolean
   variant?: string
   showPastOpacity?: boolean
@@ -82,9 +19,8 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
   const { setPanelContent } = usePanelStore()
   const plausible = usePlausible()
-  const primaryTag = item.tags?.[0] as TagKey | undefined
-  const label = primaryTag ? (TAG_LABELS[primaryTag] ?? primaryTag.toUpperCase()) : 'News'
-  const styles = primaryTag ? (TAG_STYLES[primaryTag] ?? DEFAULT_STYLE) : DEFAULT_STYLE
+  const primaryTag = item.tags?.[0] ?? 'news'
+  const styles = getTagStyle(primaryTag)
 
   const handleCardClick = () => {
     if (item.id) {
@@ -109,19 +45,13 @@ export const NewsCard = ({ item }: NewsCardProps) => {
     >
       <div className={`p-5 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
-          <span
-            className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${styles.badge}`}
-          >
-            {label}
-          </span>
+          <TagBadge tag={primaryTag} variant="compact" />
         </div>
 
-        <h3 className="text-xl font-bold mb-2 leading-tight text-gray-900">
-          {item.title}
-        </h3>
+        <h3 className="text-xl font-bold mb-2 leading-tight text-gray-900">{item.title}</h3>
 
         {item.description && (
-          <p className="text-gray-500 text-sm leading-relaxed mb-4">{item.description}</p>
+          <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-1">{item.description}</p>
         )}
 
         <span className="inline-flex items-center text-xs font-bold text-gray-900 hover:opacity-70 transition-opacity">

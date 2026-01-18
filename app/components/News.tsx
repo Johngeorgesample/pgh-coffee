@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { fmtYMD, parseYMDLocal } from '@/app/utils/utils'
-import { NewsCard, type NewsCardData } from '@/app/components/NewsCard'
+import { NewsCard } from '@/app/components/NewsCard'
+import { NewsItem } from '@/types/news-types'
 
 const DayHeader = ({ date }: { date: string }) => (
   <div className="sticky top-0 isolate -mx-4 px-4 py-2 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -39,7 +40,7 @@ export const News = () => {
           <section key={day} className="mb-4">
             <DayHeader date={day} />
             <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-              {entries.map((entry: NewsCardData, i: number) => (
+              {entries.map((entry: NewsItem, i: number) => (
                 <NewsCard key={i} asLink={true} item={entry} variant="pill" />
               ))}
             </ul>
