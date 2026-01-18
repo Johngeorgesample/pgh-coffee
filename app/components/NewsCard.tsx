@@ -5,7 +5,8 @@ import { useShopSelection } from '@/hooks'
 import usePanelStore from '@/stores/panelStore'
 import { NewsDetails } from './NewsDetails'
 import { usePlausible } from 'next-plausible'
-import { NewsItem, getTagStyle, getTagLabel } from '@/types/news-types'
+import { NewsItem, getTagStyle } from '@/types/news-types'
+import { TagBadge } from './TagBadge'
 
 type NewsCardProps = {
   item: NewsItem
@@ -18,8 +19,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
   const { setPanelContent } = usePanelStore()
   const plausible = usePlausible()
-  const primaryTag = item.tags?.[0]
-  const label = getTagLabel(primaryTag)
+  const primaryTag = item.tags?.[0] ?? 'news'
   const styles = getTagStyle(primaryTag)
 
   const handleCardClick = () => {
@@ -45,11 +45,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
     >
       <div className={`p-5 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
-          <span
-            className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${styles.badge}`}
-          >
-            {label}
-          </span>
+          <TagBadge tag={primaryTag} variant="compact" />
         </div>
 
         <h3 className="text-xl font-bold mb-2 leading-tight text-gray-900">{item.title}</h3>

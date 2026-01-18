@@ -5,16 +5,8 @@ import { Calendar, SquareArrowOutUpRight, MapPin } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import { useShopSelection } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
-import { NewsItem, getTagStyle } from '@/types/news-types'
-
-const TagBadge = ({ label }: { label: string }) => {
-  const styles = getTagStyle(label)
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${styles.badge}`}>
-      {label}
-    </span>
-  )
-}
+import { NewsItem } from '@/types/news-types'
+import { TagBadge } from './TagBadge'
 
 const formatNewsDate = (dateStr: string) => {
   const date = new Date(dateStr + 'T00:00:00')
@@ -132,7 +124,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
           {news.tags && news.tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               {news.tags.map(t => (
-                <TagBadge key={t} label={t} />
+                <TagBadge key={t} tag={t} />
               ))}
             </div>
           )}
