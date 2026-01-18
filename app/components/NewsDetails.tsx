@@ -5,24 +5,12 @@ import { Calendar, SquareArrowOutUpRight, MapPin } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import { useShopSelection } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
-import { DbShop } from '@/types/shop-types'
-
-type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu'
-
-const TAG_STYLES: Record<TagKey, string> = {
-  opening: 'bg-green-100 text-green-800',
-  closure: 'bg-red-100 text-red-800',
-  'temporary closure': 'bg-amber-100 text-amber-800',
-  'coming soon': 'bg-blue-100 text-blue-800',
-  event: 'bg-blue-100 text-blue-800',
-  seasonal: 'bg-pink-100 text-pink-800',
-  menu: 'bg-slate-100 text-slate-800',
-}
+import { NewsItem, getTagStyle } from '@/types/news-types'
 
 const TagBadge = ({ label }: { label: string }) => {
-  const cls = TAG_STYLES[label as TagKey] ?? 'bg-gray-100 text-gray-800'
+  const styles = getTagStyle(label)
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${cls}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${styles.badge}`}>
       {label}
     </span>
   )
@@ -35,18 +23,6 @@ const formatNewsDate = (dateStr: string) => {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-interface NewsItem {
-  id: string
-  title: string
-  description?: string | null
-  url?: string | null
-  tags?: string[] | null
-  post_date?: string | null
-  event_date?: string | null
-  shop_id?: string
-  shop?: DbShop
 }
 
 export const NewsDetails = ({ id }: { id: string }) => {
