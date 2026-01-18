@@ -23,7 +23,7 @@ export type NewsCardItem = NewsCardData & {
   shop?: DbShop
 }
 
-type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu'
+type TagKey = 'opening' | 'closure' | 'temporary closure' | 'coming soon' | 'event' | 'seasonal' | 'menu' | 'offering'
 
 const TAG_LABELS: Record<TagKey, string> = {
   opening: 'New Shop',
@@ -33,6 +33,7 @@ const TAG_LABELS: Record<TagKey, string> = {
   event: 'Event',
   seasonal: 'Seasonal',
   menu: 'Menu Update',
+  offering: 'Offering',
 }
 
 const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
@@ -63,6 +64,10 @@ const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
   menu: {
     badge: 'bg-teal-50 text-teal-600 border-teal-100',
     border: 'border-teal-500',
+  },
+  offering: {
+    badge: 'bg-purple-50 text-purple-600 border-purple-100',
+    border: 'border-purple-500',
   },
 }
 
@@ -116,12 +121,10 @@ export const NewsCard = ({ item }: NewsCardProps) => {
           </span>
         </div>
 
-        <h3 className="text-xl font-bold mb-2 leading-tight text-gray-900">
-          {item.title}
-        </h3>
+        <h3 className="text-xl font-bold mb-2 leading-tight text-gray-900">{item.title}</h3>
 
         {item.description && (
-          <p className="text-gray-500 text-sm leading-relaxed mb-4">{item.description}</p>
+          <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-1">{item.description}</p>
         )}
 
         <span className="inline-flex items-center text-xs font-bold text-gray-900 hover:opacity-70 transition-opacity">
