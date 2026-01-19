@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import {PlusIcon, Settings} from 'lucide-react'
+import { PlusIcon, Settings, LogIn, User } from 'lucide-react'
+import { useAuth } from '@/app/components/AuthProvider'
 
 export default function Nav() {
   const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false)
+  const { user, loading } = useAuth()
 
   useEffect(() => {
     setHamburgerIsOpen(false)
@@ -41,6 +43,18 @@ export default function Nav() {
         <PlusIcon className="w-4 h-4" />
           Submit a shop
         </Link>
+        {!loading &&
+          (user ? (
+            <Link href="/account" className="flex gap-1 items-center text-md hover:bg-black/5 p-2 hover:rounded-lg">
+              <User className="w-4 h-4" />
+              Account
+            </Link>
+          ) : (
+            <Link href="/sign-in" className="flex gap-1 items-center text-md hover:bg-black/5 p-2 hover:rounded-lg">
+              <LogIn className="w-4 h-4" />
+              Sign in
+            </Link>
+          ))}
       </div>
 
       <div className="sm:hidden">
@@ -52,7 +66,7 @@ export default function Nav() {
       <div
         className={`${hamburgerIsOpen ? 'z-20 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
       >
-        <div className="flex flex-col items-center pt-8">
+        <div className="flex flex-col items-center pt-8 gap-4">
           <Link className="text-2xl" href="/about" onClick={() => setHamburgerIsOpen(false)}>
             About
           </Link>
@@ -62,6 +76,16 @@ export default function Nav() {
           <Link className="text-2xl" href="/settings" onClick={() => setHamburgerIsOpen(false)}>
             Settings
           </Link>
+          {!loading &&
+            (user ? (
+              <Link className="text-2xl" href="/account" onClick={() => setHamburgerIsOpen(false)}>
+                Account
+              </Link>
+            ) : (
+              <Link className="text-2xl" href="/sign-in" onClick={() => setHamburgerIsOpen(false)}>
+                Sign in
+              </Link>
+            ))}
         </div>
       </div>
     </nav>
