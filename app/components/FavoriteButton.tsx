@@ -18,7 +18,7 @@ export default function FavoriteButton({ shopUUID }: FavoriteButtonProps) {
         if (response.ok) {
           const favorites = await response.json()
           const isFav = favorites.some(
-            (fav: { shop: { id: string } }) => fav.shop?.id === shopUUID
+            (fav: { shop: { uuid: string } }) => fav.shop?.uuid === shopUUID
           )
           setIsFavorited(isFav)
         }
