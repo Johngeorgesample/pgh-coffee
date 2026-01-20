@@ -16,6 +16,10 @@ export function useShopSelection() {
     (shop: TShop) => {
       const url = new URL(window.location.href)
       const params = new URLSearchParams(url.search)
+      const isOnMap = url.pathname === '/'
+      if (!isOnMap) {
+        url.pathname = '/'
+      }
       params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
       url.search = params.toString()
       router.push(url.toString())
