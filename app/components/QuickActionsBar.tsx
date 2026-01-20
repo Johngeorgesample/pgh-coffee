@@ -10,9 +10,10 @@ interface QuickActionsBarProps {
   coordinates: [number, number]
   website?: string
   shopUUID: string
+  shopName: string
 }
 
-export default function QuickActionsBar({ coordinates, website, shopUUID }: QuickActionsBarProps) {
+export default function QuickActionsBar({ coordinates, website, shopUUID, shopName }: QuickActionsBarProps) {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   return (
@@ -21,7 +22,7 @@ export default function QuickActionsBar({ coordinates, website, shopUUID }: Quic
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
         <ShareButton onClick={() => setIsShareModalOpen(true)} />
-        <FavoriteButton shopUUID={shopUUID} />
+        <FavoriteButton shopUUID={shopUUID} shopName={shopName} />
       </div>
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />

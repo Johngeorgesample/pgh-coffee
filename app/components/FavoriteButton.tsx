@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { Heart } from 'lucide-react'
+import FavoriteToast from './FavoriteToast'
 
 interface FavoriteButtonProps {
   shopUUID: string
+  shopName: string
 }
 
-export default function FavoriteButton({ shopUUID }: FavoriteButtonProps) {
+export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonProps) {
   const [isFavorited, setIsFavorited] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showToast, setShowToast] = useState(false)
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
@@ -34,6 +37,7 @@ export default function FavoriteButton({ shopUUID }: FavoriteButtonProps) {
 
   const handleToggle = async () => {
     setIsLoading(true)
+    const wasAlreadyFavorited = isFavorited
 
     try {
       const method = isFavorited ? 'DELETE' : 'POST'
@@ -45,6 +49,9 @@ export default function FavoriteButton({ shopUUID }: FavoriteButtonProps) {
 
       if (response.ok) {
         setIsFavorited(!isFavorited)
+        if (!wasAlreadyFavorited) {
+          setShowToast(true)
+        }
       }
     } catch (error) {
       console.error('Error toggling favorite:', error)
@@ -54,15 +61,23 @@ export default function FavoriteButton({ shopUUID }: FavoriteButtonProps) {
   }
 
   return (
-    <button
-      onClick={handleToggle}
-      disabled={isLoading}
-      className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors disabled:opacity-50"
-    >
-      <Heart
-        className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
+    <>
+      <button
+        onClick={handleToggle}
+        disabled={isLoading}
+        className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors disabled:opacity-50"
+      >
+        <Heart
+          className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
+        />
+        {isFavorited ? 'Favorited' : 'Favorite'}
+      </button>
+
+      <FavoriteToast
+        isOpen={showToast}
+        onClose={() => setShowToast(false)}
+        shopName={shopName}
       />
-      {isFavorited ? 'Favorited' : 'Favorite'}
-    </button>
+    </>
   )
 }
