@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 // Create mock functions for the Supabase chain
 const mockInsert = vi.fn()
@@ -18,10 +18,14 @@ vi.mock('@/lib/supabase/server', () => ({
   })),
 }))
 
-// Import the route handler after mocking
-const { POST } = await import('@/app/api/favorites/route')
-
 describe('Favorites API Route - POST (Add Favorite)', () => {
+  let POST: typeof import('@/app/api/favorites/route').POST
+
+  beforeAll(async () => {
+    const module = await import('@/app/api/favorites/route')
+    POST = module.POST
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     // Setup default chain behavior
