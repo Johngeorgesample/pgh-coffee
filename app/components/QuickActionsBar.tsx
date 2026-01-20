@@ -19,10 +19,10 @@ export default function QuickActionsBar({ coordinates, website, shopUUID, shopNa
   return (
     <>
       <div className="flex gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
+        <FavoriteButton shopUUID={shopUUID} shopName={shopName} />
+        <ShareButton onClick={() => setIsShareModalOpen(true)} />
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
-        <ShareButton onClick={() => setIsShareModalOpen(true)} />
-        <FavoriteButton shopUUID={shopUUID} shopName={shopName} />
       </div>
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
