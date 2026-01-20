@@ -40,7 +40,7 @@ export default function FavoriteToast({ isOpen, onClose, shopName }: FavoriteToa
                   <span className="font-medium">{shopName}</span> added to favorites
                 </p>
                 <Link
-                  href="/account"
+                  href="/account/favorites"
                   onClick={onClose}
                   className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 whitespace-nowrap"
                 >
