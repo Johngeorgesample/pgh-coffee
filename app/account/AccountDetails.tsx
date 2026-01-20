@@ -36,17 +36,17 @@ export default function AccountDetails() {
     )
   }
 
+  const profilePicture = user.user_metadata.avatar_url
+
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8">
       <div className="flex items-center gap-4 mb-6">
         <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
-          <User className="w-8 h-8 text-yellow-600" />
+          {profilePicture ? <img className="rounded-full" src={profilePicture} /> : <User className="w-8 h-8 text-yellow-600" />}
         </div>
         <div>
           <p className="text-lg font-medium text-gray-900">{user.email}</p>
-          <p className="text-sm text-gray-500">
-            Joined {new Date(user.created_at).toLocaleDateString()}
-          </p>
+          <p className="text-sm text-gray-500">Joined {new Date(user.created_at).toLocaleDateString()}</p>
         </div>
       </div>
 
