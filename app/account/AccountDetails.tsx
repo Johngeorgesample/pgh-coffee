@@ -42,7 +42,7 @@ export default function AccountDetails() {
     <div className="bg-white rounded-2xl shadow-lg p-8">
       <div className="flex items-center gap-4 mb-6">
         <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
-          {profilePicture ? <img className="rounded-full" src={profilePicture} /> : <User className="w-8 h-8 text-yellow-600" />}
+          {profilePicture ? <img className="rounded-full" src={profilePicture} alt={user.email || 'Profile picture'} /> : <User className="w-8 h-8 text-yellow-600" />}
         </div>
         <div>
           <p className="text-lg font-medium text-gray-900">{user.email}</p>

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function SignInForm() {
   const [email, setEmail] = useState('')
@@ -12,22 +12,55 @@ export default function SignInForm() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
 
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+
+  // Read error from URL query params (e.g., from OAuth callback failures)
+  useEffect(() => {
+    const errorParam = searchParams.get('error')
+    if (errorParam === 'auth_failed') {
+      setError('Authentication failed. Please try again.')
+    }
+  }, [searchParams])
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
 
-    const { error } =
-      mode === 'signin'
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password })
-
-    if (error) {
-      setError(error.message)
-      setIsLoading(false)
+    if (mode === 'signin') {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setError(error.message)
+        setIsLoading(false)
+      } else {
+        router.push('/')
+        router.refresh()
+      }
     } else {
+      const { data, error } = await supabase.auth.signUp({ email, password })
+
+      if (error) {
+        setError(error.message)
+        setIsLoading(false)
+        return
+      }
+
+      // Supabase returns a "fake" success when email already exists (to prevent enumeration)
+      // Detect this by checking if identities array is empty
+      if (data.user?.identities?.length === 0) {
+        setError('An account with this email already exists. Please sign in instead.')
+        setIsLoading(false)
+        return
+      }
+
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        setError('Please check your email to confirm your account before signing in.')
+        setIsLoading(false)
+        return
+      }
+
       router.push('/')
       router.refresh()
     }

@@ -26,8 +26,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const client = createClient()
       setSupabase(client)
-    } catch {
+    } catch (error) {
       // Supabase not configured, stay in loading=false state with no user
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Failed to initialize Supabase client:', error)
+      }
       setLoading(false)
     }
   }, [])

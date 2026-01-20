@@ -5,9 +5,16 @@ import Link from 'next/link'
 import { Heart, MapPin } from 'lucide-react'
 import ShopCard from '@/app/components/ShopCard'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
+import type { DbShop } from '@/types/shop-types'
+
+interface Favorite {
+  id: string
+  created_at: string
+  shop: DbShop
+}
 
 export default function Favorites() {
-  const [favorites, setFavorites] = useState<any[]>([])
+  const [favorites, setFavorites] = useState<Favorite[]>([])
   const [loading, setLoading] = useState(true)
 
   const hasFavorites = favorites && favorites.length > 0
@@ -19,7 +26,8 @@ export default function Favorites() {
         setFavorites(Array.isArray(data) ? data : [])
         setLoading(false)
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Failed to fetch favorites:', error)
         setFavorites([])
         setLoading(false)
       })

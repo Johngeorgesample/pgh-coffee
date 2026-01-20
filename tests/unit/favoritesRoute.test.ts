@@ -5,6 +5,8 @@ const mockInsert = vi.fn()
 const mockSelect = vi.fn()
 const mockSingle = vi.fn()
 const mockGetUser = vi.fn()
+const mockDelete = vi.fn()
+const mockOrder = vi.fn()
 
 // Mock the server Supabase client
 vi.mock('@/lib/supabase/server', () => ({
@@ -14,6 +16,8 @@ vi.mock('@/lib/supabase/server', () => ({
     },
     from: () => ({
       insert: mockInsert,
+      select: mockSelect,
+      delete: mockDelete,
     }),
   })),
 }))
@@ -116,5 +120,153 @@ describe('Favorites API Route - POST (Add Favorite)', () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error adding favorite')
+  })
+})
+
+describe('Favorites API Route - GET (Fetch Favorites)', () => {
+  let GET: typeof import('@/app/api/favorites/route').GET
+
+  beforeAll(async () => {
+    const module = await import('@/app/api/favorites/route')
+    GET = module.GET
+  })
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    // Setup default chain behavior for GET
+    mockSelect.mockReturnValue({ order: mockOrder })
+  })
+
+  test('successfully fetches favorites for authenticated user', async () => {
+    const mockUser = { id: 'user-123' }
+    const mockFavorites = [
+      { id: 'fav-1', created_at: '2024-01-01T00:00:00Z', shop: { name: 'Coffee Shop 1' } },
+      { id: 'fav-2', created_at: '2024-01-02T00:00:00Z', shop: { name: 'Coffee Shop 2' } },
+    ]
+
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+    mockOrder.mockResolvedValueOnce({ data: mockFavorites, error: null })
+
+    const response = await GET()
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual(mockFavorites)
+  })
+
+  test('returns 401 when user is not authenticated', async () => {
+    mockGetUser.mockResolvedValueOnce({ data: { user: null } })
+
+    const response = await GET()
+    const data = await response.json()
+
+    expect(response.status).toBe(401)
+    expect(data.error).toBe('Unauthorized')
+  })
+
+  test('returns 500 on database error', async () => {
+    const mockUser = { id: 'user-123' }
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+    mockOrder.mockResolvedValueOnce({
+      data: null,
+      error: { message: 'Database error' },
+    })
+
+    const response = await GET()
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error fetching favorites')
+  })
+})
+
+describe('Favorites API Route - DELETE (Remove Favorite)', () => {
+  let DELETE: typeof import('@/app/api/favorites/route').DELETE
+
+  beforeAll(async () => {
+    const module = await import('@/app/api/favorites/route')
+    DELETE = module.DELETE
+  })
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  test('successfully removes a shop from favorites', async () => {
+    const mockUser = { id: 'user-123' }
+
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+    // Chain: delete() -> eq() -> eq() -> resolves
+    const mockSecondEq = vi.fn().mockResolvedValueOnce({ error: null })
+    const mockFirstEq = vi.fn().mockReturnValue({ eq: mockSecondEq })
+    mockDelete.mockReturnValue({ eq: mockFirstEq })
+
+    const request = new Request('http://localhost:3000/api/favorites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopUUID: 'shop-uuid-456' }),
+    })
+
+    const response = await DELETE(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data.success).toBe(true)
+  })
+
+  test('returns 401 when user is not authenticated', async () => {
+    mockGetUser.mockResolvedValueOnce({ data: { user: null } })
+
+    const request = new Request('http://localhost:3000/api/favorites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopUUID: 'shop-uuid-456' }),
+    })
+
+    const response = await DELETE(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(401)
+    expect(data.error).toBe('Unauthorized')
+  })
+
+  test('returns 400 when shopUUID is missing', async () => {
+    const mockUser = { id: 'user-123' }
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+
+    const request = new Request('http://localhost:3000/api/favorites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
+
+    const response = await DELETE(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data.error).toBe('shopUUID is required')
+  })
+
+  test('returns 500 on database error', async () => {
+    const mockUser = { id: 'user-123' }
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+    // Chain: delete() -> eq() -> eq() -> resolves with error
+    const mockSecondEq = vi.fn().mockResolvedValueOnce({
+      error: { message: 'Database error' },
+    })
+    const mockFirstEq = vi.fn().mockReturnValue({ eq: mockSecondEq })
+    mockDelete.mockReturnValue({ eq: mockFirstEq })
+
+    const request = new Request('http://localhost:3000/api/favorites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopUUID: 'shop-uuid-456' }),
+    })
+
+    const response = await DELETE(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error removing favorite')
   })
 })

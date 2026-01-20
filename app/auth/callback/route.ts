@@ -12,6 +12,7 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
+    console.error('Supabase auth code exchange failed:', error)
   }
 
   return NextResponse.redirect(`${origin}/sign-in?error=auth_failed`)
