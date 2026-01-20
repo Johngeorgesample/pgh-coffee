@@ -12,12 +12,12 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { website, address, photos } = props.shop.properties
+  const { website, address, photos, uuid } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
     <div className="bg-[#FAF9F7]">
-      <QuickActionsBar coordinates={coordinates} website={website} />
+      <QuickActionsBar coordinates={coordinates} website={website} shopUUID={uuid} />
 
       <div className="px-4 sm:px-6 py-5">
         <a

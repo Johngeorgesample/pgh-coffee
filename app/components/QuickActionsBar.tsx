@@ -3,14 +3,16 @@ import { useState } from 'react'
 import DirectionsButton from './DirectionsButton'
 import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
+import FavoriteButton from './FavoriteButton'
 import ShareModal from './ShareModal'
 
 interface QuickActionsBarProps {
   coordinates: [number, number]
   website?: string
+  shopUUID: string
 }
 
-export default function QuickActionsBar({ coordinates, website }: QuickActionsBarProps) {
+export default function QuickActionsBar({ coordinates, website, shopUUID }: QuickActionsBarProps) {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   return (
@@ -19,6 +21,7 @@ export default function QuickActionsBar({ coordinates, website }: QuickActionsBa
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
         <ShareButton onClick={() => setIsShareModalOpen(true)} />
+        <FavoriteButton shopUUID={shopUUID} />
       </div>
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />

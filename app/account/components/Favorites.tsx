@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Heart, MapPin } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import ShopCard from '@/app/components/ShopCard'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState<any[]>([])
@@ -12,46 +13,29 @@ export default function Favorites() {
   const hasFavorites = favorites && favorites.length > 0
 
   useEffect(() => {
-    const supabase = createClient()
-    
-    supabase
-      .from('user_favorites')
-      .select(`
-        id,
-        created_at,
-        shop:shops (
-          uuid,
-          name,
-          neighborhood
-        )
-      `)
-      .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        setFavorites(data || [])
+    fetch('/api/favorites')
+      .then((res) => res.json())
+      .then((data) => {
+        setFavorites(Array.isArray(data) ? data : [])
+        setLoading(false)
+      })
+      .catch(() => {
+        setFavorites([])
         setLoading(false)
       })
   }, [])
 
   if (loading) return <div>Loading...</div>
-    return (
+  return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Favorites</h1>
-      
+
       {hasFavorites ? (
-        <div className="grid gap-4">
+        <ul>
           {favorites.map((fav) => (
-            <Link
-              key={fav.id}
-              href={`/shops/${fav.shop.slug}`}
-              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow"
-            >
-              <h3 className="font-semibold text-gray-900">{fav.shop.name}</h3>
-              {fav.shop.neighborhood && (
-                <p className="text-sm text-gray-500 mt-1">{fav.shop.neighborhood}</p>
-              )}
-            </Link>
+            <ShopCard key={fav.id} shop={formatDBShopAsFeature(fav.shop)} />
           ))}
-        </div>
+        </ul>
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">

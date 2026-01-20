@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
 export const revalidate = 0
@@ -81,21 +82,12 @@ export async function GET() {
   }
 
   const s = data[0]
+  const base = formatDBShopAsFeature(s)
   const feature = {
-    type: 'Feature',
+    ...base,
     properties: {
-      name: s.name,
-      company: s.company,
-      neighborhood: s.neighborhood,
-      website: s.website,
-      address: s.address,
+      ...base.properties,
       roaster: s.roaster ?? '',
-      photo: s.photo ?? '',
-      uuid: s.uuid,
-    },
-    geometry: {
-      type: 'Point',
-      coordinates: [Number(s.longitude), Number(s.latitude)],
     },
   }
 
