@@ -44,7 +44,7 @@ export default function FavoriteToast({ isOpen, onClose, shopName }: FavoriteToa
                   onClick={onClose}
                   className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 whitespace-nowrap"
                 >
-                  View Favorites
+                  View favorites
                 </Link>
               </DialogPanel>
             </TransitionChild>
