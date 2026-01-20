@@ -2,12 +2,12 @@ export default function Settings() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <div className="space-y-6">
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Preferences</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900">Distance units</p>
                   <p className="text-sm text-gray-500">Choose miles or kilometers</p>
@@ -17,7 +17,7 @@ export default function Settings() {
                   <option>Kilometers</option>
                 </select>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900">Email notifications</p>
                   <p className="text-sm text-gray-500">Receive updates about new shops</p>

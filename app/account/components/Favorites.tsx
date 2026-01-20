@@ -45,7 +45,7 @@ export default function Favorites() {
           ))}
         </ul>
       ) : (
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Heart className="h-12 w-12 text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No favorites yet</h3>

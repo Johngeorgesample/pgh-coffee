@@ -16,7 +16,7 @@ export default function AccountDetails() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <p className="text-gray-500">Loading...</p>
       </div>
     )
@@ -24,7 +24,7 @@ export default function AccountDetails() {
 
   if (!user) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <p className="text-gray-600 mb-4">You are not signed in.</p>
         <a
           href="/sign-in"
@@ -39,7 +39,7 @@ export default function AccountDetails() {
   const profilePicture = user?.user_metadata?.avatar_url
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8">
+    <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
       <div className="flex items-center gap-4 mb-6">
         <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
           {profilePicture ? <img className="rounded-full" src={profilePicture} alt={user.email || 'Profile picture'} /> : <User className="w-8 h-8 text-yellow-600" />}
