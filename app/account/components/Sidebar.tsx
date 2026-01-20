@@ -1,6 +1,7 @@
 'use client'
 
-import { useAuth } from '@/app/components/AuthProvider'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   Heart,
@@ -8,17 +9,14 @@ import {
 } from 'lucide-react'
 
 const navigation = [
-  { name: 'Dashboard', href: '#dashboard', icon: LayoutDashboard },
-  { name: 'Favorites', href: '#favorites', icon: Heart },
-  { name: 'Settings', href: '#settings', icon: Settings },
+  { name: 'Dashboard', href: '/account', icon: LayoutDashboard },
+  { name: 'Favorites', href: '/account/favorites', icon: Heart },
+  { name: 'Settings', href: '/account/settings', icon: Settings },
 ]
 
-interface SidebarProps {
-  currentSection: string
-  onSectionChange: (section: string) => void
-}
+export default function Sidebar() {
+  const pathname = usePathname()
 
-export default function Sidebar({ currentSection, onSectionChange }: SidebarProps) {
   return (
     <div className="flex w-64 flex-col bg-white border-r border-gray-200">
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
@@ -28,11 +26,14 @@ export default function Sidebar({ currentSection, onSectionChange }: SidebarProp
 
         <nav className="flex-1 space-y-1 px-2">
           {navigation.map((item) => {
-            const isActive = currentSection === item.name.toLowerCase()
+            const isActive =
+              item.href === '/account'
+                ? pathname === '/account'
+                : pathname.startsWith(item.href)
             return (
-              <button
+              <Link
                 key={item.name}
-                onClick={() => onSectionChange(item.name.toLowerCase())}
+                href={item.href}
                 className={`group flex w-full items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium ${
                   isActive
                     ? 'bg-yellow-50 text-yellow-600'
@@ -45,7 +46,7 @@ export default function Sidebar({ currentSection, onSectionChange }: SidebarProp
                   }`}
                 />
                 {item.name}
-              </button>
+              </Link>
             )
           })}
         </nav>
