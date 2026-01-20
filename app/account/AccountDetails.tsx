@@ -36,7 +36,7 @@ export default function AccountDetails() {
     )
   }
 
-  const profilePicture = user.user_metadata.avatar_url
+  const profilePicture = user?.user_metadata?.avatar_url
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8">
