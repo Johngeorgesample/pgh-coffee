@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import SignInForm from './SignInForm'
 
 export default function SignIn() {
@@ -8,7 +9,9 @@ export default function SignIn() {
           <h1 className="text-3xl font-bold text-gray-900">Sign in</h1>
           <p className="mt-2 text-sm text-gray-600">Sign in to your pgh.coffee account</p>
         </div>
-        <SignInForm />
+        <Suspense fallback={<div className="bg-white rounded-2xl shadow-lg p-8 animate-pulse h-96" />}>
+          <SignInForm />
+        </Suspense>
       </div>
     </div>
   )
