@@ -1,8 +1,7 @@
 'use client'
-import { useState } from 'react'
+import Image from 'next/image'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
-import PhotoDialog from './PhotoDialog'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 import { Company } from '@/app/components/Company'
@@ -20,10 +19,17 @@ export default function PanelHeader(props: IProps) {
 
   return (
     <div id="header" data-testid="header">
-      <div
-        className="group h-56 sm:h-64 relative bg-stone-300 bg-cover bg-center"
-        style={hasPhoto ? { backgroundImage: `url('${photo}')` } : undefined}
-      >
+      <div className="group h-56 sm:h-64 relative bg-stone-300">
+        {hasPhoto && (
+          <Image
+            src={photo}
+            alt={name}
+            fill
+            sizes="(max-width: 768px) 100vw, 500px"
+            className="object-cover object-center"
+            priority
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">

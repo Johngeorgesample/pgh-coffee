@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { DbShop, TShop } from '@/types/shop-types'
 
+// Cache for 1 hour, revalidate in background
+export const revalidate = 3600
+
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -57,5 +60,9 @@ export async function GET() {
     return NextResponse.json({ error: 'Error fetching curated lists' }, { status: 500 })
   }
 
-  return NextResponse.json(lists)
+  return NextResponse.json(lists, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=60',
+    },
+  })
 }

@@ -32,7 +32,7 @@ export default function FeaturedShop() {
 
     const fetchFeatured = async () => {
       try {
-        const res = await fetch('/api/featured-shop', { cache: 'no-store' })
+        const res = await fetch('/api/featured-shop', { next: { revalidate: 3600 } })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: TShop = await res.json()
         if (!cancelled) setShop(data)

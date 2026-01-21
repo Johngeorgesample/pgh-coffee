@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Cache for 1 hour, revalidate in background
+export const revalidate = 3600
+
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -42,5 +45,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching events' }, { status: 500 })
   }
 
-  return NextResponse.json(events)
+  return NextResponse.json(events, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=60',
+    },
+  })
 }

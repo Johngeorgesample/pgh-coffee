@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import ShopCard from '@/app/components/ShopCard'
@@ -11,7 +12,7 @@ interface IProps {
   hideShopNames?: boolean
 }
 
-export default function ShopList(props: IProps) {
+function ShopList(props: IProps) {
 
   return (
     <ul className="relative mt-6 flex-1">
@@ -32,3 +33,5 @@ export default function ShopList(props: IProps) {
     </ul>
   )
 }
+
+export default memo(ShopList)

@@ -2,12 +2,17 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
-import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
+
+const MapContainer = dynamic(() => import('./MapContainer'), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-stone-100" />,
+})
 import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
@@ -23,7 +28,17 @@ export default function HomeClient() {
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
   const [presented, setPresented] = useState(false)
+  const [mapReady, setMapReady] = useState(false)
   const router = useRouter()
+
+  // Defer map loading - longer on mobile since panel covers the map
+  useEffect(() => {
+    // Desktop: load map after short delay
+    // Mobile: load map after longer delay to prioritize panel interactivity
+    const delay = largeViewport ? 100 : 3000
+    const timer = setTimeout(() => setMapReady(true), delay)
+    return () => clearTimeout(timer)
+  }, [largeViewport])
 
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
@@ -114,9 +129,13 @@ export default function HomeClient() {
   return (
     <div className="relative w-full h-full">
       {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
-      <MapContainer
-        currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
-      />
+      {mapReady ? (
+        <MapContainer
+          currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-stone-100" />
+      )}
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>
         {panelContent}
       </Panel>

@@ -2,18 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import Panel from '@/app/components/Panel'
 import { TShop } from '@/types/shop-types'
 
-// Mock the Silk components
-vi.mock('@silk-hq/components', () => ({
-  Sheet: {
-    Root: ({ children, presented }: any) => presented ? <div data-testid="sheet-root">{children}</div> : null,
-    Portal: ({ children }: any) => <div data-testid="sheet-portal">{children}</div>,
-    View: ({ children }: any) => <div data-testid="sheet-view">{children}</div>,
-    Backdrop: () => <div data-testid="sheet-backdrop" />,
-    Content: ({ children, ref }: any) => <div data-testid="sheet-content" ref={ref}>{children}</div>,
-    Handle: ({ children }: any) => <div data-testid="sheet-handle">{children}</div>,
-    BleedingBackground: () => <div data-testid="sheet-bleeding-background" />,
-  },
-  useClientMediaQuery: vi.fn(() => true), // Mock as large viewport by default
+// Mock the MobileSheet component (dynamically imported)
+vi.mock('@/app/components/MobileSheet', () => ({
+  default: ({ children }: any) => <div data-testid="mobile-sheet">{children}</div>,
 }))
 
 // Mock the shop store
@@ -44,15 +35,17 @@ vi.mock('@/app/components/SearchBar', () => ({
 }))
 
 beforeAll(() => {
-  globalThis.matchMedia =
-    globalThis.matchMedia ||
-    function () {
-      return {
-        matches: false,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      }
-    }
+  // Mock as large viewport so the desktop Panel renders (no dynamic import)
+  globalThis.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: query === '(min-width: 1024px)',
+    media: query,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    onchange: null,
+    dispatchEvent: vi.fn(),
+  }))
 })
 
 describe('Panel Component', () => {

@@ -203,7 +203,7 @@ const usePanelStore = create<PanelState>()(
           return { history: [] }
         }),
     }),
-    { name: 'PanelStore' },
+    { name: 'PanelStore', enabled: process.env.NODE_ENV === 'development' },
   ),
 )
 
