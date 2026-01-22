@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { DbShop } from '@/types/shop-types'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
 export const revalidate = 0
@@ -72,7 +74,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('uuid,name,neighborhood,address,website,photo,roaster,latitude,longitude,company:company_id(*)')
+    .select('uuid,name,neighborhood,address,website,photo,photos,roaster,latitude,longitude,company:company_id(*)')
     .order('name', { ascending: true })
     .range(idx, idx)
 
@@ -80,22 +82,17 @@ export async function GET() {
     return NextResponse.json({ error: 'Query failed' }, { status: 500 })
   }
 
-  const s = data[0]
+  const row = data[0]
+  const shop: DbShop = {
+    ...row,
+    company: Array.isArray(row.company) ? row.company[0] ?? null : row.company,
+  }
+  const base = formatDBShopAsFeature(shop)
   const feature = {
-    type: 'Feature',
+    ...base,
     properties: {
-      name: s.name,
-      company: s.company,
-      neighborhood: s.neighborhood,
-      website: s.website,
-      address: s.address,
-      roaster: s.roaster ?? '',
-      photo: s.photo ?? '',
-      uuid: s.uuid,
-    },
-    geometry: {
-      type: 'Point',
-      coordinates: [Number(s.longitude), Number(s.latitude)],
+      ...base.properties,
+      roaster: shop.roaster ?? '',
     },
   }
 

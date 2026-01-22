@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { DbShop, TShop } from '@/types/shop-types'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -9,22 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const mapDbShopToTShop = (s: DbShop): TShop | null => {
   if (s.latitude == null || s.longitude == null) return null
-  return {
-    type: 'Feature',
-    properties: {
-      company: s.company,
-      name: s.name,
-      neighborhood: s.neighborhood,
-      address: s.address,
-      photo: s.photo ?? undefined,
-      website: s.website,
-      uuid: s.uuid,
-    },
-    geometry: {
-      type: 'Point',
-      coordinates: [s.longitude, s.latitude], // NOTE: [lng, lat]
-    },
-  }
+  return formatDBShopAsFeature(s)
 }
 
 const fetchCuratedLists = async () => {

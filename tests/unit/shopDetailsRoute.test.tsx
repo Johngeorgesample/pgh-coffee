@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { NextRequest } from 'next/server'
 
 // Create mock functions for the Supabase chain
@@ -17,10 +17,14 @@ vi.mock('@supabase/supabase-js', () => ({
   }),
 }))
 
-// Import the route handler after mocking
-const { GET } = await import('@/app/api/shops/[shopDetails]/route')
-
 describe('Shop Details API Route', () => {
+  let GET: typeof import('@/app/api/shops/[shopDetails]/route').GET
+
+  beforeAll(async () => {
+    const module = await import('@/app/api/shops/[shopDetails]/route')
+    GET = module.GET
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
   })

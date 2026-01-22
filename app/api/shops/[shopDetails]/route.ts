@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -37,23 +38,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
-  const transformedData = {
-    type: 'Feature',
-    properties: {
-      name: shopData[0].name,
-      neighborhood: shopData[0].neighborhood,
-      address: shopData[0].address,
-      photo: shopData[0].photo,
-      photos: shopData[0].photos ?? undefined,
-      website: shopData[0].website,
-      uuid: shopData[0].uuid,
-      company: shopData[0].company,
-    },
-    geometry: {
-      type: 'Point',
-      coordinates: [shopData[0].longitude, shopData[0].latitude],
-    },
-  }
-
-  return NextResponse.json(transformedData)
+  return NextResponse.json(formatDBShopAsFeature(shopData[0]))
 }

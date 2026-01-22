@@ -3,22 +3,26 @@ import { useState } from 'react'
 import DirectionsButton from './DirectionsButton'
 import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
+import FavoriteButton from './FavoriteButton'
 import ShareModal from './ShareModal'
 
 interface QuickActionsBarProps {
   coordinates: [number, number]
   website?: string
+  shopUUID: string
+  shopName: string
 }
 
-export default function QuickActionsBar({ coordinates, website }: QuickActionsBarProps) {
+export default function QuickActionsBar({ coordinates, website, shopUUID, shopName }: QuickActionsBarProps) {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   return (
     <>
-      <div className="flex gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
+      <div className="flex gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200 overflow-x-auto [&>button]:shrink-0">
+        <FavoriteButton shopUUID={shopUUID} shopName={shopName} />
+        <ShareButton onClick={() => setIsShareModalOpen(true)} />
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
-        <ShareButton onClick={() => setIsShareModalOpen(true)} />
       </div>
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />

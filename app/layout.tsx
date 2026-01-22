@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Nav from '@/app/components/Nav'
 import { FaroInit } from '@/app/components/FaroInit'
+import { AuthProvider } from '@/app/components/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,9 +42,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PlausibleProvider domain="pgh.coffee" trackOutboundLinks />
       </head>
       <body className={inter.className}>
-        <FaroInit />
-        <Nav />
-        <main>{children}</main>
+        <AuthProvider>
+          <FaroInit />
+          <Nav />
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   )
