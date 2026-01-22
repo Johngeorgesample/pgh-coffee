@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Heart } from 'lucide-react'
+import { usePlausible } from 'next-plausible'
 import FavoriteToast from './FavoriteToast'
 
 interface FavoriteButtonProps {
@@ -10,6 +11,7 @@ interface FavoriteButtonProps {
 }
 
 export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonProps) {
+  const plausible = usePlausible()
   const [isFavorited, setIsFavorited] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
@@ -20,10 +22,15 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
         const response = await fetch('/api/favorites')
         if (response.ok) {
           const favorites = await response.json()
-          const isFav = favorites.some(
-            (fav: { shop: { uuid: string } }) => fav.shop?.uuid === shopUUID
-          )
+          const isFav = favorites.some((fav: { shop: { uuid: string } }) => fav.shop?.uuid === shopUUID)
           setIsFavorited(isFav)
+          plausible('favorite', {
+            props: {
+              shopName,
+              shopUUID,
+              status: isFav
+            },
+          })
         }
       } catch (error) {
         console.error('Error checking favorite status:', error)
@@ -67,17 +74,11 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
         disabled={isLoading}
         className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors disabled:opacity-50"
       >
-        <Heart
-          className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
-        />
+        <Heart className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
         {isFavorited ? 'Favorited' : 'Favorite'}
       </button>
 
-      <FavoriteToast
-        isOpen={showToast}
-        onClose={() => setShowToast(false)}
-        shopName={shopName}
-      />
+      <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />
     </>
   )
 }
