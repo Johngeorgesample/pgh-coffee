@@ -21,7 +21,12 @@ export default function Favorites() {
 
   useEffect(() => {
     fetch('/api/favorites')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch favorites: ${res.status}`)
+        }
+        return res.json()
+      })
       .then((data) => {
         setFavorites(Array.isArray(data) ? data : [])
         setLoading(false)
