@@ -41,8 +41,6 @@ export default function Favorites() {
   if (loading) return <div>Loading...</div>
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Favorites</h1>
-
       {hasFavorites ? (
         <ul>
           {favorites.map((fav) => (
