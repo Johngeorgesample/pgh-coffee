@@ -28,41 +28,41 @@ export default function SignInForm() {
     setIsLoading(true)
     setError(null)
 
-    if (mode === 'signin') {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) {
-        setError(error.message)
-        setIsLoading(false)
+    try {
+      if (mode === 'signin') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        if (error) {
+          setError(error.message)
+          return
+        }
+        router.push('/')
+        router.refresh()
       } else {
+        const { data, error } = await supabase.auth.signUp({ email, password })
+
+        if (error) {
+          setError(error.message)
+          return
+        }
+
+        // Supabase returns a "fake" success when email already exists (to prevent enumeration)
+        // Detect this by checking if identities array is empty
+        if (data.user?.identities?.length === 0) {
+          setError('An account with this email already exists. Please sign in instead.')
+          return
+        }
+
+        // Check if email confirmation is required
+        if (data.user && !data.session) {
+          setError('Please check your email to confirm your account before signing in.')
+          return
+        }
+
         router.push('/')
         router.refresh()
       }
-    } else {
-      const { data, error } = await supabase.auth.signUp({ email, password })
-
-      if (error) {
-        setError(error.message)
-        setIsLoading(false)
-        return
-      }
-
-      // Supabase returns a "fake" success when email already exists (to prevent enumeration)
-      // Detect this by checking if identities array is empty
-      if (data.user?.identities?.length === 0) {
-        setError('An account with this email already exists. Please sign in instead.')
-        setIsLoading(false)
-        return
-      }
-
-      // Check if email confirmation is required
-      if (data.user && !data.session) {
-        setError('Please check your email to confirm your account before signing in.')
-        setIsLoading(false)
-        return
-      }
-
-      router.push('/')
-      router.refresh()
+    } finally {
+      setIsLoading(false)
     }
   }
 
