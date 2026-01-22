@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Heart } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import FavoriteToast from './FavoriteToast'
+import LoginPromptModal from './LoginPromptModal'
+import { useAuth } from './AuthProvider'
 
 interface FavoriteButtonProps {
   shopUUID: string
@@ -11,13 +13,20 @@ interface FavoriteButtonProps {
 }
 
 export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonProps) {
+  const { user, loading: authLoading } = useAuth()
   const plausible = usePlausible()
   const [isFavorited, setIsFavorited] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
+      if (!user) {
+        setIsLoading(false)
+        return
+      }
+
       try {
         const response = await fetch('/api/favorites')
         if (response.ok) {
@@ -39,10 +48,17 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
       }
     }
 
-    checkFavoriteStatus()
-  }, [shopUUID])
+    if (!authLoading) {
+      checkFavoriteStatus()
+    }
+  }, [shopUUID, user, authLoading])
 
   const handleToggle = async () => {
+    if (!user) {
+      setShowLoginModal(true)
+      return
+    }
+
     setIsLoading(true)
     const wasAlreadyFavorited = isFavorited
 
@@ -79,6 +95,7 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
       </button>
 
       <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />
+      <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </>
   )
 }

@@ -4,6 +4,27 @@ import PanelContent from '@/app/components/PanelContent'
 import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
 import type { TShop } from '@/types/shop-types'
 
+// Mock next-plausible
+vi.mock('next-plausible', () => ({
+  usePlausible: () => vi.fn(),
+}))
+
+// Mock AuthProvider
+vi.mock('@/app/components/AuthProvider', () => ({
+  useAuth: () => ({ user: null, loading: false }),
+}))
+
+// Mock Supabase client
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: () => ({
+    auth: {
+      signInWithPassword: vi.fn(),
+      signUp: vi.fn(),
+      signInWithOAuth: vi.fn(),
+    },
+  }),
+}))
+
 describe('getGoogleMapsUrl', () => {
   it('returns correct Google Maps URL with given coordinates', () => {
     const coordinates = {
