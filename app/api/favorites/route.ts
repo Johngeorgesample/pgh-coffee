@@ -20,6 +20,7 @@ export async function GET() {
       created_at,
       shop:shops (*)
     `)
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -51,6 +52,20 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: 'shopUUID is required' },
       { status: 400 }
+    )
+  }
+
+  // Validate that the shop exists
+  const { data: shop, error: shopError } = await supabase
+    .from('shops')
+    .select('id')
+    .eq('id', shopUUID)
+    .single()
+
+  if (shopError || !shop) {
+    return NextResponse.json(
+      { error: 'Shop not found' },
+      { status: 404 }
     )
   }
 

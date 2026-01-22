@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { PlusIcon, LogIn, User } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 
 export default function Nav() {
@@ -38,12 +38,10 @@ export default function Nav() {
         {!loading &&
           (user ? (
             <Link href="/account" className="flex gap-1 items-center text-md hover:bg-black/5 p-2 hover:rounded-lg">
-              <User className="w-4 h-4" />
               Account
             </Link>
           ) : (
             <Link href="/sign-in" className="flex gap-1 items-center text-md hover:bg-black/5 p-2 hover:rounded-lg">
-              <LogIn className="w-4 h-4" />
               Sign in
             </Link>
           ))}
