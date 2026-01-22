@@ -23,6 +23,7 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (!user) {
+        setIsFavorited(false)
         setIsLoading(false)
         return
       }

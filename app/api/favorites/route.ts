@@ -58,8 +58,8 @@ export async function POST(request: Request) {
   // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
-    .select('id')
-    .eq('id', shopUUID)
+    .select('uuid')
+    .eq('uuid', shopUUID)
     .single()
 
   if (shopError || !shop) {
