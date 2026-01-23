@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { TShop } from '@/types/shop-types'
 import IssueModal from './IssueModal'
+import IssueSuccessDialog from './IssueSuccessDialog'
 
 interface IProps {
   shop: TShop
@@ -10,6 +11,12 @@ interface IProps {
 
 export default function PanelFooter(props: IProps) {
   const [showIssueModal, setShowIssueModal] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+
+  function handleSuccess() {
+    setShowIssueModal(false)
+    setShowSuccessDialog(true)
+  }
 
   return (
     <>
@@ -21,7 +28,8 @@ export default function PanelFooter(props: IProps) {
           </button>
         </div>
       </section>
-      <IssueModal shop={props.shop} isOpen={showIssueModal} onClose={() => setShowIssueModal(false)} />
+      <IssueModal shop={props.shop} isOpen={showIssueModal} onClose={() => setShowIssueModal(false)} onSuccess={handleSuccess} />
+      <IssueSuccessDialog isOpen={showSuccessDialog} handleClose={() => setShowSuccessDialog(false)} />
     </>
   )
 }
