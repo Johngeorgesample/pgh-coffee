@@ -23,7 +23,7 @@ export default function PanelFooter(props: IProps) {
       <section className="flex flex-col items-center pb-6">
         <hr className="my-4 w-1/2 m-auto" />
         <div className="text-sm mb-2 flex flex-col flex-1 items-center">
-          <button onClick={() => setShowIssueModal(true)} className="text-gray-500">
+          <button onClick={() => setShowIssueModal(true)} className="text-gray-600 hover:underline">
             Is this information incorrect?
           </button>
         </div>
