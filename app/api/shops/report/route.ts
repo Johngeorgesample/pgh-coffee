@@ -13,6 +13,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing shop_id' }, { status: 400 })
   }
 
+  // Validate that the shop exists
+  const { data: shop, error: shopError } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('uuid', shop_id)
+    .single()
+
+  if (shopError || !shop) {
+    return NextResponse.json({ error: 'Shop not found' }, { status: 404 })
+  }
+
   const { data, error } = await supabase
     .from('shop_reports')
     .insert([{
