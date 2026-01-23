@@ -11,9 +11,7 @@ interface IProps {
 export default function IssueForm(props: IProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
-  const [neighborhoodValue, setNeighborhoodValue] = useState('')
-
-  console.log(props.shop)
+  const [neighborhoodValue, setNeighborhoodValue] = useState(props.shop.properties.neighborhood)
   const submitForm = useRef<HTMLFormElement>(null)
 
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
@@ -55,7 +53,7 @@ export default function IssueForm(props: IProps) {
 
   return (
     <section className="max-w-7xl mx-auto px-6 pb-20">
-      <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-2xl mx-auto">
+      <div className="md:pt-4">
         <form onSubmit={handleForm} ref={submitForm} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-900 mb-2">
@@ -65,6 +63,7 @@ export default function IssueForm(props: IProps) {
               id="name"
               name="name"
               type="text"
+              defaultValue={props.shop.properties.name}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
             />
           </div>
@@ -77,6 +76,7 @@ export default function IssueForm(props: IProps) {
               id="address"
               name="address"
               type="text"
+              defaultValue={props.shop.properties.address}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
             />
           </div>
@@ -89,6 +89,7 @@ export default function IssueForm(props: IProps) {
               id="neighborhood"
               name="neighborhood"
               type="text"
+              defaultValue={props.shop.properties.neighborhood}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
             />
           </div>
@@ -102,6 +103,7 @@ export default function IssueForm(props: IProps) {
               id="website"
               name="website"
               type="text"
+              defaultValue={props.shop.properties.website}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
             />
           </div>
@@ -113,7 +115,7 @@ export default function IssueForm(props: IProps) {
               isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
             }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit shop'}
+            {isSubmitting ? 'Reporting...' : 'Report an issue'}
           </button>
         </form>
       </div>
