@@ -4,10 +4,17 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { PlusIcon } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
+import usePanelStore from '@/stores/panelStore'
+import { ExploreContent } from './ExploreContent'
 
 export default function Nav() {
   const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false)
   const { user, loading } = useAuth()
+  const { reset } = usePanelStore()
+
+  const handleLogoClick = () => {
+    reset({ mode: 'explore', content: <ExploreContent /> })
+  }
 
   useEffect(() => {
     setHamburgerIsOpen(false)
@@ -20,7 +27,7 @@ export default function Nav() {
   return (
     <nav className="h-16 bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
       <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
-        <Link className="flex gap-1" href="/">
+        <Link className="flex gap-1" href="/" onClick={handleLogoClick}>
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 250 250">
             <path
               fill="#000000"
