@@ -9,8 +9,6 @@ import { AuthProvider } from '@/app/components/AuthProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'PGH Coffee',
-  description: 'Coffee shops in Pittsburgh, PA',
   openGraph: {
     title: 'pgh.coffee',
     description: 'A guide to coffee in Pittsburgh, PA',
