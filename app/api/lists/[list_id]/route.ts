@@ -22,7 +22,14 @@ export async function GET(
 
   const { data, error } = await supabase
     .from('user_lists')
-    .select('*')
+    .select(`
+      *,
+      items:user_list_items (
+        id,
+        created_at,
+        shop:shops (*)
+      )
+    `)
     .eq('id', list_id)
     .eq('user_id', user.id)
     .single()
