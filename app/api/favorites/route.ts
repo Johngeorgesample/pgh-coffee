@@ -13,14 +13,27 @@ export async function GET() {
     )
   }
 
+  // Find the user's Favorites list
+  const { data: favoritesList } = await supabase
+    .from('user_lists')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('name', 'Favorites')
+    .single()
+
+  if (!favoritesList) {
+    // No Favorites list exists yet, return empty array
+    return NextResponse.json([])
+  }
+
   const { data, error } = await supabase
-    .from('user_favorites')
+    .from('user_list_items')
     .select(`
       id,
       created_at,
       shop:shops (*)
     `)
-    .eq('user_id', user.id)
+    .eq('list_id', favoritesList.id)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -69,9 +82,34 @@ export async function POST(request: Request) {
     )
   }
 
+  // Find or create a "Favorites" list for the user
+  let { data: favoritesList } = await supabase
+    .from('user_lists')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('name', 'Favorites')
+    .single()
+
+  if (!favoritesList) {
+    const { data: newList, error: createError } = await supabase
+      .from('user_lists')
+      .insert({ user_id: user.id, name: 'Favorites' })
+      .select('id')
+      .single()
+
+    if (createError || !newList) {
+      console.error('Error creating Favorites list:', createError?.message)
+      return NextResponse.json(
+        { error: 'Error creating Favorites list' },
+        { status: 500 }
+      )
+    }
+    favoritesList = newList
+  }
+
   const { data, error } = await supabase
-    .from('user_favorites')
-    .insert({ user_id: user.id, shop_id: shopUUID })
+    .from('user_list_items')
+    .insert({ user_id: user.id, shop_id: shopUUID, list_id: favoritesList.id })
     .select()
     .single()
 
@@ -108,7 +146,7 @@ export async function DELETE(request: Request) {
   }
 
   const { error } = await supabase
-    .from('user_favorites')
+    .from('user_list_items')
     .delete()
     .eq('user_id', user.id)
     .eq('shop_id', shopUUID)
