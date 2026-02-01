@@ -18,6 +18,7 @@ interface List {
   name: string
   user_id: string
   created_at: string
+  is_public: boolean
   items: ListItem[]
 }
 
@@ -70,7 +71,9 @@ export default function ListDetailPage() {
         <ListActions
           listId={list.id}
           listName={list.name}
+          isPublic={list.is_public}
           onNameUpdate={newName => setList({ ...list, name: newName })}
+          onPublicChange={isPublic => setList({ ...list, is_public: isPublic })}
         />
       </div>
       <p>

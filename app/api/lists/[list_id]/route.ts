@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 // GET /api/lists/{list_id} - Get a single list
+// Supports both authenticated (owner) access and public access for shared lists
 export async function GET(
   _request: NextRequest,
   props: { params: Promise<{ list_id: string }> }
@@ -13,13 +14,7 @@ export async function GET(
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    )
-  }
-
+  // First, try to fetch the list
   const { data, error } = await supabase
     .from('user_lists')
     .select(`
@@ -31,25 +26,28 @@ export async function GET(
       )
     `)
     .eq('id', list_id)
-    .eq('user_id', user.id)
     .single()
 
-  if (error) {
-    console.error('Error fetching list:', error.message)
-    return NextResponse.json(
-      { error: 'Error fetching list' },
-      { status: 500 }
-    )
-  }
-
-  if (!data) {
+  if (error || !data) {
     return NextResponse.json(
       { error: 'List not found' },
       { status: 404 }
     )
   }
 
-  return NextResponse.json(data)
+  // Check access: user is owner OR list is public
+  const isOwner = user && data.user_id === user.id
+  const isPublic = data.is_public === true
+
+  if (!isOwner && !isPublic) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
+  // Include ownership flag in response
+  return NextResponse.json({ ...data, isOwner })
 }
 
 // PATCH /api/lists/{list_id} - Rename a list
@@ -71,18 +69,36 @@ export async function PATCH(
     )
   }
 
-  const { name } = await request.json()
+  const body = await request.json()
+  const { name, is_public } = body
 
-  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+  // Build update object based on provided fields
+  const updates: Record<string, unknown> = {}
+
+  if (name !== undefined) {
+    if (typeof name !== 'string' || name.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'List name is required' },
+        { status: 400 }
+      )
+    }
+    updates.name = name.trim()
+  }
+
+  if (is_public !== undefined) {
+    updates.is_public = Boolean(is_public)
+  }
+
+  if (Object.keys(updates).length === 0) {
     return NextResponse.json(
-      { error: 'List name is required' },
+      { error: 'No valid fields to update' },
       { status: 400 }
     )
   }
 
   const { data, error } = await supabase
     .from('user_lists')
-    .update({ name: name.trim() })
+    .update(updates)
     .eq('id', list_id)
     .eq('user_id', user.id)
     .select()
