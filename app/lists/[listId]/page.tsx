@@ -5,11 +5,12 @@ import ShopList from '@/app/components/ShopList'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { DbShop } from '@/types/shop-types'
 
 interface ListItem {
   id: string
   created_at: string
-  shop: Record<string, unknown>
+  shop: DbShop
 }
 
 interface List {

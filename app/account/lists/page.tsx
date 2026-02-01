@@ -6,7 +6,13 @@ import { useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import AddListAction from './AddListAction'
 
-function PhotoAvatarStack({ photos, totalCount }) {
+interface ListSummary {
+  id: string
+  name: string
+  photos: string[]
+}
+
+function PhotoAvatarStack({ photos, totalCount }: { photos: string[]; totalCount: number }) {
   const previews = photos.slice(0, 3)
   const overflow = totalCount - previews.length
 
@@ -36,7 +42,7 @@ function PhotoAvatarStack({ photos, totalCount }) {
   )
 }
 
-function ListCard({ list }) {
+function ListCard({ list }: { list: ListSummary }) {
   const photos = list.photos ?? []
   const photoCount = photos.length
 
@@ -69,7 +75,7 @@ function ListCard({ list }) {
 }
 
 export default function ListsPage() {
-  const [listItems, setListItems] = useState([])
+  const [listItems, setListItems] = useState<ListSummary[]>([])
 
   useEffect(() => {
     fetch('/api/lists?photos')
