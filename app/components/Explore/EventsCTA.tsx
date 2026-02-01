@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
 import { Events } from '@/app/components/Events'
 import { EventCard, EventCardData } from '@/app/components/EventCard'
+import { isPast } from '@/app/utils/utils'
 
 const EventCardSkeleton = () => (
   <div className="flex w-full bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm animate-pulse">
@@ -41,7 +42,13 @@ export const EventsCTA = () => {
   }, [])
 
   const isLoading = updates === null
-  const lastTwo = updates?.slice(0, 2) ?? []
+  const soonestTwo = updates
+    ?.filter(event => event.event_date && !isPast(event.event_date))
+    .sort((a, b) => {
+      if (!a.event_date || !b.event_date) return 0
+      return a.event_date.localeCompare(b.event_date)
+    })
+    .slice(0, 2) ?? []
 
   const openEvents = () => {
     plausible('ViewAllClick', { props: { section: 'events' } })
@@ -78,7 +85,7 @@ export const EventsCTA = () => {
             <EventCardSkeleton />
           </>
         ) : (
-          lastTwo.map(event => <EventCard key={event.id} entry={event} />)
+          soonestTwo.map(event => <EventCard key={event.id} entry={event} />)
         )}
       </div>
     </>
