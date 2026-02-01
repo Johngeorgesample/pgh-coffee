@@ -5,6 +5,7 @@ import DirectionsButton from './DirectionsButton'
 import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
 import FavoriteButton from './FavoriteButton'
+import SaveButton from './SaveButton'
 import ReportIssueButton from './ReportIssueButton'
 import ShareModal from './ShareModal'
 import IssueModal from './IssueModal'
@@ -30,7 +31,8 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
   return (
     <>
       <div className="flex gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200 overflow-x-auto [&>button]:shrink-0">
-        <FavoriteButton shopUUID={uuid} shopName={name} />
+        <SaveButton shopUUID={uuid} shopName={name} />
+        {/* <FavoriteButton shopUUID={uuid} shopName={name} /> */}
         <ShareButton onClick={() => setIsShareModalOpen(true)} />
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
