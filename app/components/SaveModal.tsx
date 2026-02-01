@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import SaveModalListItem from './SaveModalListItem'
 import CreateListButton from './CreateListButton'
@@ -14,9 +14,19 @@ interface Props {
 export default function SaveModal({ isOpen, onClose, shopName }: Props) {
   const [selectedLists, setSelectedLists] = useState<string[]>([])
 
+  useEffect(() => {
+    // GET user's lists and check if shop is already added to any of them
+  }, [])
+
   const handleClick = (id: string) => {
     setSelectedLists(prev => (prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]))
+    // PUT request to update list(s) w/ shop
   }
+
+  const handleAddingToNewList = () => {
+    console.log('handleAddingToNewList')
+    // PUT request to update new list w/ shop
+}
 
   const data = [
     { name: 'Favorites', count: '3', id: '1' },
@@ -38,7 +48,7 @@ export default function SaveModal({ isOpen, onClose, shopName }: Props) {
             </div>
           </DialogTitle>
 
-          <ul className="py-2 max-h-[35dvh] overflow-scroll">
+          <ul className="flex flex-col py-2 max-h-[35dvh] gap-1 overflow-scroll">
             {data.map(list => (
               <SaveModalListItem
                 key={list.id}
@@ -51,7 +61,7 @@ export default function SaveModal({ isOpen, onClose, shopName }: Props) {
             ))}
           </ul>
           <div className="border-t -mx-6 px-6 pt-4">
-            <CreateListButton />
+            <CreateListButton onAdd={handleAddingToNewList}/>
             <p className="text-center text-xs mt-4">Saved to {selectedLists.length} lists</p>
           </div>
         </DialogPanel>
