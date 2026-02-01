@@ -1,6 +1,6 @@
 'use client'
 
-import { Bookmark } from 'lucide-react'
+import { Bookmark, Check } from 'lucide-react'
 
 interface SaveModalListItemProps {
   name: string
@@ -17,9 +17,15 @@ export default function SaveModalListItem({ name, count, id, isSelected, onClick
       onClick={() => onClick(id)}
     >
       <div className="flex items-center">
-        <div className="bg-slate-200 p-2 rounded-lg">
-          <Bookmark />
-        </div>
+        {isSelected ? (
+          <div className="bg-yellow-500 p-2 rounded-lg">
+            <Check />
+          </div>
+        ) : (
+          <div className="bg-slate-200 p-2 rounded-lg">
+            <Bookmark />
+          </div>
+        )}
       </div>
       <div className="flex flex-col">
         <p>{name}</p>

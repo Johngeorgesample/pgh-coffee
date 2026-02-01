@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
+  List,
   LayoutDashboard,
   Heart,
   Settings,
@@ -14,6 +15,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/account', icon: LayoutDashboard },
   { name: 'Favorites', href: '/account/favorites', icon: Heart },
+  { name: 'Lists', href: '/account/lists', icon: List },
   // { name: 'Settings', href: '/account/settings', icon: Settings },
 ]
 
