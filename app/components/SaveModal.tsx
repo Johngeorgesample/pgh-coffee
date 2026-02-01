@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import SaveModalListItem from './SaveModalListItem'
+import CreateListButton from './CreateListButton'
 
 interface Props {
   isOpen: boolean
@@ -50,10 +51,7 @@ export default function SaveModal({ isOpen, onClose, shopName }: Props) {
             ))}
           </ul>
           <div className="border-t -mx-6 px-6 pt-4">
-            <div className="flex gap-2 border border-dashed p-2">
-              <p>+</p>
-              <p>Create new list</p>
-            </div>
+            <CreateListButton />
             <p className="text-center text-xs mt-4">Saved to {selectedLists.length} lists</p>
           </div>
         </DialogPanel>
