@@ -5,36 +5,43 @@ import ShopList from '@/app/components/ShopList'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import ListActions from './ListActions'
+
+interface ListItem {
+  id: string
+  created_at: string
+  shop: Record<string, unknown>
+}
+
+interface List {
+  id: string
+  name: string
+  user_id: string
+  created_at: string
+  items: ListItem[]
+}
 
 export default function ListDetailPage() {
   const params = useParams()
   const listId = params.listId as string
 
-  const [listName, setListName] = useState<string>('')
-  const [listItems, setListItems] = useState([])
+  const [list, setList] = useState<List | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!listId) return
 
-    Promise.all([
-      fetch(`/api/lists/${listId}`).then(res => {
+    fetch(`/api/lists/${listId}`)
+      .then(res => {
         if (!res.ok) throw new Error(`Failed to fetch list: ${res.status}`)
         return res.json()
-      }),
-      fetch(`/api/lists/${listId}/items`).then(res => {
-        if (!res.ok) throw new Error(`Failed to fetch list items: ${res.status}`)
-        return res.json()
       })
-    ])
-      .then(([listData, itemsData]) => {
-        setListName(listData.name || '')
-        setListItems(Array.isArray(itemsData) ? itemsData : [])
+      .then(data => {
+        setList(data)
       })
       .catch(error => {
         console.error('Failed to fetch list data:', error)
-        setListName('')
-        setListItems([])
+        setList(null)
       })
       .finally(() => {
         setLoading(false)
@@ -45,6 +52,10 @@ export default function ListDetailPage() {
     return <p>Loading...</p>
   }
 
+  if (!list) {
+    return <p>List not found</p>
+  }
+
   return (
     <>
       <nav className="flex items-center gap-2 text-sm mb-4">
@@ -52,10 +63,26 @@ export default function ListDetailPage() {
           Lists
         </Link>
         <span className="text-gray-400">&gt;</span>
-        <span>{listName}</span>
+        <span>{list.name}</span>
       </nav>
-      <h1 className="text-2xl font-bold mb-4">{listName}</h1>
-      <ShopList coffeeShops={listItems.map(item => formatDBShopAsFeature(item.shop))} />
+      <div className="flex items-center">
+        <h1 className="text-2xl flex-1 font-bold">{list.name}</h1>
+        <ListActions
+          onShare={() => {
+            // TODO: implement share modal
+          }}
+          onEdit={() => {
+            // TODO: implement edit modal
+          }}
+          onDelete={() => {
+            // TODO: implement delete confirmation
+          }}
+        />
+      </div>
+      <p>
+        {list.items.length} shops * Created {list.created_at}
+      </p>
+      <ShopList coffeeShops={list.items.map(item => formatDBShopAsFeature(item.shop))} />
     </>
   )
 }
