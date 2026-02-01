@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { ChevronRight } from 'lucide-react'
-import CreateListButton from '../../components/CreateListButton'
+import AddListAction from './AddListAction'
 
 function PhotoAvatarStack({ photos, totalCount }) {
   const previews = photos.slice(0, 3)
@@ -106,9 +106,7 @@ export default function ListsPage() {
         {listItems.map(list => (
           <ListCard key={list.id} list={list} />
         ))}
-        <div className="rounded-xl border-2 border-dashed border-stone-300 hover:border-amber-500 hover:bg-amber-50/50 transition-all duration-200 flex items-center justify-center min-h-[106px]">
-          <CreateListButton onAdd={() => console.log('create list')} />
-        </div>
+        <AddListAction onAdd={newList => setListItems(prev => [...prev, { ...newList, photos: [] }])} />
       </div>
 
       {listItems.length === 0 && (
