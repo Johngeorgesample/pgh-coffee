@@ -1,6 +1,50 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+// GET /api/lists/{list_id} - Get a single list
+export async function GET(
+  _request: NextRequest,
+  props: { params: Promise<{ list_id: string }> }
+) {
+  const params = await props.params
+  const { list_id } = params
+
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
+  const { data, error } = await supabase
+    .from('user_lists')
+    .select('*')
+    .eq('id', list_id)
+    .eq('user_id', user.id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching list:', error.message)
+    return NextResponse.json(
+      { error: 'Error fetching list' },
+      { status: 500 }
+    )
+  }
+
+  if (!data) {
+    return NextResponse.json(
+      { error: 'List not found' },
+      { status: 404 }
+    )
+  }
+
+  return NextResponse.json(data)
+}
+
 // PATCH /api/lists/{list_id} - Rename a list
 export async function PATCH(
   request: NextRequest,
