@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 
-export default function CreateListButton({onAdd}) {
+export default function CreateListButton({ onAdd }) {
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [listName, setListName] = useState('')
 
