@@ -3,16 +3,49 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 
-export default function CreateListButton({ onAdd }) {
-  const [isEditing, setIsEditing] = useState<boolean>(false)
+interface CreateListButtonProps {
+  onAdd: () => void
+}
+
+export default function CreateListButton({ onAdd }: CreateListButtonProps) {
+  const [isEditing, setIsEditing] = useState(false)
   const [listName, setListName] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isValid = listName.trim().length > 0
 
-  const createList = () => {
-    console.log(listName)
-    // POST request to create new record in user_lists table
-    onAdd()
+  const handleCancel = () => {
+    setListName('')
+    setIsEditing(false)
+  }
+
+  const createList = async () => {
+    if (!isValid || isSubmitting) return
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/lists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: listName.trim() }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create list')
+      }
+
+      setListName('')
+      setIsEditing(false)
+      onAdd()
+    } catch (error) {
+      console.error('Error creating list:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -26,11 +59,18 @@ export default function CreateListButton({ onAdd }) {
             value={listName}
           />
           <button
-            onClick={createList}
-            disabled={!isValid}
-            className={`px-3 py-1 rounded-lg ${isValid ? 'bg-yellow-300' : 'bg-gray-300 text-gray-500'}`}
+            onClick={handleCancel}
+            disabled={isSubmitting}
+            className="px-3 py-1 rounded-lg text-gray-600 hover:bg-gray-100"
           >
-            Add
+            Cancel
+          </button>
+          <button
+            onClick={createList}
+            disabled={!isValid || isSubmitting}
+            className={`px-3 py-1 rounded-lg ${isValid && !isSubmitting ? 'bg-yellow-300' : 'bg-gray-300 text-gray-500'}`}
+          >
+            {isSubmitting ? 'Adding...' : 'Add'}
           </button>
         </div>
       ) : (
