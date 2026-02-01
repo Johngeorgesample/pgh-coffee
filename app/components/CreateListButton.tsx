@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 
-export default function CreateListButton() {
+export default function CreateListButton({onAdd}) {
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [listName, setListName] = useState('')
 
@@ -12,6 +12,7 @@ export default function CreateListButton() {
   const createList = () => {
     console.log(listName)
     // POST request to create new record in user_lists table
+    onAdd()
   }
 
   return (
