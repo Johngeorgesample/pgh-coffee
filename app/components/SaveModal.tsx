@@ -60,9 +60,28 @@ export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props
     return res.json()
   }
 
+  const removeShopFromList = async (listId: string, shopUUID: string) => {
+    const res = await fetch(`/api/lists/${listId}/items/${shopUUID}`, {
+      method: 'DELETE',
+    })
+
+    if (!res.ok) {
+      const { error } = await res.json()
+      throw new Error(error)
+    }
+
+    return res.json()
+  }
+
   const handleClick = (id: string) => {
-    setSelectedLists(prev => (prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]))
-    addShopToList(id, shopUUID)
+    const isCurrentlySelected = selectedLists.includes(id)
+    setSelectedLists(prev => (isCurrentlySelected ? prev.filter(item => item !== id) : [...prev, id]))
+
+    if (isCurrentlySelected) {
+      removeShopFromList(id, shopUUID)
+    } else {
+      addShopToList(id, shopUUID)
+    }
   }
 
   const handleAddingToNewList = () => {
