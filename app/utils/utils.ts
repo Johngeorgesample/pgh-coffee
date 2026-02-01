@@ -67,8 +67,9 @@ export const fmtYMD = (ymd?: string) =>
  * An event today is considered NOT past.
  */
 export const isPast = (date: string) => {
-  const eventDate = new Date(date)
-  eventDate.setHours(0, 0, 0, 0)
+  // Parse as local date to avoid timezone offset issues
+  const [year, month, day] = date.split('-').map(Number)
+  const eventDate = new Date(year, month - 1, day)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   return eventDate.getTime() < today.getTime()

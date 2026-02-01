@@ -7,7 +7,9 @@ import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from './EventDetails'
 
 const formatDateParts = (dateStr: string) => {
-  const date = new Date(dateStr)
+  // Parse as local date to avoid timezone offset issues
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
   return {
     month: date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
     day: date.getDate(),
