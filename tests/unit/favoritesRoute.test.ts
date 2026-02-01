@@ -8,6 +8,8 @@ const mockShopValidationResult = vi.fn()
 const mockInsertResult = vi.fn()
 const mockSelectFavoritesResult = vi.fn()
 const mockDeleteResult = vi.fn()
+const mockFindFavoritesListResult = vi.fn()
+const mockCreateFavoritesListResult = vi.fn()
 
 // Mock the server Supabase client
 vi.mock('@/lib/supabase/server', () => ({
@@ -26,7 +28,25 @@ vi.mock('@/lib/supabase/server', () => ({
           }),
         }
       }
-      if (table === 'user_favorites') {
+      if (table === 'user_lists') {
+        return {
+          // Chain: select().eq().eq().single() - for finding Favorites list
+          select: () => ({
+            eq: () => ({
+              eq: () => ({
+                single: mockFindFavoritesListResult,
+              }),
+            }),
+          }),
+          // Chain: insert().select().single() - for creating Favorites list
+          insert: () => ({
+            select: () => ({
+              single: mockCreateFavoritesListResult,
+            }),
+          }),
+        }
+      }
+      if (table === 'user_list_items') {
         return {
           // Chain: insert().select().single()
           insert: () => ({
@@ -71,12 +91,15 @@ describe('Favorites API Route - POST (Add Favorite)', () => {
       id: 'fav-123',
       user_id: 'user-123',
       shop_id: 'shop-uuid-456',
+      list_id: 'list-123',
       created_at: '2024-01-01T00:00:00Z',
     }
 
     mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
     // Mock shop validation
     mockShopValidationResult.mockResolvedValueOnce({ data: { id: 'shop-uuid-456' }, error: null })
+    // Mock finding existing Favorites list
+    mockFindFavoritesListResult.mockResolvedValueOnce({ data: { id: 'list-123' }, error: null })
     // Mock insert
     mockInsertResult.mockResolvedValueOnce({ data: mockFavorite, error: null })
 
@@ -131,6 +154,8 @@ describe('Favorites API Route - POST (Add Favorite)', () => {
     mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
     // Mock shop validation success
     mockShopValidationResult.mockResolvedValueOnce({ data: { id: 'shop-uuid-456' }, error: null })
+    // Mock finding existing Favorites list
+    mockFindFavoritesListResult.mockResolvedValueOnce({ data: { id: 'list-123' }, error: null })
     // Mock insert failure
     mockInsertResult.mockResolvedValueOnce({
       data: null,
