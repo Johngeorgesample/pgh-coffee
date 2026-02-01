@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import CreateListButton from '../../components/CreateListButton'
 
 export default function ListsPage() {
   const [listItems, setListItems] = useState([])
@@ -34,6 +35,10 @@ export default function ListsPage() {
             </Link>
           )
         })}
+
+          <div className="border-t -mx-6 px-6 pt-4">
+            <CreateListButton onAdd={() => console.log('create list')} />
+          </div>
       </div>
     </>
   )

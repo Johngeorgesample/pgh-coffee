@@ -68,15 +68,9 @@ export default function ListDetailPage() {
       <div className="flex items-center">
         <h1 className="text-2xl flex-1 font-bold">{list.name}</h1>
         <ListActions
-          onShare={() => {
-            // TODO: implement share modal
-          }}
-          onEdit={() => {
-            // TODO: implement edit modal
-          }}
-          onDelete={() => {
-            // TODO: implement delete confirmation
-          }}
+          listId={list.id}
+          listName={list.name}
+          onNameUpdate={newName => setList({ ...list, name: newName })}
         />
       </div>
       <p>
