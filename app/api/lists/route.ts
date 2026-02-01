@@ -97,7 +97,11 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase
     .from('user_lists')
-    .insert({ user_id: user.id, name: name.trim() })
+    .insert({
+      user_id: user.id,
+      name: name.trim(),
+      creator_email: user.email,
+    })
     .select()
     .single()
 

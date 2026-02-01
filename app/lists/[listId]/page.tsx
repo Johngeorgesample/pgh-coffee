@@ -20,6 +20,7 @@ interface List {
   is_public: boolean
   items: ListItem[]
   isOwner: boolean
+  creator_email?: string
 }
 
 export default function PublicListPage() {
@@ -90,6 +91,7 @@ export default function PublicListPage() {
         </nav>
         <h1 className="text-2xl font-bold">{list.name}</h1>
         <p className="text-stone-600">
+          {list.creator_email && <>by {list.creator_email} · </>}
           {list.items.length} shops · Created {fmtISO(list.created_at)}
         </p>
         {list.isOwner && (
