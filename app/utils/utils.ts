@@ -61,6 +61,11 @@ export const fmtYMD = (ymd?: string) =>
     ? new Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(parseYMDLocal(ymd))
     : ''
 
+export const fmtISO = (iso?: string) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    : ''
+
 /**
  * Checks if a date is in the past.
  * Normalizes both dates to midnight for date-only comparison.

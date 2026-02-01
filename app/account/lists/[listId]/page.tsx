@@ -1,6 +1,6 @@
 'use client'
 
-import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { formatDBShopAsFeature, fmtISO } from '@/app/utils/utils'
 import ShopList from '@/app/components/ShopList'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -80,7 +80,7 @@ export default function ListDetailPage() {
         />
       </div>
       <p>
-        {list.items.length} shops * Created {list.created_at}
+        {list.items.length} shops · Created {fmtISO(list.created_at)}
       </p>
       <ShopList coffeeShops={list.items.map(item => formatDBShopAsFeature(item.shop))} />
     </>
