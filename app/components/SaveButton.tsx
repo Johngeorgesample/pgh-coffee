@@ -36,7 +36,7 @@ export default function SaveButton({ shopUUID, shopName }: SaveButtonProps) {
         <Bookmark className="w-4 h-4 transition-colors" />
         Save
       </button>
-      <SaveModal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)} shopName={shopName} />
+      <SaveModal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)} shopUUID={shopUUID} shopName={shopName} />
       <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </>
   )

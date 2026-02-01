@@ -5,36 +5,55 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import SaveModalListItem from './SaveModalListItem'
 import CreateListButton from './CreateListButton'
 
+interface ListWithStatus {
+  id: string
+  name: string
+  created_at: string
+  has_shop: boolean
+}
+
 interface Props {
   isOpen: boolean
   onClose: () => void
+  shopUUID: string
   shopName: string
 }
 
-export default function SaveModal({ isOpen, onClose, shopName }: Props) {
+export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props) {
+  const [lists, setLists] = useState<ListWithStatus[]>([])
   const [selectedLists, setSelectedLists] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // GET user's lists and check if shop is already added to any of them
-  }, [])
+    if (!isOpen) return
+
+    const fetchLists = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch(`/api/lists/status/${shopUUID}`)
+        if (!response.ok) throw new Error('Failed to fetch lists')
+        const data: ListWithStatus[] = await response.json()
+        setLists(data)
+        setSelectedLists(data.filter(list => list.has_shop).map(list => list.id))
+      } catch (error) {
+        console.error('Error fetching lists:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchLists()
+  }, [isOpen, shopUUID])
 
   const handleClick = (id: string) => {
     setSelectedLists(prev => (prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]))
-    // PUT request to update list(s) w/ shop
+    // TODO: POST/DELETE request to update list(s) w/ shop
   }
 
   const handleAddingToNewList = () => {
     console.log('handleAddingToNewList')
-    // PUT request to update new list w/ shop
-}
-
-  const data = [
-    { name: 'Favorites', count: '3', id: '1' },
-    { name: 'Date night spots', count: '3', id: '2' },
-    { name: 'Foo', count: '3', id: '3' },
-    { name: 'Bar', count: '3', id: '4' },
-    { name: 'Baz', count: '3', id: '5' },
-  ]
+    // TODO: POST request to create new list and add shop
+  }
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -49,16 +68,22 @@ export default function SaveModal({ isOpen, onClose, shopName }: Props) {
           </DialogTitle>
 
           <ul className="flex flex-col py-2 max-h-[35dvh] gap-1 overflow-scroll">
-            {data.map(list => (
-              <SaveModalListItem
-                key={list.id}
-                name={list.name}
-                count={list.count}
-                id={list.id}
-                isSelected={selectedLists.includes(list.id)}
-                onClick={handleClick}
-              />
-            ))}
+            {isLoading ? (
+              <li className="py-4 text-center text-slate-500">Loading...</li>
+            ) : lists.length === 0 ? (
+              <li className="py-4 text-center text-slate-500">No lists yet</li>
+            ) : (
+              lists.map(list => (
+                <SaveModalListItem
+                  key={list.id}
+                  name={list.name}
+                  count=""
+                  id={list.id}
+                  isSelected={selectedLists.includes(list.id)}
+                  onClick={handleClick}
+                />
+              ))
+            )}
           </ul>
           <div className="border-t -mx-6 px-6 pt-4">
             <CreateListButton onAdd={handleAddingToNewList}/>
