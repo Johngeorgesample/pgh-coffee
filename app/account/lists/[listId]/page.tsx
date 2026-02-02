@@ -23,6 +23,37 @@ interface List {
   items: ListItem[]
 }
 
+function ListDetailSkeleton() {
+  return (
+    <>
+      <nav className="flex items-center gap-2 text-sm mb-4">
+        <div className="h-4 bg-stone-200 rounded w-10 animate-pulse" />
+        <span className="text-gray-400">&gt;</span>
+        <div className="h-4 bg-stone-200 rounded w-24 animate-pulse" />
+      </nav>
+      <div className="flex items-center mb-2">
+        <div className="h-8 bg-stone-200 rounded w-48 flex-1 animate-pulse" />
+        <div className="h-8 bg-stone-100 rounded w-24 animate-pulse" />
+      </div>
+      <div className="h-4 bg-stone-100 rounded w-40 mb-6 animate-pulse" />
+      <div className="space-y-3">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="bg-white rounded-xl border border-stone-200 p-4 animate-pulse">
+            <div className="flex gap-4">
+              <div className="w-16 h-16 bg-stone-200 rounded-lg shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="h-5 bg-stone-200 rounded w-40 mb-2" />
+                <div className="h-4 bg-stone-100 rounded w-28 mb-1" />
+                <div className="h-4 bg-stone-100 rounded w-20" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
 export default function ListDetailPage() {
   const params = useParams()
   const listId = params.listId as string
@@ -51,7 +82,7 @@ export default function ListDetailPage() {
   }, [listId])
 
   if (loading) {
-    return <p>Loading...</p>
+    return <ListDetailSkeleton />
   }
 
   if (!list) {

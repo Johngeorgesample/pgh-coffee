@@ -12,6 +12,25 @@ interface ListSummary {
   photos: string[]
 }
 
+function ListCardSkeleton() {
+  return (
+    <div className="bg-white rounded-xl border border-stone-200 p-5 flex flex-col gap-4 animate-pulse">
+      <div className="min-w-0">
+        <div className="h-5 bg-stone-200 rounded w-32 mb-2" />
+        <div className="h-4 bg-stone-100 rounded w-16" />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="w-9 h-9 rounded-full bg-stone-200 border-2 border-white" />
+          <div className="w-9 h-9 rounded-full bg-stone-200 border-2 border-white -ml-2" />
+          <div className="w-9 h-9 rounded-full bg-stone-200 border-2 border-white -ml-2" />
+        </div>
+        <div className="w-6 h-6 bg-stone-100 rounded" />
+      </div>
+    </div>
+  )
+}
+
 function PhotoAvatarStack({ photos, totalCount }: { photos: string[]; totalCount: number }) {
   const previews = photos.slice(0, 3)
   const overflow = totalCount - previews.length
@@ -76,6 +95,7 @@ function ListCard({ list }: { list: ListSummary }) {
 
 export default function ListsPage() {
   const [listItems, setListItems] = useState<ListSummary[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/lists?photos')
@@ -92,9 +112,29 @@ export default function ListsPage() {
         console.error('Failed to fetch lists:', error)
         setListItems([])
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
   const totalShops = listItems.reduce((acc, list) => acc + (list.photos?.length ?? 0), 0)
+
+  if (loading) {
+    return (
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl font-bold text-stone-900">Lists</h1>
+          <div className="h-4 bg-stone-200 rounded w-28 animate-pulse" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ListCardSkeleton />
+          <ListCardSkeleton />
+          <ListCardSkeleton />
+          <ListCardSkeleton />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex-1 min-w-0">
