@@ -109,6 +109,14 @@ export default function HomeClient() {
     }
   }, [presented, largeViewport])
 
+  useEffect(() => {
+    if (currentShop?.properties?.name && currentShop?.properties?.neighborhood) {
+      document.title = `${currentShop.properties.name} | ${currentShop.properties.neighborhood} | pgh.coffee`
+    } else {
+      document.title = 'PGH Coffee'
+    }
+  }, [currentShop])
+
   useHighlightCurrentShop({ currentShop, displayedShops, setDisplayedShops })
 
   return (
