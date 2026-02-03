@@ -55,28 +55,27 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
   return Math.max(1, Math.round((nextMidnight.getTime() - now.getTime()) / 1000))
 }
 
-function daySeed(d = new Date()) {
-  const ymd = ymdInTz(d, TZ) // <- flips at ET midnight
-  const hex = crypto.createHash('sha1').update(ymd).digest('hex').slice(0, 8)
-  return parseInt(hex, 16)
-}
-
 export async function GET() {
   const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!)
 
-  const { count, error: countErr } = await supabase.from('shops').select('uuid', { count: 'exact', head: true })
+  const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
 
-  if (countErr || !count) {
+  if (uuidErr || !uuids?.length) {
     return NextResponse.json({ error: 'No shops found' }, { status: 500 })
   }
 
-  const idx = daySeed() % count
+  // Rendezvous hashing: pick the UUID whose hash(date + uuid) is highest.
+  // This is stable even when shops are added or removed.
+  const ymd = ymdInTz()
+  const winnerUuid = uuids.reduce<{ uuid: string; hash: string }>((best, row) => {
+    const h = crypto.createHash('sha1').update(ymd + row.uuid).digest('hex')
+    return h > best.hash ? { uuid: row.uuid, hash: h } : best
+  }, { uuid: uuids[0].uuid, hash: '' }).uuid
 
   const { data, error } = await supabase
     .from('shops')
     .select('uuid,name,neighborhood,address,website,photo,photos,roaster,latitude,longitude,company:company_id(*)')
-    .order('name', { ascending: true })
-    .range(idx, idx)
+    .eq('uuid', winnerUuid)
 
   if (error || !data?.[0]) {
     return NextResponse.json({ error: 'Query failed' }, { status: 500 })
