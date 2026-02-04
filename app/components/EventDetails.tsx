@@ -1,9 +1,11 @@
 'use client'
 
-import { Calendar, SquareArrowOutUpRight, MapPin } from 'lucide-react'
+import { useState } from 'react'
+import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import { isPast } from '@/app/utils/utils'
 import { EventCardData } from './EventCard'
+import ShareModal from './ShareModal'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -41,6 +43,7 @@ interface EventDetailsProps {
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = usePlausible()
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
   const handleShopClick = () => {
@@ -195,24 +198,34 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       {/* Fixed Bottom Section */}
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
-          {event.url && (
-            <a
-              href={event.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleExternalLink}
-              className="w-full bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+          <div className="flex gap-2">
+            {event.url && (
+              <a
+                href={event.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleExternalLink}
+                className="flex-1 bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+              >
+                View Event Website
+                <SquareArrowOutUpRight className="w-5 h-5" />
+              </a>
+            )}
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
-              View Event Website
-              <SquareArrowOutUpRight className="w-5 h-5" />
-            </a>
-          )}
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
 
           <p className="text-[11px] text-center text-gray-400 italic">
             Information is provided by the organizer and may change.
           </p>
         </div>
       </div>
+
+      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share this event" />
     </div>
   )
 }

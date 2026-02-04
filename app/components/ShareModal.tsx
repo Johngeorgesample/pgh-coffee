@@ -5,9 +5,10 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 interface ShareModalProps {
   isOpen: boolean
   onClose: () => void
+  title?: string
 }
 
-export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
+export default function ShareModal({ isOpen, onClose, title = 'Share this shop' }: ShareModalProps) {
   const [copied, setCopied] = useState(false)
   const currentUrl = typeof window !== 'undefined' ? window.location.href : ''
 
@@ -27,7 +28,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel className="max-w-lg w-full bg-white rounded-xl p-6 shadow-xl">
           <DialogTitle className="text-lg font-semibold text-stone-900 mb-4">
-            Share this shop
+            {title}
           </DialogTitle>
           <div className="space-y-4">
             <div className="bg-stone-50 border border-stone-200 rounded-lg p-3 break-all text-sm text-stone-700">
