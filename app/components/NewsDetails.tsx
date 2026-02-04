@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Calendar, SquareArrowOutUpRight, MapPin } from 'lucide-react'
+import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import { useShopSelection } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { NewsItem } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
+import ShareModal from './ShareModal'
 
 const formatNewsDate = (dateStr: string) => {
   const date = new Date(dateStr + 'T00:00:00')
@@ -20,6 +21,7 @@ const formatNewsDate = (dateStr: string) => {
 export const NewsDetails = ({ id }: { id: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const plausible = usePlausible()
   const { handleShopSelect } = useShopSelection()
 
@@ -174,24 +176,34 @@ export const NewsDetails = ({ id }: { id: string }) => {
       {/* Fixed Bottom Section */}
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
-          {news.url && (
-            <a
-              href={news.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleExternalLink}
-              className="w-full bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+          <div className="flex gap-2">
+            {news.url && (
+              <a
+                href={news.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleExternalLink}
+                className="flex-1 bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+              >
+                View Source
+                <SquareArrowOutUpRight className="w-5 h-5" />
+              </a>
+            )}
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
-              View Source
-              <SquareArrowOutUpRight className="w-5 h-5" />
-            </a>
-          )}
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
 
           <p className="text-[11px] text-center text-gray-400 italic">
             Information may have changed since this was posted.
           </p>
         </div>
       </div>
+
+      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share this update" />
     </div>
   )
 }

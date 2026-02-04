@@ -87,7 +87,11 @@ export default function HomeClient() {
 
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
-      setPanelContent(<ExploreContent />, 'explore')
+      const params = new URLSearchParams(window.location.search)
+      const hasContentParam = ['shop', 'company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
+      if (!hasContentParam) {
+        setPanelContent(<ExploreContent />, 'explore')
+      }
     }
   }, [panelContent, panelMode, setPanelContent])
 
