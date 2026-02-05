@@ -25,11 +25,13 @@ const NewsCardSkeleton = () => (
 export const NewsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
-  const { news, fetchNews } = useExploreStore()
+  const { news, newsError, newsLoading, fetchNews } = useExploreStore()
 
   useEffect(() => {
     fetchNews()
   }, [fetchNews])
+
+  if (newsError) return null
 
   const openNews = () => {
     plausible('ViewAllClick', { props: { section: 'news' } })
@@ -45,10 +47,9 @@ export const NewsCTA = () => {
     window.history.replaceState({}, '', baseUrl + '?news')
   }
 
-  const isLoading = news === null
   const lastTwo = news?.slice(0, 2) ?? []
 
-  if (!isLoading && lastTwo.length === 0) return null
+  if (!newsLoading && lastTwo.length === 0) return null
 
   return (
     <>
@@ -67,7 +68,7 @@ export const NewsCTA = () => {
       </div>
 
       <div className="mt-3 space-y-3">
-        {isLoading ? (
+        {newsLoading ? (
           <>
             <NewsCardSkeleton />
             <NewsCardSkeleton />

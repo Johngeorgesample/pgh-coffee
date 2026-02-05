@@ -11,9 +11,13 @@ interface ExploreState {
   fetchFeaturedShop: () => Promise<void>
 
   events: EventCardData[] | null
+  eventsError: string | null
+  eventsLoading: boolean
   fetchEvents: () => Promise<void>
 
   news: NewsItem[] | null
+  newsError: string | null
+  newsLoading: boolean
   fetchNews: () => Promise<void>
 }
 
@@ -40,34 +44,40 @@ const useExploreStore = create<ExploreState>()(
       },
 
       events: null,
+      eventsError: null,
+      eventsLoading: true,
 
       fetchEvents: async () => {
-        if (get().events !== null) {
+        const { events, eventsError } = get()
+        if (events !== null || eventsError !== null) {
           return
         }
         try {
           const res = await fetch('/api/events', { cache: 'no-store' })
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
           const data = await res.json()
-          set({ events: data })
-        } catch (e) {
-          console.error('Error fetching events:', e)
-          set({ events: [] })
+          set({ events: data, eventsLoading: false })
+        } catch (e: any) {
+          set({ eventsError: e?.message ?? 'Failed to load events', eventsLoading: false })
         }
       },
 
       news: null,
+      newsError: null,
+      newsLoading: true,
 
       fetchNews: async () => {
-        if (get().news !== null) {
+        const { news, newsError } = get()
+        if (news !== null || newsError !== null) {
           return
         }
         try {
           const res = await fetch('/api/updates')
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
           const data = await res.json()
-          set({ news: data ?? [] })
-        } catch (e) {
-          console.error('Error fetching news:', e)
-          set({ news: [] })
+          set({ news: data ?? [], newsLoading: false })
+        } catch (e: any) {
+          set({ newsError: e?.message ?? 'Failed to load news', newsLoading: false })
         }
       },
     }),

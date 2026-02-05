@@ -30,13 +30,13 @@ const EventCardSkeleton = () => (
 export const EventsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
-  const { events, fetchEvents } = useExploreStore()
+  const { events, eventsError, eventsLoading, fetchEvents } = useExploreStore()
 
   useEffect(() => {
     fetchEvents()
   }, [fetchEvents])
 
-  const isLoading = events === null
+  if (eventsError) return null
   const soonestTwo = events
     ?.filter(event => event.event_date && !isPast(event.event_date))
     .sort((a, b) => {
@@ -74,7 +74,7 @@ export const EventsCTA = () => {
       </div>
 
       <div className="mt-3 space-y-3">
-        {isLoading ? (
+        {eventsLoading ? (
           <>
             <EventCardSkeleton />
             <EventCardSkeleton />
