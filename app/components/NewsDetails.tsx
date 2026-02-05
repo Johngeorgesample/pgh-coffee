@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
-import { useShopSelection } from '@/hooks'
+import { useShopSelection, useCopyToClipboard } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { NewsItem } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
-import ShareModal from './ShareModal'
+import CopyLinkToast from './CopyLinkToast'
 
 const formatNewsDate = (dateStr: string) => {
   const date = new Date(dateStr + 'T00:00:00')
@@ -21,7 +21,7 @@ const formatNewsDate = (dateStr: string) => {
 export const NewsDetails = ({ id }: { id: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const plausible = usePlausible()
   const { handleShopSelect } = useShopSelection()
 
@@ -190,7 +190,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
               </a>
             )}
             <button
-              onClick={() => setIsShareModalOpen(true)}
+              onClick={copyCurrentUrl}
               className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
               <Share2 className="w-5 h-5" />
@@ -203,7 +203,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
         </div>
       </div>
 
-      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share this update" />
+      <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </div>
   )
 }

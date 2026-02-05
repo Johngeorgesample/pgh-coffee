@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
+import { useCopyToClipboard } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
 import { EventCardData } from './EventCard'
-import ShareModal from './ShareModal'
+import CopyLinkToast from './CopyLinkToast'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -43,7 +43,7 @@ interface EventDetailsProps {
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = usePlausible()
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
   const handleShopClick = () => {
@@ -212,7 +212,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
               </a>
             )}
             <button
-              onClick={() => setIsShareModalOpen(true)}
+              onClick={copyCurrentUrl}
               className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
               <Share2 className="w-5 h-5" />
@@ -225,7 +225,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         </div>
       </div>
 
-      <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share this event" />
+      <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </div>
   )
 }
