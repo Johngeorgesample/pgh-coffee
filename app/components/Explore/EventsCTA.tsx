@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { usePlausible } from 'next-plausible'
 import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
+import useExploreStore from '@/stores/exploreStore'
 import { Events } from '@/app/components/Events'
-import { EventCard, EventCardData } from '@/app/components/EventCard'
+import { EventCard } from '@/app/components/EventCard'
 import { isPast } from '@/app/utils/utils'
 
 const EventCardSkeleton = () => (
@@ -29,20 +30,14 @@ const EventCardSkeleton = () => (
 export const EventsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
-
-  const fetchEvents = async () => {
-    const response = await fetch('/api/events', { cache: 'no-store' })
-    return await response.json()
-  }
-
-  const [updates, setUpdates] = useState<EventCardData[] | null>(null)
+  const { events, eventsError, eventsLoading, fetchEvents } = useExploreStore()
 
   useEffect(() => {
-    fetchEvents().then(setUpdates)
-  }, [])
+    fetchEvents()
+  }, [fetchEvents])
 
-  const isLoading = updates === null
-  const soonestTwo = updates
+  if (eventsError) return null
+  const soonestTwo = events
     ?.filter(event => event.event_date && !isPast(event.event_date))
     .sort((a, b) => {
       if (!a.event_date || !b.event_date) return 0
@@ -79,7 +74,7 @@ export const EventsCTA = () => {
       </div>
 
       <div className="mt-3 space-y-3">
-        {isLoading ? (
+        {eventsLoading ? (
           <>
             <EventCardSkeleton />
             <EventCardSkeleton />
