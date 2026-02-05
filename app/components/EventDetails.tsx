@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
+import { useCopyToClipboard } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
 import { EventCardData } from './EventCard'
 import CopyLinkToast from './CopyLinkToast'
@@ -43,7 +43,7 @@ interface EventDetailsProps {
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = usePlausible()
-  const [showCopyToast, setShowCopyToast] = useState(false)
+  const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
   const handleShopClick = () => {
@@ -85,15 +85,6 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         url: event.url,
       },
     })
-  }
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href)
-      setShowCopyToast(true)
-    } catch (err) {
-      console.error('Failed to copy:', err)
-    }
   }
 
   return (
@@ -221,7 +212,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
               </a>
             )}
             <button
-              onClick={handleShare}
+              onClick={copyCurrentUrl}
               className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
               <Share2 className="w-5 h-5" />
@@ -234,7 +225,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         </div>
       </div>
 
-      <CopyLinkToast isOpen={showCopyToast} onClose={() => setShowCopyToast(false)} />
+      <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </div>
   )
 }
