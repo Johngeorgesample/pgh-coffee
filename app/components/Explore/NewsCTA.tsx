@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { usePlausible } from 'next-plausible'
 import { ChevronRight } from 'lucide-react';
 import usePanelStore from '@/stores/panelStore'
+import useExploreStore from '@/stores/exploreStore'
 import { News } from '@/app/components/News'
 import { NewsCard } from '@/app/components/NewsCard'
-import { NewsItem } from '@/types/news-types'
 
 const NewsCardSkeleton = () => (
   <div className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden animate-pulse">
@@ -25,14 +25,11 @@ const NewsCardSkeleton = () => (
 export const NewsCTA = () => {
   const plausible = usePlausible()
   const { setPanelContent } = usePanelStore()
-
-  const [updates, setUpdates] = useState<NewsItem[] | null>(null)
+  const { news, fetchNews } = useExploreStore()
 
   useEffect(() => {
-    fetch('/api/updates')
-      .then(res => res.json())
-      .then(data => setUpdates(data ?? []))
-  }, [])
+    fetchNews()
+  }, [fetchNews])
 
   const openNews = () => {
     plausible('ViewAllClick', { props: { section: 'news' } })
@@ -48,8 +45,8 @@ export const NewsCTA = () => {
     window.history.replaceState({}, '', baseUrl + '?news')
   }
 
-  const isLoading = updates === null
-  const lastTwo = updates?.slice(0, 2) ?? []
+  const isLoading = news === null
+  const lastTwo = news?.slice(0, 2) ?? []
 
   if (!isLoading && lastTwo.length === 0) return null
 

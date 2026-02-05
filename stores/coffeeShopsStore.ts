@@ -37,6 +37,10 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         }),
 
       fetchCoffeeShops: async () => {
+        const { allShops } = useCoffeeShopsStore.getState()
+        if (allShops.features.length > 0) {
+          return
+        }
         try {
           const response = await fetch('/api/shops/geojson')
           const data: TFeatureCollection = await response.json()

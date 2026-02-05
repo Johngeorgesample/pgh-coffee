@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import ShopCard from '../ShopCard'
-import { TShop } from '@/types/shop-types'
+import useExploreStore from '@/stores/exploreStore'
 
 const FeaturedShopSkeleton = () => (
   <div className="sm:col-span-2">
@@ -23,41 +23,21 @@ const FeaturedShopSkeleton = () => (
 )
 
 export default function FeaturedShop() {
-  const [shop, setShop] = useState<TShop | null>(null)
-  const [err, setErr] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const { featuredShop, featuredShopError, featuredShopLoading, fetchFeaturedShop } = useExploreStore()
 
   useEffect(() => {
-    let cancelled = false
+    fetchFeaturedShop()
+  }, [fetchFeaturedShop])
 
-    const fetchFeatured = async () => {
-      try {
-        const res = await fetch('/api/featured-shop', { cache: 'no-store' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data: TShop = await res.json()
-        if (!cancelled) setShop(data)
-      } catch (e: any) {
-        if (!cancelled) setErr(e?.message ?? 'Failed to load featured shop')
-      } finally {
-        if (!cancelled) setIsLoading(false)
-      }
-    }
-
-    fetchFeatured()
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  if (isLoading) return <FeaturedShopSkeleton />
-  if (err) return null
-  if (!shop) return null
+  if (featuredShopLoading) return <FeaturedShopSkeleton />
+  if (featuredShopError) return null
+  if (!featuredShop) return null
 
   return (
     <div className="sm:col-span-2">
       <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Featured shop</h3>
       <div className="list-none mt-3">
-        <ShopCard featured shop={shop} />
+        <ShopCard featured shop={featuredShop} />
       </div>
     </div>
   )
