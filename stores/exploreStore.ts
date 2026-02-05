@@ -72,7 +72,7 @@ const useExploreStore = create<ExploreState>()(
           return
         }
         try {
-          const res = await fetch('/api/updates')
+          const res = await fetch('/api/updates', { cache: 'no-store' })
           if (!res.ok) throw new Error(`HTTP ${res.status}`)
           const data = await res.json()
           set({ news: data ?? [], newsLoading: false })
