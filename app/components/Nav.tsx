@@ -1,27 +1,20 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { PlusIcon } from 'lucide-react'
+import { PlusIcon, Menu } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 import usePanelStore from '@/stores/panelStore'
 import { ExploreContent } from './ExploreContent'
+import MobileNavDrawer from './MobileNavDrawer'
 
 export default function Nav() {
-  const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const { user, loading } = useAuth()
   const { reset } = usePanelStore()
 
   const handleLogoClick = () => {
     reset({ mode: 'explore', content: <ExploreContent /> })
-  }
-
-  useEffect(() => {
-    setHamburgerIsOpen(false)
-  }, [])
-
-  const toggleHamburger = () => {
-    setHamburgerIsOpen(!hamburgerIsOpen)
   }
 
   return (
@@ -61,34 +54,18 @@ export default function Nav() {
         </Link>
       </div>
 
-      <div className="sm:hidden">
-        <span className="text-4xl select-none" onClick={toggleHamburger}>
-          {hamburgerIsOpen ? '×' : '☰'}
-        </span>
-      </div>
-
-      <div
-        className={`${hamburgerIsOpen ? 'z-20 absolute top-[4rem] left-0 h-[calc(100vh-7rem)] w-full bg-white sm:hidden' : 'hidden'}`}
+      <button
+        className="sm:hidden p-2 -mr-2"
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Open menu"
       >
-        <div className="flex flex-col items-center pt-8 gap-4">
-          <Link className="text-2xl" href="/about" onClick={() => setHamburgerIsOpen(false)}>
-            About
-          </Link>
-          {!loading &&
-            (user ? (
-              <Link className="text-2xl" href="/account" onClick={() => setHamburgerIsOpen(false)}>
-                Account
-              </Link>
-            ) : (
-              <Link className="text-2xl" href="/sign-in" onClick={() => setHamburgerIsOpen(false)}>
-                Sign in
-              </Link>
-            ))}
-          <Link className="text-2xl" href="/submit-a-shop" onClick={() => setHamburgerIsOpen(false)}>
-            Submit a shop
-          </Link>
-        </div>
-      </div>
+        <Menu className="w-6 h-6" />
+      </button>
+
+      <MobileNavDrawer
+        presented={drawerOpen}
+        onPresentedChange={setDrawerOpen}
+      />
     </nav>
   )
 }
