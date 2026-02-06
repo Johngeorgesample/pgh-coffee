@@ -14,7 +14,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/account', icon: LayoutDashboard },
   { name: 'Favorites', href: '/account/favorites', icon: Heart },
-  // { name: 'Settings', href: '/account/settings', icon: Settings },
+  { name: 'Settings', href: '/account/settings', icon: Settings },
 ]
 
 export default function Sidebar() {
