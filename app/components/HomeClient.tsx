@@ -12,13 +12,14 @@ import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentSho
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
-import {useURLCompanySync} from '@/hooks/useURLCompanySync'
-import {useURLRoasterSync} from '@/hooks/useURLRoasterSync'
+import { useURLCompanySync } from '@/hooks/useURLCompanySync'
+import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
 import { doesShopMatchFilter } from '@/app/utils/utils'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop, displayedShops, setDisplayedShops } = useShopsStore()
+  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop, displayedShops, setDisplayedShops } =
+    useShopsStore()
   const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
@@ -102,7 +103,14 @@ export default function HomeClient() {
   }, [currentShop, largeViewport])
 
   useEffect(() => {
-    if (!largeViewport && (panelMode === 'company' || panelMode === 'roaster' || panelMode === 'event')) {
+    if (
+      !largeViewport &&
+      (panelMode === 'company' ||
+        panelMode === 'roaster' ||
+        panelMode === 'event' ||
+        panelMode === 'news' ||
+        panelMode === 'events')
+    ) {
       setPresented(true)
     }
   }, [panelMode, largeViewport])
