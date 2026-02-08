@@ -11,54 +11,69 @@ type PanelEntry = {
   content: ReactNode
 }
 
-// Type guard to check if content is a ReactElement with shop props
-function hasShopProps(content: ReactNode): content is ReactElement<{ shop: TShop }> {
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events'] as const
+
+function hasProps<K extends string>(
+  content: ReactNode,
+  key: K,
+): content is ReactElement<Record<K, unknown>> {
   return (
     isValidElement(content) &&
     typeof content.props === 'object' &&
     content.props !== null &&
-    'shop' in content.props
+    key in content.props
   )
 }
 
-// Type guard to check if content is a ReactElement with company slug props
-function hasCompanyProps(content: ReactNode): content is ReactElement<{ slug: string }> {
-  return (
-    isValidElement(content) &&
-    typeof content.props === 'object' &&
-    content.props !== null &&
-    'slug' in content.props
-  )
+function getURLParamForEntry(entry: PanelEntry): { key: string; value: string } | null {
+  const { mode, content } = entry
+
+  switch (mode) {
+    case 'shop':
+      if (hasProps(content, 'shop')) {
+        const shop = content.props.shop as TShop
+        if (shop?.properties?.name) {
+          return { key: 'shop', value: `${shop.properties.name}_${shop.properties.neighborhood}` }
+        }
+      }
+      return null
+    case 'company':
+      if (hasProps(content, 'slug') && content.props.slug) {
+        return { key: 'company', value: content.props.slug as string }
+      }
+      return null
+    case 'roaster':
+      if (hasProps(content, 'slug') && content.props.slug) {
+        return { key: 'roaster', value: content.props.slug as string }
+      }
+      return null
+    case 'news':
+      if (hasProps(content, 'id') && content.props.id) {
+        return { key: 'news', value: content.props.id as string }
+      }
+      return { key: 'news', value: '' }
+    case 'event':
+      if (hasProps(content, 'event')) {
+        const event = content.props.event as { id: string }
+        if (event?.id) {
+          return { key: 'event', value: event.id }
+        }
+      }
+      return null
+    case 'events':
+      return { key: 'events', value: '' }
+    default:
+      return null
+  }
 }
 
-// Type guard to check if content is a ReactElement with roaster slug props
-function hasRoasterProps(content: ReactNode): content is ReactElement<{ slug: string }> {
-  return (
-    isValidElement(content) &&
-    typeof content.props === 'object' &&
-    content.props !== null &&
-    'slug' in content.props
-  )
-}
-
-// Type guard to check if content is a ReactElement with news id props
-function hasNewsProps(content: ReactNode): content is ReactElement<{ id: string }> {
-  return (
-    isValidElement(content) &&
-    typeof content.props === 'object' &&
-    content.props !== null &&
-    'id' in content.props
-  )
-}
-
-// Type guard to check if content is a ReactElement with event props
-function hasEventProps(content: ReactNode): content is ReactElement<{ event: { id: string } }> {
-  return (
-    isValidElement(content) &&
-    typeof content.props === 'object' &&
-    content.props !== null &&
-    'event' in content.props
-  )
+function updateURL(param: { key: string; value: string } | null) {
+  const url = new URL(window.location.href)
+  URL_PARAMS.forEach(p => url.searchParams.delete(p))
+  if (param) {
+    url.searchParams.set(param.key, param.value)
+  }
+  window.history.replaceState({}, '', url.toString())
 }
 
 interface PanelState {
@@ -105,86 +120,21 @@ const usePanelStore = create<PanelState>()(
             set({ searchValue: '' })
           }
 
-          // if nothing to go back to, just render explore
           if (state.history.length <= 1) {
-            const url = new URL(window.location.href)
-            const baseUrl = url.origin + url.pathname
-            window.history.replaceState({}, '', baseUrl)
+            updateURL(null)
             return { history: [], panelMode: 'explore', panelContent: null }
           }
 
-          // pop current entry
           const history = state.history.slice(0, -1)
-
           const top = history[history.length - 1]
 
-          const url = new URL(window.location.href)
-          const params = new URLSearchParams(url.search)
+          updateURL(getURLParamForEntry(top))
 
-          if (hasShopProps(top.content) && top.content.props.shop?.properties?.name) {
-            params.set(
-              'shop',
-              `${top.content.props.shop.properties.name}_${top.content.props.shop.properties.neighborhood}`,
-            )
-            params.delete('company')
-            params.delete('roaster')
-            params.delete('news')
-            params.delete('event')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
-
-            // Reset displayed shops to show all shops when going back to shop page
+          if (top.mode === 'shop') {
             const { allShops, setDisplayedShops } = useCoffeeShopsStore.getState()
             setDisplayedShops(allShops)
-          } else if (hasCompanyProps(top.content) && top.content.props.slug && top.mode === 'company') {
-            params.set('company', top.content.props.slug)
-            params.delete('shop')
-            params.delete('roaster')
-            params.delete('news')
-            params.delete('event')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
-          } else if (hasRoasterProps(top.content) && top.content.props.slug && top.mode === 'roaster') {
-            params.set('roaster', top.content.props.slug)
-            params.delete('shop')
-            params.delete('company')
-            params.delete('news')
-            params.delete('event')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
-          } else if (hasNewsProps(top.content) && top.content.props.id && top.mode === 'news') {
-            params.set('news', top.content.props.id)
-            params.delete('shop')
-            params.delete('company')
-            params.delete('roaster')
-            params.delete('event')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
-          } else if (top.mode === 'news' && !hasNewsProps(top.content)) {
-            // News list (no id prop)
-            const baseUrl = url.origin + url.pathname
-            window.history.replaceState({}, '', baseUrl + '?news')
-          } else if (hasEventProps(top.content) && top.content.props.event?.id && top.mode === 'event') {
-            params.set('event', top.content.props.event.id)
-            params.delete('shop')
-            params.delete('company')
-            params.delete('roaster')
-            params.delete('news')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
-          } else if (top.mode === 'events') {
-            const baseUrl = url.origin + url.pathname
-            window.history.replaceState({}, '', baseUrl + '?events')
-          } else {
-            params.delete('shop')
-            params.delete('company')
-            params.delete('roaster')
-            params.delete('news')
-            params.delete('event')
-            params.delete('events')
-            url.search = params.toString()
-            window.history.replaceState({}, '', url.toString())
           }
+
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
 
