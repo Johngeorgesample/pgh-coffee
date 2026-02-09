@@ -63,6 +63,7 @@ hr {
 
 .mapboxgl-popup-content {
   position: relative;
+  pointer-events: auto;
 }
 
 .shop-hover-popup .mapboxgl-popup-content {

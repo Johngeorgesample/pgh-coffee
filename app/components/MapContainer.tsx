@@ -216,7 +216,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
                 closeOnClick={false}
                 className="shop-hover-popup"
               >
-                <div className="w-48 h-28 relative rounded-lg overflow-hidden">
+                <div className="w-48 h-28 relative rounded-lg overflow-hidden cursor-pointer" onClick={() => handleShopSelect(shop)}>
                   {shop.properties.photo ? (
                     <img className="h-full w-full object-cover object-center" src={shop.properties.photo} alt={shop.properties.name} />
                   ) : (
@@ -241,7 +241,10 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             closeOnClick={false}
             className="shop-hover-popup"
           >
-            <div className="w-48 h-28 relative rounded-lg overflow-hidden">
+            <div className="w-48 h-28 relative rounded-lg overflow-hidden cursor-pointer" onClick={() => {
+              const shop = displayedShops.features.find(s => s.properties.uuid === popupInfo.uuid)
+              if (shop) handleShopSelect(shop)
+            }}>
               {popupInfo.photo ? (
                 <img className="h-full w-full object-cover object-center" src={popupInfo.photo} alt={popupInfo.name} />
               ) : (
