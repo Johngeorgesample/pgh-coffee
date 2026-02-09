@@ -85,6 +85,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const handleMouseMove = useCallback(
     (event: MapLayerMouseEvent) => {
+      if (showAllPopups) return
+
       const map = mapRef.current?.getMap()
       const features = map?.queryRenderedFeatures(event.point, {
         layers: [layerId],
@@ -115,7 +117,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         })
       }
     },
-    [currentShop?.properties?.uuid, displayedShops.features],
+    [currentShop?.properties?.uuid, displayedShops.features, showAllPopups],
   )
 
   const handleMouseLeave = useCallback(() => {
@@ -207,8 +209,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         {showAllPopups &&
           shopsInView
             .filter(shop =>
-              shop.properties.uuid !== currentShop?.properties?.uuid &&
-              shop.properties.uuid !== popupInfo?.uuid
+              shop.properties.uuid !== currentShop?.properties?.uuid
             )
             .map(shop => (
               <ShopPopup
@@ -222,7 +223,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
               />
             ))}
 
-        {popupInfo && (
+        {popupInfo && !showAllPopups && (
           <ShopPopup
             longitude={popupInfo.longitude}
             latitude={popupInfo.latitude}
