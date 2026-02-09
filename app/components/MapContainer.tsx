@@ -152,7 +152,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onLoad={updateBounds}
-        onZoom={(e) => setZoomLevel(e.viewState.zoom)}
+        onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
         interactiveLayerIds={[layerId]}
         ref={mapRef}
