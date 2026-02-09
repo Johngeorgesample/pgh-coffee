@@ -18,15 +18,6 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const layerId = 'myPoint'
   const hoveredUUID = hoveredShop?.properties?.uuid || null
 
-  const [popupInfo, setPopupInfo] = useState<{
-    longitude: number
-    latitude: number
-    name: string
-    neighborhood: string
-    photo: string | null
-    uuid: string
-  } | null>(null)
-
   const MAP_CONSTANTS = {
     INITIAL_VIEW: {
       longitude: -79.99585,
@@ -43,6 +34,19 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       ],
     },
   } as const
+
+  const [popupInfo, setPopupInfo] = useState<{
+    longitude: number
+    latitude: number
+    name: string
+    neighborhood: string
+    photo: string | null
+    uuid: string
+  } | null>(null)
+
+  const [zoomLevel, setZoomLevel] = useState<number>(MAP_CONSTANTS.INITIAL_VIEW.zoom)
+
+  const showAllPopups = zoomLevel > 15
 
   const panToCurrentShop = () => {
     if (currentShopCoordinates?.every(element => Boolean(element))) {
@@ -144,6 +148,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onZoom={(e) => setZoomLevel(e.viewState.zoom)}
         interactiveLayerIds={[layerId]}
         ref={mapRef}
       >
@@ -192,6 +197,39 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             }}
           />
         </Source>
+
+
+        {showAllPopups &&
+          displayedShops.features
+            .filter(shop =>
+              shop.properties.uuid !== currentShop?.properties?.uuid &&
+              shop.properties.uuid !== popupInfo?.uuid
+            )
+            .map(shop => (
+              <Popup
+                key={shop.properties.uuid}
+                longitude={shop.geometry.coordinates[0]}
+                latitude={shop.geometry.coordinates[1]}
+                anchor="bottom"
+                offset={[0, -14] as [number, number]}
+                closeButton={false}
+                closeOnClick={false}
+                className="shop-hover-popup"
+              >
+                <div className="w-48 h-28 relative rounded-lg overflow-hidden">
+                  {shop.properties.photo ? (
+                    <img className="h-full w-full object-cover object-center" src={shop.properties.photo} alt={shop.properties.name} />
+                  ) : (
+                    <div className="h-full w-full bg-yellow-200" />
+                  )}
+                  <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]" />
+                  <div className="absolute bottom-0 w-full px-2 py-1">
+                    <p className="font-medium text-white text-sm leading-tight">{shop.properties.name}</p>
+                    <p className="text-white/80 text-xs mt-0.5">{shop.properties.neighborhood}</p>
+                  </div>
+                </div>
+              </Popup>
+            ))}
 
         {popupInfo && (
           <Popup
