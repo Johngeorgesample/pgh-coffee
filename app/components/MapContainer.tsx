@@ -139,7 +139,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   }
 
   return (
-    <div data-testid="map-container" className="w-full lg:w-2/3">
+    <div data-testid="map-container" className="w-full lg:w-2/3 overflow-hidden">
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
