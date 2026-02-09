@@ -6,15 +6,17 @@ import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
 import PhotoGrid from './PhotoGrid'
+import AmenityChip from './AmenityChip'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos } = props.shop.properties
+  const { address, photos, amenities } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
+  console.log(amenities)
   return (
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
@@ -33,6 +35,14 @@ export default function PanelContent(props: IProps) {
             {address}
           </address>
         </a>
+
+        {amenities && amenities.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {amenities.map(amenity => (
+              <AmenityChip key={String(amenity)} amenity={String(amenity)} />
+            ))}
+          </div>
+        )}
 
         {/*
         <div className="flex gap-1 items-center">
