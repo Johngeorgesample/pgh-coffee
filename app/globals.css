@@ -45,3 +45,34 @@ canvas {
 hr {
   @apply border-gray-300;
 }
+
+.mapboxgl-popup {
+  display: flex;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  will-change: transform;
+}
+
+.mapboxgl-popup-anchor-bottom,
+.mapboxgl-popup-anchor-bottom-left,
+.mapboxgl-popup-anchor-bottom-right {
+  flex-direction: column-reverse;
+}
+
+.mapboxgl-popup-content {
+  position: relative;
+}
+
+.shop-hover-popup .mapboxgl-popup-content {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.shop-hover-popup .mapboxgl-popup-tip {
+  display: none;
+}
