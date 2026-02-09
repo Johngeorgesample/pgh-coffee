@@ -1,10 +1,10 @@
 'use client'
 
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
-import Map, { Source, Layer, MapRef, type ViewStateChangeEvent } from 'react-map-gl'
-import { MapMouseEvent, LngLatBounds } from 'mapbox-gl'
+import Map, { Source, Layer, MapRef } from 'react-map-gl'
+import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
-import { useShopSelection } from '@/hooks'
+import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
 
@@ -46,21 +46,10 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   } | null>(null)
 
   const [zoomLevel, setZoomLevel] = useState<number>(MAP_CONSTANTS.INITIAL_VIEW.zoom)
-  const [bounds, setBounds] = useState<LngLatBounds | null>(null)
 
   const showAllPopups = zoomLevel > 15
 
-  const shopsInView = useMemo(() => {
-    if (!showAllPopups || !bounds) return []
-    return displayedShops.features.filter(shop => {
-      const [lng, lat] = shop.geometry.coordinates
-      return bounds.contains([lng, lat])
-    })
-  }, [showAllPopups, bounds, displayedShops.features])
-
-  const handleMoveEnd = useCallback((e: ViewStateChangeEvent) => {
-    setBounds(e.target.getBounds())
-  }, [])
+  const { shopsInView, updateBounds } = useShopsInView(displayedShops.features, showAllPopups)
 
   const panToCurrentShop = () => {
     if (currentShopCoordinates?.every(element => Boolean(element))) {
@@ -162,9 +151,9 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onLoad={(e) => setBounds(e.target.getBounds())}
+        onLoad={updateBounds}
         onZoom={(e) => setZoomLevel(e.viewState.zoom)}
-        onMoveEnd={handleMoveEnd}
+        onMoveEnd={updateBounds}
         interactiveLayerIds={[layerId]}
         ref={mapRef}
       >
