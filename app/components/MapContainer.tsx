@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useEffect, useMemo } from 'react'
-import Map, { Source, Layer, MapRef } from 'react-map-gl'
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
+import Map, { Source, Layer, MapRef, Popup } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
+import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 
@@ -11,11 +12,20 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
-  const { displayedShops, hoveredShop } = useShopsStore()
+  const { displayedShops, hoveredShop, currentShop } = useShopsStore()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
   const hoveredUUID = hoveredShop?.properties?.uuid || null
+
+  const [popupInfo, setPopupInfo] = useState<{
+    longitude: number
+    latitude: number
+    name: string
+    neighborhood: string
+    photo: string | null
+    uuid: string
+  } | null>(null)
 
   const MAP_CONSTANTS = {
     INITIAL_VIEW: {
@@ -66,7 +76,47 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     }
   }, [displayedShops, hoveredUUID])
 
+  const handleMouseMove = useCallback(
+    (event: MapLayerMouseEvent) => {
+      const map = mapRef.current?.getMap()
+      const features = map?.queryRenderedFeatures(event.point, {
+        layers: [layerId],
+      }) as unknown as GeoJSON.Feature[] | undefined
+
+      if (!features?.length || !features[0].properties) {
+        setPopupInfo(null)
+        return
+      }
+
+      const hoveredShopUUID = features[0].properties.uuid
+
+      if (currentShop?.properties?.uuid === hoveredShopUUID) {
+        setPopupInfo(null)
+        return
+      }
+
+      const hydratedHoveredShop = displayedShops.features.find(shop => shop.properties.uuid === hoveredShopUUID)
+
+      if (hydratedHoveredShop) {
+        setPopupInfo({
+          longitude: hydratedHoveredShop.geometry.coordinates[0],
+          latitude: hydratedHoveredShop.geometry.coordinates[1],
+          name: hydratedHoveredShop.properties.name,
+          neighborhood: hydratedHoveredShop.properties.neighborhood,
+          photo: hydratedHoveredShop.properties.photo || null,
+          uuid: hydratedHoveredShop.properties.uuid,
+        })
+      }
+    },
+    [currentShop?.properties?.uuid, displayedShops.features],
+  )
+
+  const handleMouseLeave = useCallback(() => {
+    setPopupInfo(null)
+  }, [])
+
   const handleMapClick = (event: MapMouseEvent) => {
+    setPopupInfo(null)
     const map = mapRef.current?.getMap()
     const features = map?.queryRenderedFeatures(event.point, {
       layers: [layerId],
@@ -75,13 +125,11 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     if (features?.length && features[0].properties) {
       // queryRenderedFeatures strips nested objects like 'company'
       // Look up the full shop data from the store using uuid
-      const clickedUuid = features[0].properties.uuid
-      const fullShop = displayedShops.features.find(
-        shop => shop.properties.uuid === clickedUuid
-      )
+      const clickedUUID = features[0].properties.uuid
+      const hydratedClickedShop = displayedShops.features.find(shop => shop.properties.uuid === clickedUUID)
 
-      if (fullShop) {
-        handleShopSelect(fullShop)
+      if (hydratedClickedShop) {
+        handleShopSelect(hydratedClickedShop)
       }
     }
   }
@@ -94,6 +142,9 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         cursor="pointer"
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onClick={handleMapClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        interactiveLayerIds={[layerId]}
         ref={mapRef}
       >
         <Source id="my-data" type="geojson" data={shopsWithHoverState}>
@@ -141,6 +192,31 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             }}
           />
         </Source>
+
+        {popupInfo && (
+          <Popup
+            longitude={popupInfo.longitude}
+            latitude={popupInfo.latitude}
+            anchor="bottom"
+            offset={[0, -14] as [number, number]}
+            closeButton={false}
+            closeOnClick={false}
+            className="shop-hover-popup"
+          >
+            <div className="w-48 h-28 relative rounded-lg overflow-hidden">
+              {popupInfo.photo ? (
+                <img className="h-full w-full object-cover object-center" src={popupInfo.photo} alt={popupInfo.name} />
+              ) : (
+                <div className="h-full w-full bg-yellow-200" />
+              )}
+              <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]" />
+              <div className="absolute bottom-0 w-full px-2 py-1">
+                <p className="font-medium text-white text-sm leading-tight">{popupInfo.name}</p>
+                <p className="text-white/80 text-xs mt-0.5">{popupInfo.neighborhood}</p>
+              </div>
+            </div>
+          </Popup>
+        )}
       </Map>
     </div>
   )
