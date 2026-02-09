@@ -1,11 +1,12 @@
 'use client'
 
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
-import Map, { Source, Layer, MapRef, Popup } from 'react-map-gl'
+import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import ShopPopup from './ShopPopup'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -206,57 +207,29 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
               shop.properties.uuid !== popupInfo?.uuid
             )
             .map(shop => (
-              <Popup
+              <ShopPopup
                 key={shop.properties.uuid}
                 longitude={shop.geometry.coordinates[0]}
                 latitude={shop.geometry.coordinates[1]}
-                anchor="bottom"
-                offset={[0, -14] as [number, number]}
-                closeButton={false}
-                closeOnClick={false}
-                className="shop-hover-popup"
-              >
-                <div className="w-48 h-28 relative rounded-lg overflow-hidden cursor-pointer" onClick={() => handleShopSelect(shop)}>
-                  {shop.properties.photo ? (
-                    <img className="h-full w-full object-cover object-center" src={shop.properties.photo} alt={shop.properties.name} />
-                  ) : (
-                    <div className="h-full w-full bg-yellow-200" />
-                  )}
-                  <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]" />
-                  <div className="absolute bottom-0 w-full px-2 py-1">
-                    <p className="font-medium text-white text-sm leading-tight">{shop.properties.name}</p>
-                    <p className="text-white/80 text-xs mt-0.5">{shop.properties.neighborhood}</p>
-                  </div>
-                </div>
-              </Popup>
+                name={shop.properties.name}
+                neighborhood={shop.properties.neighborhood}
+                photo={shop.properties.photo || null}
+                onClick={() => handleShopSelect(shop)}
+              />
             ))}
 
         {popupInfo && (
-          <Popup
+          <ShopPopup
             longitude={popupInfo.longitude}
             latitude={popupInfo.latitude}
-            anchor="bottom"
-            offset={[0, -14] as [number, number]}
-            closeButton={false}
-            closeOnClick={false}
-            className="shop-hover-popup"
-          >
-            <div className="w-48 h-28 relative rounded-lg overflow-hidden cursor-pointer" onClick={() => {
+            name={popupInfo.name}
+            neighborhood={popupInfo.neighborhood}
+            photo={popupInfo.photo}
+            onClick={() => {
               const shop = displayedShops.features.find(s => s.properties.uuid === popupInfo.uuid)
               if (shop) handleShopSelect(shop)
-            }}>
-              {popupInfo.photo ? (
-                <img className="h-full w-full object-cover object-center" src={popupInfo.photo} alt={popupInfo.name} />
-              ) : (
-                <div className="h-full w-full bg-yellow-200" />
-              )}
-              <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]" />
-              <div className="absolute bottom-0 w-full px-2 py-1">
-                <p className="font-medium text-white text-sm leading-tight">{popupInfo.name}</p>
-                <p className="text-white/80 text-xs mt-0.5">{popupInfo.neighborhood}</p>
-              </div>
-            </div>
-          </Popup>
+            }}
+          />
         )}
       </Map>
     </div>
