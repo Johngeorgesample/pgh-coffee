@@ -16,7 +16,6 @@ export default function PanelContent(props: IProps) {
   const { address, photos, amenities } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
-  console.log(amenities)
   return (
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
