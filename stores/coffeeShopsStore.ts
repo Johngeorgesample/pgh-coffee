@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
+import { doesShopMatchFilter } from '@/app/utils/utils'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
@@ -10,8 +12,17 @@ interface CoffeeShopsState {
   setCurrentShop: (data: TShop) => void
   hoveredShop: TShop | null
   setHoveredShop: (shop: TShop | null) => void
-  displayedShops: TFeatureCollection
-  setDisplayedShops: (shops: TFeatureCollection) => void
+
+  // Filters
+  searchValue: string
+  setSearchValue: (value: string) => void
+  activeAmenityFilters: string[]
+  toggleAmenityFilter: (amenity: string) => void
+  clearAmenityFilters: () => void
+
+  // Override for Company/Roaster pages that show a subset of shops
+  overrideShops: TFeatureCollection | null
+  setOverrideShops: (shops: TFeatureCollection | null) => void
 }
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
@@ -51,19 +62,73 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       },
 
       currentShop: {} as TShop,
-
       setCurrentShop: (data: TShop) => set({ currentShop: data }),
+
       hoveredShop: null,
       setHoveredShop: shop => set({ hoveredShop: shop }),
 
-      displayedShops: {
-        type: 'FeatureCollection',
-        features: [],
-      },
-      setDisplayedShops: (shops: TFeatureCollection) => set({ displayedShops: shops }),
+      // Filters
+      searchValue: '',
+      setSearchValue: value => set({ searchValue: value }),
+
+      activeAmenityFilters: [],
+      toggleAmenityFilter: amenity =>
+        set(prev => ({
+          activeAmenityFilters: prev.activeAmenityFilters.includes(amenity)
+            ? prev.activeAmenityFilters.filter(a => a !== amenity)
+            : [...prev.activeAmenityFilters, amenity],
+        })),
+      clearAmenityFilters: () => set({ activeAmenityFilters: [] }),
+
+      overrideShops: null,
+      setOverrideShops: shops => set({ overrideShops: shops }),
     }),
     { name: 'ShopsStore' },
   ),
 )
+
+/**
+ * Derives the displayed shops from allShops + filters + currentShop selection state.
+ * When overrideShops is set (e.g. Company page), returns that instead.
+ */
+export function useDisplayedShops(): TFeatureCollection {
+  const { allShops, searchValue, activeAmenityFilters, currentShop, overrideShops } = useCoffeeShopsStore()
+
+  return useMemo(() => {
+    if (overrideShops) return overrideShops
+
+    const filtered = allShops.features.filter(shop => {
+      if (!doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)) {
+        return false
+      }
+      if (
+        activeAmenityFilters.length > 0 &&
+        !activeAmenityFilters.every(amenity => shop.properties.amenities?.includes(amenity))
+      ) {
+        return false
+      }
+      return true
+    })
+
+    // Mark selected shop
+    const features = filtered.map(shop => {
+      const isSelected =
+        shop.properties.address === currentShop?.properties?.address &&
+        shop.properties.name === currentShop?.properties?.name
+
+      if (shop.properties.selected === isSelected) return shop
+
+      return {
+        ...shop,
+        properties: {
+          ...shop.properties,
+          selected: isSelected,
+        },
+      }
+    })
+
+    return { ...allShops, features }
+  }, [allShops, searchValue, activeAmenityFilters, currentShop, overrideShops])
+}
 
 export default useCoffeeShopsStore

@@ -5,7 +5,7 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
-import useShopsStore from '@/stores/coffeeShopsStore'
+import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
 
 interface MapContainerProps {
@@ -13,7 +13,8 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
-  const { displayedShops, hoveredShop, currentShop } = useShopsStore()
+  const displayedShops = useDisplayedShops()
+  const { hoveredShop, currentShop } = useShopsStore()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
 import { TShop } from '@/types/shop-types'
@@ -8,19 +8,18 @@ import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useURLEventSync, useURLNewsSync, useHighlightCurrentShop, useMediaQuery } from '@/hooks'
+import { useURLShopSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
-import { doesShopMatchFilter } from '@/app/utils/utils'
 
 export default function HomeClient() {
   const plausible = usePlausible()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, hoveredShop, displayedShops, setDisplayedShops } =
+  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
     useShopsStore()
-  const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
+  const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
   const [presented, setPresented] = useState(false)
@@ -40,35 +39,18 @@ export default function HomeClient() {
   }
 
   const handleClose = () => {
-    setDisplayedShops(allShops)
+    setSearchValue('')
+    clearAmenityFilters()
     setCurrentShop({} as TShop)
     removeSearchParam()
     if (panelMode === 'shop') {
-      setSearchValue('')
       setPanelContent(<ShopSearch />, 'search')
       clearHistory()
     } else {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
-      setDisplayedShops(allShops)
       clearHistory()
     }
   }
-  const filteredShops = useMemo(() => {
-    if (!allShops) return { type: 'FeatureCollection' as const, features: [] }
-
-    const filteredFeatures = allShops.features.filter(shop => {
-      return doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)
-    })
-
-    return {
-      ...allShops,
-      features: filteredFeatures,
-    }
-  }, [allShops, searchValue])
-
-  useEffect(() => {
-    setDisplayedShops(filteredShops)
-  }, [filteredShops, setDisplayedShops])
 
   useURLShopSync()
   useURLCompanySync()
@@ -128,8 +110,6 @@ export default function HomeClient() {
       document.title = 'PGH Coffee'
     }
   }, [currentShop])
-
-  useHighlightCurrentShop({ currentShop, displayedShops, setDisplayedShops })
 
   return (
     <div className="relative w-full h-full">

@@ -48,6 +48,7 @@ export interface TShop {
     website: string
     uuid: string
     amenities?: String[]
+    selected?: boolean
   }
   geometry: {
     type: string

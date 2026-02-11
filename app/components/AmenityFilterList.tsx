@@ -1,12 +1,8 @@
+import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
-import { Plus } from 'lucide-react'
-
 import useShopsStore from '@/stores/coffeeShopsStore'
-import usePanelStore from '@/stores/panelStore'
 import AmenityChip from './AmenityChip'
-import ShopList from './ShopList'
-import { TFeatureCollection } from '@/types/shop-types'
 
 // @TODO sort by prevalence
 const amenities = [
@@ -35,28 +31,17 @@ const amenities = [
 
 export const AmenityFilterList = () => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { allShops, setDisplayedShops } = useShopsStore()
-  const { setPanelContent } = usePanelStore()
-  const handleClick = (amenity: string) => {
-    const filtered: TFeatureCollection = {
-      type: 'FeatureCollection',
-      features: allShops.features.filter(shop => shop.properties.amenities?.includes(amenity)),
-    }
-    setDisplayedShops(filtered)
-    setPanelContent(
-      <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
-        <div className="mt-12">
-          <ShopList coffeeShops={filtered.features} />
-        </div>
-      </div>,
+  const { activeAmenityFilters, toggleAmenityFilter } = useShopsStore()
 
-      'list',
-    )
-  }
   return (
     <div className="flex flex-wrap gap-2 mt-3">
       {(isExpanded ? amenities : amenities.slice(0, 6)).map(amenity => (
-        <AmenityChip key={amenity} amenity={amenity} onClick={() => handleClick(amenity)} />
+        <AmenityChip
+          key={amenity}
+          amenity={amenity}
+          active={activeAmenityFilters.includes(amenity)}
+          onClick={() => toggleAmenityFilter(amenity)}
+        />
       ))}
       {!isExpanded && (
         <button

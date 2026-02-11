@@ -45,11 +45,11 @@ const amenityMap: Record<string, { label: string; icon: LucideIcon }> = {
 
 interface AmenityChipProps {
   amenity: string
+  active?: boolean
   onClick?: () => void
 }
 
-// @TODO styles if active
-export default function AmenityChip({ amenity, onClick }: AmenityChipProps) {
+export default function AmenityChip({ amenity, active, onClick }: AmenityChipProps) {
   const entry = amenityMap[amenity]
   if (!entry) return null
 
@@ -58,7 +58,11 @@ export default function AmenityChip({ amenity, onClick }: AmenityChipProps) {
   return (
     <span
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700 ${onClick ? 'cursor-pointer hover:bg-stone-200' : ''}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+        active
+          ? 'bg-stone-700 text-white'
+          : `bg-stone-100 text-stone-700 ${onClick ? 'hover:bg-stone-200' : ''}`
+      } ${onClick ? 'cursor-pointer' : ''}`}
     >
       <Icon size={14} strokeWidth={2} />
       {entry.label}
