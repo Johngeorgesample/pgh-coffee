@@ -72,8 +72,8 @@ export const NewsDetails = ({ id }: { id: string }) => {
 
   if (loading) {
     return (
-      <div className="flex mt-24 lg:mt-16 h-full flex-col">
-        <div className="flex-grow overflow-y-auto pb-56">
+      <div className="mt-24 lg:mt-16">
+        <div>
           <div className="p-6 animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
             <div className="flex items-start gap-3 mb-6">
@@ -99,7 +99,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
 
   if (!news) {
     return (
-      <div className="flex mt-24 lg:mt-16 h-full flex-col">
+      <div className="mt-24 lg:mt-16">
         <div className="p-6">
           <p className="text-gray-600">News not found</p>
         </div>
@@ -108,20 +108,18 @@ export const NewsDetails = ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="flex mt-24 lg:mt-16 h-full flex-col">
-      {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-56">
-        {/* Title Section */}
-        <div className="flex">
-          <div className="p-6 flex-1">
-            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
-              {news.title}
-            </h1>
-          </div>
+    <div className="mt-24 lg:mt-16">
+      {/* Title Section */}
+      <div className="flex">
+        <div className="p-6 flex-1">
+          <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
+            {news.title}
+          </h1>
         </div>
+      </div>
 
-        {/* Details Section */}
-        <div className="px-6 space-y-6">
+      {/* Details Section */}
+      <div className="px-6 space-y-6">
           {/* Tags */}
           {news.tags && news.tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
@@ -170,11 +168,10 @@ export const NewsDetails = ({ id }: { id: string }) => {
             <span className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">About</span>
             {news.description && <p className="text-gray-600 leading-relaxed">{news.description}</p>}
           </div>
-        </div>
       </div>
 
-      {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+      {/* Sticky Bottom Section */}
+      <div className="sticky bottom-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {news.url && (
