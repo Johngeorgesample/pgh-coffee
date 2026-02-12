@@ -73,7 +73,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
   if (loading) {
     return (
       <div className="flex mt-24 lg:mt-16 h-full flex-col">
-        <div className="flex-grow overflow-y-auto pb-[calc(14rem+env(safe-area-inset-bottom,0px))]">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="p-6 animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
             <div className="flex items-start gap-3 mb-6">
@@ -110,7 +110,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
   return (
     <div className="flex mt-24 lg:mt-16 h-full flex-col">
       {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-[calc(14rem+env(safe-area-inset-bottom,0px))]">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {/* Title Section */}
         <div className="flex">
           <div className="p-6 flex-1">
@@ -174,7 +174,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
       </div>
 
       {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
+      <div className="shrink-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {news.url && (
