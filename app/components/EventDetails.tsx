@@ -88,20 +88,18 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   }
 
   return (
-    <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
-      {/* Scrollable Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {/* Title Section with yellow accent bar */}
-        <div className="flex">
-          <div className="p-6 flex-1">
-            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
-              {event.title}
-            </h1>
-          </div>
+    <div className={`mt-24 lg:mt-16 ${eventIsPast ? 'opacity-60' : ''}`}>
+      {/* Title Section with yellow accent bar */}
+      <div className="flex">
+        <div className="p-6 flex-1">
+          <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
+            {event.title}
+          </h1>
         </div>
+      </div>
 
-        {/* Details Section */}
-        <div className="px-6 space-y-6">
+      {/* Details Section */}
+      <div className="px-6 space-y-6">
           {/* Date and Time row */}
           {event.event_date && (
             <div className="flex gap-6">
@@ -192,11 +190,10 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
               ))}
             </div>
           )}
-        </div>
       </div>
 
-      {/* Fixed Bottom Section */}
-      <div className="shrink-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
+      {/* Sticky Bottom Section */}
+      <div className="sticky bottom-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {event.url && (
