@@ -90,7 +90,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   return (
     <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-56">
+      <div className="flex-grow overflow-y-auto pb-[calc(14rem+env(safe-area-inset-bottom,0px))]">
         {/* Title Section with yellow accent bar */}
         <div className="flex">
           <div className="p-6 flex-1">
@@ -196,7 +196,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       </div>
 
       {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+      <div className="absolute bottom-0 left-0 right-0 px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {event.url && (
