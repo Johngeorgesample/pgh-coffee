@@ -7,7 +7,6 @@ import AmenityChip from './AmenityChip'
 // @TODO sort by prevalence
 const amenities = [
   'free_wifi',
-  'no_wifi',
   'onsite_parking',
   'street_parking',
   'garage_nearby',
@@ -19,14 +18,10 @@ const amenities = [
   'patio_seating',
   'sidewalk_seating',
   'outlets_abundant',
-  'outlets_limited',
   'seating_spacious',
   'seating_moderate',
   'seating_tight',
-  'cash_only',
-  'card_only',
   'restroom',
-  'no_restroom',
 ]
 
 export const AmenityFilterList = () => {
