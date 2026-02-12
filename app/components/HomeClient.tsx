@@ -23,7 +23,7 @@ export default function HomeClient() {
   const { panelContent, clearHistory, searchValue, setSearchValue, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
-  const [presented, setPresented] = useState(false)
+  const [presented, setPresented] = useState(true)
   const router = useRouter()
 
   const removeSearchParam = () => {
