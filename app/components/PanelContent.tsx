@@ -42,7 +42,6 @@ export default function PanelContent(props: IProps) {
 
         {amenities && amenities.length > 0 && (
           <>
-            <p className="mb-2 text-gray-700">Nearby shops</p>
             <div className="flex flex-wrap gap-2 mt-3">
               {amenities.map(amenity => (
                 <AmenityChip key={String(amenity)} amenity={String(amenity)} />
