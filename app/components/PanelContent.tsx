@@ -81,6 +81,7 @@ export default function PanelContent(props: IProps) {
         }}
         onSuccess={() => {}}
         amenities={amenities?.map(String) ?? []}
+        shopId={props.shop.properties.uuid}
       />
     </div>
   )

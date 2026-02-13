@@ -10,9 +10,10 @@ interface Props {
   onClose: () => void
   onSuccess: () => void
   amenities: string[]
+  shopId: string
 }
 
-export default function AmenityReportModal({ isOpen, onClose, onSuccess, amenities }: Props) {
+export default function AmenityReportModal({ isOpen, onClose, onSuccess, amenities, shopId }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   return (
@@ -21,11 +22,25 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
           as="form"
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             const formData = new FormData(e.currentTarget)
             const selected = formData.getAll('amenities') as string[]
-            console.log(selected)
+            setIsSubmitting(true)
+            try {
+              const res = await fetch('/api/shops/report-amenities', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ shop_id: shopId, amenities: selected }),
+              })
+              if (!res.ok) throw new Error('Failed to submit')
+              onSuccess()
+              onClose()
+            } catch (err) {
+              console.error('Error submitting amenity report:', err)
+            } finally {
+              setIsSubmitting(false)
+            }
           }}
           className="relative max-w-md w-full bg-white rounded-xl p-6 shadow-xl"
         >
