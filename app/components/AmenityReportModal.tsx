@@ -19,12 +19,16 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel as="form" onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault()
-          const formData = new FormData(e.currentTarget)
-          const selected = formData.getAll('amenities') as string[]
-          console.log(selected)
-        }} className="relative max-w-md w-full bg-white rounded-xl p-6 shadow-xl">
+        <DialogPanel
+          as="form"
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault()
+            const formData = new FormData(e.currentTarget)
+            const selected = formData.getAll('amenities') as string[]
+            console.log(selected)
+          }}
+          className="relative max-w-md w-full bg-white rounded-xl p-6 shadow-xl"
+        >
           <button
             type="button"
             onClick={onClose}
@@ -39,30 +43,33 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               />
             </svg>
           </button>
-          <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">Suggest a correction</DialogTitle>
-          <p className="text-sm text-stone-600 mb-4">Only update what&apos;s incorrect.</p>
+          <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">What&apos; here?</DialogTitle>
           <div className="grid grid-cols-2">
-          {Object.entries(amenityMap).map(([key, { label, icon: Icon }]) => (
-            <div key={key} className="flex items-center gap-2 py-1">
-              <Checkbox
-                defaultChecked={amenities.includes(key)}
-                name="amenities"
-                value={key}
-                className="group block size-4 rounded border bg-white data-checked:bg-blue-500"
-              >
-                <svg className="stroke-white opacity-0 group-data-checked:opacity-100" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Checkbox>
-              <Icon size={16} strokeWidth={2} className="text-stone-500" />
-              <span className="text-sm text-stone-700">{label}</span>
-            </div>
-          ))}
-</div>
+            {Object.entries(amenityMap).map(([key, { label, icon: Icon }]) => (
+              <div key={key} className="flex items-center gap-2 py-1">
+                <Checkbox
+                  defaultChecked={amenities.includes(key)}
+                  name="amenities"
+                  value={key}
+                  className="group block size-4 rounded border bg-white data-checked:bg-blue-500"
+                >
+                  <svg
+                    className="stroke-white opacity-0 group-data-checked:opacity-100"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                  >
+                    <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Checkbox>
+                <Icon size={16} strokeWidth={2} className="text-stone-500" />
+                <span className="text-sm text-stone-700">{label}</span>
+              </div>
+            ))}
+          </div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full rounded-lg py-3 px-4 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${
+            className={`w-full rounded-lg mt-6 py-3 px-4 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${
               isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
             }`}
           >
