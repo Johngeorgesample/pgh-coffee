@@ -1,4 +1,7 @@
 'use client'
+
+import { useState } from 'react'
+
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
@@ -7,12 +10,14 @@ import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
 import PhotoGrid from './PhotoGrid'
 import AmenityChip from './AmenityChip'
+import AmenityReportModal from './AmenityReportModal'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelContent(props: IProps) {
+  const [showAmenityModal, setShowAmenityModal] = useState(false)
   const { address, photos, amenities } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
@@ -36,11 +41,20 @@ export default function PanelContent(props: IProps) {
         </a>
 
         {amenities && amenities.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-3">
-            {amenities.map(amenity => (
-              <AmenityChip key={String(amenity)} amenity={String(amenity)} />
-            ))}
-          </div>
+          <>
+            <p className="mb-2 text-gray-700">Nearby shops</p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {amenities.map(amenity => (
+                <AmenityChip key={String(amenity)} amenity={String(amenity)} />
+              ))}
+              <p className="text-xs">
+                Missing something?{' '}
+                <button className="text-amber-700" onClick={() => setShowAmenityModal(true)}>
+                  Let me know
+                </button>
+              </p>
+            </div>
+          </>
         )}
 
         {/*
@@ -60,6 +74,15 @@ export default function PanelContent(props: IProps) {
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
+
+      <AmenityReportModal
+        isOpen={showAmenityModal}
+        onClose={() => {
+          setShowAmenityModal(false)
+        }}
+        onSuccess={() => {}}
+        amenities={amenities?.map(String) ?? []}
+      />
     </div>
   )
 }

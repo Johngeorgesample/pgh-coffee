@@ -19,7 +19,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-const amenityMap: Record<string, { label: string; icon: LucideIcon }> = {
+export const amenityMap: Record<string, { label: string; icon: LucideIcon }> = {
   free_wifi: { label: 'Free Wi-Fi', icon: Wifi },
   no_wifi: { label: 'No Wi-Fi', icon: WifiOff },
   onsite_parking: { label: 'Onsite Parking', icon: Car },
