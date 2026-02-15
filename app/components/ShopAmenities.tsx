@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import AmenityChip from './AmenityChip'
 import AmenityReportModal from './AmenityReportModal'
+import IssueSuccessDialog from './IssueSuccessDialog'
 
 interface IProps {
   amenities: string[]
@@ -12,6 +13,7 @@ interface IProps {
 
 export default function ShopAmenities({ amenities, shopId }: IProps) {
   const [showModal, setShowModal] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   if (!amenities.length) return null
 
@@ -33,10 +35,12 @@ export default function ShopAmenities({ amenities, shopId }: IProps) {
       <AmenityReportModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        onSuccess={() => {}}
+        onSuccess={() => setShowSuccess(true)}
         amenities={amenities}
         shopId={shopId}
       />
+
+      <IssueSuccessDialog isOpen={showSuccess} handleClose={() => setShowSuccess(false)} />
     </>
   )
 }
