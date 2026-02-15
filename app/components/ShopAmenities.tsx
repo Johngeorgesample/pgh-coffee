@@ -1,0 +1,42 @@
+'use client'
+
+import { useState } from 'react'
+
+import AmenityChip from './AmenityChip'
+import AmenityReportModal from './AmenityReportModal'
+
+interface IProps {
+  amenities: string[]
+  shopId: string
+}
+
+export default function ShopAmenities({ amenities, shopId }: IProps) {
+  const [showModal, setShowModal] = useState(false)
+
+  if (!amenities.length) return null
+
+  return (
+    <>
+      <div className="flex flex-wrap gap-2 my-3">
+        {amenities.map(amenity => (
+          <AmenityChip key={amenity} amenity={amenity} />
+        ))}
+      </div>
+
+      <p className="text-xs text-gray-700">
+        Missing something?{' '}
+        <button aria-label="Report amenity" className="text-amber-700" onClick={() => setShowModal(true)}>
+          Let me know
+        </button>
+      </p>
+
+      <AmenityReportModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={() => {}}
+        amenities={amenities}
+        shopId={shopId}
+      />
+    </>
+  )
+}

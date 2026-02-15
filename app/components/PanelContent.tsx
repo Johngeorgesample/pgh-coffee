@@ -1,7 +1,3 @@
-'use client'
-
-import { useState } from 'react'
-
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
@@ -9,15 +5,13 @@ import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
 import PhotoGrid from './PhotoGrid'
-import AmenityChip from './AmenityChip'
-import AmenityReportModal from './AmenityReportModal'
+import ShopAmenities from './ShopAmenities'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelContent(props: IProps) {
-  const [showAmenityModal, setShowAmenityModal] = useState(false)
   const { address, photos, amenities } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
@@ -40,22 +34,10 @@ export default function PanelContent(props: IProps) {
           </address>
         </a>
 
-        {amenities && amenities.length > 0 && (
-          <>
-            <div className="flex flex-wrap gap-2 my-3">
-              {amenities.map(amenity => (
-                <AmenityChip key={String(amenity)} amenity={String(amenity)} />
-              ))}
-            </div>
-
-            <p className="text-xs text-gray-700">
-              Missing something?{' '}
-              <button aria-label="Report amenity" className="text-amber-700" onClick={() => setShowAmenityModal(true)}>
-                Let me know
-              </button>
-            </p>
-          </>
-        )}
+        <ShopAmenities
+          amenities={amenities?.map(String) ?? []}
+          shopId={props.shop.properties.uuid}
+        />
       </div>
 
       {/* Divider */}
@@ -66,16 +48,6 @@ export default function PanelContent(props: IProps) {
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
-
-      <AmenityReportModal
-        isOpen={showAmenityModal}
-        onClose={() => {
-          setShowAmenityModal(false)
-        }}
-        onSuccess={() => {}}
-        amenities={amenities?.map(String) ?? []}
-        shopId={props.shop.properties.uuid}
-      />
     </div>
   )
 }
