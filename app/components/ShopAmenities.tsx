@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePlausible } from 'next-plausible'
 
 import AmenityChip from './AmenityChip'
 import AmenityReportModal from './AmenityReportModal'
@@ -12,8 +13,18 @@ interface IProps {
 }
 
 export default function ShopAmenities({ amenities, shopId }: IProps) {
+  const plausible = usePlausible()
   const [showModal, setShowModal] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+
+  const handleOnClick = () => {
+    setShowModal(true)
+    plausible('reportAmenityIssue', {
+      props: {
+        shopId,
+      },
+    })
+  }
 
   if (!amenities.length) return null
 
@@ -27,7 +38,7 @@ export default function ShopAmenities({ amenities, shopId }: IProps) {
 
       <p className="text-xs text-gray-700">
         Missing something?{' '}
-        <button aria-label="Report amenity" className="text-amber-700" onClick={() => setShowModal(true)}>
+        <button aria-label="Report amenity" className="text-amber-700" onClick={handleOnClick}>
           Let me know
         </button>
       </p>

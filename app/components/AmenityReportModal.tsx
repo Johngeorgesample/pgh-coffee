@@ -58,7 +58,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               />
             </svg>
           </button>
-          <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">What&apos; here?</DialogTitle>
+          <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">What&apos;s here?</DialogTitle>
           <div className="grid grid-cols-2">
             {Object.entries(amenityMap).map(([key, { label, icon: Icon }]) => (
               <div key={key} className="flex items-center gap-2 py-1">

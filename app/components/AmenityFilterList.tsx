@@ -1,5 +1,6 @@
-import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
+import { usePlausible } from 'next-plausible'
 
 import useShopsStore from '@/stores/coffeeShopsStore'
 import AmenityChip from './AmenityChip'
@@ -25,8 +26,18 @@ const amenities = [
 ]
 
 export const AmenityFilterList = () => {
+  const plausible = usePlausible()
   const [isExpanded, setIsExpanded] = useState(false)
   const { activeAmenityFilters, toggleAmenityFilter } = useShopsStore()
+
+  const handleAmenityClick = (amenity: string) => {
+    toggleAmenityFilter(amenity)
+    plausible('filterByAmenity', {
+      props: {
+        amenity,
+      },
+    })
+  }
 
   return (
     <div className="flex flex-wrap gap-2 mt-3">
@@ -35,7 +46,7 @@ export const AmenityFilterList = () => {
           key={amenity}
           amenity={amenity}
           active={activeAmenityFilters.includes(amenity)}
-          onClick={() => toggleAmenityFilter(amenity)}
+          onClick={() => handleAmenityClick(amenity)}
         />
       ))}
       {!isExpanded && (
