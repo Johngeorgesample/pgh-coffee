@@ -42,27 +42,20 @@ export default function PanelContent(props: IProps) {
 
         {amenities && amenities.length > 0 && (
           <>
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 my-3">
               {amenities.map(amenity => (
                 <AmenityChip key={String(amenity)} amenity={String(amenity)} />
               ))}
-              <p className="text-xs">
-                Missing something?{' '}
-                <button className="text-amber-700" onClick={() => setShowAmenityModal(true)}>
-                  Let me know
-                </button>
-              </p>
             </div>
+
+            <p className="text-xs text-gray-700">
+              Missing something?{' '}
+              <button aria-label="Report amenity" className="text-amber-700" onClick={() => setShowAmenityModal(true)}>
+                Let me know
+              </button>
+            </p>
           </>
         )}
-
-        {/*
-        <div className="flex gap-1 items-center">
-          <p className="text-sm font-medium text-emerald-600">Open</p>
-          <p className="text-xs text-stone-700">•</p>
-          <p className="text-sm text-stone-400">Hours vary</p>
-        </div>
-        */}
       </div>
 
       {/* Divider */}
