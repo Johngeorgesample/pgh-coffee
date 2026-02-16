@@ -110,7 +110,8 @@ export function useDisplayedShops(): TFeatureCollection {
       return true
     })
 
-    // Mark selected shop
+    // Mark selected shop, avoiding new objects when selected state is unchanged
+    let anyChanged = false
     const features = filtered.map(shop => {
       const isSelected =
         shop.properties.address === currentShop?.properties?.address &&
@@ -118,6 +119,7 @@ export function useDisplayedShops(): TFeatureCollection {
 
       if (shop.properties.selected === isSelected) return shop
 
+      anyChanged = true
       return {
         ...shop,
         properties: {
@@ -127,7 +129,7 @@ export function useDisplayedShops(): TFeatureCollection {
       }
     })
 
-    return { ...allShops, features }
+    return { ...allShops, features: anyChanged ? features : filtered }
   }, [
     allShops,
     searchValue,
