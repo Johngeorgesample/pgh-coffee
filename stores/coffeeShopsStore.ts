@@ -92,7 +92,11 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
  * When overrideShops is set (e.g. Company page), returns that instead.
  */
 export function useDisplayedShops(): TFeatureCollection {
-  const { allShops, searchValue, activeAmenityFilters, currentShop, overrideShops } = useCoffeeShopsStore()
+  const allShops = useCoffeeShopsStore(s => s.allShops)
+  const searchValue = useCoffeeShopsStore(s => s.searchValue)
+  const activeAmenityFilters = useCoffeeShopsStore(s => s.activeAmenityFilters)
+  const currentShop = useCoffeeShopsStore(s => s.currentShop)
+  const overrideShops = useCoffeeShopsStore(s => s.overrideShops)
 
   return useMemo(() => {
     if (overrideShops) return overrideShops

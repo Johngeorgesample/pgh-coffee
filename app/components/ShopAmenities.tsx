@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { usePlausible } from 'next-plausible'
 
 import AmenityChip from './AmenityChip'
-import AmenityReportModal from './AmenityReportModal'
 import IssueSuccessDialog from './IssueSuccessDialog'
+
+const AmenityReportModal = dynamic(() => import('./AmenityReportModal'), { ssr: false })
 
 interface IProps {
   amenities: string[]
@@ -43,13 +45,15 @@ export default function ShopAmenities({ amenities, shopId }: IProps) {
         </button>
       </p>
 
-      <AmenityReportModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onSuccess={() => setShowSuccess(true)}
-        amenities={amenities}
-        shopId={shopId}
-      />
+      {showModal && (
+        <AmenityReportModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => setShowSuccess(true)}
+          amenities={amenities}
+          shopId={shopId}
+        />
+      )}
 
       <IssueSuccessDialog isOpen={showSuccess} handleClose={() => setShowSuccess(false)} />
     </>
