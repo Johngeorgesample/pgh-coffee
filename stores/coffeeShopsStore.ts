@@ -128,7 +128,14 @@ export function useDisplayedShops(): TFeatureCollection {
     })
 
     return { ...allShops, features }
-  }, [allShops, searchValue, activeAmenityFilters, currentShop, overrideShops])
+  }, [
+    allShops,
+    searchValue,
+    activeAmenityFilters,
+    currentShop?.properties?.address,
+    currentShop?.properties?.name,
+    overrideShops,
+  ])
 }
 
 export default useCoffeeShopsStore
