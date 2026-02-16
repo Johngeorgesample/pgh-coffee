@@ -5,7 +5,6 @@ import ShopCard from '@/app/components/ShopCard'
 interface IProps {
   coffeeShops: TShop[]
   distances?: number[]
-  filter?: string
   units?: TUnits
   hideShopNames?: boolean
 }
