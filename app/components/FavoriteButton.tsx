@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { Heart } from 'lucide-react'
 import { usePlausible } from 'next-plausible'
 import FavoriteToast from './FavoriteToast'
-import LoginPromptModal from './LoginPromptModal'
 import { useAuth } from './AuthProvider'
+
+const LoginPromptModal = dynamic(() => import('./LoginPromptModal'), { ssr: false })
 
 interface FavoriteButtonProps {
   shopUUID: string
@@ -96,7 +98,7 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
       </button>
 
       <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />
-      <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      {showLoginModal && <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />}
     </>
   )
 }
