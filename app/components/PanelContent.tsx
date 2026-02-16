@@ -35,7 +35,7 @@ export default function PanelContent(props: IProps) {
         </a>
 
         <ShopAmenities
-          amenities={amenities?.map(String) ?? []}
+          amenities={amenities ?? []}
           shopId={props.shop.properties.uuid}
         />
       </div>

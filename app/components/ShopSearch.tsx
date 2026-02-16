@@ -1,3 +1,5 @@
+'use client'
+
 import { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import { AmenityFilterList } from './AmenityFilterList'
 import ShopList from '@/app/components/ShopList'

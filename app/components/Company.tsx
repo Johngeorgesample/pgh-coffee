@@ -14,6 +14,8 @@ export const Company = ({ slug }: { slug: string }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setCompany(null)
+    setLoading(true)
     const fetchCompany = async () => {
       try {
         const response = await fetch(`/api/companies/${slug}`)

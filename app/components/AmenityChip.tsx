@@ -56,7 +56,7 @@ export default function AmenityChip({ amenity, active, onClick }: AmenityChipPro
   const Icon = entry.icon
 
   return (
-    <span
+    <button
       onClick={onClick}
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
         active
@@ -66,6 +66,6 @@ export default function AmenityChip({ amenity, active, onClick }: AmenityChipPro
     >
       <Icon size={14} strokeWidth={2} />
       {entry.label}
-    </span>
+    </button>
   )
 }
