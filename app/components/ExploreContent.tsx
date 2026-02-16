@@ -21,7 +21,7 @@ export const ExploreContent = () => {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
-      <div className="flex flex-col sm:grid gap-4 px-6 lg:px-4 mt-24 lg:mt-16">
+      <div className="flex flex-col sm:grid gap-4 px-6 lg:px-4 mt-16">
         <AmenityFilterList />
         <div>
           <NewsCTA />
