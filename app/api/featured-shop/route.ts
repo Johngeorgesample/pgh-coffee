@@ -74,7 +74,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('uuid,name,neighborhood,address,website,photo,photos,roaster,latitude,longitude,company:company_id(*)')
+    .select('*, company:company_id(*)')
     .eq('uuid', winnerUuid)
 
   if (error || !data?.[0]) {
