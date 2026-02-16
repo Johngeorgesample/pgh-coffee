@@ -89,6 +89,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       if (showAllPopups) return
 
       const map = mapRef.current?.getMap()
+      if (!map?.getLayer(layerId)) return
       const features = map?.queryRenderedFeatures(event.point, {
         layers: [layerId],
       }) as unknown as GeoJSON.Feature[] | undefined
@@ -128,6 +129,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const handleMapClick = (event: MapMouseEvent) => {
     setPopupInfo(null)
     const map = mapRef.current?.getMap()
+    if (!map?.getLayer(layerId)) return
     const features = map?.queryRenderedFeatures(event.point, {
       layers: [layerId],
     }) as unknown as GeoJSON.Feature[] | undefined
