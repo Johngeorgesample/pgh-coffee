@@ -1,7 +1,6 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import type { User, SupabaseClient } from '@supabase/supabase-js'
 
 type AuthContextType = {
@@ -22,17 +21,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
 
   useEffect(() => {
-    // Only create client on the client side
-    try {
-      const client = createClient()
-      setSupabase(client)
-    } catch (error) {
-      // Supabase not configured, stay in loading=false state with no user
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('Failed to initialize Supabase client:', error)
-      }
-      setLoading(false)
-    }
+    import('@/lib/supabase/client')
+      .then(({ createClient }) => {
+        setSupabase(createClient())
+      })
+      .catch(error => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Failed to initialize Supabase client:', error)
+        }
+        setLoading(false)
+      })
   }, [])
 
   useEffect(() => {
