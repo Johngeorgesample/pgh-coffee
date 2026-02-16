@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import MapContainer from '@/app/components/MapContainer'
 import { TNeighborhood } from '@/types/neighborhood-types'
-import useShopsStore from '@/stores/coffeeShopsStore'
+import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import { useShopSelection } from '@/hooks'
 
 vi.mock('react-map-gl', () => {
@@ -15,6 +15,7 @@ vi.mock('react-map-gl', () => {
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
   default: vi.fn(),
+  useDisplayedShops: vi.fn(),
 }))
 
 vi.mock('@/hooks', () => ({
@@ -46,8 +47,8 @@ describe.skip('MapContainer', () => {
   }
 
   it('renders the MapContainer component and displays the map', () => {
+    vi.mocked(useDisplayedShops).mockReturnValue(dataSet as any)
     vi.mocked(useShopsStore).mockReturnValue({
-      displayedShops: dataSet,
       allShops: dataSet,
       fetchCoffeeShops: vi.fn(),
       setAllShops: vi.fn(),
@@ -55,8 +56,14 @@ describe.skip('MapContainer', () => {
       setCurrentShop: vi.fn(),
       hoveredShop: null,
       setHoveredShop: vi.fn(),
-      setDisplayedShops: vi.fn(),
-    })
+      searchValue: '',
+      setSearchValue: vi.fn(),
+      activeAmenityFilters: [],
+      toggleAmenityFilter: vi.fn(),
+      clearAmenityFilters: vi.fn(),
+      overrideShops: null,
+      setOverrideShops: vi.fn(),
+    } as any)
 
     vi.mocked(useShopSelection).mockReturnValue({
       handleShopSelect: mockOnShopSelect,

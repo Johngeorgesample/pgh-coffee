@@ -79,11 +79,9 @@ function updateURL(param: { key: string; value: string } | null) {
 interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
-  searchValue: string
   history: PanelEntry[]
 
   // setters
-  setSearchValue: (value: string) => void
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
   setPanelContent: (content: ReactNode, mode: PanelMode, opts?: { push?: boolean }) => void
 
@@ -100,10 +98,7 @@ const usePanelStore = create<PanelState>()(
     (set, get) => ({
       panelMode: 'explore',
       panelContent: null,
-      searchValue: '',
       history: [],
-
-      setSearchValue: value => set({ searchValue: value }),
 
       setPanelContent: (content, mode, opts) =>
         set(state => {
@@ -116,9 +111,9 @@ const usePanelStore = create<PanelState>()(
 
       back: () =>
         set(state => {
-          if (state.searchValue) {
-            set({ searchValue: '' })
-          }
+          const { setSearchValue, clearAmenityFilters } = useCoffeeShopsStore.getState()
+          setSearchValue('')
+          clearAmenityFilters()
 
           if (state.history.length <= 1) {
             updateURL(null)
@@ -130,18 +125,13 @@ const usePanelStore = create<PanelState>()(
 
           updateURL(getURLParamForEntry(top))
 
-          if (top.mode === 'shop') {
-            const { allShops, setDisplayedShops } = useCoffeeShopsStore.getState()
-            setDisplayedShops(allShops)
-          }
-
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
 
       reset: root =>
         set(() => {
           const base = root ?? { mode: 'explore' as PanelMode, content: null }
-          return { history: [base], panelMode: base.mode, panelContent: base.content, searchValue: '' }
+          return { history: [base], panelMode: base.mode, panelContent: base.content }
         }),
 
       clearHistory: opts =>

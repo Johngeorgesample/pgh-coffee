@@ -8,6 +8,7 @@ const mockPush = vi.fn()
 const mockPlausible = vi.fn()
 const mockSetCurrentShop = vi.fn()
 const mockSetSearchValue = vi.fn()
+const mockClearAmenityFilters = vi.fn()
 const mockSetPanelContent = vi.fn()
 
 vi.mock('next/navigation', () => ({
@@ -18,23 +19,19 @@ vi.mock('next-plausible', () => ({
   usePlausible: () => mockPlausible,
 }))
 
-const mockSetDisplayedShops = vi.fn()
-const mockAllShops: TShop[] = []
-
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
   default: () => ({
     setCurrentShop: mockSetCurrentShop,
-    setDisplayedShops: mockSetDisplayedShops,
-    allShops: mockAllShops
+    setSearchValue: mockSetSearchValue,
+    clearAmenityFilters: mockClearAmenityFilters,
   }),
 }))
 
 vi.mock('@/stores/panelStore', () => ({
   __esModule: true,
-  default: () => ({ 
-    setSearchValue: mockSetSearchValue, 
-    setPanelContent: mockSetPanelContent 
+  default: () => ({
+    setPanelContent: mockSetPanelContent
   }),
 }))
 
@@ -89,7 +86,6 @@ describe('useShopSelection', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockSetDisplayedShops.mockClear()
     // Reset matchMedia mock to default
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -108,14 +104,14 @@ describe('useShopSelection', () => {
 
   test('returns handleShopSelect function', () => {
     const { result } = renderHook(() => useShopSelection())
-    
+
     expect(result.current).toHaveProperty('handleShopSelect')
     expect(typeof result.current.handleShopSelect).toBe('function')
   })
 
   test('handleShopSelect sets panel content with ShopDetails', () => {
     const { result } = renderHook(() => useShopSelection())
-    
+
     act(() => {
       result.current.handleShopSelect(mockShop)
     })
@@ -124,5 +120,16 @@ describe('useShopSelection', () => {
       expect.anything(), // The JSX element
       'shop'
     )
+  })
+
+  test('handleShopSelect clears search and amenity filters', () => {
+    const { result } = renderHook(() => useShopSelection())
+
+    act(() => {
+      result.current.handleShopSelect(mockShop)
+    })
+
+    expect(mockSetSearchValue).toHaveBeenCalledWith('')
+    expect(mockClearAmenityFilters).toHaveBeenCalled()
   })
 })
