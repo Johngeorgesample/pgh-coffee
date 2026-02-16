@@ -30,6 +30,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-map-gl": "^7.1.7",
+    "swagger-ui-react": "^5.31.1",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
+    "@types/swagger-ui-react": "^5.18.0",
     "eslint": "^8",
     "eslint-config-next": "15.1.7",
     "jsdom": "^26.0.0",
