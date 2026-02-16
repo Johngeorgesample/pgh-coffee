@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "PGH Coffee API",
+    "title": "pgh.coffee API",
     "description": "API for Pittsburgh coffee shop data",
     "version": "1.0.0"
   },
