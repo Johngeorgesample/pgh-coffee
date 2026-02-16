@@ -1,0 +1,423 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "pgh.coffee API",
+    "description": "API for Pittsburgh coffee shop data",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Local"
+    }
+  ],
+  "paths": {
+    "/shops": {
+      "get": {
+        "summary": "List all shops",
+        "description": "Returns an array of all coffee shops, optionally filtered by neighborhood.",
+        "tags": ["Shops"],
+        "parameters": [
+          {
+            "name": "neighborhood",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Filter by neighborhood name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of shop objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Shop" }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/geojson": {
+      "get": {
+        "summary": "All shops as GeoJSON",
+        "description": "Returns all coffee shops as a GeoJSON FeatureCollection.",
+        "tags": ["Shops"],
+        "responses": {
+          "200": {
+            "description": "GeoJSON FeatureCollection",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureCollection" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/{shopDetails}": {
+      "get": {
+        "summary": "Get a single shop",
+        "description": "Returns a single shop as a GeoJSON Feature, looked up by `{name}_{neighborhood}`.",
+        "tags": ["Shops"],
+        "parameters": [
+          {
+            "name": "shopDetails",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Shop identifier in the format `name_neighborhood` (URL-encoded)",
+            "example": "De%20Fer%20Coffee%20%26%20Tea_Downtown"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoJSON Feature for the shop",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Feature" }
+              }
+            }
+          },
+          "404": {
+            "description": "Shop not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Shop not found" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/batch": {
+      "get": {
+        "summary": "Get shops by UUIDs",
+        "description": "Returns multiple shops as a GeoJSON FeatureCollection, looked up by a comma-separated list of UUIDs.",
+        "tags": ["Shops"],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Comma-separated list of shop UUIDs",
+            "example": "abc123,def456"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoJSON FeatureCollection of matching shops",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureCollection" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing ids parameter",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/submit": {
+      "post": {
+        "summary": "Submit a shop for moderation",
+        "description": "Submits a new coffee shop to the moderation queue for review.",
+        "tags": ["Submissions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "address"],
+                "properties": {
+                  "name": { "type": "string", "example": "Cafe Example" },
+                  "address": { "type": "string", "example": "123 Main St, Pittsburgh, PA" },
+                  "neighborhood": { "type": "string", "example": "Shadyside" },
+                  "website": { "type": "string", "example": "https://example.com" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Shop submitted successfully"
+          },
+          "400": {
+            "description": "Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/report": {
+      "post": {
+        "summary": "Report incorrect shop info",
+        "description": "Reports that a shop's information is incorrect. The referenced shop must exist.",
+        "tags": ["Submissions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["shop_id"],
+                "properties": {
+                  "shop_id": { "type": "string", "format": "uuid", "description": "UUID of the shop to report" },
+                  "reported_name": { "type": "string" },
+                  "reported_address": { "type": "string" },
+                  "reported_neighborhood": { "type": "string" },
+                  "reported_website": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report submitted successfully"
+          },
+          "400": {
+            "description": "Missing shop_id",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Shop not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shops/report-amenities": {
+      "post": {
+        "summary": "Report amenity information",
+        "description": "Submits amenity data for a shop.",
+        "tags": ["Submissions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["shop_id", "amenities"],
+                "properties": {
+                  "shop_id": { "type": "string", "format": "uuid", "description": "UUID of the shop" },
+                  "amenities": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["wifi", "outdoor_seating"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Amenity report submitted successfully"
+          },
+          "400": {
+            "description": "Missing shop_id or amenities",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string" },
+          "name": { "type": "string" },
+          "website": { "type": "string" },
+          "description": { "type": "string" },
+          "instagram_handle": { "type": "string" }
+        }
+      },
+      "Photo": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" }
+        }
+      },
+      "Shop": {
+        "type": "object",
+        "description": "Raw shop record from the database (with joined company)",
+        "properties": {
+          "name": { "type": "string", "example": "De Fer Coffee & Tea" },
+          "neighborhood": { "type": "string", "example": "Strip District" },
+          "address": { "type": "string", "example": "1 Allegheny Square E" },
+          "website": { "type": "string" },
+          "uuid": { "type": "string", "format": "uuid" },
+          "latitude": { "type": "number", "nullable": true },
+          "longitude": { "type": "number", "nullable": true },
+          "photo": { "type": "string", "nullable": true },
+          "photos": {
+            "type": "array",
+            "nullable": true,
+            "items": { "$ref": "#/components/schemas/Photo" }
+          },
+          "company": {
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/Company" }]
+          },
+          "amenities": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "Feature": {
+        "type": "object",
+        "description": "GeoJSON Feature for a coffee shop",
+        "properties": {
+          "type": { "type": "string", "enum": ["Feature"] },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "neighborhood": { "type": "string" },
+              "address": { "type": "string" },
+              "website": { "type": "string" },
+              "uuid": { "type": "string", "format": "uuid" },
+              "photo": { "type": "string" },
+              "photos": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Photo" }
+              },
+              "company": {
+                "nullable": true,
+                "allOf": [{ "$ref": "#/components/schemas/Company" }]
+              },
+              "amenities": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "geometry": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["Point"] },
+              "coordinates": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "[longitude, latitude]"
+              }
+            }
+          }
+        }
+      },
+      "FeatureCollection": {
+        "type": "object",
+        "description": "GeoJSON FeatureCollection of coffee shops",
+        "properties": {
+          "type": { "type": "string", "enum": ["FeatureCollection"] },
+          "features": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Feature" }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      }
+    }
+  }
+}
