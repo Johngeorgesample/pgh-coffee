@@ -1,4 +1,3 @@
-'use client'
 import { TShop } from '@/types/shop-types'
 import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
@@ -6,13 +5,14 @@ import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
 import PhotoGrid from './PhotoGrid'
+import ShopAmenities from './ShopAmenities'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos } = props.shop.properties
+  const { address, photos, amenities } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
@@ -34,13 +34,10 @@ export default function PanelContent(props: IProps) {
           </address>
         </a>
 
-        {/*
-        <div className="flex gap-1 items-center">
-          <p className="text-sm font-medium text-emerald-600">Open</p>
-          <p className="text-xs text-stone-700">•</p>
-          <p className="text-sm text-stone-400">Hours vary</p>
-        </div>
-        */}
+        <ShopAmenities
+          amenities={amenities ?? []}
+          shopId={props.shop.properties.uuid}
+        />
       </div>
 
       {/* Divider */}

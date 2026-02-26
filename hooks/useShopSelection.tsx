@@ -9,8 +9,8 @@ import ShopDetails from '@/app/components/ShopDetails'
 export function useShopSelection() {
   const plausible = usePlausible()
   const router = useRouter()
-  const { allShops, setCurrentShop, setDisplayedShops } = useShopsStore()
-  const { setSearchValue, setPanelContent } = usePanelStore()
+  const { setCurrentShop, setSearchValue, clearAmenityFilters } = useShopsStore()
+  const { setPanelContent } = usePanelStore()
 
   const appendSearchParamToURL = useCallback(
     (shop: TShop) => {
@@ -31,6 +31,7 @@ export function useShopSelection() {
     (shop: TShop) => {
       setCurrentShop(shop)
       setSearchValue('')
+      clearAmenityFilters()
       appendSearchParamToURL(shop)
       setPanelContent(<ShopDetails shop={shop} />, 'shop')
 
@@ -38,7 +39,6 @@ export function useShopSelection() {
         top: 0,
         behavior: 'smooth',
       })
-      setDisplayedShops(allShops)
       plausible('FeaturePointClick', {
         props: {
           shopName: shop.properties.name,
@@ -46,7 +46,7 @@ export function useShopSelection() {
         },
       })
     },
-    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, setPanelContent, allShops, setDisplayedShops],
+    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, clearAmenityFilters, setPanelContent],
   )
 
   return { handleShopSelect }

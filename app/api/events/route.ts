@@ -10,6 +10,7 @@ const fetchEvents = async (shopID?: string, roasterID?: string) => {
   let query = supabase
     .from('events')
     .select('*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)')
+    .eq('is_hidden', false)
     .order('event_date', { ascending: false })
 
   if (shopID) {

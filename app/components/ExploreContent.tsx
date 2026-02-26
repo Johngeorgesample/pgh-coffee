@@ -5,12 +5,11 @@ import { TShop } from '@/types/shop-types'
 import FeaturedShop from './Explore/FeaturedShop'
 import { EventsCTA } from './Explore/EventsCTA'
 import { NewsCTA } from './Explore/NewsCTA'
-import usePanelStore from '@/stores/panelStore'
-
 import useShopsStore from '@/stores/coffeeShopsStore'
+import { AmenityFilterList } from './AmenityFilterList'
+
 export const ExploreContent = () => {
-  const { setSearchValue } = usePanelStore()
-  const { fetchCoffeeShops, setCurrentShop, setHoveredShop } = useShopsStore()
+  const { fetchCoffeeShops, setCurrentShop, setHoveredShop, setSearchValue } = useShopsStore()
   useEffect(() => {
     setSearchValue('')
     fetchCoffeeShops()
@@ -22,7 +21,8 @@ export const ExploreContent = () => {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
-      <div className="flex flex-col sm:grid gap-4 px-6 lg:px-4 mt-24 lg:mt-16">
+      <div className="flex flex-col sm:grid gap-4 px-6 lg:px-4 mt-16">
+        <AmenityFilterList />
         <div>
           <NewsCTA />
         </div>

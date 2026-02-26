@@ -1,11 +1,13 @@
 'use client'
 
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 
 
 export default function SearchBar() {
-  const { searchValue, setSearchValue, panelMode } = usePanelStore()
+  const { searchValue, setSearchValue } = useShopsStore()
+  const { panelMode } = usePanelStore()
 
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-8 lg:top-3 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">

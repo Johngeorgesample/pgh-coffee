@@ -9,11 +9,13 @@ import { formatDataToGeoJSON } from '../utils/utils'
 import { TCompany } from '@/types/shop-types'
 
 export const Company = ({ slug }: { slug: string }) => {
-  const { setDisplayedShops } = useShopsStore()
+  const { setOverrideShops } = useShopsStore()
   const [company, setCompany] = useState<TCompany | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setCompany(null)
+    setLoading(true)
     const fetchCompany = async () => {
       try {
         const response = await fetch(`/api/companies/${slug}`)
@@ -40,9 +42,10 @@ export const Company = ({ slug }: { slug: string }) => {
   useEffect(() => {
     if (company?.shops) {
       const shopsGeoJSON = formatDataToGeoJSON(company.shops)
-      setDisplayedShops(shopsGeoJSON)
+      setOverrideShops(shopsGeoJSON)
     }
-  }, [company, setDisplayedShops])
+    return () => setOverrideShops(null)
+  }, [company, setOverrideShops])
 
   if (loading) {
     return (

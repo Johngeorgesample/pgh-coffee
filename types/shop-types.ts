@@ -28,6 +28,7 @@ export interface DbShop {
   latitude: number | null
   longitude: number | null
   roaster?: boolean | string
+  amenities?: string[]
 }
 
 export interface TFeatureCollection {
@@ -46,6 +47,8 @@ export interface TShop {
     photos?: Photo[]
     website: string
     uuid: string
+    amenities?: string[]
+    selected?: boolean
   }
   geometry: {
     type: string

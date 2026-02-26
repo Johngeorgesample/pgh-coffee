@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { getSynonyms, normalizeSearchText } from '@/app/utils/utils'
+import { getSynonyms, normalizeSearchText, doesShopMatchFilter } from '@/app/utils/utils'
 
 describe('getSynonyms', () => {
   test('returns synonyms for "&"', () => {
@@ -86,5 +86,60 @@ describe('normalizeSearchText', () => {
 
   test('preserves special characters like &', () => {
     expect(normalizeSearchText('Coffee & Tea')).toBe('coffee & tea')
+  })
+})
+
+describe('doesShopMatchFilter', () => {
+  test('matches all shops when no filter is provided', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', '')).toBe(true)
+  })
+
+  test('filters by exact name match', () => {
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'elegance')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'elegance')).toBe(false)
+  })
+
+  test('filters by neighborhood', () => {
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'oakland')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'oakland')).toBe(false)
+  })
+
+  test('matches "&" when searching for "and"', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'and')).toBe(true)
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'and')).toBe(false)
+  })
+
+  test('matches "and" when searching for "&"', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', '&')).toBe(true)
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', '&')).toBe(false)
+  })
+
+  test('matches "café" when searching for "cafe" (without accent)', () => {
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'cafe')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'cafe')).toBe(false)
+  })
+
+  test('matches "cafe" when searching for "café" (with accent)', () => {
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'café')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'café')).toBe(false)
+  })
+
+  test('handles multi-word searches', () => {
+    expect(doesShopMatchFilter('Downtown Roasters', 'Shadyside', 'downtown roasters')).toBe(true)
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'downtown roasters')).toBe(false)
+  })
+
+  test('multi-word search with synonym', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'coffee and tea')).toBe(true)
+    expect(doesShopMatchFilter('Café Elegance', 'North Oakland', 'coffee and tea')).toBe(false)
+  })
+
+  test('returns false when filter does not match', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'nonexistent')).toBe(false)
+  })
+
+  test('is case-insensitive', () => {
+    expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'DOWNTOWN')).toBe(true)
   })
 })

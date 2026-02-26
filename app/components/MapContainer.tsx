@@ -1,17 +1,20 @@
 'use client'
 
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
 import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
-import { useShopSelection } from '@/hooks'
-import useShopsStore from '@/stores/coffeeShopsStore'
+import type { MapLayerMouseEvent } from 'react-map-gl'
+import { useShopSelection, useShopsInView } from '@/hooks'
+import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
+import ShopPopup from './ShopPopup'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
 }
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
-  const { displayedShops, hoveredShop } = useShopsStore()
+  const displayedShops = useDisplayedShops()
+  const { hoveredShop, currentShop } = useShopsStore()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -33,6 +36,21 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       ],
     },
   } as const
+
+  const [popupInfo, setPopupInfo] = useState<{
+    longitude: number
+    latitude: number
+    name: string
+    neighborhood: string
+    photo: string | null
+    uuid: string
+  } | null>(null)
+
+  const [zoomLevel, setZoomLevel] = useState<number>(MAP_CONSTANTS.INITIAL_VIEW.zoom)
+
+  const showAllPopups = zoomLevel > 15
+
+  const { shopsInView, updateBounds } = useShopsInView(displayedShops.features, showAllPopups)
 
   const panToCurrentShop = () => {
     if (currentShopCoordinates?.every(element => Boolean(element))) {
@@ -66,8 +84,52 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     }
   }, [displayedShops, hoveredUUID])
 
+  const handleMouseMove = useCallback(
+    (event: MapLayerMouseEvent) => {
+      if (showAllPopups) return
+
+      const map = mapRef.current?.getMap()
+      if (!map?.getLayer(layerId)) return
+      const features = map?.queryRenderedFeatures(event.point, {
+        layers: [layerId],
+      }) as unknown as GeoJSON.Feature[] | undefined
+
+      if (!features?.length || !features[0].properties) {
+        setPopupInfo(null)
+        return
+      }
+
+      const hoveredShopUUID = features[0].properties.uuid
+
+      if (currentShop?.properties?.uuid === hoveredShopUUID) {
+        setPopupInfo(null)
+        return
+      }
+
+      const hydratedHoveredShop = displayedShops.features.find(shop => shop.properties.uuid === hoveredShopUUID)
+
+      if (hydratedHoveredShop) {
+        setPopupInfo({
+          longitude: hydratedHoveredShop.geometry.coordinates[0],
+          latitude: hydratedHoveredShop.geometry.coordinates[1],
+          name: hydratedHoveredShop.properties.name,
+          neighborhood: hydratedHoveredShop.properties.neighborhood,
+          photo: hydratedHoveredShop.properties.photo || null,
+          uuid: hydratedHoveredShop.properties.uuid,
+        })
+      }
+    },
+    [currentShop?.properties?.uuid, displayedShops.features, showAllPopups],
+  )
+
+  const handleMouseLeave = useCallback(() => {
+    setPopupInfo(null)
+  }, [])
+
   const handleMapClick = (event: MapMouseEvent) => {
+    setPopupInfo(null)
     const map = mapRef.current?.getMap()
+    if (!map?.getLayer(layerId)) return
     const features = map?.queryRenderedFeatures(event.point, {
       layers: [layerId],
     }) as unknown as GeoJSON.Feature[] | undefined
@@ -75,25 +137,29 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     if (features?.length && features[0].properties) {
       // queryRenderedFeatures strips nested objects like 'company'
       // Look up the full shop data from the store using uuid
-      const clickedUuid = features[0].properties.uuid
-      const fullShop = displayedShops.features.find(
-        shop => shop.properties.uuid === clickedUuid
-      )
+      const clickedUUID = features[0].properties.uuid
+      const hydratedClickedShop = displayedShops.features.find(shop => shop.properties.uuid === clickedUUID)
 
-      if (fullShop) {
-        handleShopSelect(fullShop)
+      if (hydratedClickedShop) {
+        handleShopSelect(hydratedClickedShop)
       }
     }
   }
 
   return (
-    <div data-testid="map-container" className="w-full lg:w-2/3">
+    <div data-testid="map-container" className="w-full lg:w-2/3 overflow-hidden">
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
         cursor="pointer"
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onClick={handleMapClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onLoad={updateBounds}
+        onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
+        onMoveEnd={updateBounds}
+        interactiveLayerIds={[layerId]}
         ref={mapRef}
       >
         <Source id="my-data" type="geojson" data={shopsWithHoverState}>
@@ -141,6 +207,38 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             }}
           />
         </Source>
+
+
+        {showAllPopups &&
+          shopsInView
+            .filter(shop =>
+              shop.properties.uuid !== currentShop?.properties?.uuid
+            )
+            .map(shop => (
+              <ShopPopup
+                key={shop.properties.uuid}
+                longitude={shop.geometry.coordinates[0]}
+                latitude={shop.geometry.coordinates[1]}
+                name={shop.properties.name}
+                neighborhood={shop.properties.neighborhood}
+                photo={shop.properties.photo || null}
+                onClick={() => handleShopSelect(shop)}
+              />
+            ))}
+
+        {popupInfo && !showAllPopups && (
+          <ShopPopup
+            longitude={popupInfo.longitude}
+            latitude={popupInfo.latitude}
+            name={popupInfo.name}
+            neighborhood={popupInfo.neighborhood}
+            photo={popupInfo.photo}
+            onClick={() => {
+              const shop = displayedShops.features.find(s => s.properties.uuid === popupInfo.uuid)
+              if (shop) handleShopSelect(shop)
+            }}
+          />
+        )}
       </Map>
     </div>
   )

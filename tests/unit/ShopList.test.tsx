@@ -62,79 +62,16 @@ const mockShops: TShop[] = [
   },
 ]
 
-describe('ShopList search with synonyms', () => {
-  test('renders all shops when no filter is provided', () => {
+describe('ShopList', () => {
+  test('renders all shops passed to it', () => {
     render(<ShopList coffeeShops={mockShops} />)
     expect(screen.getByText('Coffee & Tea Shop')).toBeTruthy()
     expect(screen.getByText('Café Elegance')).toBeTruthy()
     expect(screen.getByText('Downtown Roasters')).toBeTruthy()
   })
 
-  test('filters shops by exact name match', () => {
-    render(<ShopList coffeeShops={mockShops} filter="elegance" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.getByText('Café Elegance')).toBeTruthy()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('filters shops by neighborhood', () => {
-    render(<ShopList coffeeShops={mockShops} filter="oakland" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.getByText('Café Elegance')).toBeTruthy()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('matches "&" when searching for "and"', () => {
-    render(<ShopList coffeeShops={mockShops} filter="and" />)
-    expect(screen.getByText('Coffee & Tea Shop')).toBeTruthy()
-    expect(screen.queryByText('Café Elegance')).toBeNull()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('matches "and" when searching for "&"', () => {
-    render(<ShopList coffeeShops={mockShops} filter="&" />)
-    expect(screen.getByText('Coffee & Tea Shop')).toBeTruthy()
-    expect(screen.queryByText('Café Elegance')).toBeNull()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('matches "café" when searching for "cafe" (without accent)', () => {
-    render(<ShopList coffeeShops={mockShops} filter="cafe" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.getByText('Café Elegance')).toBeTruthy()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('matches "cafe" when searching for "café" (with accent)', () => {
-    render(<ShopList coffeeShops={mockShops} filter="café" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.getByText('Café Elegance')).toBeTruthy()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('handles multi-word searches', () => {
-    render(<ShopList coffeeShops={mockShops} filter="downtown roasters" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.queryByText('Café Elegance')).toBeNull()
-    expect(screen.getByText('Downtown Roasters')).toBeTruthy()
-  })
-
-  test('multi-word search with synonym', () => {
-    render(<ShopList coffeeShops={mockShops} filter="coffee and tea" />)
-    expect(screen.getByText('Coffee & Tea Shop')).toBeTruthy()
-    expect(screen.queryByText('Café Elegance')).toBeNull()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('returns no results when filter does not match', () => {
-    render(<ShopList coffeeShops={mockShops} filter="nonexistent" />)
-    expect(screen.queryByText('Coffee & Tea Shop')).toBeNull()
-    expect(screen.queryByText('Café Elegance')).toBeNull()
-    expect(screen.queryByText('Downtown Roasters')).toBeNull()
-  })
-
-  test('is case-insensitive', () => {
-    render(<ShopList coffeeShops={mockShops} filter="DOWNTOWN" />)
-    expect(screen.getByText('Coffee & Tea Shop')).toBeTruthy()
+  test('renders empty list when no shops are provided', () => {
+    render(<ShopList coffeeShops={[]} />)
+    expect(screen.queryByRole('listitem')).toBeNull()
   })
 })
