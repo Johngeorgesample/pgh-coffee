@@ -5,9 +5,9 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import LocationList from '@/app/components/LocationList'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { DbShop, TFeatureCollection } from '@/types/shop-types'
-import EditListAction from '@/app/account/lists/[listId]/EditListAction'
-import ShareListAction from '@/app/account/lists/[listId]/ShareListAction'
-import DeleteListAction from '@/app/account/lists/[listId]/DeleteListAction'
+import EditListAction from '@/app/account/lists/EditListAction'
+import ShareListAction from '@/app/account/lists/ShareListAction'
+import DeleteListAction from '@/app/account/lists/DeleteListAction'
 
 interface ListItem {
   id: string
