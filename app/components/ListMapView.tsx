@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import usePanelStore from '@/stores/panelStore'
 import LocationList from '@/app/components/LocationList'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { DbShop, TFeatureCollection } from '@/types/shop-types'
@@ -48,7 +49,11 @@ export const ListMapView = ({ listId }: { listId: string }) => {
       }
       setOverrideShops(shopsGeoJSON)
     }
-    return () => setOverrideShops(null)
+    return () => {
+      if (usePanelStore.getState().panelMode !== 'shop') {
+        setOverrideShops(null)
+      }
+    }
   }, [list, setOverrideShops])
 
   if (loading) {
