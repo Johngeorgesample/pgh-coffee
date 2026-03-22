@@ -74,7 +74,7 @@ export async function PATCH(
   }
 
   const body = await request.json()
-  const { name, is_public } = body
+  const { name, is_public, description } = body
 
   // Build update object based on provided fields
   const updates: Record<string, unknown> = {}
@@ -91,6 +91,10 @@ export async function PATCH(
 
   if (is_public !== undefined) {
     updates.is_public = Boolean(is_public)
+  }
+
+  if (description !== undefined) {
+    updates.description = description === null ? null : String(description).trim() || null
   }
 
   if (Object.keys(updates).length === 0) {

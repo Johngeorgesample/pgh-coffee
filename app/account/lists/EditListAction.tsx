@@ -10,21 +10,31 @@ const buttonClass =
 interface EditListActionProps {
   listId: string
   currentName: string
-  onUpdate: (newName: string) => void
+  currentDescription: string | null
+  onUpdate: (name: string, description: string | null) => void
 }
 
-export default function EditListAction({ listId, currentName, onUpdate }: EditListActionProps) {
+export default function EditListAction({ listId, currentName, currentDescription, onUpdate }: EditListActionProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState(currentName)
+  const [description, setDescription] = useState(currentDescription ?? '')
   const [saving, setSaving] = useState(false)
 
   const handleOpen = () => {
     setName(currentName)
+    setDescription(currentDescription ?? '')
     setIsOpen(true)
   }
 
   const handleSave = async () => {
-    if (!name.trim() || name === currentName) {
+    if (!name.trim()) {
+      setIsOpen(false)
+      return
+    }
+
+    const descriptionValue = description.trim() || null
+    const unchanged = name === currentName && descriptionValue === currentDescription
+    if (unchanged) {
       setIsOpen(false)
       return
     }
@@ -34,12 +44,12 @@ export default function EditListAction({ listId, currentName, onUpdate }: EditLi
       const res = await fetch(`/api/lists/${listId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim() }),
+        body: JSON.stringify({ name: name.trim(), description: descriptionValue }),
       })
 
       if (!res.ok) throw new Error('Failed to update list')
 
-      onUpdate(name.trim())
+      onUpdate(name.trim(), descriptionValue)
       setIsOpen(false)
     } catch (err) {
       console.error('Failed to update list:', err)
@@ -59,15 +69,22 @@ export default function EditListAction({ listId, currentName, onUpdate }: EditLi
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="max-w-lg w-full bg-white rounded-xl p-6 shadow-xl">
             <DialogTitle className="text-lg font-semibold text-stone-900 mb-4">
-              Edit list name
+              Edit list
             </DialogTitle>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-800"
                 placeholder="List name"
+              />
+              <textarea
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                rows={3}
+                className="w-full border border-stone-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-800 resize-none"
+                placeholder="Description (optional)"
               />
               <div className="flex gap-2">
                 <button

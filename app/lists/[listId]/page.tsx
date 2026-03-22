@@ -19,6 +19,7 @@ interface List {
   user_id: string
   created_at: string
   is_public: boolean
+  description: string | null
   items: ListItem[]
   isOwner: boolean
   creator_name?: string
@@ -91,7 +92,10 @@ export default function PublicListPage() {
           <span>{list.name}</span>
         </nav>
         <h1 className="text-2xl font-bold">{list.name}</h1>
-        <p className="text-stone-600">
+        {list.description && (
+          <p className="text-stone-600 mt-1">{list.description}</p>
+        )}
+        <p className="text-stone-500 text-sm mt-1">
           {list.items.length} shops · Created {fmtISO(list.created_at)}
         </p>
         {list.creator_name && (

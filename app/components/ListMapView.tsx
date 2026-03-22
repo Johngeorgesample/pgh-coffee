@@ -18,6 +18,7 @@ interface ListItem {
 interface List {
   id: string
   name: string
+  description: string | null
   is_public: boolean
   isOwner: boolean
   items: ListItem[]
@@ -88,13 +89,17 @@ export const ListMapView = ({ listId }: { listId: string }) => {
               <EditListAction
                 listId={list.id}
                 currentName={list.name}
-                onUpdate={name => setList({ ...list, name })}
+                currentDescription={list.description}
+                onUpdate={(name, description) => setList({ ...list, name, description })}
               />
               <DeleteListAction listId={list.id} listName={list.name} />
             </div>
           )}
         </div>
-        <p className="text-sm text-gray-500 mb-2">{list.items.length} shops</p>
+        {list.description && (
+          <p className="text-sm text-gray-500 mb-1">{list.description}</p>
+        )}
+        <p className="text-sm text-gray-400 mb-2">{list.items.length} shops</p>
         <LocationList coffeeShops={shops} />
       </div>
     </div>
