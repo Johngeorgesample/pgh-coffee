@@ -25,24 +25,23 @@ export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props
   const [selectedLists, setSelectedLists] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  const fetchLists = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`/api/lists/status/${shopUUID}`)
+      if (!response.ok) throw new Error('Failed to fetch lists')
+      const data: ListWithStatus[] = await response.json()
+      setLists(data)
+      setSelectedLists(data.filter(list => list.has_shop).map(list => list.id))
+    } catch (error) {
+      console.error('Error fetching lists:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (!isOpen) return
-
-    const fetchLists = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch(`/api/lists/status/${shopUUID}`)
-        if (!response.ok) throw new Error('Failed to fetch lists')
-        const data: ListWithStatus[] = await response.json()
-        setLists(data)
-        setSelectedLists(data.filter(list => list.has_shop).map(list => list.id))
-      } catch (error) {
-        console.error('Error fetching lists:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchLists()
   }, [isOpen, shopUUID])
 
@@ -85,9 +84,9 @@ export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props
     }
   }
 
-  const handleAddingToNewList = () => {
-    console.log('handleAddingToNewList')
-    // TODO: POST request to create new list and add shop
+  const handleAddingToNewList = async (newListId: string) => {
+    await addShopToList(newListId, shopUUID)
+    fetchLists()
   }
 
   return (

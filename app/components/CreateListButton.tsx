@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Plus } from 'lucide-react'
 
 interface CreateListButtonProps {
-  onAdd: () => void
+  onAdd: (newListId: string) => void
 }
 
 export default function CreateListButton({ onAdd }: CreateListButtonProps) {
@@ -38,9 +38,10 @@ export default function CreateListButton({ onAdd }: CreateListButtonProps) {
         throw new Error(error.error || 'Failed to create list')
       }
 
+      const newList = await response.json()
       setListName('')
       setIsEditing(false)
-      onAdd()
+      onAdd(newList.id)
     } catch (error) {
       console.error('Error creating list:', error)
     } finally {
