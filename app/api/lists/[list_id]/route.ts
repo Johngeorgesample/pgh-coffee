@@ -46,8 +46,12 @@ export async function GET(
     )
   }
 
-  // Include ownership flag in response
-  return NextResponse.json({ ...data, isOwner })
+  if (!isOwner) {
+    const { user_id: _uid, creator_email: _email, ...publicData } = data
+    return NextResponse.json({ ...publicData, isOwner: false })
+  }
+
+  return NextResponse.json({ ...data, isOwner: true })
 }
 
 // PATCH /api/lists/{list_id} - Rename a list
@@ -141,17 +145,25 @@ export async function DELETE(
     )
   }
 
-  const { error } = await supabase
+  const { data: deleted, error } = await supabase
     .from('user_lists')
     .delete()
     .eq('id', list_id)
     .eq('user_id', user.id)
+    .select('id')
 
   if (error) {
     console.error('Error deleting list:', error.message)
     return NextResponse.json(
       { error: 'Error deleting list' },
       { status: 500 }
+    )
+  }
+
+  if (!deleted || deleted.length === 0) {
+    return NextResponse.json(
+      { error: 'List not found' },
+      { status: 404 }
     )
   }
 
