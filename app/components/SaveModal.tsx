@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { X } from 'lucide-react'
 import SaveModalListItem from './SaveModalListItem'
 import CreateListButton from './CreateListButton'
 
@@ -91,21 +92,31 @@ export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="relative max-w-md w-full bg-white rounded-xl p-5 shadow-xl">
-          <DialogTitle>
-            <div className="h-18 border-b -mx-6 px-6">
-              <p className="font-bold">Save to list</p>
-              <p>{shopName}</p>
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-end sm:items-center justify-center sm:p-4">
+        <DialogPanel className="relative w-full sm:max-w-md bg-stone-50 sm:rounded-3xl rounded-t-3xl px-6 pt-5 pb-8 sm:pb-6 shadow-2xl">
+          {/* drag handle on mobile */}
+          <div className="sm:hidden w-10 h-1 bg-stone-300 rounded-full mx-auto mb-5" />
+
+          <DialogTitle as="div" className="flex items-start justify-between mb-5">
+            <div>
+              <p className="font-semibold text-stone-900 text-base tracking-tight">Save to list</p>
+              <p className="text-stone-400 text-sm mt-0.5 truncate max-w-[260px]">{shopName}</p>
             </div>
+            <button
+              onClick={onClose}
+              className="ml-3 mt-0.5 p-1.5 rounded-full text-stone-400 hover:text-stone-600 hover:bg-stone-200 transition-colors shrink-0"
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
           </DialogTitle>
 
-          <ul className="flex flex-col py-2 max-h-[35dvh] gap-1 overflow-scroll">
+          <ul className="flex flex-col max-h-[38dvh] gap-1 overflow-y-auto -mx-1 px-1 mb-4">
             {isLoading ? (
-              <li className="py-4 text-center text-slate-500">Loading...</li>
+              <li className="py-6 text-center text-stone-400 text-sm">Loading...</li>
             ) : lists.length === 0 ? (
-              <li className="py-4 text-center text-slate-500">No lists yet</li>
+              <li className="py-6 text-center text-stone-400 text-sm">No lists yet</li>
             ) : (
               lists.map(list => (
                 <SaveModalListItem
@@ -119,9 +130,14 @@ export default function SaveModal({ isOpen, onClose, shopUUID, shopName }: Props
               ))
             )}
           </ul>
-          <div className="border-t -mx-6 px-6 pt-4">
+
+          <div className="border-t border-stone-200 pt-4 space-y-3">
             <CreateListButton onAdd={handleAddingToNewList} />
-            <p className="text-center text-xs mt-4">Saved to {selectedLists.length} lists</p>
+            {selectedLists.length > 0 && (
+              <p className="text-center text-xs text-stone-400">
+                Saved to {selectedLists.length} {selectedLists.length === 1 ? 'list' : 'lists'}
+              </p>
+            )}
           </div>
         </DialogPanel>
       </div>
