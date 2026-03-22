@@ -22,7 +22,6 @@ interface List {
   items: ListItem[]
   isOwner: boolean
   creator_name?: string
-  creator_email?: string
 }
 
 export default function PublicListPage() {
@@ -95,13 +94,8 @@ export default function PublicListPage() {
         <p className="text-stone-600">
           {list.items.length} shops · Created {fmtISO(list.created_at)}
         </p>
-        {(list.creator_name || list.creator_email) && (
-          <p className="text-stone-500 text-sm mt-1">
-            by {list.creator_name ?? list.creator_email}
-            {list.creator_name && list.creator_email && (
-              <span className="text-stone-400"> · {list.creator_email}</span>
-            )}
-          </p>
+        {list.creator_name && (
+          <p className="text-stone-500 text-sm mt-1">by {list.creator_name}</p>
         )}
         {list.isOwner && (
           <Link

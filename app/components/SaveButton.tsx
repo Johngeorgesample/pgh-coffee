@@ -19,11 +19,11 @@ export default function SaveButton({ shopUUID, shopName }: SaveButtonProps) {
   const [showLoginModal, setShowLoginModal] = useState(false)
 
   const handleToggle = async () => {
-    console.log('handleToggle')
     if (!user) {
       setShowLoginModal(true)
       return
     }
+    plausible('save', { props: { shopName, shopUUID } })
     setIsSaveModalOpen(true)
   }
 
