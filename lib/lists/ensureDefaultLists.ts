@@ -11,6 +11,10 @@ export async function ensureDefaultLists(
   userId: string,
   listNames: string[] = DEFAULT_LISTS,
 ): Promise<Record<string, string>> {
+  const { data: { user } } = await supabase.auth.getUser()
+  const creatorEmail = user?.email ?? null
+  const creatorName = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? null
+
   const { data: existing } = await supabase
     .from('user_lists')
     .select('id, name')
@@ -27,7 +31,7 @@ export async function ensureDefaultLists(
   if (missing.length > 0) {
     const { data: created, error } = await supabase
       .from('user_lists')
-      .insert(missing.map(name => ({ user_id: userId, name })))
+      .insert(missing.map(name => ({ user_id: userId, name, creator_email: creatorEmail, creator_name: creatorName })))
       .select('id, name')
 
     if (error) {

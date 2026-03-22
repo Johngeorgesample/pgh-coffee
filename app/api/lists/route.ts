@@ -101,6 +101,7 @@ export async function POST(request: Request) {
       user_id: user.id,
       name: name.trim(),
       creator_email: user.email,
+      creator_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
     })
     .select()
     .single()
