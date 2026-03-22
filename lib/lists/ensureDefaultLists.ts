@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient, User } from '@supabase/supabase-js'
 
 export const DEFAULT_LISTS = ['Favorites', 'Want to Try']
 
@@ -8,17 +8,16 @@ export const DEFAULT_LISTS = ['Favorites', 'Want to Try']
  */
 export async function ensureDefaultLists(
   supabase: SupabaseClient,
-  userId: string,
+  user: User,
   listNames: string[] = DEFAULT_LISTS,
 ): Promise<Record<string, string>> {
-  const { data: { user } } = await supabase.auth.getUser()
-  const creatorEmail = user?.email ?? null
-  const creatorName = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? null
+  const creatorEmail = user.email ?? null
+  const creatorName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
 
   const { data: existing } = await supabase
     .from('user_lists')
     .select('id, name')
-    .eq('user_id', userId)
+    .eq('user_id', user.id)
     .in('name', listNames)
 
   const existingMap: Record<string, string> = {}
@@ -31,7 +30,7 @@ export async function ensureDefaultLists(
   if (missing.length > 0) {
     const { data: created, error } = await supabase
       .from('user_lists')
-      .insert(missing.map(name => ({ user_id: userId, name, creator_email: creatorEmail, creator_name: creatorName })))
+      .insert(missing.map(name => ({ user_id: user.id, name, creator_email: creatorEmail, creator_name: creatorName })))
       .select('id, name')
 
     if (error) {

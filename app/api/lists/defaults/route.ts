@@ -13,7 +13,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const lists = await ensureDefaultLists(supabase, user.id)
+  const lists = await ensureDefaultLists(supabase, user)
 
   return NextResponse.json(lists)
 }
