@@ -91,6 +91,9 @@ export default function PublicListPage() {
           <span>{list.name}</span>
         </nav>
         <h1 className="text-2xl font-bold">{list.name}</h1>
+        <Link href={`/?list=${list.id}`} className="text-sm text-blue-600 hover:underline mt-1 inline-block">
+          View on map
+        </Link>
         <p className="text-stone-600">
           {list.items.length} shops · Created {fmtISO(list.created_at)}
         </p>

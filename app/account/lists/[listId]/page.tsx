@@ -100,6 +100,9 @@ export default function ListDetailPage() {
       </nav>
       <div className="flex items-center">
         <h1 className="text-2xl flex-1 font-bold">{list.name}</h1>
+        <Link href={`/?list=${list.id}`} className="text-sm text-blue-600 hover:underline mr-3">
+          View on map
+        </Link>
         <ListActions
           listId={list.id}
           listName={list.name}

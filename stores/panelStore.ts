@@ -11,7 +11,7 @@ type PanelEntry = {
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'list'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,
@@ -62,6 +62,11 @@ function getURLParamForEntry(entry: PanelEntry): { key: string; value: string } 
       return null
     case 'events':
       return { key: 'events', value: '' }
+    case 'list':
+      if (hasProps(content, 'listId') && content.props.listId) {
+        return { key: 'list', value: content.props.listId as string }
+      }
+      return null
     default:
       return null
   }

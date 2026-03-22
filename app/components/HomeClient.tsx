@@ -9,6 +9,7 @@ import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
 import { useURLShopSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
+import { useURLListSync } from '@/hooks/useURLListSync'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
@@ -34,6 +35,7 @@ export default function HomeClient() {
     params.delete('news')
     params.delete('event')
     params.delete('events')
+    params.delete('list')
     url.search = params.toString()
     router.replace(url.toString())
   }
@@ -57,6 +59,7 @@ export default function HomeClient() {
   useURLRoasterSync()
   useURLNewsSync()
   useURLEventSync()
+  useURLListSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -71,7 +74,7 @@ export default function HomeClient() {
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
-      const hasContentParam = ['shop', 'company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
+      const hasContentParam = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'list'].some(p => params.has(p))
       if (!hasContentParam) {
         setPanelContent(<ExploreContent />, 'explore')
       }
@@ -91,7 +94,8 @@ export default function HomeClient() {
         panelMode === 'roaster' ||
         panelMode === 'event' ||
         panelMode === 'news' ||
-        panelMode === 'events')
+        panelMode === 'events' ||
+        panelMode === 'list')
     ) {
       setPresented(true)
     }
