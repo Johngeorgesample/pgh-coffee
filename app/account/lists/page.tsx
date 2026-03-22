@@ -67,7 +67,7 @@ function ListCard({ list }: { list: ListSummary }) {
 
   return (
     <Link
-      href={`/account/lists/${list.id}`}
+      href={`/?list=${list.id}`}
       className="group bg-white rounded-xl border border-stone-200 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg flex flex-col gap-4 no-underline"
     >
       <div className="min-w-0">

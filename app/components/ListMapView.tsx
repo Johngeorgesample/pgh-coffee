@@ -5,6 +5,9 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import LocationList from '@/app/components/LocationList'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { DbShop, TFeatureCollection } from '@/types/shop-types'
+import EditListAction from '@/app/account/lists/[listId]/EditListAction'
+import ShareListAction from '@/app/account/lists/[listId]/ShareListAction'
+import DeleteListAction from '@/app/account/lists/[listId]/DeleteListAction'
 
 interface ListItem {
   id: string
@@ -14,6 +17,8 @@ interface ListItem {
 interface List {
   id: string
   name: string
+  is_public: boolean
+  isOwner: boolean
   items: ListItem[]
 }
 
@@ -66,7 +71,24 @@ export const ListMapView = ({ listId }: { listId: string }) => {
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
-        <h2 className="font-medium text-2xl mb-1">{list.name}</h2>
+        <div className="flex items-center gap-2 mb-1">
+          <h2 className="font-medium text-2xl flex-1">{list.name}</h2>
+          {list.isOwner && (
+            <div className="flex items-center gap-1 shrink-0">
+              <ShareListAction
+                listId={list.id}
+                isPublic={list.is_public}
+                onPublicChange={isPublic => setList({ ...list, is_public: isPublic })}
+              />
+              <EditListAction
+                listId={list.id}
+                currentName={list.name}
+                onUpdate={name => setList({ ...list, name })}
+              />
+              <DeleteListAction listId={list.id} listName={list.name} />
+            </div>
+          )}
+        </div>
         <p className="text-sm text-gray-500 mb-2">{list.items.length} shops</p>
         <LocationList coffeeShops={shops} />
       </div>
