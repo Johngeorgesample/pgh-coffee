@@ -38,9 +38,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
 
   if (shopData.length === 0) {
     logger.warn('Shop not found', { name, neighborhood })
-    metrics.shopNotFound()
+    metrics.shopNotFound(name)
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
+  metrics.shopViewed(name, neighborhood)
   return NextResponse.json(formatDBShopAsFeature(shopData[0]))
 }
