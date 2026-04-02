@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { metrics } from '@/lib/metrics'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -23,5 +24,6 @@ export async function POST(request: Request) {
   }
 
   logger.info('Amenity report submitted', { shop_id })
+  metrics.shopAmenityReportSubmitted()
   return NextResponse.json(data, { status: 201 })
 }

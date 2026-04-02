@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
+import { metrics } from '@/lib/metrics'
+import { withMetrics } from '@/lib/withMetrics'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -23,7 +25,7 @@ const getShop = async (name: string, neighborhood: string) => {
   return data
 }
 
-export async function GET(req: NextRequest, props: { params: Promise<{ shopDetails: string }> }) {
+export const GET = withMetrics('shops/[shopDetails]', async (req: NextRequest, props: { params: Promise<{ shopDetails: string }> }) => {
   const params = await props.params
   const { shopDetails } = params
 
@@ -37,8 +39,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
 
   if (shopData.length === 0) {
     logger.warn('Shop not found', { name, neighborhood })
+    metrics.shopNotFound(name)
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
+  metrics.shopViewed(name, neighborhood)
   return NextResponse.json(formatDBShopAsFeature(shopData[0]))
-}
+})

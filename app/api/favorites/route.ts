@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
+import { metrics } from '@/lib/metrics'
 
 export async function GET() {
   const supabase = await createClient()
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
   // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
-    .select('uuid, name')
+    .select('uuid, name, neighborhood')
     .eq('uuid', shopUUID)
     .single()
 
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
   }
 
   logger.info('Added favorite', { shopUUID, shopName: shop.name, userID: user.id })
+  metrics.favoriteAdded(shop.neighborhood)
   return NextResponse.json(data, { status: 201 })
 }
 
@@ -124,5 +126,6 @@ export async function DELETE(request: Request) {
   }
 
   logger.info('Removed favorite', { shopUUID, userID: user.id })
+  metrics.favoriteRemoved()
   return NextResponse.json({ success: true })
 }
