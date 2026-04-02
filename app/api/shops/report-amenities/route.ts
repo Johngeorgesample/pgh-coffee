@@ -22,5 +22,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error submitting amenity report' }, { status: 500 })
   }
 
+  logger.info('Amenity report submitted', { shop_id })
   return NextResponse.json(data, { status: 201 })
 }

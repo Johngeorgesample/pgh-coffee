@@ -84,6 +84,7 @@ export async function POST(request: Request) {
     )
   }
 
+  logger.info('Added favorite', { shopUUID })
   return NextResponse.json(data, { status: 201 })
 }
 
@@ -122,5 +123,6 @@ export async function DELETE(request: Request) {
     )
   }
 
+  logger.info('Removed favorite', { shopUUID })
   return NextResponse.json({ success: true })
 }
