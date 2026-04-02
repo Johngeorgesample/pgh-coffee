@@ -43,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
+    "@types/snappyjs": "^0.7.1",
     "eslint": "^8",
     "eslint-config-next": "15.1.7",
     "jsdom": "^26.0.0",
