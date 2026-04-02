@@ -72,15 +72,15 @@ function increment(metricName: string, labels: Record<string, string> = {}) {
 }
 
 export const metrics = {
-  shopSubmitted:              () => increment('pgh_coffee_shop_submitted_total'),
-  shopReportSubmitted:        () => increment('pgh_coffee_shop_report_submitted_total'),
-  shopAmenityReportSubmitted: () => increment('pgh_coffee_amenity_report_submitted_total'),
-  shopNotFound:               (name: string) => increment('pgh_coffee_shop_not_found_total', { name }),
-  shopViewed:                 (name: string, neighborhood: string) => increment('pgh_coffee_shop_view_total', { name, neighborhood }),
-  favoriteAdded:              (neighborhood: string) => increment('pgh_coffee_favorite_added_total', { neighborhood }),
-  favoriteRemoved:            () => increment('pgh_coffee_favorite_removed_total'),
-  authSignIn:                 () => increment('pgh_coffee_auth_signin_total'),
-  authSignUp:                 () => increment('pgh_coffee_auth_signup_total'),
-  authSignOut:                () => increment('pgh_coffee_auth_signout_total'),
-  apiError:                   (route: string) => increment('pgh_coffee_api_error_total', { route }),
+  shopSubmitted:              () => increment('shop_submitted_total'),
+  shopReportSubmitted:        () => increment('shop_report_submitted_total'),
+  shopAmenityReportSubmitted: () => increment('amenity_report_submitted_total'),
+  shopNotFound:               (name: string) => increment('shop_not_found_total', { name }),
+  shopViewed:                 (name: string, neighborhood: string) => increment('shop_view_total', { name, neighborhood }),
+  favoriteAdded:              (neighborhood: string) => increment('favorite_added_total', { neighborhood }),
+  favoriteRemoved:            () => increment('favorite_removed_total'),
+  authSignIn:                 () => increment('auth_signin_total'),
+  authSignUp:                 () => increment('auth_signup_total'),
+  authSignOut:                () => increment('auth_signout_total'),
+  apiError:                   (route: string) => increment('api_error_total', { route }),
 }
