@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
   const supabase = await createClient()
@@ -24,7 +25,7 @@ export async function GET() {
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('Error fetching favorites:', error.message)
+    logger.error('Error fetching favorites', { error: error.message })
     return NextResponse.json(
       { error: 'Error fetching favorites' },
       { status: 500 }
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
   // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
-    .select('uuid')
+    .select('uuid, name')
     .eq('uuid', shopUUID)
     .single()
 
@@ -76,13 +77,14 @@ export async function POST(request: Request) {
     .single()
 
   if (error) {
-    console.error('Error adding favorite:', error.message)
+    logger.error('Error adding favorite', { error: error.message })
     return NextResponse.json(
       { error: 'Error adding favorite' },
       { status: 500 }
     )
   }
 
+  logger.info('Added favorite', { shopUUID, shopName: shop.name, userID: user.id })
   return NextResponse.json(data, { status: 201 })
 }
 
@@ -114,12 +116,13 @@ export async function DELETE(request: Request) {
     .eq('shop_id', shopUUID)
 
   if (error) {
-    console.error('Error removing favorite:', error.message)
+    logger.error('Error removing favorite', { error: error.message })
     return NextResponse.json(
       { error: 'Error removing favorite' },
       { status: 500 }
     )
   }
 
+  logger.info('Removed favorite', { shopUUID, userID: user.id })
   return NextResponse.json({ success: true })
 }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { DbShop, TShop } from '@/types/shop-types'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { logger } from '@/lib/logger'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -20,7 +21,7 @@ const fetchCuratedLists = async () => {
     .order('title', { ascending: true })
 
   if (error) {
-    console.error('Error fetching curated lists:', error.message)
+    logger.error('Error fetching curated lists', { error: error.message })
     return null
   }
 

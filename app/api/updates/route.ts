@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -18,7 +19,7 @@ const fetchUpdates = async (shopID?: string) => {
   const { data, error } = await query
 
   if (error) {
-    console.error('Error fetching updates:', error.message)
+    logger.error('Error fetching updates', { error: error.message })
     return null
   }
 

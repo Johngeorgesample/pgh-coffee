@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -13,7 +14,7 @@ const getCompany = async (slug: string) => {
     .single()
 
   if (error) {
-    console.error('Error fetching company:', error.message)
+    logger.error('Error fetching company', { error: error.message })
     return null
   }
 
@@ -27,7 +28,7 @@ const getCompanyEvents = async (companyId: string) => {
     .eq('shops.company_id', companyId)
 
   if (error) {
-    console.error('Error fetching company events:', error.message)
+    logger.error('Error fetching company events', { error: error.message })
     return null
   }
 

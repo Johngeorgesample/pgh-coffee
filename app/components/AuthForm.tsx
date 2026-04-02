@@ -28,6 +28,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
           setError(error.message)
           return
         }
+        fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed in' }) })
         onSuccess()
       } else {
         const { data, error } = await supabase.auth.signUp({ email, password })
@@ -47,6 +48,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
           return
         }
 
+        fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed up' }) })
         onSuccess()
       }
     } finally {

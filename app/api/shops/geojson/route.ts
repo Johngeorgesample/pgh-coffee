@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
+import { logger } from '@/lib/logger'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -13,7 +14,7 @@ const fetchShops = async () => {
     .select('*, company:company_id(*)')
     .order('name', { ascending: true })
   if (error) {
-    console.error('Error fetching shops:', error.message)
+    logger.error('Error fetching shops', { error: error.message })
     return []
   }
   return data

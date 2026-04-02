@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -14,7 +15,7 @@ const getRoaster = async (slug: string) => {
     .single()
 
   if (error) {
-    console.error('Error fetching roaster:', error.message)
+    logger.error('Error fetching roaster', { error: error.message })
     return null
   }
 
