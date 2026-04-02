@@ -29,7 +29,7 @@ function push(level: Level, message: string, fields?: Record<string, string>) {
 }
 
 export const logger = {
-  info: (message: string, fields?: Record<string, string>) => push('info', message, fields),
-  warn: (message: string, fields?: Record<string, string>) => push('warn', message, fields),
+  info:  (message: string, fields?: Record<string, string>) => push('info',  message, fields),
+  warn:  (message: string, fields?: Record<string, string>) => push('warn',  message, fields),
   error: (message: string, fields?: Record<string, string>) => push('error', message, fields),
 }

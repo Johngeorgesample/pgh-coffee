@@ -36,6 +36,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
   }
 
   if (shopData.length === 0) {
+    logger.warn('Shop not found', { name, neighborhood })
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 

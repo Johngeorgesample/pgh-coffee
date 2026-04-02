@@ -40,6 +40,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error submitting report' }, { status: 500 })
   }
 
-  logger.info('Shop report submitted', { shop_id })
+  logger.info('Shop report submitted', { shop_id, reported_name, reported_address, reported_neighborhood, reported_website })
   return NextResponse.json(data, { status: 201 })
 }

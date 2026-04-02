@@ -9,6 +9,7 @@ export default function AccountDetails() {
   const router = useRouter()
 
   const handleSignOut = async () => {
+    await fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed out' }) })
     await signOut()
     router.push('/')
     router.refresh()

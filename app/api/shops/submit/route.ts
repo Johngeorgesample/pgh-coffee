@@ -22,6 +22,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error adding shop' }, { status: 500 })
   }
 
-  logger.info('Shop submitted', { name, neighborhood })
+  logger.info('Shop submitted', { name, address, neighborhood, website })
   return NextResponse.json(data, { status: 201 })
 }
