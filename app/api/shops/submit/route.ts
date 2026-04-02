@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     .insert([{ name, address, neighborhood, website }])
 
   if (error) {
-    console.error('Error adding shop:', error.message)
+    logger.error('Error adding shop', { error: error.message })
     return NextResponse.json({ error: 'Error adding shop' }, { status: 500 })
   }
 

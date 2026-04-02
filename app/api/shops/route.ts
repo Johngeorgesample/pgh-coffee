@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -15,7 +16,7 @@ const fetchShops = async (neighborhood?: string) => {
 
   const { data, error } = await query
   if (error) {
-    console.error('Error fetching shops:', error.message)
+    logger.error('Error fetching shops', { error: error.message })
     return null
   }
   return data

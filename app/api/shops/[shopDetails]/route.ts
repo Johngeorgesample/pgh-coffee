@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { logger } from '@/lib/logger'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -15,7 +16,7 @@ const getShop = async (name: string, neighborhood: string) => {
     .eq('neighborhood', neighborhood)
 
   if (error) {
-    console.error('Error fetching shop:', error.message)
+    logger.error('Error fetching shop', { error: error.message })
     return null
   }
 
