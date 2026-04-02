@@ -9,6 +9,7 @@ function push(level: Level, message: string, fields?: Record<string, string>) {
   if (!LOKI_URL || !LOKI_USER || !LOKI_PASSWORD) return
 
   const timestamp = (Date.now() * 1_000_000).toString()
+  const line = fields ? JSON.stringify({ message, ...fields }) : message
 
   fetch(`${LOKI_URL}/loki/api/v1/push`, {
     method: 'POST',
@@ -19,8 +20,8 @@ function push(level: Level, message: string, fields?: Record<string, string>) {
     body: JSON.stringify({
       streams: [
         {
-          stream: { app: 'pgh-coffee', env: ENV, level, ...fields },
-          values: [[timestamp, message]],
+          stream: { app: 'pgh-coffee', env: ENV, level },
+          values: [[timestamp, line]],
         },
       ],
     }),

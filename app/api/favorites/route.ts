@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
-    .select('uuid')
+    .select('uuid, name')
     .eq('uuid', shopUUID)
     .single()
 
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     )
   }
 
-  logger.info('Added favorite', { shopUUID })
+  logger.info('Added favorite', { shopUUID, shopName: shop.name, userID: user.id })
   return NextResponse.json(data, { status: 201 })
 }
 
@@ -123,6 +123,6 @@ export async function DELETE(request: Request) {
     )
   }
 
-  logger.info('Removed favorite', { shopUUID })
+  logger.info('Removed favorite', { shopUUID, userID: user.id })
   return NextResponse.json({ success: true })
 }
