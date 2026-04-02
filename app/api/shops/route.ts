@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { withMetrics } from '@/lib/withMetrics'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -22,8 +23,7 @@ const fetchShops = async (neighborhood?: string) => {
   return data
 }
 
-// API Route Handler
-export async function GET(request: Request) {
+export const GET = withMetrics('shops', async (request: Request) => {
   const { searchParams } = new URL(request.url)
   const neighborhood = searchParams.get('neighborhood') ?? ''
 
@@ -34,4 +34,4 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.json(shops)
-}
+})

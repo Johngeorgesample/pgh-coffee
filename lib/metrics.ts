@@ -41,23 +41,23 @@ function encodeSample(value: number, timestampMs: number): Buffer {
   return Buffer.concat([doubleField(1, value), varint((2 << 3) | 0), varint(timestampMs)])
 }
 
-function encodeWriteRequest(metricName: string, extraLabels: Record<string, string>): Buffer {
+function encodeWriteRequest(metricName: string, value: number, extraLabels: Record<string, string>): Buffer {
   const labels = { __name__: metricName, app: 'pgh-coffee', env: ENV, ...extraLabels }
 
   const labelBuffers = Object.entries(labels)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => embeddedField(1, encodeLabel(k, v)))
 
-  const sample = embeddedField(2, encodeSample(1, Date.now()))
+  const sample = embeddedField(2, encodeSample(value, Date.now()))
   const timeSeries = embeddedField(1, Buffer.concat([...labelBuffers, sample]))
 
   return timeSeries
 }
 
-function increment(metricName: string, labels: Record<string, string> = {}) {
+function push(metricName: string, value: number, labels: Record<string, string> = {}) {
   if (!MIMIR_URL || !MIMIR_USER || !MIMIR_PASSWORD) return
 
-  const writeRequest = encodeWriteRequest(metricName, labels)
+  const writeRequest = encodeWriteRequest(metricName, value, labels)
   const compressed = compress(writeRequest)
 
   fetch(`${MIMIR_URL}/api/prom/push`, {
@@ -69,6 +69,14 @@ function increment(metricName: string, labels: Record<string, string> = {}) {
     },
     body: compressed,
   }).catch(() => {})
+}
+
+function increment(metricName: string, labels: Record<string, string> = {}) {
+  push(metricName, 1, labels)
+}
+
+function gauge(metricName: string, value: number, labels: Record<string, string> = {}) {
+  push(metricName, value, labels)
 }
 
 export const metrics = {
@@ -83,4 +91,9 @@ export const metrics = {
   authSignUp:                 () => increment('auth_signup_total'),
   authSignOut:                () => increment('auth_signout_total'),
   apiError:                   (route: string) => increment('api_error_total', { route }),
+  requestCompleted:           (route: string, statusCode: number, durationSeconds: number) => {
+    increment('request_total', { route, status_code: String(statusCode) })
+    gauge('request_duration_seconds', durationSeconds, { route })
+  },
+  shopsPerNeighborhood:       (neighborhood: string, count: number) => gauge('shops_total', count, { neighborhood }),
 }

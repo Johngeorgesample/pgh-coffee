@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
 import { logger } from '@/lib/logger'
+import { withMetrics } from '@/lib/withMetrics'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -21,8 +22,7 @@ const fetchShops = async () => {
 }
 
 
-// API Route Handler
-export async function GET() {
+export const GET = withMetrics('shops/geojson', async () => {
   const shops = await fetchShops()
   const geojson = formatDataToGeoJSON(shops)
 
@@ -31,4 +31,4 @@ export async function GET() {
   }
 
   return NextResponse.json(geojson)
-}
+})
