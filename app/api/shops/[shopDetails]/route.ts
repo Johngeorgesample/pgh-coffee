@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
+import { metrics } from '@/lib/metrics'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -37,6 +38,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ shopDetai
 
   if (shopData.length === 0) {
     logger.warn('Shop not found', { name, neighborhood })
+    metrics.shopNotFound()
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
