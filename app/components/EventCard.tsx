@@ -1,7 +1,7 @@
 'use client'
 
 import { MapPinIcon } from '@heroicons/react/24/outline'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from './EventDetails'
@@ -56,7 +56,7 @@ export const EventCard = ({
   entry,
   hideShopInfo = false,
 }: EventCardProps) => {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { setPanelContent } = usePanelStore()
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
 

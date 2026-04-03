@@ -3,7 +3,7 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 
 interface TRoaster {
   id: string
@@ -23,7 +23,7 @@ interface TRoaster {
 export const RoasterDetails = ({ slug }: { slug: string }) => {
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
 
   useEffect(() => {
     const fetchRoaster = async () => {

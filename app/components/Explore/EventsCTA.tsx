@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
 import useExploreStore from '@/stores/exploreStore'
@@ -28,7 +28,7 @@ const EventCardSkeleton = () => (
 )
 
 export const EventsCTA = () => {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { setPanelContent } = usePanelStore()
   const { events, eventsError, eventsLoading, fetchEvents } = useExploreStore()
 

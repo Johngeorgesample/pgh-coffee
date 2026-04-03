@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useEffect } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -24,7 +24,7 @@ interface ISortedShopsResults {
 const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ shop }: IProps) {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { allShops } = useShopsStore()
 
   const [units, setUnits] = useState<TUnits>('miles')

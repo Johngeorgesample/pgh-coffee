@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 
 import useShopsStore from '@/stores/coffeeShopsStore'
 import AmenityChip from './AmenityChip'
@@ -28,7 +28,7 @@ const amenities = [
 ]
 
 export const AmenityFilterList = () => {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const [isExpanded, setIsExpanded] = useState(false)
   const { activeAmenityFilters, toggleAmenityFilter } = useShopsStore()
 

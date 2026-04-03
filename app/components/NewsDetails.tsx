@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
-import { usePlausible } from 'next-plausible'
-import { useShopSelection, useCopyToClipboard } from '@/hooks'
+import { useShopSelection, useCopyToClipboard, useAnalytics } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { NewsItem } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
@@ -22,7 +21,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
 
   useEffect(() => {

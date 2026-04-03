@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { Heart } from 'lucide-react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import FavoriteToast from './FavoriteToast'
 import { useAuth } from './AuthProvider'
 
@@ -16,7 +16,7 @@ interface FavoriteButtonProps {
 
 export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonProps) {
   const { user, loading: authLoading } = useAuth()
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const [isFavorited, setIsFavorited] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)

@@ -1,10 +1,9 @@
 'use client'
 import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { useShopSelection } from '@/hooks'
+import { useShopSelection, useAnalytics } from '@/hooks'
 import usePanelStore from '@/stores/panelStore'
 import { NewsDetails } from './NewsDetails'
-import { usePlausible } from 'next-plausible'
 import { NewsItem, getTagStyle } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
 
@@ -18,7 +17,7 @@ type NewsCardProps = {
 export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
   const { setPanelContent } = usePanelStore()
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const primaryTag = item.tags?.[0] ?? 'news'
   const styles = getTagStyle(primaryTag)
 

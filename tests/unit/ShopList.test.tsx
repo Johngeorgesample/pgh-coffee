@@ -5,6 +5,7 @@ import type { TShop } from '@/types/shop-types'
 
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: vi.fn() }),
+  useAnalytics: () => vi.fn(),
 }))
 
 vi.mock('@/stores/coffeeShopsStore', () => ({

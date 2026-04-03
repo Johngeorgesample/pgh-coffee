@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks/useAnalytics'
 import { TShop } from '@/types/shop-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
 
 export function useShopSelection() {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const router = useRouter()
   const { setCurrentShop, setSearchValue, clearAmenityFilters } = useShopsStore()
   const { setPanelContent } = usePanelStore()

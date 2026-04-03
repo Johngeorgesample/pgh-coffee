@@ -8,6 +8,7 @@ const setHoveredShopMock = vi.fn()
 
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: handleShopSelectMock }),
+  useAnalytics: () => vi.fn(),
 }))
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
