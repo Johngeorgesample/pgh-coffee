@@ -36,13 +36,6 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
           const favorites = await response.json()
           const isFav = favorites.some((fav: { shop: { uuid: string } }) => fav.shop?.uuid === shopUUID)
           setIsFavorited(isFav)
-          plausible('favorite', {
-            props: {
-              shopName,
-              shopUUID,
-              status: isFav
-            },
-          })
         }
       } catch (error) {
         console.error('Error checking favorite status:', error)
@@ -74,7 +67,11 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
       })
 
       if (response.ok) {
-        setIsFavorited(!isFavorited)
+        const newState = !isFavorited
+        setIsFavorited(newState)
+        plausible('favorite', {
+          props: { shopName, shopUUID, status: newState },
+        })
         if (!wasAlreadyFavorited) {
           setShowToast(true)
         }
