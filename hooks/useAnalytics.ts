@@ -10,14 +10,14 @@ export function useAnalytics() {
       plausible(...args)
       try {
         const [eventName, options] = args
-        const attributes =
-          options?.props &&
-          Object.fromEntries(
-            Object.entries(options.props)
-              .filter(([, v]) => v !== undefined)
-              .map(([k, v]) => [k, String(v)]),
-          )
-        getFaro()?.api?.pushEvent(String(eventName), attributes || undefined)
+        const attributes = options?.props
+          ? Object.fromEntries(
+              Object.entries(options.props)
+                .filter(([, v]) => v !== undefined)
+                .map(([k, v]) => [k, String(v)]),
+            )
+          : undefined
+        getFaro()?.api?.pushEvent(String(eventName), attributes)
       } catch {
         // fail silently if Faro isn't initialized
       }

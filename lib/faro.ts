@@ -1,3 +1,5 @@
+'use client'
+
 import type { Faro } from '@grafana/faro-web-sdk'
 
 let instance: Faro | null = null
