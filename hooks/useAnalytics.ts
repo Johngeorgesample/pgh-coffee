@@ -17,7 +17,7 @@ export function useAnalytics() {
               .filter(([, v]) => v !== undefined)
               .map(([k, v]) => [k, String(v)]),
           )
-        faro?.api?.pushLog([String(eventName)], { context: attributes || undefined })
+        faro?.api?.pushEvent(String(eventName), attributes || undefined)
       } catch {
         // fail silently if Faro isn't initialized
       }
