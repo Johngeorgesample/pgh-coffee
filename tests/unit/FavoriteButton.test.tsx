@@ -7,8 +7,9 @@ const mockFetch = vi.fn()
 global.fetch = mockFetch
 
 // Mock next-plausible
+const mockPlausible = vi.fn()
 vi.mock('next-plausible', () => ({
-  usePlausible: () => vi.fn(),
+  usePlausible: () => mockPlausible,
 }))
 
 // Mock AuthProvider
@@ -170,6 +171,73 @@ describe('FavoriteButton', () => {
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /favorited/i })).toBeInTheDocument()
+      })
+    })
+
+    it('does not fire favorite event on mount', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve([{ shop: { uuid: 'test-uuid-123' } }]),
+      })
+
+      render(<FavoriteButton {...defaultProps} />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /favorited/i })).toBeInTheDocument()
+      })
+
+      expect(mockPlausible).not.toHaveBeenCalledWith('favorite', expect.anything())
+    })
+
+    it('fires favorite event with correct props when favoriting', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve([]),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        })
+
+      render(<FavoriteButton {...defaultProps} />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /favorite/i })).not.toBeDisabled()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: /favorite/i }))
+
+      await waitFor(() => {
+        expect(mockPlausible).toHaveBeenCalledWith('favorite', {
+          props: { shopName: 'Test Coffee Shop', shopUUID: 'test-uuid-123', status: true },
+        })
+      })
+    })
+
+    it('fires favorite event with correct props when unfavoriting', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve([{ shop: { uuid: 'test-uuid-123' } }]),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        })
+
+      render(<FavoriteButton {...defaultProps} />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /favorited/i })).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: /favorited/i }))
+
+      await waitFor(() => {
+        expect(mockPlausible).toHaveBeenCalledWith('favorite', {
+          props: { shopName: 'Test Coffee Shop', shopUUID: 'test-uuid-123', status: false },
+        })
       })
     })
 
