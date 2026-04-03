@@ -1,9 +1,8 @@
-import { usePlausible } from 'next-plausible'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import { useShopSelection } from '@/hooks'
+import { useShopSelection, useAnalytics } from '@/hooks'
 
 interface IProps {
   distance?: string
@@ -26,7 +25,7 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 }
 
 export default function ShopCard(props: IProps) {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
   const { setHoveredShop } = useShopsStore()
 

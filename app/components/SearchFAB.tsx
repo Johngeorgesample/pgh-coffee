@@ -1,6 +1,6 @@
 'use client'
 
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export default function SearchFAB({ handleClick }: IProps) {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
 
   const handleFABClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     plausible('SearchFABClick')

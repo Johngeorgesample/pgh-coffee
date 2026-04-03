@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -16,7 +16,7 @@ import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
 
 export default function HomeClient() {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
     useShopsStore()
   const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()

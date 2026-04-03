@@ -1,3 +1,4 @@
+export * from './useAnalytics'
 export * from './useURLShopSync'
 export * from './useURLNewsSync'
 export * from './useURLEventSync'

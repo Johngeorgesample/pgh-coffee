@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { Photo } from '@/types/shop-types'
 
 const BUCKET_URL = 'https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/shop-photos'
@@ -11,7 +11,7 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos }: PhotoGridProps) {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
   useEffect(() => {

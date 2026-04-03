@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
@@ -13,7 +13,7 @@ interface IProps {
 
 export default function PanelHeader(props: IProps) {
   const { name, neighborhood, photo, company } = props.shop.properties
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { setPanelContent } = usePanelStore()
 
   const hasPhoto = !!photo

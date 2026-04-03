@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 
 import AmenityChip from './AmenityChip'
 import IssueSuccessDialog from './IssueSuccessDialog'
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export default function ShopAmenities({ amenities, shopId }: IProps) {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const [showModal, setShowModal] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 

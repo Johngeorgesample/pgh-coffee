@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePlausible } from 'next-plausible'
+import { useAnalytics } from '@/hooks'
 import usePanelStore from '@/stores/panelStore'
 import { CuratedList } from './CuratedList'
 import {TList} from '@/types/shop-types'
@@ -11,7 +11,7 @@ export const CuratedListIndex = () => {
   const [lists, setLists] = useState<TList[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
 
   useEffect(() => {
     const fetchLists = async () => {

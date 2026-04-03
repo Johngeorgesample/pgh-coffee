@@ -1,8 +1,7 @@
 'use client'
 
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
-import { usePlausible } from 'next-plausible'
-import { useCopyToClipboard } from '@/hooks'
+import { useCopyToClipboard, useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
 import { EventCardData } from './EventCard'
 import CopyLinkToast from './CopyLinkToast'
@@ -42,7 +41,7 @@ interface EventDetailsProps {
 }
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
-  const plausible = usePlausible()
+  const plausible = useAnalytics()
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
