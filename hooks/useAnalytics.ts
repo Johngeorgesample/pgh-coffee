@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { usePlausible } from 'next-plausible'
-import { faro } from '@grafana/faro-web-sdk'
+import * as faroSdk from '@grafana/faro-web-sdk'
 
 export function useAnalytics() {
   const plausible = usePlausible()
@@ -17,7 +17,7 @@ export function useAnalytics() {
               .filter(([, v]) => v !== undefined)
               .map(([k, v]) => [k, String(v)]),
           )
-        faro?.api?.pushEvent(String(eventName), attributes || undefined)
+        faroSdk.faro?.api?.pushEvent(String(eventName), attributes || undefined)
       } catch {
         // fail silently if Faro isn't initialized
       }
