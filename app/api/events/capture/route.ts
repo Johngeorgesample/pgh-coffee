@@ -76,11 +76,22 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData()
+  const keys = Array.from(formData.keys())
   const imageFile = formData.get('image') as File | string | null
 
   if (!imageFile) {
-    return NextResponse.json({ error: 'No image provided' }, { status: 400 })
+    return NextResponse.json({ error: 'No image provided', keys, contentType: request.headers.get('content-type') }, { status: 400 })
   }
+
+  // Temp debug: return info about what was received
+  return NextResponse.json({
+    debug: true,
+    keys,
+    imageType: typeof imageFile,
+    isFile: imageFile instanceof File,
+    fileType: imageFile instanceof File ? imageFile.type : null,
+    fileSize: imageFile instanceof File ? imageFile.size : (typeof imageFile === 'string' ? imageFile.length : null),
+  })
 
   let base64Image: string
   let mediaType: string
