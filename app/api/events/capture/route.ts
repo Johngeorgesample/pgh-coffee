@@ -84,7 +84,7 @@ export async function POST(request: Request) {
   try {
     extracted = await extractEventFromImage(base64Image, mediaType)
   } catch (error) {
-    logger.error('Failed to extract event from image', { error })
+    logger.error('Failed to extract event from image', { error: String(error) })
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
