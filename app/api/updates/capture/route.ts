@@ -9,6 +9,7 @@ const supabase = createClient(
 
 interface ExtractedUpdate {
   shop_name: string
+  neighborhood: string | null
   title: string
   description: string
   external_url: string | null
@@ -39,6 +40,7 @@ async function extractUpdateFromImage(base64Image: string, mediaType: string): P
             text: `This is an Instagram post from a Pittsburgh coffee shop sharing a general update (new menu, hours change, opening, closure, new offering, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
+  "neighborhood": "Pittsburgh neighborhood where the shop is located if mentioned or visible (e.g. South Side, Lawrenceville, Downtown), otherwise null",
   "title": "concise update title (e.g. Summer Menu Launch, New Hours, Temporary Closure)",
   "description": "post body text, cleaned up and readable",
   "external_url": "any relevant link visible in the post such as a menu or ordering link, otherwise null",
@@ -109,9 +111,14 @@ export async function POST(request: Request) {
     .from('shops')
     .select('uuid, name, neighborhood')
     .ilike('name', `%${extracted.shop_name}%`)
-    .limit(5)
+    .limit(10)
 
-  const shop = shops?.[0] ?? null
+  const shop = (() => {
+    if (!shops?.length) return null
+    if (shops.length === 1 || !extracted.neighborhood) return shops[0]
+    const hint = extracted.neighborhood.toLowerCase()
+    return shops.find(s => s.neighborhood?.toLowerCase().includes(hint)) ?? shops[0]
+  })()
 
   const { error: insertError } = await supabase
     .from('updates')

@@ -9,6 +9,7 @@ const supabase = createClient(
 
 interface ExtractedEvent {
   shop_name: string
+  neighborhood: string | null
   title: string
   description: string
   event_date: string | null
@@ -39,6 +40,7 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
             text: `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
+  "neighborhood": "Pittsburgh neighborhood where the shop is located if mentioned or visible (e.g. South Side, Lawrenceville, Downtown), otherwise null",
   "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
   "description": "post body text, cleaned up and readable",
   "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
@@ -109,9 +111,14 @@ export async function POST(request: Request) {
     .from('shops')
     .select('uuid, name, neighborhood')
     .ilike('name', `%${extracted.shop_name}%`)
-    .limit(5)
+    .limit(10)
 
-  const shop = shops?.[0] ?? null
+  const shop = (() => {
+    if (!shops?.length) return null
+    if (shops.length === 1 || !extracted.neighborhood) return shops[0]
+    const hint = extracted.neighborhood.toLowerCase()
+    return shops.find(s => s.neighborhood?.toLowerCase().includes(hint)) ?? shops[0]
+  })()
 
   const { error: insertError } = await supabase
     .from('events')
