@@ -57,7 +57,8 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
   }
 
   const result = await response.json()
-  return JSON.parse(result.content[0].text) as ExtractedEvent
+  const text = result.content[0].text.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
+  return JSON.parse(text) as ExtractedEvent
 }
 
 export async function POST(request: Request) {
@@ -85,7 +86,7 @@ export async function POST(request: Request) {
     extracted = await extractEventFromImage(base64Image, mediaType)
   } catch (error) {
     logger.error('Failed to extract event from image', { error: String(error) })
-    return NextResponse.json({ error: 'Failed to analyze image', detail: String(error) }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
   const { data: shops } = await supabase
