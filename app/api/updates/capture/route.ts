@@ -7,16 +7,16 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY as string
 )
 
-interface ExtractedEvent {
+interface ExtractedUpdate {
   shop_name: string
   title: string
   description: string
-  event_date: string | null
   external_url: string | null
   type: string
+  tags: string[]
 }
 
-async function extractEventFromImage(base64Image: string, mediaType: string): Promise<ExtractedEvent> {
+async function extractUpdateFromImage(base64Image: string, mediaType: string): Promise<ExtractedUpdate> {
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -36,14 +36,14 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
           },
           {
             type: 'text',
-            text: `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
+            text: `This is an Instagram post from a Pittsburgh coffee shop sharing a general update (new menu, hours change, opening, closure, new offering, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
-  "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
+  "title": "concise update title (e.g. Summer Menu Launch, New Hours, Temporary Closure)",
   "description": "post body text, cleaned up and readable",
-  "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
-  "external_url": "any ticket or registration link visible in the post, otherwise null",
-  "type": "pick the single most relevant from: event, seasonal, coming soon"
+  "external_url": "any relevant link visible in the post such as a menu or ordering link, otherwise null",
+  "type": "pick the single most relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering",
+  "tags": ["pick all relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering"]
 }`,
           },
         ],
@@ -58,7 +58,7 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
 
   const result = await response.json()
   const text = result.content[0].text.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
-  return JSON.parse(text) as ExtractedEvent
+  return JSON.parse(text) as ExtractedUpdate
 }
 
 async function getImageData(request: Request): Promise<{ base64Image: string; mediaType: string } | null> {
@@ -97,11 +97,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No image provided' }, { status: 400 })
   }
 
-  let extracted: ExtractedEvent
+  let extracted: ExtractedUpdate
   try {
-    extracted = await extractEventFromImage(imageData.base64Image, imageData.mediaType)
+    extracted = await extractUpdateFromImage(imageData.base64Image, imageData.mediaType)
   } catch (error) {
-    logger.error('Failed to extract event from image', { error: String(error) })
+    logger.error('Failed to extract update from image', { error: String(error) })
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
@@ -114,26 +114,25 @@ export async function POST(request: Request) {
   const shop = shops?.[0] ?? null
 
   const { error: insertError } = await supabase
-    .from('events')
+    .from('updates')
     .insert([{
       title: extracted.title,
       description: extracted.description,
       url: extracted.external_url,
       type: extracted.type,
+      tags: extracted.tags,
       post_date: new Date().toISOString().split('T')[0],
-      event_date: extracted.event_date,
       shop_id: shop?.uuid ?? null,
-      is_hidden: true,
     }])
 
   if (insertError) {
-    logger.error('Failed to insert event', { error: insertError.message })
-    return NextResponse.json({ error: 'Failed to stage event' }, { status: 500 })
+    logger.error('Failed to insert update', { error: insertError.message })
+    return NextResponse.json({ error: 'Failed to save update' }, { status: 500 })
   }
 
   return NextResponse.json({
     extracted,
     shop_matched: shop ? { name: shop.name, neighborhood: shop.neighborhood } : null,
-    message: 'Staged in events with is_hidden=true. Set to false in Supabase Studio to publish.',
+    message: 'Inserted into updates and live immediately.',
   }, { status: 201 })
 }
