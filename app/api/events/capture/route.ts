@@ -114,7 +114,7 @@ export async function POST(request: Request) {
 
   if (insertError) {
     logger.error('Failed to insert event', { error: insertError.message })
-    return NextResponse.json({ error: 'Failed to stage event' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to stage event', detail: insertError.message }, { status: 500 })
   }
 
   return NextResponse.json({
