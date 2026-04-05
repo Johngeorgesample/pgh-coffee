@@ -13,7 +13,7 @@ interface ExtractedEvent {
   description: string
   event_date: string | null
   external_url: string | null
-  tags: string[]
+  type: string
 }
 
 async function extractEventFromImage(base64Image: string, mediaType: string): Promise<ExtractedEvent> {
@@ -43,7 +43,7 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
   "description": "post body text, cleaned up and readable",
   "event_date": "YYYY-MM-DD if a specific event date is mentioned, otherwise null",
   "external_url": "any external link visible in the post such as a ticket or menu link, otherwise null",
-  "tags": ["pick the most relevant from: event, opening, closure, temporary closure, coming soon, seasonal, menu, offering"]
+  "type": "pick the single most relevant from: event, opening, closure, temporary closure, coming soon, seasonal, menu, offering"
 }`,
           },
         ],
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
       title: extracted.title,
       description: extracted.description,
       url: extracted.external_url,
-      tags: extracted.tags,
+      type: extracted.type,
       post_date: new Date().toISOString().split('T')[0],
       event_date: extracted.event_date,
       shop_id: shop?.uuid ?? null,
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
 
   if (insertError) {
     logger.error('Failed to insert event', { error: insertError.message })
-    return NextResponse.json({ error: 'Failed to stage event', detail: insertError.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to stage event' }, { status: 500 })
   }
 
   return NextResponse.json({
