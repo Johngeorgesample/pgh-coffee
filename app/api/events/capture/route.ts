@@ -76,14 +76,22 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData()
-  const imageFile = formData.get('image') as File | null
+  const imageFile = formData.get('image') as File | string | null
 
   if (!imageFile) {
     return NextResponse.json({ error: 'No image provided' }, { status: 400 })
   }
 
-  const mediaType = imageFile.type || 'image/jpeg'
-  const base64Image = Buffer.from(await imageFile.arrayBuffer()).toString('base64')
+  let base64Image: string
+  let mediaType: string
+
+  if (typeof imageFile === 'string') {
+    base64Image = imageFile.replace(/^data:image\/\w+;base64,/, '')
+    mediaType = 'image/jpeg'
+  } else {
+    mediaType = imageFile.type || 'image/jpeg'
+    base64Image = Buffer.from(await imageFile.arrayBuffer()).toString('base64')
+  }
 
   let extracted: ExtractedPost
   try {
