@@ -83,13 +83,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No image provided', keys, contentType: request.headers.get('content-type') }, { status: 400 })
   }
 
-  // Temp debug: return info about what was received
-  return NextResponse.json({
-    debug: true,
+  const debugInfo = {
     keys,
     imageType: typeof imageFile,
     isFile: imageFile instanceof File,
     fileType: imageFile instanceof File ? imageFile.type : null,
     fileSize: imageFile instanceof File ? imageFile.size : (typeof imageFile === 'string' ? (imageFile as string).length : null),
-  })
+    constructorName: Object.getPrototypeOf(imageFile)?.constructor?.name ?? 'unknown',
+  }
+  console.error('CAPTURE DEBUG:', JSON.stringify(debugInfo))
+  return NextResponse.json({ debug: true, ...debugInfo })
 }
