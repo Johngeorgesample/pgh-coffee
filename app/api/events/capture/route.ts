@@ -75,22 +75,94 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 })
   }
 
-  const formData = await request.formData()
-  const keys = Array.from(formData.keys())
-  const imageFile = formData.get('image')
+  const contentType = request.headers.get('content-type') ?? ''
+  let base64Image: string
+  let mediaType: string
 
-  if (!imageFile) {
-    return NextResponse.json({ error: 'No image provided', keys, contentType: request.headers.get('content-type') }, { status: 400 })
+  if (contentType.startsWith('multipart/form-data')) {
+    const formData = await request.formData()
+    const imageFile = formData.get('image')
+    if (!imageFile || !(imageFile instanceof File)) {
+      return NextResponse.json({ error: 'No image provided' }, { status: 400 })
+    }
+    mediaType = imageFile.type || 'image/jpeg'
+    base64Image = Buffer.from(await imageFile.arrayBuffer()).toString('base64')
+  } else {
+    // Raw binary body (iOS Shortcuts with File body type)
+    const buffer = await request.arrayBuffer()
+    if (!buffer.byteLength) {
+      return NextResponse.json({ error: 'No image provided' }, { status: 400 })
+    }
+    mediaType = contentType || 'image/jpeg'
+    base64Image = Buffer.from(buffer).toString('base64')
   }
 
-  const debugInfo = {
-    keys,
-    imageType: typeof imageFile,
-    isFile: imageFile instanceof File,
-    fileType: imageFile instanceof File ? imageFile.type : null,
-    fileSize: imageFile instanceof File ? imageFile.size : (typeof imageFile === 'string' ? (imageFile as string).length : null),
-    constructorName: Object.getPrototypeOf(imageFile)?.constructor?.name ?? 'unknown',
+  let extracted: ExtractedPost
+  try {
+    extracted = await extractPostFromImage(base64Image, mediaType)
+  } catch (error) {
+    logger.error('Failed to extract post from image', { error: String(error) })
+    return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
-  console.error('CAPTURE DEBUG:', JSON.stringify(debugInfo))
-  return NextResponse.json({ debug: true, ...debugInfo })
+
+  const { data: shops } = await supabase
+    .from('shops')
+    .select('uuid, name, neighborhood')
+    .ilike('name', `%${extracted.shop_name}%`)
+    .limit(5)
+
+  const shop = shops?.[0] ?? null
+  const postDate = new Date().toISOString().split('T')[0]
+  const shopId = shop?.uuid ?? null
+
+  let insertError
+
+  if (extracted.table === 'events') {
+    const { error } = await supabase
+      .from('events')
+      .insert([{
+        title: extracted.title,
+        description: extracted.description,
+        url: extracted.external_url,
+        type: extracted.type,
+        post_date: postDate,
+        event_date: extracted.event_date,
+        shop_id: shopId,
+        is_hidden: true,
+      }])
+      .select()
+      .single()
+    insertError = error
+  } else {
+    const { error } = await supabase
+      .from('updates')
+      .insert([{
+        title: extracted.title,
+        description: extracted.description,
+        url: extracted.external_url,
+        type: extracted.type,
+        tags: extracted.tags,
+        post_date: postDate,
+        event_date: extracted.event_date,
+        shop_id: shopId,
+      }])
+      .select()
+      .single()
+    insertError = error
+  }
+
+  if (insertError) {
+    logger.error('Failed to insert post', { error: insertError.message })
+    return NextResponse.json({ error: 'Failed to stage post' }, { status: 500 })
+  }
+
+  const message = extracted.table === 'events'
+    ? 'Staged in events with is_hidden=true. Set to false in Supabase Studio to publish.'
+    : 'Inserted into updates and live immediately.'
+
+  return NextResponse.json({
+    extracted,
+    shop_matched: shop ? { name: shop.name, neighborhood: shop.neighborhood } : null,
+    message,
+  }, { status: 201 })
 }
