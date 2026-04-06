@@ -88,6 +88,7 @@ export async function getShopCandidates(base64Image: string, mediaType: string):
 
   const result = await response.json()
   const shopName = result.content[0].text.trim()
+  console.log(`[capture] shop name from first pass: "${shopName}"`)
 
   const { data } = await supabase
     .from('shops')
@@ -95,6 +96,7 @@ export async function getShopCandidates(base64Image: string, mediaType: string):
     .ilike('name', `%${shopName}%`)
     .limit(10)
 
+  console.log(`[capture] candidates: ${JSON.stringify(data?.map(s => s.name) ?? [])}`)
   return data ?? []
 }
 
