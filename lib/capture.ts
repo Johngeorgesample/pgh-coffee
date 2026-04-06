@@ -107,3 +107,21 @@ export function validateShopUuid(candidates: Shop[], uuid: string | null): Shop 
   if (!uuid) return null
   return candidates.find(s => s.uuid === uuid) ?? null
 }
+
+export async function getRoasterId(shopUuid: string): Promise<string | null> {
+  const { data: shop } = await supabase
+    .from('shops')
+    .select('company_id')
+    .eq('uuid', shopUuid)
+    .single()
+
+  if (!shop?.company_id) return null
+
+  const { data: roaster } = await supabase
+    .from('roaster')
+    .select('id')
+    .eq('company_id', shop.company_id)
+    .single()
+
+  return roaster?.id ?? null
+}

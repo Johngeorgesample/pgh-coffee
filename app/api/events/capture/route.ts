@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { getImageData, getShopCandidates, buildShopContext, validateShopUuid, callAnthropicVision, supabase } from '@/lib/capture'
+import { getImageData, getShopCandidates, buildShopContext, validateShopUuid, callAnthropicVision, getRoasterId, supabase } from '@/lib/capture'
 
 interface ExtractedEvent {
   shop_name: string
@@ -21,7 +21,7 @@ function buildPrompt(shopContext: string): string {
   "description": "post body text, cleaned up and readable",
   "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
-  "type": "pick the single most relevant from: event, seasonal, coming soon"
+  "type": "pick the single most relevant from: FIX THESE, event, seasonal, coming soon"
 }${shopContext}`
 }
 
@@ -55,6 +55,7 @@ export async function POST(request: Request) {
   }
 
   const shop = validateShopUuid(shopCandidates, extracted.shop_uuid)
+  const roasterId = shop ? await getRoasterId(shop.uuid) : null
 
   const { error: insertError } = await supabase
     .from('events')
@@ -66,6 +67,7 @@ export async function POST(request: Request) {
       post_date: new Date().toISOString().split('T')[0],
       event_date: extracted.event_date,
       shop_id: shop?.uuid ?? null,
+      roaster_id: roasterId,
       is_hidden: true,
     }])
 
