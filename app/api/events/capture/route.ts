@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-import { getImageData, getShopCandidates, buildShopContext, validateShopUuid, type Shop } from '@/lib/capture'
-
-const supabase = createClient(
-  process.env.SUPABASE_URL as string,
-  process.env.SUPABASE_ANON_KEY as string
-)
+import { getImageData, getShopCandidates, buildShopContext, validateShopUuid, callAnthropicVision, supabase } from '@/lib/capture'
 
 interface ExtractedEvent {
   shop_name: string
@@ -18,27 +12,8 @@ interface ExtractedEvent {
   type: string
 }
 
-async function extractEventFromImage(base64Image: string, mediaType: string, shopCandidates: Shop[]): Promise<ExtractedEvent> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': process.env.ANTHROPIC_API_KEY as string,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'image',
-            source: { type: 'base64', media_type: mediaType, data: base64Image },
-          },
-          {
-            type: 'text',
-            text: `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
+function buildPrompt(shopContext: string): string {
+  return `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
@@ -47,21 +22,7 @@ async function extractEventFromImage(base64Image: string, mediaType: string, sho
   "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
   "type": "pick the single most relevant from: event, seasonal, coming soon"
-}${buildShopContext(shopCandidates)}`,
-          },
-        ],
-      }],
-    }),
-  })
-
-  if (!response.ok) {
-    const body = await response.text()
-    throw new Error(`Anthropic API error ${response.status}: ${body}`)
-  }
-
-  const result = await response.json()
-  const text = result.content[0].text.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
-  return JSON.parse(text) as ExtractedEvent
+}${shopContext}`
 }
 
 export async function POST(request: Request) {
@@ -83,7 +44,11 @@ export async function POST(request: Request) {
 
   let extracted: ExtractedEvent
   try {
-    extracted = await extractEventFromImage(imageData.base64Image, imageData.mediaType, shopCandidates)
+    extracted = await callAnthropicVision<ExtractedEvent>(
+      buildPrompt(buildShopContext(shopCandidates)),
+      imageData.base64Image,
+      imageData.mediaType,
+    )
   } catch (error) {
     logger.error('Failed to extract event from image', { error: String(error) })
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
