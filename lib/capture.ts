@@ -103,12 +103,12 @@ export function buildShopContext(candidates: Shop[]): string {
   return `\nThe following shops are in our database — pick the best match and return its uuid, or null if none fit:\n${candidates.map(s => `- "${s.name}" (${s.neighborhood}) — uuid: ${s.uuid}`).join('\n')}`
 }
 
-export function validateShopUuid(candidates: Shop[], uuid: string | null): Shop | null {
+export function validateShopUUID(candidates: Shop[], uuid: string | null): Shop | null {
   if (!uuid) return null
   return candidates.find(s => s.uuid === uuid) ?? null
 }
 
-export async function getRoasterId(shopUuid: string): Promise<string | null> {
+export async function getRoasterID(shopUuid: string): Promise<string | null> {
   const { data: shop } = await supabase
     .from('shops')
     .select('company_id')

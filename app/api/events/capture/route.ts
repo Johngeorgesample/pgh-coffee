@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { getImageData, getShopCandidates, buildShopContext, validateShopUuid, callAnthropicVision, getRoasterId, supabase } from '@/lib/capture'
+import { getImageData, getShopCandidates, buildShopContext, validateShopUUID, callAnthropicVision, getRoasterID, supabase } from '@/lib/capture'
 
 interface ExtractedEvent {
   shop_name: string
@@ -54,8 +54,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
-  const shop = validateShopUuid(shopCandidates, extracted.shop_uuid)
-  const roasterId = shop ? await getRoasterId(shop.uuid) : null
+  const shop = validateShopUUID(shopCandidates, extracted.shop_uuid)
+  const roasterId = shop ? await getRoasterID(shop.uuid) : null
 
   const { error: insertError } = await supabase
     .from('events')
