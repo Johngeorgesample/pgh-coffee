@@ -21,7 +21,7 @@ function buildPrompt(shopContext: string): string {
   "description": "post body text, cleaned up and readable",
   "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
-  "type": "pick the single most relevant from: FIX THESE, event, seasonal, coming soon"
+  "type": "pick the single most relevant from: class, community event, event, market, pop-up, special event, talk / lecture, tasting, throwdown, workshop"
 }${shopContext}`
 }
 
@@ -68,7 +68,6 @@ export async function POST(request: Request) {
       event_date: extracted.event_date,
       shop_id: shop?.uuid ?? null,
       roaster_id: roasterId,
-      is_hidden: true,
     }])
 
   if (insertError) {
@@ -79,6 +78,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     extracted,
     shop_matched: shop ? { name: shop.name, neighborhood: shop.neighborhood } : null,
-    message: 'Staged in events with is_hidden=true. Set to false in Supabase Studio to publish.',
+    message: 'Inserted into events.',
   }, { status: 201 })
 }
