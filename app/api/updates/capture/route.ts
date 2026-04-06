@@ -2,26 +2,26 @@ import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { getImageData, getShopCandidates, buildShopContext, validateShopUUID, callAnthropicVision, getRoasterID, supabase } from '@/lib/capture'
 
-interface ExtractedEvent {
+interface ExtractedUpdate {
   shop_name: string
   shop_uuid: string | null
   title: string
   description: string
-  event_date: string | null
   external_url: string | null
   type: string
+  tags: string[]
 }
 
 function buildPrompt(shopContext: string): string {
-  return `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
+  return `This is an Instagram post from a Pittsburgh coffee shop sharing a general update (new menu, hours change, opening, closure, new offering, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
-  "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
+  "title": "concise update title (e.g. Summer Menu Launch, New Hours, Temporary Closure)",
   "description": "post body text, cleaned up and readable",
-  "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
-  "external_url": "any ticket or registration link visible in the post, otherwise null",
-  "type": "pick the single most relevant from: class, community event, event, market, pop-up, special event, talk / lecture, tasting, throwdown, workshop"
+  "external_url": "any relevant link visible in the post such as a menu or ordering link, otherwise null",
+  "type": "pick the single most relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering",
+  "tags": ["pick all relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering"]
 }${shopContext}`
 }
 
@@ -42,15 +42,15 @@ export async function POST(request: Request) {
 
   const shopCandidates = await getShopCandidates(imageData.base64Image, imageData.mediaType)
 
-  let extracted: ExtractedEvent
+  let extracted: ExtractedUpdate
   try {
-    extracted = await callAnthropicVision<ExtractedEvent>(
+    extracted = await callAnthropicVision<ExtractedUpdate>(
       buildPrompt(buildShopContext(shopCandidates)),
       imageData.base64Image,
       imageData.mediaType,
     )
   } catch (error) {
-    logger.error('Failed to extract event from image', { error: String(error) })
+    logger.error('Failed to extract update from image', { error: String(error) })
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
@@ -58,26 +58,26 @@ export async function POST(request: Request) {
   const roasterId = shop ? await getRoasterID(shop.uuid) : null
 
   const { error: insertError } = await supabase
-    .from('events')
+    .from('updates')
     .insert([{
       title: extracted.title,
       description: extracted.description,
       url: extracted.external_url,
       type: extracted.type,
+      tags: extracted.tags,
       post_date: new Date().toISOString().split('T')[0],
-      event_date: extracted.event_date,
       shop_id: shop?.uuid ?? null,
       roaster_id: roasterId,
     }])
 
   if (insertError) {
-    logger.error('Failed to insert event', { error: insertError.message })
-    return NextResponse.json({ error: 'Failed to stage event' }, { status: 500 })
+    logger.error('Failed to insert update', { error: insertError.message })
+    return NextResponse.json({ error: 'Failed to save update' }, { status: 500 })
   }
 
   return NextResponse.json({
     extracted,
     shop_matched: shop ? { name: shop.name, neighborhood: shop.neighborhood } : null,
-    message: 'Inserted into events.',
+    message: 'Inserted into updates and live immediately.',
   }, { status: 201 })
 }
