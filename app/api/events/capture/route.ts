@@ -7,9 +7,15 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY as string
 )
 
+interface Shop {
+  uuid: string
+  name: string
+  neighborhood: string
+}
+
 interface ExtractedEvent {
   shop_name: string
-  neighborhood: string | null
+  shop_uuid: string | null
   title: string
   description: string
   event_date: string | null
@@ -17,7 +23,11 @@ interface ExtractedEvent {
   type: string
 }
 
-async function extractEventFromImage(base64Image: string, mediaType: string): Promise<ExtractedEvent> {
+async function extractEventFromImage(base64Image: string, mediaType: string, shopCandidates: Shop[]): Promise<ExtractedEvent> {
+  const shopContext = shopCandidates.length > 0
+    ? `\nThe following shops are in our database — pick the best match and return its uuid, or null if none fit:\n${shopCandidates.map(s => `- "${s.name}" (${s.neighborhood}) — uuid: ${s.uuid}`).join('\n')}`
+    : ''
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -40,13 +50,13 @@ async function extractEventFromImage(base64Image: string, mediaType: string): Pr
             text: `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
-  "neighborhood": "Pittsburgh neighborhood where the shop is located if mentioned or visible (e.g. South Side, Lawrenceville, Downtown), otherwise null",
+  "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
   "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
   "description": "post body text, cleaned up and readable",
   "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
   "type": "pick the single most relevant from: event, seasonal, coming soon"
-}`,
+}${shopContext}`,
           },
         ],
       }],
@@ -84,6 +94,15 @@ async function getImageData(request: Request): Promise<{ base64Image: string; me
   }
 }
 
+async function getShopCandidates(shopName: string): Promise<Shop[]> {
+  const { data } = await supabase
+    .from('shops')
+    .select('uuid, name, neighborhood')
+    .ilike('name', `%${shopName}%`)
+    .limit(10)
+  return data ?? []
+}
+
 export async function POST(request: Request) {
   const secret = request.headers.get('x-capture-secret')
   if (secret !== process.env.CAPTURE_SECRET) {
@@ -99,26 +118,44 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No image provided' }, { status: 400 })
   }
 
+  // First pass: extract just the shop name to look up candidates
+  const firstPass = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': process.env.ANTHROPIC_API_KEY as string,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 64,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: imageData.mediaType, data: imageData.base64Image } },
+          { type: 'text', text: 'What is the name of the coffee shop in this Instagram post? Reply with only the shop name, nothing else.' },
+        ],
+      }],
+    }),
+  })
+
+  let shopCandidates: Shop[] = []
+  if (firstPass.ok) {
+    const firstPassResult = await firstPass.json()
+    const shopName = firstPassResult.content[0].text.trim()
+    shopCandidates = await getShopCandidates(shopName)
+  }
+
   let extracted: ExtractedEvent
   try {
-    extracted = await extractEventFromImage(imageData.base64Image, imageData.mediaType)
+    extracted = await extractEventFromImage(imageData.base64Image, imageData.mediaType, shopCandidates)
   } catch (error) {
     logger.error('Failed to extract event from image', { error: String(error) })
     return NextResponse.json({ error: 'Failed to analyze image' }, { status: 500 })
   }
 
-  const { data: shops } = await supabase
-    .from('shops')
-    .select('uuid, name, neighborhood')
-    .ilike('name', `%${extracted.shop_name}%`)
-    .limit(10)
-
-  const shop = (() => {
-    if (!shops?.length) return null
-    if (shops.length === 1 || !extracted.neighborhood) return shops[0]
-    const hint = extracted.neighborhood.toLowerCase()
-    return shops.find(s => s.neighborhood?.toLowerCase().includes(hint)) ?? shops[0]
-  })()
+  // Validate the returned uuid is actually one of the candidates
+  const shop = shopCandidates.find(s => s.uuid === extracted.shop_uuid) ?? null
 
   const { error: insertError } = await supabase
     .from('events')
