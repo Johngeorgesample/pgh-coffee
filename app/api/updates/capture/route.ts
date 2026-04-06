@@ -7,18 +7,21 @@ interface ExtractedUpdate {
   shop_uuid: string | null
   title: string
   description: string
+  event_date: string | null
   external_url: string | null
   type: string
   tags: string[]
 }
 
 function buildPrompt(shopContext: string): string {
+  const year = new Date().getFullYear()
   return `This is an Instagram post from a Pittsburgh coffee shop sharing a general update (new menu, hours change, opening, closure, new offering, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
   "title": "concise update title (e.g. Summer Menu Launch, New Hours, Temporary Closure)",
   "description": "post body text, cleaned up and readable",
+  "event_date": "YYYY-MM-DD if a relevant date is mentioned. If no year is shown, assume ${year}. Null if no date is mentioned.",
   "external_url": "any relevant link visible in the post such as a menu or ordering link, otherwise null",
   "type": "pick the single most relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering",
   "tags": ["pick all relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering"]
@@ -65,6 +68,7 @@ export async function POST(request: Request) {
       url: extracted.external_url,
       type: extracted.type,
       tags: extracted.tags,
+      event_date: extracted.event_date,
       post_date: new Date().toISOString().split('T')[0],
       shop_id: shop?.uuid ?? null,
       roaster_id: roasterId,

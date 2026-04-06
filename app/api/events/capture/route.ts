@@ -13,13 +13,14 @@ interface ExtractedEvent {
 }
 
 function buildPrompt(shopContext: string): string {
+  const year = new Date().getFullYear()
   return `This is an Instagram post from a Pittsburgh coffee shop announcing a specific event (class, tasting, pop-up, live music, etc.). Extract details and respond ONLY with valid JSON, no other text:
 {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
   "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
   "description": "post body text, cleaned up and readable",
-  "event_date": "YYYY-MM-DD if a specific date is mentioned, otherwise null",
+  "event_date": "YYYY-MM-DD if a date is mentioned. If no year is shown, assume ${year}. Null if no date is mentioned.",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
   "type": "pick the single most relevant from: class, community event, event, market, pop-up, special event, talk / lecture, tasting, throwdown, workshop"
 }${shopContext}`
