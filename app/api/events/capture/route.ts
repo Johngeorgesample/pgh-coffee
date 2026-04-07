@@ -19,7 +19,7 @@ function buildPrompt(shopContext: string): string {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
   "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
-  "description": "post body text, cleaned up and readable",
+  "description": "post body text, cleaned up and readable. Replace any first-person language (we, I, our, my) with the shop's name",
   "event_date": "YYYY-MM-DD if a date is mentioned. If no year is shown, assume ${year}. Null if no date is mentioned.",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
   "type": "pick the single most relevant from: class, community event, event, market, pop-up, special event, talk / lecture, tasting, throwdown, workshop"

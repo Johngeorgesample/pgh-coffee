@@ -20,7 +20,7 @@ function buildPrompt(shopContext: string): string {
   "shop_name": "coffee shop name shown or implied in the post",
   "shop_uuid": "uuid of the best matching shop from the list below, or null if no match",
   "title": "concise update title (e.g. Summer Menu Launch, New Hours, Temporary Closure)",
-  "description": "post body text, cleaned up and readable",
+  "description": "post body text, cleaned up and readable. Replace any first-person language (we, I, our, my) with the shop's name",
   "event_date": "YYYY-MM-DD if a relevant date is mentioned. If no year is shown, assume ${year}. Null if no date is mentioned.",
   "external_url": "any relevant link visible in the post such as a menu or ordering link, otherwise null",
   "type": "pick the single most relevant from: opening, closure, temporary closure, coming soon, seasonal, menu, offering",
