@@ -5,12 +5,11 @@
  * runtime and PYROSCOPE_SERVER_ADDRESS is configured.
  *
  * Required environment variables:
- *   PYROSCOPE_SERVER_ADDRESS      – Pyroscope / Grafana Cloud Profiles URL
+ *   PYROSCOPE_URL      – Pyroscope / Grafana Cloud Profiles URL
  *
  * Optional environment variables:
- *   PYROSCOPE_APPLICATION_NAME    – app label sent with profiles (default: "pgh-coffee")
- *   PYROSCOPE_BASIC_AUTH_USER     – Grafana Cloud instance ID for basic auth
- *   PYROSCOPE_BASIC_AUTH_PASSWORD – Grafana Cloud API token for basic auth
+ *   PYROSCOPE_USER     – Grafana Cloud instance ID for basic auth
+ *   PYROSCOPE_PASSWORD – Grafana Cloud API token for basic auth
  *
  * Note: @pyroscope/nodejs depends on @datadog/pprof, a native module compiled
  * at install time. Verify your deployment environment supports native addons
@@ -18,7 +17,7 @@
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return
-  if (!process.env.PYROSCOPE_SERVER_ADDRESS) return
+  if (!process.env.PYROSCOPE_URL) return
 
   let logger: Awaited<typeof import('@/lib/logger')>['logger'] | undefined
 
@@ -29,15 +28,15 @@ export async function register() {
     ])
     logger = _logger
 
-    if (!process.env.PYROSCOPE_BASIC_AUTH_USER || !process.env.PYROSCOPE_BASIC_AUTH_PASSWORD) {
-      logger.warn('Pyroscope: PYROSCOPE_BASIC_AUTH_USER or PYROSCOPE_BASIC_AUTH_PASSWORD is not set — connecting without authentication')
+    if (!process.env.PYROSCOPE_USER || !process.env.PYROSCOPE_PASSWORD) {
+      logger.warn('Pyroscope: PYROSCOPE_USER or PYROSCOPE_PASSWORD is not set — connecting without authentication')
     }
 
     init({
-      appName: process.env.PYROSCOPE_APPLICATION_NAME ?? 'pgh-coffee',
-      serverAddress: process.env.PYROSCOPE_SERVER_ADDRESS,
-      basicAuthUser: process.env.PYROSCOPE_BASIC_AUTH_USER,
-      basicAuthPassword: process.env.PYROSCOPE_BASIC_AUTH_PASSWORD,
+      appName: 'pgh-coffee',
+      serverAddress: process.env.PYROSCOPE_URL,
+      basicAuthUser: process.env.PYROSCOPE_USER,
+      basicAuthPassword: process.env.PYROSCOPE_PASSWORD,
       tags: { env: process.env.NODE_ENV ?? 'development' },
     })
 
