@@ -11,9 +11,9 @@
  *   PYROSCOPE_USER     – Grafana Cloud instance ID for basic auth
  *   PYROSCOPE_PASSWORD – Grafana Cloud API token for basic auth
  *
- * Note: @pyroscope/nodejs depends on @datadog/pprof, a native module compiled
- * at install time. Verify your deployment environment supports native addons
- * (e.g. Netlify Functions) before enabling.
+ * Note: @pyroscope/nodejs depends on @datadog/pprof, a native module. It must
+ * be listed under [functions] external_node_modules in netlify.toml to prevent
+ * the Next.js bundler from inlining it and breaking the native binary.
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return
