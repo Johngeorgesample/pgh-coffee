@@ -5,6 +5,7 @@ export type TagKey =
   | 'closure'
   | 'temporary closure'
   | 'coming soon'
+  | 'moving'
   | 'event'
   | 'seasonal'
   | 'menu'
@@ -29,6 +30,7 @@ export const TAG_LABELS: Record<TagKey, string> = {
   closure: 'Closing',
   'temporary closure': 'Temporary Closure',
   'coming soon': 'Coming Soon',
+  moving: 'Moving',
   event: 'Event',
   seasonal: 'Seasonal',
   menu: 'Menu Update',
@@ -51,6 +53,10 @@ export const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
   'coming soon': {
     badge: 'bg-blue-50 text-blue-600 border-blue-100',
     border: 'border-blue-500',
+  },
+  moving: {
+    badge: 'bg-sky-50 text-sky-600 border-sky-100',
+    border: 'border-sky-500',
   },
   event: {
     badge: 'bg-amber-50 text-amber-600 border-amber-100',
