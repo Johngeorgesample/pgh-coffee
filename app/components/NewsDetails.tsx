@@ -62,6 +62,20 @@ export const NewsDetails = ({ id }: { id: string }) => {
     }
   }
 
+  const handleRoasterClick = () => {
+    if (!news?.roaster) return
+    plausible('NewsDetailsRoasterClick', {
+      props: { newsId: news.id, newsTitle: news.title, roasterSlug: news.roaster.slug },
+    })
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    params.delete('news')
+    params.set('roaster', news.roaster.slug)
+    url.search = params.toString()
+    window.history.pushState(null, '', url.toString())
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+
   const handleExternalLink = () => {
     if (!news?.url) return
     plausible('NewsExternalLinkClick', {
@@ -159,6 +173,26 @@ export const NewsDetails = ({ id }: { id: string }) => {
                   {news.shop.neighborhood && (
                     <div className="text-sm text-gray-500 mt-0.5">{news.shop.neighborhood}</div>
                   )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Roaster */}
+          {news.roaster && (
+            <div className="flex items-start gap-3">
+              <div className="bg-yellow-100 p-2.5 rounded-lg">
+                <svg className="w-4 h-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
+                  Roaster
+                </span>
+                <button onClick={handleRoasterClick} className="text-left hover:opacity-80 transition-opacity">
+                  <div className="text-slate-900 font-bold text-[15px]">{news.roaster.name}</div>
                 </button>
               </div>
             </div>

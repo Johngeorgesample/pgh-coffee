@@ -1,4 +1,4 @@
-import { DbShop } from './shop-types'
+import { DbShop, RoasterRef } from './shop-types'
 
 export type TagKey =
   | 'opening'
@@ -20,6 +20,8 @@ export type NewsItem = {
   event_date?: string | null
   shop_id?: string
   shop?: DbShop
+  roaster_id?: string | null
+  roaster?: RoasterRef | null
 }
 
 export const TAG_LABELS: Record<TagKey, string> = {

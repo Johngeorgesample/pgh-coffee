@@ -3,6 +3,7 @@
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
+import { RoasterRef } from '@/types/shop-types'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from './EventDetails'
 
@@ -41,10 +42,7 @@ export type EventCardData = {
     name: string
     neighborhood: string
   }
-  roaster?: {
-    name: string
-    slug: string
-  }
+  roaster?: Pick<RoasterRef, 'name' | 'slug'>
 }
 
 interface EventCardProps {
