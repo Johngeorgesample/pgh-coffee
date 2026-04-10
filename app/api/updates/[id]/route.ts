@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchUpdate = async (id: string) => {
   const { data, error } = await supabase
     .from('updates')
-    .select('*, shop:shops(*, company:company_id(*))')
+    .select('*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)')
     .eq('id', id)
     .single()
 

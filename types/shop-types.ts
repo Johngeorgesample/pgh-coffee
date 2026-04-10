@@ -56,6 +56,12 @@ export interface TShop {
   }
 }
 
+export interface RoasterRef {
+  id: string
+  name: string
+  slug: string
+}
+
 export interface TList {
   id: string
   title: string
