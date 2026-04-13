@@ -12,7 +12,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   if (!shopParam || typeof shopParam !== 'string') {
     return {
       title: 'PGH Coffee',
-      description: 'Coffee shops in Pittsburgh, PA',
+      description: 'Explore independent coffee shops across Pittsburgh\'s neighborhoods — find your next favorite spot on the map.',
+      openGraph: {
+        title: 'PGH Coffee',
+        description: 'Explore independent coffee shops across Pittsburgh\'s neighborhoods — find your next favorite spot on the map.',
+      },
     }
   }
 
@@ -21,7 +25,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   if (!name || !neighborhood) {
     return {
       title: 'PGH Coffee',
-      description: 'Coffee shops in Pittsburgh, PA',
+      description: 'Explore independent coffee shops across Pittsburgh\'s neighborhoods — find your next favorite spot on the map.',
+      openGraph: {
+        title: 'PGH Coffee',
+        description: 'Explore independent coffee shops across Pittsburgh\'s neighborhoods — find your next favorite spot on the map.',
+      },
     }
   }
 
