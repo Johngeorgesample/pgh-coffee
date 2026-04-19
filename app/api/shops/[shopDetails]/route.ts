@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const getShop = async (name: string, neighborhood: string) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select('*, company:company_id(*), roaster:roaster_id(*)')
     .eq('name', name)
     .eq('neighborhood', neighborhood)
 
