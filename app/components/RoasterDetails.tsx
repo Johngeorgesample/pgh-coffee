@@ -5,7 +5,7 @@ import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import { useShopSelection } from '@/hooks'
+import LocationList from './LocationList'
 
 interface RoasterShop {
   name: string
@@ -34,8 +34,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
   const plausible = useAnalytics()
-  const { allShops } = useShopsStore()
-  const { handleShopSelect } = useShopSelection()
+  const { allShops, setOverrideShops } = useShopsStore()
 
   useEffect(() => {
     const fetchRoaster = async () => {
@@ -52,6 +51,14 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     }
     fetchRoaster()
   }, [slug, plausible])
+
+  useEffect(() => {
+    if (!roaster?.shops?.length || !allShops?.features) return
+    const uuids = new Set(roaster.shops.map(s => s.uuid))
+    const matched = allShops.features.filter(f => uuids.has(f.properties.uuid))
+    setOverrideShops({ type: 'FeatureCollection', features: matched })
+    return () => setOverrideShops(null)
+  }, [roaster, allShops, setOverrideShops])
 
   useEffect(() => {
     if (roaster?.slug) {
@@ -145,29 +152,16 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           </div>
         )}
 
-        {roaster.shops?.length > 0 && (
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">Where to find it</p>
-            <ul className="space-y-2">
-              {roaster.shops.map((shop) => {
-                const match = allShops?.features?.find(
-                  f => f.properties.uuid === shop.uuid
-                )
-                return (
-                  <li key={shop.uuid}>
-                    <button
-                      className="text-left text-sm text-stone-700 hover:text-amber-700 transition-colors"
-                      onClick={() => match && handleShopSelect(match)}
-                    >
-                      {shop.name}
-                      <span className="ml-1 text-stone-400">{shop.neighborhood}</span>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        )}
+        {roaster.shops?.length > 0 && (() => {
+          const uuids = new Set(roaster.shops.map(s => s.uuid))
+          const matched = allShops?.features?.filter(f => uuids.has(f.properties.uuid)) ?? []
+          return matched.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">Where to find it</p>
+              <LocationList coffeeShops={matched} />
+            </div>
+          )
+        })()}
       </div>
     </div>
   )
