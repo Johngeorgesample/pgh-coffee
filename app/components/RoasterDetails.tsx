@@ -144,20 +144,12 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           <p className="text-sm text-gray-600 mb-4">{roaster.description}</p>
         )}
 
-        {roaster.company && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Part of <span className="font-medium">{roaster.company.name}</span>
-            </p>
-          </div>
-        )}
-
         {roaster.shops?.length > 0 && (() => {
           const uuids = new Set(roaster.shops.map(s => s.uuid))
           const matched = allShops?.features?.filter(f => uuids.has(f.properties.uuid)) ?? []
           return matched.length > 0 && (
             <div className="mt-6 pt-4 border-t border-gray-200">
-              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">Where to find it</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">Served at</p>
               <LocationList coffeeShops={matched} />
             </div>
           )
