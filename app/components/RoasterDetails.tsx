@@ -4,6 +4,15 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
+import useShopsStore from '@/stores/coffeeShopsStore'
+import LocationList from './LocationList'
+
+interface RoasterShop {
+  name: string
+  neighborhood: string
+  photo: string | null
+  uuid: string
+}
 
 interface TRoaster {
   id: string
@@ -14,6 +23,7 @@ interface TRoaster {
   website: string | null
   instagram: string | null
   description: string | null
+  shops: RoasterShop[]
   company?: {
     name: string
     slug: string
@@ -24,6 +34,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
   const plausible = useAnalytics()
+  const { allShops, setOverrideShops } = useShopsStore()
 
   useEffect(() => {
     const fetchRoaster = async () => {
@@ -40,6 +51,14 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     }
     fetchRoaster()
   }, [slug, plausible])
+
+  useEffect(() => {
+    if (!roaster?.shops?.length || !allShops?.features) return
+    const uuids = new Set(roaster.shops.map(s => s.uuid))
+    const matched = allShops.features.filter(f => uuids.has(f.properties.uuid))
+    setOverrideShops({ type: 'FeatureCollection', features: matched })
+    return () => setOverrideShops(null)
+  }, [roaster, allShops, setOverrideShops])
 
   useEffect(() => {
     if (roaster?.slug) {
@@ -125,13 +144,16 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           <p className="text-sm text-gray-600 mb-4">{roaster.description}</p>
         )}
 
-        {roaster.company && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Part of <span className="font-medium">{roaster.company.name}</span>
-            </p>
-          </div>
-        )}
+        {roaster.shops?.length > 0 && (() => {
+          const uuids = new Set(roaster.shops.map(s => s.uuid))
+          const matched = allShops?.features?.filter(f => uuids.has(f.properties.uuid)) ?? []
+          return matched.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">Served at</p>
+              <LocationList coffeeShops={matched} />
+            </div>
+          )
+        })()}
       </div>
     </div>
   )
