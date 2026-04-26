@@ -1,3 +1,8 @@
+[functions]
+  # @pyroscope/nodejs depends on @datadog/pprof, a native addon that must not
+  # be bundled by the Next.js bundler.
+  external_node_modules = ["@pyroscope/nodejs", "@datadog/pprof"]
+
 [[redirects]]
   from = "/js/script.js"
   to = "https://plausible.io/js/script.js"
