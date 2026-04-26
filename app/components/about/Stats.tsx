@@ -5,7 +5,7 @@ export default function Stats() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           <div>
             <div className="text-6xl md:text-7xl font-black text-black mb-4 tracking-tighter">
-              9,000+
+              10,000+
             </div>
             <p className="text-slate-500 font-medium uppercase tracking-widest text-sm">coffee lovers reached</p>
           </div>
