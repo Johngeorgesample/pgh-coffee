@@ -6,7 +6,8 @@ export function useCopyToClipboard() {
   const [showToast, setShowToast] = useState(false)
 
   const copyCurrentUrl = useCallback(async () => {
-    if (navigator.share) {
+    const isMobile = window.matchMedia('(pointer: coarse)').matches
+    if (isMobile && navigator.share) {
       try {
         await navigator.share({ url: window.location.href })
       } catch (err) {
