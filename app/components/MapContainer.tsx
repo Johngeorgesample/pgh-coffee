@@ -210,11 +210,9 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
 
         {showAllPopups &&
-          shopsInView
-            .filter(shop =>
-              shop.properties.uuid !== currentShop?.properties?.uuid
-            )
-            .map(shop => (
+          shopsInView.flatMap(shop => {
+            if (shop.properties.uuid === currentShop?.properties?.uuid) return []
+            return [
               <ShopPopup
                 key={shop.properties.uuid}
                 longitude={shop.geometry.coordinates[0]}
@@ -223,8 +221,9 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
                 neighborhood={shop.properties.neighborhood}
                 photo={shop.properties.photo || null}
                 onClick={() => handleShopSelect(shop)}
-              />
-            ))}
+              />,
+            ]
+          })}
 
         {popupInfo && !showAllPopups && (
           <ShopPopup

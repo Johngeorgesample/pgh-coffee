@@ -40,7 +40,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
 
 // Mock SearchBar component
 vi.mock('@/app/components/SearchBar', () => ({
-  default: ({ onClose }: any) => <div data-testid="search-bar">Search Bar</div>
+  default: () => <div data-testid="search-bar">Search Bar</div>
 }))
 
 beforeAll(() => {
@@ -73,15 +73,14 @@ describe('Panel Component', () => {
     },
   }
 
-  const mockEmitClose = vi.fn()
+  const mockOnPresentedChange = vi.fn()
   const mockHandlePanelContentClick = vi.fn()
 
   const defaultProps = {
     children: <div>Panel Content</div>,
     shop: mockShop,
-    panelIsOpen: true,
-    emitClose: mockEmitClose,
-    handlePanelContentClick: mockHandlePanelContentClick,
+    presented: true,
+    onPresentedChange: mockOnPresentedChange,
   }
 
   it('renders the panel content', () => {
@@ -92,7 +91,7 @@ describe('Panel Component', () => {
   it('supports interactions with child content', () => {
     render(
       <Panel {...defaultProps}>
-        <button onClick={() => mockHandlePanelContentClick(mockShop)}>Click Me</button>
+        <button type="button" onClick={() => mockHandlePanelContentClick(mockShop)}>Click Me</button>
       </Panel>,
     )
 

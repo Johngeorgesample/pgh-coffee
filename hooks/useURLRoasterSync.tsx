@@ -6,26 +6,17 @@ export const useURLRoasterSync = () => {
   const { setPanelContent } = usePanelStore()
 
   useEffect(() => {
-    const fetchRoasterFromURL = async () => {
+    const syncRoasterFromURL = () => {
       const params = new URLSearchParams(window.location.search)
       const roasterSlug = params.get('roaster')
 
-      if (!roasterSlug) {
-        return
-      }
+      if (!roasterSlug) return
 
-      try {
-        const res = await fetch(`/api/roasters/${roasterSlug}`)
-        if (!res.ok) throw new Error('Roaster not found')
-        await res.json()
-        setPanelContent(<RoasterDetails slug={roasterSlug} />, 'roaster')
-      } catch (e) {
-        console.error(e)
-      }
+      setPanelContent(<RoasterDetails slug={roasterSlug} />, 'roaster')
     }
 
-    fetchRoasterFromURL()
-    window.addEventListener('popstate', fetchRoasterFromURL)
-    return () => window.removeEventListener('popstate', fetchRoasterFromURL)
+    syncRoasterFromURL()
+    window.addEventListener('popstate', syncRoasterFromURL)
+    return () => window.removeEventListener('popstate', syncRoasterFromURL)
   }, [setPanelContent])
 }
