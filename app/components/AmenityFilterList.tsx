@@ -53,10 +53,11 @@ export const AmenityFilterList = () => {
       ))}
       {!isExpanded && (
         <button
+          type="button"
           className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-200"
           onClick={() => setIsExpanded(true)}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="size-5" />
           More
         </button>
       )}
