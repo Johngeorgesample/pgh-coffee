@@ -91,6 +91,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
             <input
               id="name"
               name="name"
+              aria-label="Name"
               type="text"
               defaultValue={shop.properties.name}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -104,6 +105,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
             <input
               id="address"
               name="address"
+              aria-label="Address"
               type="text"
               defaultValue={shop.properties.address}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -117,6 +119,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
             <input
               id="neighborhood"
               name="neighborhood"
+              aria-label="Neighborhood"
               type="text"
               defaultValue={shop.properties.neighborhood}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -130,6 +133,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
             <input
               id="website"
               name="website"
+              aria-label="Website"
               type="text"
               defaultValue={shop.properties.website}
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -147,7 +151,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
               isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
             }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? 'Submitting…' : 'Submit'}
           </button>
         </form>
       </div>

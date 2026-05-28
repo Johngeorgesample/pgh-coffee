@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { DISTANCE_UNITS } from '@/app/utils/distance'
 
 interface IProps {
   currentUnit: string
@@ -10,28 +11,27 @@ interface IProps {
   onUnitChange: (newUnit: string) => void
 }
 
-export const DISTANCE_UNITS = { Meters: 'Meters', Miles: 'Miles' }
-
 export default function DistanceUnitsDialog(props: IProps) {
-  const [selected, setSelected] = useState(props.currentUnit)
-
-  useEffect(() => {
-    if (props.isOpen) {
-      setSelected(props.currentUnit)
-    }
-  }, [props.isOpen, props.currentUnit])
+  const [pendingUnit, setPendingUnit] = useState<string | null>(null)
+  const selected = pendingUnit ?? props.currentUnit
 
   const handleSave = () => {
     props.onUnitChange(selected)
+    setPendingUnit(null)
+    props.handleClose()
+  }
+
+  const handleCancel = () => {
+    setPendingUnit(null)
     props.handleClose()
   }
 
   const handleUnitChange = (unit: string) => {
-    setSelected(unit)
+    setPendingUnit(unit)
   }
 
   return (
-    <Dialog open={props.isOpen} onClose={props.handleClose} className="relative z-10">
+    <Dialog open={props.isOpen} onClose={handleCancel} className="relative z-10">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in"
@@ -63,7 +63,8 @@ export default function DistanceUnitsDialog(props: IProps) {
                       id={unit}
                       name="distance-unit"
                       type="radio"
-                      className="h-4 w-4 border-gray-300 text-yellow-300 focus:ring-yellow-300"
+                      aria-label={unit}
+                      className="size-4 border-gray-300 text-yellow-300 focus:ring-yellow-300"
                       onChange={() => handleUnitChange(unit)}
                     />
                     <label htmlFor={unit} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
@@ -83,7 +84,7 @@ export default function DistanceUnitsDialog(props: IProps) {
               </button>
               <button
                 type="button"
-                onClick={props.handleClose}
+                onClick={handleCancel}
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
               >
                 Cancel

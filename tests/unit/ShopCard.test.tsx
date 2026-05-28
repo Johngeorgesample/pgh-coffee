@@ -1,6 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import ShopCard, { roundDistance, generateDistanceText } from '@/app/components/ShopCard'
+import ShopCard from '@/app/components/ShopCard'
+import { roundDistance, generateDistanceText } from '@/app/utils/distance'
 import type { TShop } from '@/types/shop-types'
 
 const handleShopSelectMock = vi.fn()
@@ -107,17 +108,15 @@ describe('ShopCard', () => {
     expect(bgElement?.style.backgroundImage).toBe(undefined)
   })
 
-  it('calls handleShopSelect when Enter key is pressed', () => {
+  it('calls handleShopSelect when clicked', () => {
     render(<ShopCard {...defaultProps} />)
-    const keyEvent = { key: 'Enter' }
-    fireEvent.keyDown(screen.getByRole('button'), keyEvent)
+    fireEvent.click(screen.getByRole('button'))
     expect(handleShopSelectMock).toHaveBeenCalledWith(mockShop)
   })
 
   it('has correct accessibility attributes', () => {
     render(<ShopCard {...defaultProps} />)
     const card = screen.getByRole('button')
-    expect(card.getAttribute('tabIndex')).toBe('0')
-    expect(card.getAttribute('role')).toBe('button')
+    expect(card.tagName).toBe('BUTTON')
   })
 })

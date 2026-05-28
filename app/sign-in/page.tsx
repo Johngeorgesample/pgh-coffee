@@ -1,6 +1,11 @@
 import { Suspense } from 'react'
 import SignInForm from './SignInForm'
 
+export const metadata = {
+  title: 'Sign In | Pittsburgh Coffee',
+  description: 'Sign in to your pgh.coffee account.',
+}
+
 export default function SignIn() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50 flex items-center justify-center py-12 px-4">

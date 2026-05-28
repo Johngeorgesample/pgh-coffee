@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -20,38 +21,45 @@ interface TRoaster {
   }
 }
 
+const fetchRoasterData = async (slug: string): Promise<TRoaster> => {
+  const response = await fetch(`/api/roasters/${slug}`)
+  return response.json()
+}
+
+const updateUrlForRoaster = (roasterSlug: string) => {
+  const url = new URL(window.location.href)
+  const params = new URLSearchParams(url.search)
+  params.delete('shop')
+  params.delete('company')
+  params.set('roaster', roasterSlug)
+  url.search = params.toString()
+  window.history.pushState(null, '', url.toString())
+}
+
 export const RoasterDetails = ({ slug }: { slug: string }) => {
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
   const plausible = useAnalytics()
 
   useEffect(() => {
-    const fetchRoaster = async () => {
-      try {
-        const response = await fetch(`/api/roasters/${slug}`)
-        const data = await response.json()
+    let cancelled = false
+    fetchRoasterData(slug)
+      .then(data => {
+        if (cancelled) return
         setRoaster(data)
         plausible('RoasterView', {
           props: { roasterName: data.name, roasterSlug: slug },
         })
-      } finally {
-        setLoading(false)
-      }
+        if (data?.slug) updateUrlForRoaster(data.slug)
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
     }
-    fetchRoaster()
   }, [slug, plausible])
-
-  useEffect(() => {
-    if (roaster?.slug) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.delete('company')
-      params.set('roaster', roaster.slug)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [roaster])
 
   if (loading) {
     return (
@@ -59,8 +67,8 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
         <div className="flex items-center justify-between mb-2">
           <div className="h-8 bg-gray-200 rounded w-48"></div>
           <div className="flex gap-2">
-            <div className="h-4 w-4 bg-gray-200 rounded"></div>
-            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+            <div className="size-4 bg-gray-200 rounded"></div>
+            <div className="size-4 bg-gray-200 rounded"></div>
           </div>
         </div>
         <div className="space-y-2 mb-4">
@@ -77,11 +85,14 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="px-6 lg:px-4 mt-20 lg:mt-16 flex flex-col">
         {roaster.logo && (
-          <div className="mb-4">
-            <img
+          <div className="mb-4 relative size-24">
+            <Image
               src={roaster.logo}
               alt={`${roaster.name} logo`}
-              className="h-24 w-24 object-contain"
+              className="object-contain"
+              fill
+              sizes="96px"
+              unoptimized
             />
           </div>
         )}
@@ -101,7 +112,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
                   })
                 }
               >
-                <Instagram className="h-4 w-4" />
+                <Instagram className="size-4" />
               </a>
             )}
             {roaster.website && (
@@ -115,7 +126,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
                   })
                 }
               >
-                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                <ArrowTopRightOnSquareIcon className="size-4" />
               </a>
             )}
           </div>

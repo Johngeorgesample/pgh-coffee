@@ -1,24 +1,26 @@
 'use client'
 
+import Image from 'next/image'
+import Link from 'next/link'
 import { useAuth } from '@/app/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import { User } from 'lucide-react'
 
 export default function AccountDetails() {
   const { user, loading, signOut } = useAuth()
-  const router = useRouter()
+  const { push, refresh } = useRouter()
 
   const handleSignOut = async () => {
     await fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed out' }) })
     await signOut()
-    router.push('/')
-    router.refresh()
+    push('/')
+    refresh()
   }
 
   if (loading) {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-gray-500">Loading…</p>
       </div>
     )
   }
@@ -27,12 +29,12 @@ export default function AccountDetails() {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <p className="text-gray-600 mb-4">You are not signed in.</p>
-        <a
+        <Link
           href="/sign-in"
           className="inline-block rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
         >
           Sign in
-        </a>
+        </Link>
       </div>
     )
   }
@@ -42,11 +44,18 @@ export default function AccountDetails() {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
+        <div className="size-16 bg-yellow-100 rounded-full flex items-center justify-center overflow-hidden relative">
           {profilePicture ? (
-            <img className="rounded-full" src={profilePicture} alt={user.email || 'Profile picture'} />
+            <Image
+              className="rounded-full"
+              src={profilePicture}
+              alt={user.email || 'Profile picture'}
+              fill
+              sizes="64px"
+              unoptimized
+            />
           ) : (
-            <User className="w-8 h-8 text-yellow-600" />
+            <User className="size-8 text-yellow-600" />
           )}
         </div>
         <div>
@@ -80,6 +89,7 @@ export default function AccountDetails() {
 
       <div className="border-t border-gray-200 mt-6 pt-6">
         <button
+          type="button"
           onClick={handleSignOut}
           className="w-fit rounded-lg py-3 px-4 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         >

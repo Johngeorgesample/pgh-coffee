@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TShop } from '@/types/shop-types'
-import { EventCardData } from '@/app/components/EventCard'
+import { EventCardData } from '@/types/event-types'
 import { NewsItem } from '@/types/news-types'
 
 interface ExploreState {

@@ -13,7 +13,7 @@ export default function JoinTheCommunity() {
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+            <div className="size-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
               <Store />
             </div>
             <h3 className="font-bold text-xl">Submit a Shop</h3>
@@ -27,7 +27,7 @@ export default function JoinTheCommunity() {
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+            <div className="size-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
               <MessagesSquare />
             </div>
             <h3 className="font-bold text-xl">Provide Feedback</h3>
@@ -41,7 +41,7 @@ export default function JoinTheCommunity() {
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
+            <div className="size-12 bg-yellow-300 rounded-xl flex items-center justify-center shrink-0">
               <Share2 />
             </div>
             <h3 className="font-bold text-xl">Spread the Word</h3>

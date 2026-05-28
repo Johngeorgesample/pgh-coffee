@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
 import { Check } from 'lucide-react'
 
@@ -10,14 +10,17 @@ interface CopyLinkToastProps {
 }
 
 export default function CopyLinkToast({ isOpen, onClose }: CopyLinkToastProps) {
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
-        onClose()
+        onCloseRef.current()
       }, 3000)
       return () => clearTimeout(timer)
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   return (
     <Transition show={isOpen}>
@@ -33,7 +36,7 @@ export default function CopyLinkToast({ isOpen, onClose }: CopyLinkToastProps) {
               leaveTo="opacity-0 translate-y-4"
             >
               <DialogPanel className="bg-stone-900 text-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-3">
-                <Check className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <Check className="size-5 text-green-400 flex-shrink-0" />
                 <p className="text-sm font-medium">Link copied to clipboard</p>
               </DialogPanel>
             </TransitionChild>

@@ -40,7 +40,7 @@ export default function ShopAmenities({ amenities, shopId }: IProps) {
 
       <p className="text-xs text-gray-700">
         Missing something?{' '}
-        <button aria-label="Report amenity" className="text-amber-700" onClick={handleOnClick}>
+        <button type="button" aria-label="Report amenity" className="text-amber-700" onClick={handleOnClick}>
           Let me know
         </button>
       </p>

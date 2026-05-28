@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import { mockAnimationsApi } from 'jsdom-testing-mocks'
 import HomeClient from '@/app/components/HomeClient'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
+import { DISTANCE_UNITS } from '@/app/utils/distance'
 
 beforeAll(() => {
   mockAnimationsApi()

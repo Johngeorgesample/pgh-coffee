@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import { TShop } from '@/types/shop-types'
-import { EventCard, type EventCardData } from '@/app/components/EventCard'
+import { EventCard } from '@/app/components/EventCard'
+import type { EventCardData } from '@/types/event-types'
 
 type EventEntry = {
   id: string
@@ -18,27 +19,57 @@ type EventEntry = {
   }
 }
 
+interface State {
+  events: EventEntry[]
+  loading: boolean
+}
+
+type Action =
+  | { type: 'LOAD_START' }
+  | { type: 'LOAD_SUCCESS'; events: EventEntry[] }
+  | { type: 'LOAD_ERROR' }
+
+const initialState: State = { events: [], loading: true }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'LOAD_START':
+      return { ...state, loading: true }
+    case 'LOAD_SUCCESS':
+      return { events: action.events, loading: false }
+    case 'LOAD_ERROR':
+      return { events: [], loading: false }
+    default:
+      return state
+  }
+}
+
+const loadEvents = async (shopId: string): Promise<EventEntry[]> => {
+  const res = await fetch(`/api/events?shop_id=${shopId}`)
+  if (!res.ok) return []
+  return res.json()
+}
+
 type Props = { shop: TShop }
 
 export const ShopEvents = ({ shop }: Props) => {
-  const [events, setEvents] = useState<EventEntry[]>([])
-  const [loading, setLoading] = useState(true)
+  const [{ events, loading }, dispatch] = useReducer(reducer, initialState)
   const shopId = shop.properties.uuid
 
   useEffect(() => {
     if (!shopId) return
-
-    setLoading(true)
-    fetch(`/api/events?shop_id=${shopId}`)
-      .then(res => res.ok ? res.json() : [])
+    let cancelled = false
+    dispatch({ type: 'LOAD_START' })
+    loadEvents(shopId)
       .then(data => {
-        setEvents(data)
-        setLoading(false)
+        if (!cancelled) dispatch({ type: 'LOAD_SUCCESS', events: data })
       })
       .catch(() => {
-        setEvents([])
-        setLoading(false)
+        if (!cancelled) dispatch({ type: 'LOAD_ERROR' })
       })
+    return () => {
+      cancelled = true
+    }
   }, [shopId])
 
   if (loading || !events.length) return null

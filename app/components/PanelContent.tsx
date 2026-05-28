@@ -3,7 +3,7 @@ import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
-import { getGoogleMapsUrl } from './DirectionsButton'
+import { getGoogleMapsUrl } from '@/app/utils/maps'
 import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
 
@@ -44,7 +44,7 @@ export default function PanelContent(props: IProps) {
       <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
 
       {/* Child components */}
-      {photos && <PhotoGrid photos={photos} />}
+      {photos && <PhotoGrid key={props.shop.properties.uuid} photos={photos} />}
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />

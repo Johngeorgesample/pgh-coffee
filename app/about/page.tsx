@@ -1,29 +1,10 @@
-'use client'
+import AboutClient from './AboutClient'
 
-import {
-  Hero,
-  Stats,
-  Bio,
-  InTheMedia,
-  JoinTheCommunity,
-  GetInTouch,
-  FrequentlyAskedQuestions,
-  SubmitAShopCTA,
-  Footer,
-} from '@/app/components/about'
+export const metadata = {
+  title: 'About | Pittsburgh Coffee',
+  description: 'Learn about pgh.coffee, an independent guide to Pittsburgh coffee shops.',
+}
 
 export default function About() {
-  return (
-    <div>
-      <Hero />
-      <Stats />
-      <Bio />
-      <InTheMedia />
-      <JoinTheCommunity />
-      <GetInTouch />
-      <FrequentlyAskedQuestions />
-      <SubmitAShopCTA />
-      <Footer />
-    </div>
-  )
+  return <AboutClient />
 }
