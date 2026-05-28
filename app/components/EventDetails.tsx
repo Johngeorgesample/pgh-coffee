@@ -3,7 +3,7 @@
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { useCopyToClipboard, useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
-import { EventCardData } from './EventCard'
+import type { EventCardData } from '@/types/event-types'
 import CopyLinkToast from './CopyLinkToast'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
@@ -107,7 +107,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
               {/* Date */}
               <div className="flex items-start gap-3">
                 <div className="bg-yellow-100 p-2.5 rounded-lg">
-                  <Calendar className="w-4 h-4 text-yellow-500" />
+                  <Calendar className="size-4 text-yellow-500" />
                 </div>
                 <div>
                   <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
@@ -125,13 +125,14 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
           {event.shop && (
             <div className="flex items-start gap-3">
               <div className="bg-yellow-100 p-2.5 rounded-lg">
-                <MapPin className="w-4 h-4 text-yellow-500" />
+                <MapPin className="size-4 text-yellow-500" />
               </div>
               <div>
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Location
                 </span>
                 <button
+                  type="button"
                   onClick={handleShopClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
@@ -150,7 +151,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
           {event.roaster && (
             <div className="flex items-start gap-3">
               <div className="bg-yellow-100 p-2.5 rounded-lg">
-                <svg className="w-4 h-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="size-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
                 </svg>
@@ -160,6 +161,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   Roaster
                 </span>
                 <button
+                  type="button"
                   onClick={handleRoasterClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
@@ -204,17 +206,18 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleExternalLink}
-                className="flex-1 bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+                className="flex-1 bg-yellow-400 text-yellow-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
               >
                 View Event Website
-                <SquareArrowOutUpRight className="w-5 h-5" />
+                <SquareArrowOutUpRight className="size-5" />
               </a>
             )}
             <button
+              type="button"
               onClick={copyCurrentUrl}
               className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
-              <Share2 className="w-5 h-5" />
+              <Share2 className="size-5" />
             </button>
           </div>
 

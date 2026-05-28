@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { EventCard, EventCardData } from './EventCard'
+import { EventCard } from './EventCard'
+import type { EventCardData } from '@/types/event-types'
 import { isPast } from '@/app/utils/utils'
 
 const fetchEvents = async (): Promise<EventCardData[]> => {
