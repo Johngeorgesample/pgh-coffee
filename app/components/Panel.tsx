@@ -4,24 +4,23 @@
 import { useEffect, useRef, useState } from 'react'
 import { Sheet } from '@silk-hq/components'
 import { TShop } from '@/types/shop-types'
-import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
 
 interface IProps {
   children?: React.ReactNode
   shop: TShop
-  presented?: boolean
-  onPresentedChange?: (presented: boolean) => void
+  presented: boolean
+  onPresentedChange: (presented: boolean) => void
 }
 
-export default function Panel(props: IProps) {
-  const currentShop = useShopStore(s => s.currentShop)
-  const [internalPresented, setInternalPresented] = useState(true)
+const detectTouch = () => {
+  if (typeof window === 'undefined') return false
+  if (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) return true
+  return Boolean(window.matchMedia?.('(pointer: coarse)').matches)
+}
 
-  const presented = props.presented !== undefined ? props.presented : internalPresented
-  const setPresented = props.onPresentedChange || setInternalPresented
-
+export default function Panel({ children, presented, onPresentedChange }: IProps) {
   // detents: middle (60vh) -> full
   const detents = ['60vh'] as const
   const lastDetentIndex = detents.length + 1 // 2
@@ -32,32 +31,15 @@ export default function Panel(props: IProps) {
   const touchStartY = useRef<number | null>(null)
   const largeViewport = useMediaQuery('(min-width: 1024px)')
 
-  // detect touch device once
-  const [isTouch, setIsTouch] = useState(false)
-  useEffect(() => {
-    const touch =
-      (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) ||
-      (typeof window !== 'undefined' &&
-        window.matchMedia?.('(pointer: coarse)').matches)
-    setIsTouch(Boolean(touch))
-  }, [])
-
-  useEffect(() => {
-    if (presented && currentShop && Object.keys(currentShop).length > 0) {
-        if (largeViewport && contentRef.current) {
-          contentRef.current.scrollTop = 0
-        } else {
-          const scrollableContainer = document.querySelector('.flex.h-full.flex-col.overflow-y-auto')
-          if (scrollableContainer) {
-            scrollableContainer.scrollTop = 0
-          }
-        }
-    }
-  }, [presented, currentShop, largeViewport])
+  // detect touch device once (ref, not state, since render never reads it)
+  const isTouchRef = useRef<boolean | null>(null)
+  if (isTouchRef.current === null && typeof window !== 'undefined') {
+    isTouchRef.current = detectTouch()
+  }
 
   // Touch-only: if user scrolls DOWN while on middle detent, expand to full
   useEffect(() => {
-    if (!isTouch) return
+    if (!isTouchRef.current) return
     const el = contentRef.current
     if (!el) return
 
@@ -86,7 +68,10 @@ export default function Panel(props: IProps) {
     }
 
     el.addEventListener('touchstart', onTouchStart, { passive: true })
-    el.addEventListener('touchmove', onTouchMove, { passive: false }) // must be non-passive to preventDefault
+    // touchmove is intentionally non-passive: we call preventDefault() above
+    // to suppress partial scroll while expanding the sheet.
+    // oxlint-disable-next-line react-doctor/client-passive-event-listeners
+    el.addEventListener('touchmove', onTouchMove, { passive: false })
     el.addEventListener('touchend', onTouchEnd, { passive: true })
     el.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
@@ -96,7 +81,7 @@ export default function Panel(props: IProps) {
       el.removeEventListener('touchend', onTouchEnd as any)
       el.removeEventListener('touchcancel', onTouchEnd as any)
     }
-  }, [isTouch, activeDetent, middleDetentIndex, lastDetentIndex])
+  }, [activeDetent, middleDetentIndex, lastDetentIndex])
 
   if (largeViewport) {
     return (
@@ -106,7 +91,7 @@ export default function Panel(props: IProps) {
             <div className="w-full bottom-0 h-full pointer-events-none fixed lg:w-1/3 lg:h-[calc(100%-4rem)] lg:inset-y-0 lg:top-16 lg:right-0 flex max-w-full">
               <div ref={contentRef} className="bg-neutral-50 overflow-y-auto pointer-events-auto w-screen lg:max-w-4xl">
                 <SearchBar />
-                {props.children}
+                {children}
               </div>
             </div>
           </div>
@@ -118,7 +103,7 @@ export default function Panel(props: IProps) {
   return (
     <Sheet.Root
       presented={presented}
-      onPresentedChange={setPresented}
+      onPresentedChange={onPresentedChange}
       activeDetent={activeDetent}
       onActiveDetentChange={setActiveDetent}
       license="commercial"
@@ -139,7 +124,7 @@ export default function Panel(props: IProps) {
             </Sheet.Handle>
 
             <SearchBar />
-            {props.children}
+            {children}
 
             <Sheet.BleedingBackground className="BottomSheet-bleedingBackground" />
           </Sheet.Content>

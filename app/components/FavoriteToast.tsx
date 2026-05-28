@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
@@ -12,14 +12,17 @@ interface FavoriteToastProps {
 }
 
 export default function FavoriteToast({ isOpen, onClose, shopName }: FavoriteToastProps) {
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
-        onClose()
+        onCloseRef.current()
       }, 5000)
       return () => clearTimeout(timer)
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   return (
     <Transition show={isOpen}>
@@ -35,7 +38,7 @@ export default function FavoriteToast({ isOpen, onClose, shopName }: FavoriteToa
               leaveTo="opacity-0 translate-y-4"
             >
               <DialogPanel className="bg-stone-900 text-white rounded-xl px-4 py-3 shadow-lg flex flex-col lg:flex-row items-center gap-3">
-                <Heart className="w-5 h-5 fill-red-500 text-red-500 flex-shrink-0" />
+                <Heart className="size-5 fill-red-500 text-red-500 flex-shrink-0" />
                 <p className="text-sm">
                   <span className="font-medium">{shopName}</span> added to favorites
                 </p>
