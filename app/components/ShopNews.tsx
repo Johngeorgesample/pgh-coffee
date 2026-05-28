@@ -17,6 +17,13 @@ type UpdateEntry = {
   shopId?: string | null
 }
 
+const loadShopUpdates = async (shopId: string): Promise<UpdateEntry[]> => {
+  const qs = new URLSearchParams({ shop_id: String(shopId) })
+  const res = await fetch(`/api/updates?${qs.toString()}`)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json()
+}
+
 type Props = { shop: TShop }
 
 export const ShopNews = ({ shop }: Props) => {
@@ -24,37 +31,25 @@ export const ShopNews = ({ shop }: Props) => {
   const shopId = shop.properties.uuid
 
   useEffect(() => {
-    if (!shopId) {
-      setUpdates([])
-      return
-    }
+    if (!shopId) return
 
     let cancelled = false
-    const ac = new AbortController()
-
-    ;(async () => {
-      try {
-        const qs = new URLSearchParams({ shop_id: String(shopId) })
-        const res = await fetch(`/api/updates?${qs.toString()}`)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data: UpdateEntry[] = await res.json()
+    loadShopUpdates(shopId)
+      .then(data => {
         if (!cancelled) setUpdates(data)
-      } catch {}
-    })()
+      })
+      .catch(() => {})
 
     return () => {
       cancelled = true
-      ac.abort()
     }
-  }, [shop, shopId])
+  }, [shopId])
 
   const relevantNews = useMemo(() => {
-    if (!updates) return []
+    if (!updates || !shopId) return []
     // Filter before normalizing - only show updates tied to THIS shop
-    const filtered = shopId
-      ? updates.filter(e => (e.shopId ?? e.shop_id) === String(shopId))
-      : updates
-    return filtered.sort((a, b) => {
+    const filtered = updates.filter(e => (e.shopId ?? e.shop_id) === String(shopId))
+    return filtered.toSorted((a, b) => {
       const aDate = new Date((a.postDate ?? a.post_date) ?? (a.eventDate ?? a.event_date) ?? 0).getTime()
       const bDate = new Date((b.postDate ?? b.post_date) ?? (b.eventDate ?? b.event_date) ?? 0).getTime()
       return bDate - aDate

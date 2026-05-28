@@ -17,6 +17,23 @@ const formatNewsDate = (dateStr: string) => {
   })
 }
 
+const fetchNewsItem = async (id: string): Promise<NewsItem> => {
+  const response = await fetch(`/api/updates/${id}`)
+  if (!response.ok) throw new Error('News not found')
+  return response.json()
+}
+
+const updateUrlForNews = (newsId: string) => {
+  const url = new URL(window.location.href)
+  const params = new URLSearchParams(url.search)
+  params.delete('shop')
+  params.delete('company')
+  params.delete('roaster')
+  params.set('news', newsId)
+  url.search = params.toString()
+  window.history.pushState(null, '', url.toString())
+}
+
 export const NewsDetails = ({ id }: { id: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
@@ -25,36 +42,26 @@ export const NewsDetails = ({ id }: { id: string }) => {
   const { handleShopSelect } = useShopSelection()
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch(`/api/updates/${id}`)
-        if (!response.ok) throw new Error('News not found')
-        const data = await response.json()
+    let cancelled = false
+    fetchNewsItem(id)
+      .then(data => {
+        if (cancelled) return
         setNews(data)
         plausible('NewsView', {
           props: { newsId: id, newsTitle: data.title },
         })
-      } catch (error) {
+        if (data?.id) updateUrlForNews(data.id)
+      })
+      .catch(error => {
         console.error(error)
-      } finally {
-        setLoading(false)
-      }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
     }
-    fetchNews()
   }, [id, plausible])
-
-  useEffect(() => {
-    if (news?.id) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.delete('company')
-      params.delete('roaster')
-      params.set('news', news.id)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [news])
 
   const handleShopClick = () => {
     if (news?.shop_id && news?.shop) {
@@ -90,7 +97,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
           <div className="p-6 animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
             <div className="flex items-start gap-3 mb-6">
-              <div className="bg-gray-200 p-2.5 rounded-lg w-9 h-9"></div>
+              <div className="bg-gray-200 p-2.5 rounded-lg size-9"></div>
               <div>
                 <div className="h-3 bg-gray-200 rounded w-12 mb-2"></div>
                 <div className="h-5 bg-gray-200 rounded w-32"></div>
@@ -147,7 +154,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
           {news.post_date && (
             <div className="flex items-start gap-3">
               <div className="bg-yellow-100 p-2.5 rounded-lg">
-                <Calendar className="w-4 h-4 text-yellow-500" />
+                <Calendar className="size-4 text-yellow-500" />
               </div>
               <div>
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
@@ -162,13 +169,13 @@ export const NewsDetails = ({ id }: { id: string }) => {
           {news.shop && (
             <div className="flex items-start gap-3">
               <div className="bg-yellow-100 p-2.5 rounded-lg">
-                <MapPin className="w-4 h-4 text-yellow-500" />
+                <MapPin className="size-4 text-yellow-500" />
               </div>
               <div>
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Location
                 </span>
-                <button onClick={handleShopClick} className="text-left hover:opacity-80 transition-opacity">
+                <button type="button" onClick={handleShopClick} className="text-left hover:opacity-80 transition-opacity">
                   <div className="text-slate-900 font-bold text-[15px]">{news.shop.name}</div>
                   {news.shop.neighborhood && (
                     <div className="text-sm text-gray-500 mt-0.5">{news.shop.neighborhood}</div>
@@ -182,7 +189,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
           {news.roaster && (
             <div className="flex items-start gap-3">
               <div className="bg-yellow-100 p-2.5 rounded-lg">
-                <svg className="w-4 h-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="size-4 text-yellow-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
                 </svg>
@@ -191,7 +198,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
                 <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
                   Roaster
                 </span>
-                <button onClick={handleRoasterClick} className="text-left hover:opacity-80 transition-opacity">
+                <button type="button" onClick={handleRoasterClick} className="text-left hover:opacity-80 transition-opacity">
                   <div className="text-slate-900 font-bold text-[15px]">{news.roaster.name}</div>
                 </button>
               </div>
@@ -216,17 +223,18 @@ export const NewsDetails = ({ id }: { id: string }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleExternalLink}
-                className="flex-1 bg-yellow-400 text-slate-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
+                className="flex-1 bg-yellow-400 text-yellow-900 font-bold py-4 rounded-full shadow-sm hover:shadow-md hover:bg-yellow-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 no-underline"
               >
                 View Source
-                <SquareArrowOutUpRight className="w-5 h-5" />
+                <SquareArrowOutUpRight className="size-5" />
               </a>
             )}
             <button
+              type="button"
               onClick={copyCurrentUrl}
               className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
             >
-              <Share2 className="w-5 h-5" />
+              <Share2 className="size-5" />
             </button>
           </div>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
@@ -16,16 +16,16 @@ import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
 
 export default function HomeClient() {
-  const plausible = useAnalytics()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
+  useAnalytics()
+  const { fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
     useShopsStore()
   const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
-  const [presented, setPresented] = useState(true)
-  const router = useRouter()
+  const [presented, setPresentedState] = useState(true)
+  const { replace } = useRouter()
 
-  const removeSearchParam = () => {
+  const removeSearchParam = useCallback(() => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     params.delete('shop')
@@ -35,10 +35,10 @@ export default function HomeClient() {
     params.delete('event')
     params.delete('events')
     url.search = params.toString()
-    router.replace(url.toString())
-  }
+    replace(url.toString())
+  }, [replace])
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setSearchValue('')
     clearAmenityFilters()
     setCurrentShop({} as TShop)
@@ -50,7 +50,31 @@ export default function HomeClient() {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
       clearHistory()
     }
-  }
+  }, [
+    panelMode,
+    setSearchValue,
+    clearAmenityFilters,
+    setCurrentShop,
+    removeSearchParam,
+    setPanelContent,
+    clearHistory,
+  ])
+
+  // Wrap setPresented to perform close logic directly on dismissal
+  const setPresented = useCallback(
+    (next: boolean) => {
+      setPresentedState(next)
+      if (
+        !next &&
+        !largeViewport &&
+        currentShop &&
+        Object.keys(currentShop).length > 0
+      ) {
+        handleClose()
+      }
+    },
+    [largeViewport, currentShop, handleClose],
+  )
 
   useURLShopSync()
   useURLCompanySync()
@@ -79,29 +103,21 @@ export default function HomeClient() {
   }, [panelContent, panelMode, setPanelContent])
 
   useEffect(() => {
-    if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
-      setPresented(true)
+    if (largeViewport) return
+    if (currentShop && Object.keys(currentShop).length > 0) {
+      setPresentedState(true)
+      return
     }
-  }, [currentShop, largeViewport])
-
-  useEffect(() => {
     if (
-      !largeViewport &&
-      (panelMode === 'company' ||
-        panelMode === 'roaster' ||
-        panelMode === 'event' ||
-        panelMode === 'news' ||
-        panelMode === 'events')
+      panelMode === 'company' ||
+      panelMode === 'roaster' ||
+      panelMode === 'event' ||
+      panelMode === 'news' ||
+      panelMode === 'events'
     ) {
-      setPresented(true)
+      setPresentedState(true)
     }
-  }, [panelMode, largeViewport])
-
-  useEffect(() => {
-    if (!largeViewport && !presented && currentShop && Object.keys(currentShop).length > 0) {
-      handleClose()
-    }
-  }, [presented, largeViewport])
+  }, [currentShop, panelMode, largeViewport])
 
   useEffect(() => {
     if (currentShop?.properties?.name && currentShop?.properties?.neighborhood) {
@@ -113,7 +129,7 @@ export default function HomeClient() {
 
   return (
     <div className="relative w-full h-full">
-      {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
+      {!largeViewport && !presented && <SearchFAB handleClick={() => setPresentedState(true)} />}
       <MapContainer
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
