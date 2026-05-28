@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Popup } from 'react-map-gl'
 
 interface ShopPopupProps {
@@ -21,12 +22,20 @@ export default function ShopPopup({ longitude, latitude, name, neighborhood, pho
       className="shop-hover-popup"
     >
       <button
+        type="button"
         className="w-48 h-28 relative rounded-lg overflow-hidden cursor-pointer block focus:outline-none"
         onClick={onClick}
         aria-label={`View ${name} in ${neighborhood}`}
       >
         {photo ? (
-          <img className="h-full w-full object-cover object-center" src={photo} alt="" />
+          <Image
+            className="object-cover object-center"
+            src={photo}
+            alt=""
+            fill
+            sizes="192px"
+            unoptimized
+          />
         ) : (
           <div className="h-full w-full bg-yellow-200" />
         )}

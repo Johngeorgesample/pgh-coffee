@@ -9,22 +9,33 @@ export const revalidate = 0
 
 const TZ = 'America/New_York'
 
+const ymdFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: TZ,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
+const tzOffsetFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: TZ,
+  timeZoneName: 'shortOffset',
+})
+
+const utcYmdFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'UTC',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
 // YYYY-MM-DD in a specific timezone
-function ymdInTz(d = new Date(), tz = TZ) {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: tz,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(d) // e.g. 2025-08-20
+function ymdInTz(d = new Date()) {
+  return ymdFormatter.format(d) // e.g. 2025-08-20
 }
 
 // e.g. "-04:00" or "-05:00" for ET (handles DST)
-function tzOffsetString(d = new Date(), tz = TZ) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: tz,
-    timeZoneName: 'shortOffset',
-  }).formatToParts(d)
+function tzOffsetString(d = new Date()) {
+  const parts = tzOffsetFormatter.formatToParts(d)
   const tzName = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT-05'
   // "GMT-4" or "GMT-05:00" → normalize to "-04:00"/"-05:00"
   const m = tzName.match(/GMT([+-]\d{1,2})(?::?(\d{2}))?/)
@@ -36,23 +47,22 @@ function tzOffsetString(d = new Date(), tz = TZ) {
 }
 
 // Seconds until next midnight in tz
-function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
-  const today = ymdInTz(now, tz)
-  const offset = tzOffsetString(now, tz)
+function secondsUntilNextMidnightTz(now = new Date()) {
+  const today = ymdInTz(now)
+  const offset = tzOffsetString(now)
   // Construct today's midnight in tz, then add 1 day if we've passed it
   let nextMidnight = new Date(`${today}T00:00:00${offset}`)
   if (now.getTime() >= nextMidnight.getTime()) {
     const [y, m, d] = today.split('-').map(Number)
     const dt = new Date(Date.UTC(y, m - 1, d + 1, 0, 0, 0))
-    const nextYMD = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'UTC',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(dt)
+    const nextYMD = utcYmdFormatter.format(dt)
     nextMidnight = new Date(`${nextYMD}T00:00:00${offset}`)
   }
   return Math.max(1, Math.round((nextMidnight.getTime() - now.getTime()) / 1000))
+}
+
+function shopHash(ymd: string, uuid: string): string {
+  return crypto.createHash('sha1').update(ymd + uuid).digest('hex')
 }
 
 export async function GET() {
@@ -68,7 +78,7 @@ export async function GET() {
   // This is stable even when shops are added or removed.
   const ymd = ymdInTz()
   const winnerUuid = uuids.reduce<{ uuid: string; hash: string }>((best, row) => {
-    const h = crypto.createHash('sha1').update(ymd + row.uuid).digest('hex')
+    const h = shopHash(ymd, row.uuid)
     return h > best.hash ? { uuid: row.uuid, hash: h } : best
   }, { uuid: uuids[0].uuid, hash: '' }).uuid
 
