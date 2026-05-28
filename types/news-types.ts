@@ -25,7 +25,7 @@ export type NewsItem = {
   roaster?: RoasterRef | null
 }
 
-export const TAG_LABELS: Record<TagKey, string> = {
+const TAG_LABELS: Record<TagKey, string> = {
   opening: 'New Shop',
   closure: 'Closing',
   'temporary closure': 'Temporary Closure',
@@ -37,7 +37,7 @@ export const TAG_LABELS: Record<TagKey, string> = {
   offering: 'Offering',
 }
 
-export const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
+const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
   opening: {
     badge: 'bg-green-50 text-green-600 border-green-100',
     border: 'border-green-500',
@@ -76,7 +76,7 @@ export const TAG_STYLES: Record<TagKey, { badge: string; border: string }> = {
   },
 }
 
-export const DEFAULT_TAG_STYLE = {
+const DEFAULT_TAG_STYLE = {
   badge: 'bg-stone-50 text-stone-600 border-stone-100',
   border: 'border-primary',
 }
