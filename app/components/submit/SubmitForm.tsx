@@ -75,6 +75,7 @@ export default function SubmitForm() {
             <input
               id="name"
               name="name"
+              aria-label="Shop name"
               required
               type="text"
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -88,6 +89,7 @@ export default function SubmitForm() {
             <input
               id="address"
               name="address"
+              aria-label="Address"
               required
               type="text"
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -142,6 +144,7 @@ export default function SubmitForm() {
               <input
                 id="website"
                 name="website"
+                aria-label="Website"
                 type="url"
                 className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
               />
@@ -149,7 +152,7 @@ export default function SubmitForm() {
           </div>
 
           <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <InfoIcon aria-hidden="true" className="w-4 h-4 shrink-0 mt-0.5 text-yellow-400" />
+            <InfoIcon aria-hidden="true" className="size-4 shrink-0 mt-0.5 text-yellow-400" />
             <p className="text-sm text-slate-600">
               I currently only list shops located within Allegheny County, but I&apos;m tracking interest in the greater Pittsburgh area for future expansion. Chains or franchises headquartered elsewhere
               are not included to maintain the focus on local independent businesses.
@@ -163,7 +166,7 @@ export default function SubmitForm() {
               isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
             }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit shop'}
+            {isSubmitting ? 'Submitting…' : 'Submit shop'}
           </button>
         </form>
       </div>

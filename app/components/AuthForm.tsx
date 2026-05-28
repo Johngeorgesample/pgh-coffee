@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useReducer } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 interface AuthFormProps {
@@ -8,24 +8,68 @@ interface AuthFormProps {
   idPrefix?: string
 }
 
+type AuthMode = 'signin' | 'signup'
+
+interface AuthState {
+  email: string
+  password: string
+  isLoading: boolean
+  error: string | null
+  mode: AuthMode
+}
+
+type AuthAction =
+  | { type: 'SET_EMAIL'; value: string }
+  | { type: 'SET_PASSWORD'; value: string }
+  | { type: 'SET_LOADING'; value: boolean }
+  | { type: 'SET_ERROR'; value: string | null }
+  | { type: 'SET_MODE'; value: AuthMode }
+  | { type: 'SUBMIT_START' }
+  | { type: 'SUBMIT_END' }
+
+const initialAuthState: AuthState = {
+  email: '',
+  password: '',
+  isLoading: false,
+  error: null,
+  mode: 'signin',
+}
+
+function authReducer(state: AuthState, action: AuthAction): AuthState {
+  switch (action.type) {
+    case 'SET_EMAIL':
+      return { ...state, email: action.value }
+    case 'SET_PASSWORD':
+      return { ...state, password: action.value }
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.value }
+    case 'SET_ERROR':
+      return { ...state, error: action.value }
+    case 'SET_MODE':
+      return { ...state, mode: action.value }
+    case 'SUBMIT_START':
+      return { ...state, isLoading: true, error: null }
+    case 'SUBMIT_END':
+      return { ...state, isLoading: false }
+    default:
+      return state
+  }
+}
+
 export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const [state, dispatch] = useReducer(authReducer, initialAuthState)
+  const { email, password, isLoading, error, mode } = state
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
+    dispatch({ type: 'SUBMIT_START' })
 
     try {
       if (mode === 'signin') {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) {
-          setError(error.message)
+          dispatch({ type: 'SET_ERROR', value: error.message })
           return
         }
         fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed in' }) })
@@ -34,17 +78,17 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
         const { data, error } = await supabase.auth.signUp({ email, password })
 
         if (error) {
-          setError(error.message)
+          dispatch({ type: 'SET_ERROR', value: error.message })
           return
         }
 
         if (data.user?.identities?.length === 0) {
-          setError('An account with this email already exists. Please sign in instead.')
+          dispatch({ type: 'SET_ERROR', value: 'An account with this email already exists. Please sign in instead.' })
           return
         }
 
         if (data.user && !data.session) {
-          setError('Please check your email to confirm your account before signing in.')
+          dispatch({ type: 'SET_ERROR', value: 'Please check your email to confirm your account before signing in.' })
           return
         }
 
@@ -52,7 +96,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
         onSuccess()
       }
     } finally {
-      setIsLoading(false)
+      dispatch({ type: 'SUBMIT_END' })
     }
   }
 
@@ -64,7 +108,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
-    if (error) setError(error.message)
+    if (error) dispatch({ type: 'SET_ERROR', value: error.message })
   }
 
   const emailId = idPrefix ? `${idPrefix}-email` : 'email'
@@ -77,7 +121,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
         onClick={handleGoogleSignIn}
         className="w-full flex items-center justify-center gap-3 rounded-lg py-3 px-4 text-sm font-medium text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
       >
-        <svg className="h-5 w-5" viewBox="0 0 24 24">
+        <svg className="size-5" viewBox="0 0 24 24">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -119,8 +163,9 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
           <input
             id={emailId}
             type="email"
+            aria-label="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => dispatch({ type: 'SET_EMAIL', value: e.target.value })}
             required
             className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
           />
@@ -133,8 +178,9 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
           <input
             id={passwordId}
             type="password"
+            aria-label="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => dispatch({ type: 'SET_PASSWORD', value: e.target.value })}
             required
             className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
           />
@@ -147,7 +193,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
             isLoading ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
           }`}
         >
-          {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign in' : 'Sign up'}
+          {isLoading ? 'Loading…' : mode === 'signin' ? 'Sign in' : 'Sign up'}
         </button>
       </form>
 
@@ -155,7 +201,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
         {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
         <button
           type="button"
-          onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+          onClick={() => dispatch({ type: 'SET_MODE', value: mode === 'signin' ? 'signup' : 'signin' })}
           className="font-semibold text-yellow-600 hover:text-yellow-500"
         >
           {mode === 'signin' ? 'Sign up' : 'Sign in'}

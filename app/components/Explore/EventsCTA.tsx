@@ -13,12 +13,12 @@ const EventCardSkeleton = () => (
   <div className="flex w-full bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm animate-pulse">
     <div className="w-14 flex flex-col items-center justify-center py-4 shrink-0 bg-stone-200">
       <div className="h-2 w-6 bg-stone-300 rounded mb-1" />
-      <div className="h-6 w-6 bg-stone-300 rounded" />
+      <div className="size-6 bg-stone-300 rounded" />
     </div>
     <div className="flex-1 p-4">
       <div className="h-5 w-3/4 bg-stone-200 rounded mb-2" />
       <div className="flex items-center gap-1 mb-2">
-        <div className="h-3 w-3 bg-stone-200 rounded" />
+        <div className="size-3 bg-stone-200 rounded" />
         <div className="h-3 w-24 bg-stone-200 rounded" />
         <div className="h-3 w-16 bg-stone-100 rounded ml-2" />
       </div>
@@ -64,12 +64,13 @@ export const EventsCTA = () => {
       <div className="flex items-center justify-between">
         <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Upcoming events</h3>
         <button
+          type="button"
           className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openEvents}
         >
           View all
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="size-5" />
         </button>
       </div>
 

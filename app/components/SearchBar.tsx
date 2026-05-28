@@ -11,10 +11,11 @@ export default function SearchBar() {
 
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-8 lg:top-3 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
-      <button onClick={() => usePanelStore.getState().back()}>
-        {panelMode !== 'explore' && <ArrowLeftIcon className="h-4 w-4 mr-auto" />}
+      <button type="button" aria-label="Back" onClick={() => usePanelStore.getState().back()}>
+        {panelMode !== 'explore' && <ArrowLeftIcon className="size-4 mr-auto" />}
       </button>
       <input
+        aria-label="Search for a shop or neighborhood"
         className="h-[24px] flex-1 bg-transparent border-none focus:outline-none focus:ring-0"
         value={searchValue}
         onChange={e => setSearchValue(e.target.value)}

@@ -1,8 +1,6 @@
 'use client'
-import { useState } from 'react'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
-import PhotoDialog from './PhotoDialog'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 import usePanelStore from '@/stores/panelStore'
 import { Company } from '@/app/components/Company'
@@ -29,6 +27,7 @@ export default function PanelHeader(props: IProps) {
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
           {company?.slug && (
             <button
+              type="button"
               onClick={e => {
                 e.stopPropagation()
                 plausible('ViewAllLocationsClick', {
@@ -37,10 +36,10 @@ export default function PanelHeader(props: IProps) {
                 setPanelContent(<Company slug={company.slug} />, 'company')
               }}
               className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm
-                           hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full 
+                           hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full
                            text-xs text-white/90 mb-3 cursor-pointer border-none"
             >
-              <BuildingStorefrontIcon className="w-3.5 h-3.5" />
+              <BuildingStorefrontIcon className="size-3.5" />
               <span className="opacity-80">Part of</span>
               <span className="font-semibold">{company.name || 'Company'}</span>
             </button>

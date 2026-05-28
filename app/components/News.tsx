@@ -18,18 +18,23 @@ const fetchUpdates = async () => {
 }
 
 export const News = () => {
-  const [ updates, setUpdates ] = useState([])
+  const [ updates, setUpdates ] = useState<NewsItem[]>([])
 
   useEffect(() => {
     fetchUpdates().then(setUpdates)
   }, [])
 
   // ensure newest first
-  const items = [...updates].sort((a: any, b: any) => parseYMDLocal(b.post_date).getTime() - parseYMDLocal(a.post_date).getTime())
+  const items = updates.toSorted((a: NewsItem, b: NewsItem) => {
+    const aTime = a.post_date ? parseYMDLocal(a.post_date).getTime() : 0
+    const bTime = b.post_date ? parseYMDLocal(b.post_date).getTime() : 0
+    return bTime - aTime
+  })
 
   // group by day
-  const groups = items.reduce<Record<string, typeof items>>((acc: any, it: any) => {
-    ;(acc[it.post_date] ||= []).push(it)
+  const groups = items.reduce<Record<string, NewsItem[]>>((acc, it) => {
+    const key = it.post_date ?? 'unknown'
+    ;(acc[key] ||= []).push(it)
     return acc
   }, {})
 
@@ -40,8 +45,8 @@ export const News = () => {
           <section key={day} className="mb-4">
             <DayHeader date={day} />
             <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">
-              {entries.map((entry: NewsItem, i: number) => (
-                <NewsCard key={i} asLink={true} item={entry} variant="pill" />
+              {entries.map((entry: NewsItem) => (
+                <NewsCard key={entry.id} asLink={true} item={entry} variant="pill" />
               ))}
             </ul>
           </section>

@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, use, useCallback, useEffect, useMemo, useReducer } from 'react'
 import type { User, SupabaseClient } from '@supabase/supabase-js'
 
 type AuthContextType = {
@@ -15,21 +15,52 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
 })
 
+interface AuthState {
+  user: User | null
+  loading: boolean
+  supabase: SupabaseClient | null
+}
+
+type AuthAction =
+  | { type: 'SET_SUPABASE'; supabase: SupabaseClient }
+  | { type: 'SET_USER'; user: User | null }
+  | { type: 'SET_LOADING_DONE' }
+  | { type: 'SET_USER_LOADED'; user: User | null }
+
+const initialAuthState: AuthState = {
+  user: null,
+  loading: true,
+  supabase: null,
+}
+
+function authReducer(state: AuthState, action: AuthAction): AuthState {
+  switch (action.type) {
+    case 'SET_SUPABASE':
+      return { ...state, supabase: action.supabase }
+    case 'SET_USER':
+      return { ...state, user: action.user }
+    case 'SET_USER_LOADED':
+      return { ...state, user: action.user, loading: false }
+    case 'SET_LOADING_DONE':
+      return { ...state, loading: false }
+    default:
+      return state
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
+  const [{ user, loading, supabase }, dispatch] = useReducer(authReducer, initialAuthState)
 
   useEffect(() => {
     import('@/lib/supabase/client')
       .then(({ createClient }) => {
-        setSupabase(createClient())
+        dispatch({ type: 'SET_SUPABASE', supabase: createClient() })
       })
       .catch(error => {
         if (process.env.NODE_ENV !== 'production') {
           console.error('Failed to initialize Supabase client:', error)
         }
-        setLoading(false)
+        dispatch({ type: 'SET_LOADING_DONE' })
       })
   }, [])
 
@@ -37,27 +68,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabase) return
 
     supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user)
-      setLoading(false)
+      dispatch({ type: 'SET_USER_LOADED', user })
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
+      dispatch({ type: 'SET_USER_LOADED', user: session?.user ?? null })
     })
 
     return () => subscription.unsubscribe()
   }, [supabase])
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     if (supabase) {
       await supabase.auth.signOut()
     }
-  }
+  }, [supabase])
 
-  return <AuthContext.Provider value={{ user, loading, signOut }}>{children}</AuthContext.Provider>
+  const contextValue = useMemo(
+    () => ({ user, loading, signOut }),
+    [user, loading, signOut],
+  )
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => use(AuthContext)

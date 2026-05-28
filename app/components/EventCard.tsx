@@ -3,9 +3,11 @@
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
-import { RoasterRef } from '@/types/shop-types'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from './EventDetails'
+import type { EventCardData } from '@/types/event-types'
+
+export type { EventCardData }
 
 const formatDateParts = (dateStr: string) => {
   // Parse as local date to avoid timezone offset issues
@@ -27,22 +29,6 @@ const isNew = (date: string) => {
   const created = new Date(date).getTime()
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
   return created > sevenDaysAgo
-}
-
-export type EventCardData = {
-  id: string
-  title: string
-  description?: string | null
-  url?: string | null
-  tags?: string[] | null
-  post_date?: string
-  postDate?: string
-  event_date?: string | null
-  shop?: {
-    name: string
-    neighborhood: string
-  }
-  roaster?: Pick<RoasterRef, 'name' | 'slug'>
 }
 
 interface EventCardProps {
@@ -87,6 +73,7 @@ export const EventCard = ({
 
   return (
     <button
+      type="button"
       onClick={handleCardClick}
       className={`
         group flex w-full bg-white rounded-xl border border-stone-200
@@ -116,7 +103,7 @@ export const EventCard = ({
 
         {!hideShopInfo && entry.shop && (
           <div className="flex items-center text-xs text-slate-500 mb-2">
-            <MapPinIcon className="h-[14px] w-[14px] mr-1" />
+            <MapPinIcon className="size-[14px] mr-1" />
             <span className="font-medium text-slate-700">{entry.shop.name}</span>
             <span className="mx-1">•</span>
             <span>{entry.shop.neighborhood}</span>

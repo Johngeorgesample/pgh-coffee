@@ -13,6 +13,13 @@ interface Favorite {
   shop: DbShop
 }
 
+const fetchFavoritesList = async (): Promise<Favorite[]> => {
+  const res = await fetch('/api/favorites')
+  if (!res.ok) throw new Error(`Failed to fetch favorites: ${res.status}`)
+  const data = await res.json()
+  return Array.isArray(data) ? data : []
+}
+
 export default function Favorites() {
   const [favorites, setFavorites] = useState<Favorite[]>([])
   const [loading, setLoading] = useState(true)
@@ -20,25 +27,27 @@ export default function Favorites() {
   const hasFavorites = favorites && favorites.length > 0
 
   useEffect(() => {
-    fetch('/api/favorites')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch favorites: ${res.status}`)
+    let cancelled = false
+    fetchFavoritesList()
+      .then(data => {
+        if (!cancelled) {
+          setFavorites(data)
+          setLoading(false)
         }
-        return res.json()
       })
-      .then((data) => {
-        setFavorites(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
-      .catch((error) => {
+      .catch(error => {
         console.error('Failed to fetch favorites:', error)
-        setFavorites([])
-        setLoading(false)
+        if (!cancelled) {
+          setFavorites([])
+          setLoading(false)
+        }
       })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>Loading…</div>
   return (
     <div>
       {hasFavorites ? (
@@ -50,7 +59,7 @@ export default function Favorites() {
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Heart className="h-12 w-12 text-gray-300 mb-4" />
+            <Heart className="size-12 text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No favorites yet</h3>
             <p className="text-gray-500 max-w-sm">
               Start exploring coffee shops and save your favorites to see them here.
@@ -59,7 +68,7 @@ export default function Favorites() {
               href="/"
               className="mt-6 inline-flex items-center gap-2 rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
             >
-              <MapPin className="h-4 w-4" />
+              <MapPin className="size-4" />
               Explore shops
             </Link>
           </div>

@@ -46,20 +46,21 @@ export default function Nav() {
             </Link>
           ))}
         <Link
-          className="flex gap-1 items-center text-md rounded-2xl px-2 py-1 bg-black text-yellow-300 hover:bg-neutral-800"
+          className="flex gap-1 items-center text-md rounded-2xl px-2 py-1 bg-gray-950 text-yellow-300 hover:bg-neutral-800"
           href="/submit-a-shop"
         >
-          <PlusIcon className="w-4 h-4" />
+          <PlusIcon className="size-4" />
           Submit a shop
         </Link>
       </div>
 
       <button
+        type="button"
         className="sm:hidden p-2 -mr-2"
         onClick={() => setDrawerOpen(true)}
         aria-label="Open menu"
       >
-        <Menu className="w-6 h-6" />
+        <Menu className="size-6" />
       </button>
 
       <MobileNavDrawer
