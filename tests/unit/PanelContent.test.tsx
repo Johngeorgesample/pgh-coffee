@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, vi } from 'vitest'
 import PanelContent from '@/app/components/PanelContent'
-import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
+import { getGoogleMapsUrl } from '@/app/utils/maps'
 import type { TShop } from '@/types/shop-types'
 
 // Mock next-plausible
