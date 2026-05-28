@@ -10,7 +10,7 @@ export default function SubmitAShopCTA() {
           Help me build the ultimate directory of Pittsburgh&apos;s vibrant coffee scene. One shop at a time.
         </p>
         <Link href="/submit-a-shop"
-          className="w-fit bg-black text-white px-10 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform flex items-center gap-3 mx-auto shadow-xl"
+          className="w-fit bg-gray-950 text-white px-10 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform flex items-center gap-3 mx-auto shadow-xl"
         >
           <Coffee />
           Submit a Shop Now

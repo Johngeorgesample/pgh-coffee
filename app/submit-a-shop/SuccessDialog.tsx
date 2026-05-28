@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 interface TProps {
@@ -44,7 +43,7 @@ export default function SuccessDialog(props: TProps) {
                 onClick={handleSave}
                 className="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:ml-3 sm:w-auto"
               >
-                Okay
+                Close dialog
               </button>
             </div>
           </DialogPanel>
