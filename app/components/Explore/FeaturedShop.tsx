@@ -13,7 +13,7 @@ const FeaturedShopSkeleton = () => (
         <div className="px-2 py-1 absolute bottom-0 w-full">
           <div className="h-7 w-2/3 bg-stone-300 rounded mb-2" />
           <div className="flex items-center gap-1 mb-1">
-            <div className="h-4 w-4 bg-stone-300 rounded" />
+            <div className="size-4 bg-stone-300 rounded" />
             <div className="h-4 w-24 bg-stone-300 rounded" />
           </div>
         </div>

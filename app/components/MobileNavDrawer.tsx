@@ -40,11 +40,11 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                   onClick={handleLinkClick}
                   className="flex items-center py-4 border-b border-gray-100"
                 >
-                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                    <Info className="w-5 h-5 text-gray-600" />
+                  <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
+                    <Info className="size-5 text-gray-600" />
                   </span>
                   <span className="flex-1 ml-4 text-base font-medium text-gray-900">About</span>
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                  <ChevronRight className="size-5 text-gray-400" />
                 </Link>
 
                 {!loading && (
@@ -54,11 +54,11 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                       onClick={handleLinkClick}
                       className="flex items-center py-4 border-b border-gray-100"
                     >
-                      <span className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                        <User className="w-5 h-5 text-gray-600" />
+                      <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
+                        <User className="size-5 text-gray-600" />
                       </span>
                       <span className="flex-1 ml-4 text-base font-medium text-gray-900">Account</span>
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="size-5 text-gray-400" />
                     </Link>
                   ) : (
                     <Link
@@ -66,11 +66,11 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                       onClick={handleLinkClick}
                       className="flex items-center py-4 border-b border-gray-100"
                     >
-                      <span className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                        <User className="w-5 h-5 text-gray-600" />
+                      <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
+                        <User className="size-5 text-gray-600" />
                       </span>
                       <span className="flex-1 ml-4 text-base font-medium text-gray-900">Sign in</span>
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="size-5 text-gray-400" />
                     </Link>
                   )
                 )}
@@ -82,7 +82,7 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                 onClick={handleLinkClick}
                 className="flex items-center justify-center gap-2 mt-6 py-4 bg-yellow-300 rounded-xl font-medium text-black hover:bg-yellow-400 transition-colors"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="size-5" />
                 Submit a shop
               </Link>
             </div>
