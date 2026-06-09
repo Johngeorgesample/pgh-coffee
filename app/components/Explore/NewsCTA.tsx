@@ -58,12 +58,13 @@ export const NewsCTA = () => {
           Latest news
         </h3>
         <button
+          type="button"
           className="flex gap-0.5 items-center text-sm font-medium transition-colors hover:opacity-80"
           style={{ color: 'lab(45 10 50)' }}
           onClick={openNews}
         >
           View all
-          <ChevronRight className="h-5 w-5"/>
+          <ChevronRight className="size-5"/>
         </button>
       </div>
 

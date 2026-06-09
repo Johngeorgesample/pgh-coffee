@@ -147,7 +147,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
               isSubmitting ? 'bg-yellow-100 cursor-not-allowed' : 'bg-yellow-300 hover:bg-yellow-400'
             }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? 'Submitting…' : 'Submit'}
           </button>
         </form>
       </div>
