@@ -39,7 +39,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   }
 
   return (
-    <div className={`bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex flex-col transition-all hover:shadow-md`}>
+    <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex flex-col transition-all hover:shadow-md">
       <div className={`p-5 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
           <TagBadge tag={primaryTag} variant="compact" />
@@ -77,6 +77,6 @@ export const NewsCard = ({ item }: NewsCardProps) => {
           </button>
         )}
       </div>
-    </div>
+    </article>
   )
 }

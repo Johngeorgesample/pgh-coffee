@@ -75,7 +75,6 @@ export default function SubmitForm() {
             <input
               id="name"
               name="name"
-              aria-label="Shop name"
               required
               type="text"
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -89,7 +88,6 @@ export default function SubmitForm() {
             <input
               id="address"
               name="address"
-              aria-label="Address"
               required
               type="text"
               className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
@@ -144,7 +142,6 @@ export default function SubmitForm() {
               <input
                 id="website"
                 name="website"
-                aria-label="Website"
                 type="url"
                 className="block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm"
               />
