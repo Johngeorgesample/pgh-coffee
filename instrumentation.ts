@@ -6,7 +6,7 @@ export async function register() {
 
   try {
     const [{ init, start }, { logger: _logger }] = await Promise.all([
-      import('@pyroscope/nodejs'),
+      import(/* webpackIgnore: true */ '@pyroscope/nodejs'),
       import('@/lib/logger'),
     ])
     logger = _logger
