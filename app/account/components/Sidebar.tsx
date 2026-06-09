@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   Heart,
-  Settings,
   Menu,
   X,
 } from 'lucide-react'
@@ -17,11 +16,13 @@ const navigation = [
   // { name: 'Settings', href: '/account/settings', icon: Settings },
 ]
 
-export default function Sidebar() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+interface NavLinksProps {
+  pathname: string
+  onClick?: () => void
+}
 
-  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+function NavLinks({ pathname, onClick }: NavLinksProps) {
+  return (
     <>
       {navigation.map((item) => {
         const isActive =
@@ -40,7 +41,7 @@ export default function Sidebar() {
             }`}
           >
             <item.icon
-              className={`h-5 w-5 flex-shrink-0 ${
+              className={`size-5 flex-shrink-0 ${
                 isActive ? 'text-yellow-600' : 'text-gray-400 group-hover:text-gray-500'
               }`}
             />
@@ -50,6 +51,11 @@ export default function Sidebar() {
       })}
     </>
   )
+}
+
+export default function Sidebar() {
+  const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <>
@@ -61,15 +67,15 @@ export default function Sidebar() {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
         >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {mobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
 
       {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 px-2 py-2">
+        <div className="md:hidden bg-white border-b border-gray-200 p-2">
           <nav className="space-y-1">
-            <NavLinks onClick={() => setMobileMenuOpen(false)} />
+            <NavLinks pathname={pathname} onClick={() => setMobileMenuOpen(false)} />
           </nav>
         </div>
       )}
@@ -82,7 +88,7 @@ export default function Sidebar() {
           </div>
 
           <nav className="flex-1 space-y-1 px-2">
-            <NavLinks />
+            <NavLinks pathname={pathname} />
           </nav>
         </div>
       </div>

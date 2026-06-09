@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useReducer } from 'react'
 import dynamic from 'next/dynamic'
 import { Heart } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
@@ -9,53 +9,108 @@ import { useAuth } from './AuthProvider'
 
 const LoginPromptModal = dynamic(() => import('./LoginPromptModal'), { ssr: false })
 
+const fetchFavorites = async (): Promise<{ shop: { uuid: string } }[]> => {
+  const response = await fetch('/api/favorites')
+  if (!response.ok) throw new Error('Failed to fetch favorites')
+  return response.json()
+}
+
 interface FavoriteButtonProps {
   shopUUID: string
   shopName: string
 }
 
+interface FavoriteRecord {
+  shop: { uuid: string }
+}
+
+interface State {
+  favorites: FavoriteRecord[] | null
+  fetching: boolean
+  showToast: boolean
+  showLoginModal: boolean
+}
+
+type Action =
+  | { type: 'FETCH_START' }
+  | { type: 'FETCH_SUCCESS'; favorites: FavoriteRecord[] }
+  | { type: 'FETCH_ERROR' }
+  | { type: 'TOGGLE_LOCAL'; shopUUID: string }
+  | { type: 'SHOW_TOAST' }
+  | { type: 'HIDE_TOAST' }
+  | { type: 'SHOW_LOGIN_MODAL' }
+  | { type: 'HIDE_LOGIN_MODAL' }
+
+const initialState: State = {
+  favorites: null,
+  fetching: false,
+  showToast: false,
+  showLoginModal: false,
+}
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'FETCH_START':
+      return { ...state, fetching: true }
+    case 'FETCH_SUCCESS':
+      return { ...state, fetching: false, favorites: action.favorites }
+    case 'FETCH_ERROR':
+      return { ...state, fetching: false }
+    case 'TOGGLE_LOCAL': {
+      const prev = state.favorites ?? []
+      const isFav = prev.some(f => f.shop?.uuid === action.shopUUID)
+      const next = isFav
+        ? prev.filter(f => f.shop?.uuid !== action.shopUUID)
+        : [...prev, { shop: { uuid: action.shopUUID } }]
+      return { ...state, favorites: next }
+    }
+    case 'SHOW_TOAST':
+      return { ...state, showToast: true }
+    case 'HIDE_TOAST':
+      return { ...state, showToast: false }
+    case 'SHOW_LOGIN_MODAL':
+      return { ...state, showLoginModal: true }
+    case 'HIDE_LOGIN_MODAL':
+      return { ...state, showLoginModal: false }
+    default:
+      return state
+  }
+}
+
 export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonProps) {
   const { user, loading: authLoading } = useAuth()
   const plausible = useAnalytics()
-  const [isFavorited, setIsFavorited] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [showToast, setShowToast] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const isLoading = authLoading || state.fetching
+  const isFavorited =
+    !!user && (state.favorites?.some(fav => fav.shop?.uuid === shopUUID) ?? false)
 
   useEffect(() => {
-    const checkFavoriteStatus = async () => {
-      if (!user) {
-        setIsFavorited(false)
-        setIsLoading(false)
-        return
-      }
+    if (authLoading || !user) return
 
-      try {
-        const response = await fetch('/api/favorites')
-        if (response.ok) {
-          const favorites = await response.json()
-          const isFav = favorites.some((fav: { shop: { uuid: string } }) => fav.shop?.uuid === shopUUID)
-          setIsFavorited(isFav)
-        }
-      } catch (error) {
+    let cancelled = false
+    dispatch({ type: 'FETCH_START' })
+    fetchFavorites()
+      .then((data) => {
+        if (!cancelled) dispatch({ type: 'FETCH_SUCCESS', favorites: data })
+      })
+      .catch((error) => {
         console.error('Error checking favorite status:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+        if (!cancelled) dispatch({ type: 'FETCH_ERROR' })
+      })
 
-    if (!authLoading) {
-      checkFavoriteStatus()
+    return () => {
+      cancelled = true
     }
-  }, [shopUUID, user, authLoading])
+  }, [user, authLoading])
 
   const handleToggle = async () => {
     if (!user) {
-      setShowLoginModal(true)
+      dispatch({ type: 'SHOW_LOGIN_MODAL' })
       return
     }
 
-    setIsLoading(true)
     const wasAlreadyFavorited = isFavorited
 
     try {
@@ -67,35 +122,42 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
       })
 
       if (response.ok) {
-        const newState = !isFavorited
-        setIsFavorited(newState)
+        dispatch({ type: 'TOGGLE_LOCAL', shopUUID })
         plausible('favorite', {
-          props: { shopName, shopUUID, status: newState },
+          props: { shopName, shopUUID, status: !wasAlreadyFavorited },
         })
         if (!wasAlreadyFavorited) {
-          setShowToast(true)
+          dispatch({ type: 'SHOW_TOAST' })
         }
       }
     } catch (error) {
       console.error('Error toggling favorite:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   return (
     <>
       <button
+        type="button"
         onClick={handleToggle}
         disabled={isLoading}
         className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors disabled:opacity-50"
       >
-        <Heart className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+        <Heart className={`size-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
         {isFavorited ? 'Favorited' : 'Favorite'}
       </button>
 
-      <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />
-      {showLoginModal && <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />}
+      <FavoriteToast
+        isOpen={state.showToast}
+        onClose={() => dispatch({ type: 'HIDE_TOAST' })}
+        shopName={shopName}
+      />
+      {state.showLoginModal && (
+        <LoginPromptModal
+          isOpen={state.showLoginModal}
+          onClose={() => dispatch({ type: 'HIDE_LOGIN_MODAL' })}
+        />
+      )}
     </>
   )
 }

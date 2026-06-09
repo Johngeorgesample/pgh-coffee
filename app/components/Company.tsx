@@ -3,49 +3,78 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import LocationList from '@/app/components/LocationList'
-import { useState, useEffect } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
 import { TCompany } from '@/types/shop-types'
 
+const fetchCompanyData = async (slug: string): Promise<TCompany> => {
+  const response = await fetch(`/api/companies/${slug}`)
+  return response.json()
+}
+
+const updateUrlForCompany = (companySlug: string) => {
+  const url = new URL(window.location.href)
+  const params = new URLSearchParams(url.search)
+  params.delete('shop')
+  params.set('company', companySlug)
+  url.search = params.toString()
+  window.history.pushState(null, '', url.toString())
+}
+
+interface State {
+  company: TCompany | null
+  loading: boolean
+}
+
+type Action =
+  | { type: 'LOAD_START' }
+  | { type: 'LOAD_SUCCESS'; company: TCompany }
+  | { type: 'LOAD_ERROR' }
+
+const initialState: State = { company: null, loading: true }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'LOAD_START':
+      return { company: null, loading: true }
+    case 'LOAD_SUCCESS':
+      return { company: action.company, loading: false }
+    case 'LOAD_ERROR':
+      return { company: null, loading: false }
+    default:
+      return state
+  }
+}
+
 export const Company = ({ slug }: { slug: string }) => {
   const { setOverrideShops } = useShopsStore()
-  const [company, setCompany] = useState<TCompany | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [{ company, loading }, dispatch] = useReducer(reducer, initialState)
+  const setOverrideShopsRef = useRef(setOverrideShops)
+  setOverrideShopsRef.current = setOverrideShops
 
   useEffect(() => {
-    setCompany(null)
-    setLoading(true)
-    const fetchCompany = async () => {
-      try {
-        const response = await fetch(`/api/companies/${slug}`)
-        const data = await response.json()
-        setCompany(data)
-      } finally {
-        setLoading(false)
-      }
+    const setOverrideShopsFn = setOverrideShopsRef.current
+    let cancelled = false
+    dispatch({ type: 'LOAD_START' })
+
+    fetchCompanyData(slug)
+      .then(data => {
+        if (cancelled) return
+        dispatch({ type: 'LOAD_SUCCESS', company: data })
+        if (data?.slug) updateUrlForCompany(data.slug)
+        if (data?.shops) {
+          setOverrideShopsFn(formatDataToGeoJSON(data.shops))
+        }
+      })
+      .catch(() => {
+        if (!cancelled) dispatch({ type: 'LOAD_ERROR' })
+      })
+    return () => {
+      cancelled = true
+      setOverrideShopsFn(null)
     }
-    fetchCompany()
   }, [slug])
-
-  useEffect(() => {
-    if (company?.slug) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.set('company', company.slug)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [company])
-
-  useEffect(() => {
-    if (company?.shops) {
-      const shopsGeoJSON = formatDataToGeoJSON(company.shops)
-      setOverrideShops(shopsGeoJSON)
-    }
-    return () => setOverrideShops(null)
-  }, [company, setOverrideShops])
 
   if (loading) {
     return (
@@ -53,8 +82,8 @@ export const Company = ({ slug }: { slug: string }) => {
         <div className="flex items-center justify-between mb-2">
           <div className="h-8 bg-gray-200 rounded w-48"></div>
           <div className="flex gap-2">
-            <div className="h-4 w-4 bg-gray-200 rounded"></div>
-            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+            <div className="size-4 bg-gray-200 rounded"></div>
+            <div className="size-4 bg-gray-200 rounded"></div>
           </div>
         </div>
         <div className="space-y-2 mb-4">
@@ -86,10 +115,10 @@ export const Company = ({ slug }: { slug: string }) => {
               rel="noopener noreferrer"
               className=""
             >
-              <Instagram className="h-4 w-4" />
+              <Instagram className="size-4" />
             </a>
             <a href={company.website} target="_blank" rel="noopener noreferrer">
-              <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+              <ArrowTopRightOnSquareIcon className="size-4" />
             </a>
           </div>
         </div>
