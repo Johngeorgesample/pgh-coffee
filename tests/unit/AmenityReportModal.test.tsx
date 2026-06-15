@@ -29,7 +29,8 @@ describe('AmenityReportModal', () => {
 
   it('pre-checks amenities already associated with the shop', () => {
     render(<AmenityReportModal {...defaultProps} />)
-    expect(screen.getAllByRole('checkbox')[0]).toHaveAttribute('aria-checked', 'true')
+    const checked = screen.getAllByRole('checkbox').filter(cb => cb.getAttribute('aria-checked') === 'true')
+    expect(checked).toHaveLength(defaultProps.amenities.length)
   })
 
   it('submits the currently selected amenities and calls onSuccess/onClose', async () => {
@@ -58,11 +59,27 @@ describe('AmenityReportModal', () => {
     fireEvent.click(screen.getByRole('button', { name: /^submit$/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/something went wrong submitting your update/i)).toBeInTheDocument()
+      expect(screen.getByRole('alert')).toHaveTextContent(/something went wrong submitting your update/i)
     })
 
     expect(defaultProps.onSuccess).not.toHaveBeenCalled()
     expect(defaultProps.onClose).not.toHaveBeenCalled()
+  })
+
+  it('clears the error when the modal is closed and reopened', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({ ok: false } as Response)
+
+    const { rerender } = render(<AmenityReportModal {...defaultProps} />)
+    fireEvent.click(screen.getByRole('button', { name: /^submit$/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+    })
+
+    rerender(<AmenityReportModal {...defaultProps} isOpen={false} />)
+    rerender(<AmenityReportModal {...defaultProps} isOpen={true} />)
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
   it('shows an error message when the request throws', async () => {
