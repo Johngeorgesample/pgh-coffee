@@ -5,9 +5,10 @@ const COMBINING_MARKS = new RegExp(`[${String.fromCharCode(0x0300)}-${String.fro
 
 /**
  * Builds the `/shops/{slug}` identifier for a shop. The trailing 8 hex
- * characters are taken from the shop's `uuid` column, so the slug is
- * guaranteed unique even for shops that share a name and neighborhood
- * (e.g. the multiple "Yinz Coffee" locations).
+ * characters are taken from the shop's `uuid` column, so the slug stays
+ * effectively unique even for shops that share a name and neighborhood
+ * (e.g. the multiple "Yinz Coffee" locations). An 8-char prefix isn't a
+ * strict guarantee, but collisions across the shop dataset are negligible.
  */
 export function buildShopSlug(shop: { name: string; neighborhood: string; uuid: string }): string {
   return `${slugify(shop.name)}-${slugify(shop.neighborhood)}-${shop.uuid.slice(0, 8)}`
