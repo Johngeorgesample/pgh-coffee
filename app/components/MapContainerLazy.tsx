@@ -3,8 +3,6 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 
-// Code-split MapContainer (and the heavy mapbox-gl/react-map-gl payload it pulls
-// in) out of the initial bundle. ssr: false because the map is client-only.
 const MapContainer = dynamic(() => import('./MapContainer'), {
   ssr: false,
   loading: () => <MapPlaceholder />,
@@ -27,13 +25,6 @@ interface MapContainerLazyProps {
   currentShopCoordinates: [number, number]
 }
 
-/**
- * Defers mounting the map until after the first paint so mapbox-gl's parse +
- * init cost (~2.8s of main-thread blocking) lands outside the critical
- * render path. The panel and explore content paint first; the map mounts on
- * the first idle callback (or a short timeout fallback on browsers without
- * requestIdleCallback).
- */
 export default function MapContainerLazy(props: MapContainerLazyProps) {
   const [ready, setReady] = useState(false)
 

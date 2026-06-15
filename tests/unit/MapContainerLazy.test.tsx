@@ -2,19 +2,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import MapContainerLazy from '@/app/components/MapContainerLazy'
 
-// Stand in for the real (mapbox-gl-heavy) MapContainer so the dynamic import
-// resolves instantly and we can assert on mount timing without loading mapbox.
 vi.mock('@/app/components/MapContainer', () => ({
   default: () => <div data-testid="map-real">map</div>,
 }))
 
 // Capture the idle callback so the test controls when "first paint" idle fires.
-let idleCb: (() => void) | null = null
+let idleCallback: (() => void) | null = null
 
 beforeEach(() => {
-  idleCb = null
+  idleCallback = null
   vi.stubGlobal('requestIdleCallback', (cb: () => void) => {
-    idleCb = cb
+    idleCallback = cb
     return 1
   })
   vi.stubGlobal('cancelIdleCallback', vi.fn())
@@ -35,8 +33,8 @@ describe('MapContainerLazy', () => {
   it('mounts the map once the browser is idle', async () => {
     render(<MapContainerLazy currentShopCoordinates={[0, 0]} />)
 
-    expect(idleCb).toBeTypeOf('function')
-    idleCb!()
+    expect(idleCallback).toBeTypeOf('function')
+    idleCallback!()
 
     await waitFor(() => expect(screen.getByTestId('map-real')).toBeInTheDocument())
     expect(screen.queryByTestId('map-placeholder')).not.toBeInTheDocument()
