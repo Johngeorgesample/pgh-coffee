@@ -4,6 +4,7 @@ import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { withMetrics } from '@/lib/withMetrics'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -44,5 +45,5 @@ export const GET = withMetrics('shops/[shopDetails]', async (req: NextRequest, p
   }
 
   metrics.shopViewed(name, neighborhood)
-  return NextResponse.json(formatDBShopAsFeature(shopData[0]))
+  return NextResponse.json(formatDBShopAsFeature(shopData[0]), { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 })

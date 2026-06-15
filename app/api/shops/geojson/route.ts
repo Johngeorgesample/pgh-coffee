@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
 import { logger } from '@/lib/logger'
 import { withMetrics } from '@/lib/withMetrics'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -30,5 +31,5 @@ export const GET = withMetrics('shops/geojson', async () => {
     return NextResponse.json({ error: 'Error creating GeoJSON' }, { status: 500 })
   }
 
-  return NextResponse.json(geojson)
+  return NextResponse.json(geojson, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 })
