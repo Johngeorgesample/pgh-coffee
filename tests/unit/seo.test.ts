@@ -1,4 +1,12 @@
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect, vi } from 'vitest'
+
+// seo.ts pulls in app/utils/shops.ts, which creates a Supabase client at module
+// load. These tests only exercise pure helpers, so stub the client to avoid
+// needing SUPABASE_URL in the test environment.
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => ({}),
+}))
+
 import {
   buildShopPath,
   buildShopUrl,
@@ -26,18 +34,14 @@ const baseShop: DbShop = {
 }
 
 describe('buildShopPath / buildShopUrl', () => {
-  test('matches the URLSearchParams encoding used by useShopSelection', () => {
-    // Mirrors `params.set('shop', \`${name}_${neighborhood}\`); url.search = params.toString()`
-    const params = new URLSearchParams()
-    params.set('shop', 'Trace Echo + Ghost Coffee_Lawrenceville')
-
-    expect(buildShopPath('Trace Echo + Ghost Coffee', 'Lawrenceville')).toBe(`/?${params.toString()}`)
+  test('builds a /shops/{slug} path with the uuid8 suffix', () => {
+    expect(buildShopPath(baseShop)).toBe('/shops/61b-cafe-regent-square-00000000')
   })
 
   test('produces an absolute, parseable URL', () => {
-    const url = buildShopUrl('61B Cafe', 'Regent Square')
+    const url = buildShopUrl(baseShop)
     expect(() => new URL(url)).not.toThrow()
-    expect(url).toBe('https://pgh.coffee/?shop=61B+Cafe_Regent+Square')
+    expect(url).toBe('https://pgh.coffee/shops/61b-cafe-regent-square-00000000')
   })
 })
 
@@ -156,10 +160,11 @@ describe('buildOrganizationJsonLd / buildWebsiteJsonLd', () => {
 
 describe('buildShopListJsonLd', () => {
   test('builds a CollectionPage with one ListItem per shop, 1-indexed', () => {
-    const jsonLd = buildShopListJsonLd([
-      { name: '61B Cafe', neighborhood: 'Regent Square' },
-      { name: 'Afters Cafe', neighborhood: 'Squirrel Hill South' },
-    ])
+    const entries = [
+      { name: '61B Cafe', neighborhood: 'Regent Square', uuid: '00000000-0000-0000-0000-000000000000' },
+      { name: 'Afters Cafe', neighborhood: 'Squirrel Hill South', uuid: '11111111-1111-1111-1111-111111111111' },
+    ]
+    const jsonLd = buildShopListJsonLd(entries)
 
     expect(jsonLd['@type']).toBe('CollectionPage')
     const itemList = jsonLd.mainEntity as unknown as { '@type': string; itemListElement: { position: number; name: string; url: string }[] }
@@ -169,7 +174,7 @@ describe('buildShopListJsonLd', () => {
       '@type': 'ListItem',
       position: 1,
       name: '61B Cafe',
-      url: buildShopUrl('61B Cafe', 'Regent Square'),
+      url: buildShopUrl(entries[0]),
     })
     expect(itemList.itemListElement[1].position).toBe(2)
   })
@@ -180,6 +185,8 @@ describe('buildShopMetadata', () => {
     const metadata = buildShopMetadata(baseShop)
 
     expect(metadata.title).toBe('61B Cafe | Regent Square | pgh.coffee')
+    expect(metadata.alternates?.canonical).toBe('/shops/61b-cafe-regent-square-00000000')
+    expect(metadata.openGraph?.url).toBe('/shops/61b-cafe-regent-square-00000000')
     expect(metadata.openGraph?.images).toEqual([{ url: baseShop.photo }])
     const twitter = metadata.twitter as { card?: string; images?: unknown } | undefined
     expect(twitter?.card).toBe('summary_large_image')

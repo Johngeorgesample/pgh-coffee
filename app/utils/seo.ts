@@ -4,6 +4,8 @@ import type { Metadata } from 'next'
 import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSite, WithContext } from 'schema-dts'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
+import { buildShopSlug, extractUuidPrefix } from '@/app/utils/shopSlug'
+import { getShopByUuidPrefix } from '@/app/utils/shops'
 
 export const SITE_URL = 'https://pgh.coffee'
 export const SITE_NAME = 'pgh.coffee'
@@ -11,19 +13,16 @@ export const SITE_NAME = 'pgh.coffee'
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 
-/**
- * Builds the `/?shop=...` path for a shop, matching the encoding produced by
- * useShopSelection's appendSearchParamToURL so canonical/OG URLs match the
- * links the app itself generates.
- */
-export function buildShopPath(name: string, neighborhood: string): string {
-  const params = new URLSearchParams()
-  params.set('shop', `${name}_${neighborhood}`)
-  return `/?${params.toString()}`
+/** The shop fields needed to build a `/shops/{slug}` identifier. */
+export type ShopSlugInput = { name: string; neighborhood: string; uuid: string }
+
+/** Builds the root-relative `/shops/{slug}` path for a shop. */
+export function buildShopPath(shop: ShopSlugInput): string {
+  return `/shops/${buildShopSlug(shop)}`
 }
 
-export function buildShopUrl(name: string, neighborhood: string): string {
-  return `${SITE_URL}${buildShopPath(name, neighborhood)}`
+export function buildShopUrl(shop: ShopSlugInput): string {
+  return `${SITE_URL}${buildShopPath(shop)}`
 }
 
 export interface ParsedAddress {
@@ -65,58 +64,31 @@ function getSupabase() {
 }
 
 /**
- * Fetches a single shop by name + neighborhood for SEO purposes. Wrapped in
- * React's cache() so generateMetadata and the page body share one query per request.
+ * Resolves the shop for a `/shops/{slug}` page from its uuid prefix, or null if
+ * the slug has no prefix / matches nothing. Wrapped in React's cache() so
+ * generateMetadata and the page body share one query per request.
  */
-export const getShopForSeo = cache(async (name: string, neighborhood: string): Promise<DbShop | null> => {
-  const supabase = getSupabase()
-  const { data, error } = await supabase
-    .from('shops')
-    .select('*, company:company_id(*)')
-    .eq('name', name)
-    .eq('neighborhood', neighborhood)
-
-  if (error) {
-    logger.error('Error fetching shop for SEO', { error: error.message })
-    return null
-  }
-
-  if (!data || data.length === 0) return null
-  return data[0]
+export const getShopForSeo = cache(async (slug: string): Promise<DbShop | null> => {
+  const prefix = extractUuidPrefix(slug)
+  return prefix ? getShopByUuidPrefix(prefix) : null
 })
-
-export type SearchParams = { [key: string]: string | string[] | undefined }
-
-/**
- * Resolves the shop referenced by a `?shop={name}_{neighborhood}` search param,
- * or null if absent/unrecognized. Shared by generateMetadata and the page body
- * so both agree on which shop (if any) the page is about.
- */
-export async function getShopFromSearchParams(searchParams: SearchParams): Promise<DbShop | null> {
-  const shopParam = searchParams.shop
-  if (!shopParam || typeof shopParam !== 'string') return null
-
-  const [name, neighborhood] = shopParam.split('_')
-  if (!name || !neighborhood) return null
-
-  return getShopForSeo(name, neighborhood)
-}
 
 export interface ShopListEntry {
   name: string
   neighborhood: string
+  uuid: string
 }
 
 /**
- * Fetches every shop's name + neighborhood, deduped to one entry per
- * /?shop= identifier (e.g. the three "Yinz Coffee" locations in Downtown
- * collapse to a single URL).
+ * Fetches every shop's name, neighborhood, and uuid for building the sitemap and
+ * the shop-list JSON-LD. No deduping is needed: each shop has its own
+ * `/shops/{slug}` URL (the uuid suffix keeps same-name locations distinct).
  */
 export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('shops')
-    .select('name, neighborhood')
+    .select('name, neighborhood, uuid')
     .order('name', { ascending: true })
 
   if (error || !data) {
@@ -124,38 +96,30 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
     return []
   }
 
-  const seen = new Set<string>()
-  return data.filter(shop => {
-    const key = `${shop.name}_${shop.neighborhood}`
-    if (seen.has(key)) return false
-    seen.add(key)
-    return true
-  })
+  return data as ShopListEntry[]
 })
 
 /**
- * Builds OG/Twitter metadata for a shop page from real shop data.
+ * Builds OG/Twitter metadata for a shop page from real shop data. Now that shops
+ * live at a real `/shops/{slug}` path, canonical/og:url are expressed through the
+ * metadata API (resolved against metadataBase in the root layout).
  * Image/photo fields are only set when present; otherwise the root layout's
  * site-default image is inherited via Next's metadata merging.
- *
- * canonical/og:url are deliberately omitted here: shop pages live at `/?shop=...`,
- * and Next's metadata resolver collapses any absolute URL whose pathname is "/"
- * down to the bare origin, discarding the query string. Returning a per-shop URL
- * would render as `https://pgh.coffee` — i.e. "this page is a duplicate of the
- * homepage", which is worse than no canonical at all. The page body renders its
- * own correct <link rel="canonical"> and <meta property="og:url"> tags instead.
  */
 export function buildShopMetadata(shop: DbShop): Metadata {
   const title = `${shop.name} | ${shop.neighborhood} | pgh.coffee`
   const description = `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
+  const path = buildShopPath(shop)
 
   const metadata: Metadata = {
     title,
     description,
+    alternates: { canonical: path },
     openGraph: {
       title,
       description,
       type: 'website',
+      url: path,
     },
     twitter: shop.photo
       ? { card: 'summary_large_image', title, description, images: [shop.photo] }
@@ -256,7 +220,7 @@ export function buildShopListJsonLd(shops: ShopListEntry[]): WithContext<Collect
         '@type': 'ListItem',
         position: index + 1,
         name: shop.name,
-        url: buildShopUrl(shop.name, shop.neighborhood),
+        url: buildShopUrl(shop),
       })),
     },
   }

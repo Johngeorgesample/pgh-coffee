@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   const shopPages: MetadataRoute.Sitemap = shops.map(shop => ({
-    url: buildShopUrl(shop.name, shop.neighborhood),
+    url: buildShopUrl(shop),
   }))
 
   return [...staticPages, ...shopPages]

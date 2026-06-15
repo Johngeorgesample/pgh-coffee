@@ -1,18 +1,28 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { extractUuidPrefix } from '@/app/utils/shopSlug'
-import { getShopByUuidPrefix } from '@/app/utils/shops'
+import { getShopForSeo, buildShopMetadata, buildShopJsonLd, jsonLdToString } from '@/app/utils/seo'
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
-export default async function ShopPage({ params }: Props) {
-  const { slug } = await params
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const shop = await getShopForSeo((await params).slug)
+  return shop ? buildShopMetadata(shop) : {}
+}
 
-  const prefix = extractUuidPrefix(slug)
-  const shop = prefix ? await getShopByUuidPrefix(prefix) : null
+export default async function ShopPage({ params }: Props) {
+  const shop = await getShopForSeo((await params).slug)
 
   if (!shop) notFound()
 
-  return null
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
+      {/* PanelHeader renders its own <h1> with the shop name, but only after
+          client-side data fetching completes, so the server-rendered HTML
+          has none. */}
+      <h1 className="sr-only">{shop.name}</h1>
+    </>
+  )
 }
