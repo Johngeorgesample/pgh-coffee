@@ -23,7 +23,7 @@ export const useShopRouteSync = () => {
       return
     }
 
-    fetch(`/api/shops/by-slug/${slug}`)
+    fetch(`/api/shops/by-slug/${encodeURIComponent(slug)}`)
       .then(res => (res.ok ? res.json() : Promise.reject(new Error('Shop not found'))))
       .then(data => {
         setCurrentShop(data)
