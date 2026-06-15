@@ -12,7 +12,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchShops = async () => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select('*, company:company_id(*), roaster:roaster_id(*)')
     .order('name', { ascending: true })
   if (error) {
     logger.error('Error fetching shops', { error: error.message })

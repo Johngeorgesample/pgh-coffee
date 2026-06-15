@@ -27,7 +27,8 @@ export interface DbShop {
   uuid: string
   latitude: number | null
   longitude: number | null
-  roaster?: boolean | string
+  roaster_id?: string | null
+  roaster?: RoasterRef | null
   amenities?: string[]
 }
 
@@ -48,6 +49,7 @@ export interface TShop {
     website: string
     uuid: string
     amenities?: string[]
+    roaster?: RoasterRef | null
     selected?: boolean
   }
   geometry: {
@@ -60,6 +62,8 @@ export interface RoasterRef {
   id: string
   name: string
   slug: string
+  website?: string | null
+  is_local: boolean
 }
 
 export interface TList {

@@ -6,14 +6,17 @@ import QuickActionsBar from './QuickActionsBar'
 import { getGoogleMapsUrl } from './DirectionsButton'
 import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
+import { RoasterDetails } from './RoasterDetails'
+import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities } = props.shop.properties
+  const { address, photos, amenities, roaster } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
+  const { setPanelContent } = usePanelStore()
 
   return (
     <div className="bg-[#FAF9F7]">
@@ -33,6 +36,31 @@ export default function PanelContent(props: IProps) {
             {address}
           </address>
         </a>
+
+        {roaster && (
+          <p className="mt-2 text-xs text-stone-400">
+            Beans:{' '}
+            {roaster.is_local ? (
+              <button
+                className="hover:text-stone-600 transition-colors"
+                onClick={() => setPanelContent(<RoasterDetails slug={roaster.slug} />, 'roaster')}
+              >
+                {roaster.name}
+              </button>
+            ) : roaster.website ? (
+              <a
+                href={roaster.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-stone-600 transition-colors"
+              >
+                {roaster.name}
+              </a>
+            ) : (
+              roaster.name
+            )}
+          </p>
+        )}
 
         <ShopAmenities
           amenities={amenities ?? []}
