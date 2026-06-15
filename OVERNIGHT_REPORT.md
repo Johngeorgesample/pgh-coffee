@@ -1,7 +1,7 @@
 # Overnight Report — 2026-06-15
 
 **Branch:** `overnight/test-hardening-2026-06-15`
-**Status:** In progress — this section is the plan, written before starting work. Final results/summary appended at the end of the session.
+**Status:** Done. Full check suite (typecheck, lint, test, build) passes on Node 22.
 
 ## Environment note
 
@@ -74,4 +74,106 @@ Anything needing product judgment gets a `// TODO(jg):` comment plus a note in t
 "decisions to sanity-check" section at the end, rather than blocking on it.
 
 ---
-*(Sections below are filled in as work completes.)*
+
+## What was done
+
+All 10 plan steps completed, in 9 commits on `overnight/test-hardening-2026-06-15`:
+
+1. **`700b3fc`** — `report-amenities` route: added a shared `AMENITY_KEYS`/`AmenityKey`
+   constant (`lib/amenities.ts`), validated incoming `amenities` against it (400 on
+   unknown values), and added a shop-existence check (404 if `shop_id` doesn't
+   match a row) before inserting. Added a sync test asserting `AMENITY_KEYS` matches
+   `AmenityChip`'s `amenityMap` exactly, so the two can't silently drift.
+2. **`ba56343`** — `IssueForm`: on a failed (`!response.ok`) or thrown/rejected
+   submit, the form now shows "Something went wrong submitting your correction.
+   Please try again." instead of just silently re-enabling the button.
+3. **`8fe7faa`** — `AmenityReportModal`: same fix — failed/thrown submits now show
+   "Something went wrong submitting your update. Please try again." and the modal
+   stays open so the user can retry.
+4. **`9ef19d2`** — Account `Favorites`: a failed `/api/favorites` fetch (non-OK
+   response or thrown error) now renders a distinct "Couldn't load your favorites"
+   state instead of the "No favorites yet" empty state.
+5. **`a39012a`** — Tests for `/api/events` (filter by `shop_id`/`roaster_id`, db
+   error → 500) and `/api/events/[eventId]` (found → 200, not found → 404).
+6. **`eaff9e2`** — Tests for `/api/curated-lists` (shop→feature mapping, filtering
+   out shops with missing coordinates, empty `shops`, db error → 500).
+7. **`4ebd4dc`** — Tests for `/api/auth/event` (401 when unauthenticated, metric
+   dispatch per event type, email fallback) and `/app/auth/callback` (success
+   redirect to `next`, default redirect, failure → `/sign-in?error=auth_failed`,
+   missing code → same failure redirect).
+8. **`b67424c`** — Added `app/error.tsx` (root error boundary, "Try again" / "Go
+   home") and `app/account/error.tsx` (card-styled, "Try again"), each with a small
+   render test.
+9. Full check suite — see below.
+
+## Test coverage delta
+
+| | Before | After |
+|---|---|---|
+| Test files | 20 (4 with skips) | 27 passed + 4 skipped = 31 |
+| Tests | 119 passed / 7 skipped | 170 passed / 7 skipped |
+
+51 new tests added, 0 removed. The 7 pre-existing skips (PanelHeader, NearbyShops,
+MapContainer, HomeClient) are untouched — out of scope for tonight.
+
+## Bugs found + fixed
+
+- **`report-amenities` route accepted any `shop_id` / `amenities` payload** with no
+  validation — a typo'd shop UUID or garbage amenity key would silently insert into
+  `moderation`/amenity tables. Now returns 404/400 respectively (`700b3fc`).
+- **`IssueForm` and `AmenityReportModal` swallowed submission failures** — on a
+  network error or non-2xx response, the only feedback was the submit button
+  re-enabling; the user had no indication anything went wrong. Both now show an
+  inline error message (`ba56343`, `8fe7faa`).
+- **Account `Favorites` showed "No favorites yet" on a fetch error**, indistinguishable
+  from genuinely having zero favorites — a user whose favorites failed to load would
+  think they'd lost them. Now shows a distinct "Couldn't load your favorites" state
+  (`9ef19d2`).
+
+## Decisions to sanity-check
+
+- **`AMENITY_KEYS` whitelist** (`lib/amenities.ts`) was derived from the current
+  `amenityMap` in `AmenityChip.tsx` — if there are amenity values the UI doesn't yet
+  expose but the API should still accept, the whitelist will reject them. The sync
+  test will fail loudly if the two drift, which should make this easy to catch.
+- **Error copy** ("Something went wrong submitting your correction/update. Please
+  try again.") is generic placeholder text — swap for your preferred tone/wording if
+  you have existing copy conventions.
+- **`app/error.tsx` / `app/account/error.tsx` styling** — built to match the
+  existing `Favorites` empty-state card pattern (rounded-2xl white card, yellow-300
+  CTA button) and the `Coffee`/`AlertTriangle` lucide icons already used elsewhere.
+  No design review was possible — worth a quick visual check.
+- No `// TODO(jg):` markers were needed — every gap encountered had a reasonably
+  unambiguous fix within the stated scope (validation, error surfacing, error
+  boundaries).
+
+## What I'd do next (priority order)
+
+1. **`/api/events/[eventId]` conflates "not found" with "any DB error"** — `getEvent`
+   returns `null` on *any* Supabase error (including real failures, not just "no
+   rows"), and the route always responds 404 in that case. A genuine DB outage would
+   look like "event not found" to the client. Worth distinguishing PostgREST's "no
+   rows" error code from other errors and returning 500 for the latter.
+2. **Address the pre-existing skipped tests** (PanelHeader, NearbyShops,
+   MapContainer, HomeClient) — these are the most complex interactive components and
+   currently have zero enforced coverage for whatever was skipped.
+3. **`/api/shops/submit`** (new shop submissions to `moderation`) wasn't in tonight's
+   scope but is in the same risk class as `report-amenities` — worth the same
+   validation audit (existence checks, input whitelisting).
+4. **Node version**: run `nvm alias default 22` (or commit an engines field /
+   Volta config) so `npm test`/`npm run lint`/`npm run build` work without manually
+   sourcing nvm — currently Node 18 is the default shell version and Vitest 4 hard-fails
+   on it.
+5. **Error boundary coverage**: only root and `/account` got `error.tsx`. If
+   `/account/favorites` or `/account/settings` have failure modes distinct enough to
+   warrant their own messaging (e.g. favorites-specific retry), consider per-segment
+   boundaries — currently they'll bubble to `app/account/error.tsx`.
+
+## Check suite results (Node 22.22.0)
+
+- `npx tsc --noEmit` — clean (after `npm run build` regenerated stale
+  `.next/types/**` referencing pre-restructure routes — gitignored cache, not a
+  source issue)
+- `npm run lint` — clean (only pre-existing `<img>`/a11y warnings, no errors)
+- `npx vitest run` — 170 passed, 7 skipped (31 files: 27 passed, 4 skipped)
+- `npm run build` — succeeds, all 29 routes compile
