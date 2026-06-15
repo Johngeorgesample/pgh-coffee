@@ -20,20 +20,29 @@ self.addEventListener('activate', (event) => {
 })
 
 // Network-first for navigations so users always get fresh content when online,
-// falling back to the cached shell when offline.
+// falling back to the cached app shell when offline. Only the shell ('/') is
+// cached so we never persist authenticated or route-specific HTML.
 self.addEventListener('fetch', (event) => {
   const { request } = event
-  if (request.method !== 'GET') return
+  if (request.method !== 'GET' || request.mode !== 'navigate') return
 
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
+  const url = new URL(request.url)
+  const isShell = url.origin === self.location.origin && url.pathname === '/'
+
+  event.respondWith(
+    fetch(request)
+      .then((response) => {
+        if (isShell) {
           const copy = response.clone()
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy))
-          return response
-        })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match('/'))),
-    )
-  }
+          event.waitUntil(
+            caches
+              .open(CACHE_NAME)
+              .then((cache) => cache.put('/', copy))
+              .catch(() => {}),
+          )
+        }
+        return response
+      })
+      .catch(() => caches.match('/')),
+  )
 })
