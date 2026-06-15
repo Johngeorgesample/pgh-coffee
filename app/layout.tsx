@@ -5,10 +5,12 @@ import './globals.css'
 import Nav from '@/app/components/Nav'
 import { FaroInit } from '@/app/components/FaroInit'
 import { AuthProvider } from '@/app/components/AuthProvider'
+import { SITE_URL } from '@/app/utils/seo'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: 'pgh.coffee',
     description: 'A guide to coffee in Pittsburgh, PA',
