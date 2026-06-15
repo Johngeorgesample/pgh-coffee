@@ -25,11 +25,13 @@ export const getShopByUuidPrefix = async (prefix: string): Promise<DbShop | null
   const { data, error } = await supabase
     .from('shops')
     .select('*, company:company_id(*)')
+    .like('uuid', `${prefix}%`)
+    .limit(1)
 
   if (error) {
     logger.error('Error fetching shops', { error: error.message })
     return null
   }
 
-  return data.find((shop: DbShop) => shop.uuid.startsWith(prefix)) ?? null
+  return data[0] ?? null
 }
