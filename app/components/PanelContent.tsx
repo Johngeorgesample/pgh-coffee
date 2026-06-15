@@ -8,6 +8,7 @@ import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
 import { RoasterDetails } from './RoasterDetails'
 import usePanelStore from '@/stores/panelStore'
+import { useAnalytics } from '@/hooks'
 
 interface IProps {
   shop: TShop
@@ -17,6 +18,7 @@ export default function PanelContent(props: IProps) {
   const { address, photos, amenities, roaster } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
   const { setPanelContent } = usePanelStore()
+  const plausible = useAnalytics()
 
   return (
     <div className="bg-[#FAF9F7]">
@@ -46,13 +48,23 @@ export default function PanelContent(props: IProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-600 transition-colors"
+                onClick={() =>
+                  plausible('RoasterBeansClick', {
+                    props: { roasterName: roaster.name, roasterSlug: roaster.slug, source: 'shop_panel', destination: 'external' },
+                  })
+                }
               >
                 {roaster.name}
               </a>
             ) : roaster.slug ? (
               <button
                 className="hover:text-stone-600 transition-colors"
-                onClick={() => setPanelContent(<RoasterDetails slug={roaster.slug} />, 'roaster')}
+                onClick={() => {
+                  plausible('RoasterBeansClick', {
+                    props: { roasterName: roaster.name, roasterSlug: roaster.slug, source: 'shop_panel', destination: 'roaster_panel' },
+                  })
+                  setPanelContent(<RoasterDetails slug={roaster.slug} />, 'roaster')
+                }}
               >
                 {roaster.name}
               </button>

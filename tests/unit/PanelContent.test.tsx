@@ -9,6 +9,12 @@ vi.mock('@/stores/panelStore', () => ({
   default: () => ({ setPanelContent: mockSetPanelContent }),
 }))
 
+const mockPlausible = vi.fn()
+vi.mock('@/hooks', async importOriginal => ({
+  ...(await importOriginal<typeof import('@/hooks')>()),
+  useAnalytics: () => mockPlausible,
+}))
+
 // Mock next-plausible
 vi.mock('next-plausible', () => ({
   usePlausible: () => vi.fn(),
@@ -105,6 +111,10 @@ describe('PanelContent', () => {
 
     fireEvent.click(screen.getByText('Local Roaster'))
     expect(mockSetPanelContent).toHaveBeenCalledWith(expect.anything(), 'roaster')
+    expect(mockPlausible).toHaveBeenCalledWith(
+      'RoasterBeansClick',
+      expect.objectContaining({ props: expect.objectContaining({ destination: 'roaster_panel' }) }),
+    )
   })
 
   it('links externally for a non-local roaster instead of opening the panel', () => {
@@ -120,5 +130,11 @@ describe('PanelContent', () => {
     const link = screen.getByText('Far Away Roaster').closest('a')
     expect(link).toHaveAttribute('href', 'https://faraway.example')
     expect(mockSetPanelContent).not.toHaveBeenCalled()
+
+    fireEvent.click(link!)
+    expect(mockPlausible).toHaveBeenCalledWith(
+      'RoasterBeansClick',
+      expect.objectContaining({ props: expect.objectContaining({ destination: 'external' }) }),
+    )
   })
 })
