@@ -29,7 +29,6 @@ describe('AmenityReportModal', () => {
 
   it('pre-checks amenities already associated with the shop', () => {
     render(<AmenityReportModal {...defaultProps} />)
-    // amenityMap is rendered in declaration order; free_wifi is first
     expect(screen.getAllByRole('checkbox')[0]).toHaveAttribute('aria-checked', 'true')
   })
 
