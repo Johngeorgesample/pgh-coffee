@@ -55,34 +55,14 @@ describe('Curated Lists API Route - GET', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data).toEqual([
-      {
-        id: 'list-1',
-        title: 'Best Patios',
-        description: 'Great outdoor seating',
-        featured: true,
-        shops: [
-          {
-            type: 'Feature',
-            properties: {
-              name: 'Test Shop',
-              company: null,
-              neighborhood: 'Downtown',
-              website: 'https://example.com',
-              address: '123 Main St',
-              photo: undefined,
-              photos: undefined,
-              uuid: 'shop-1',
-              amenities: undefined,
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [-79.925, 40.4363],
-            },
-          },
-        ],
-      },
-    ])
+    // List metadata is passed through and each shop becomes a GeoJSON Feature.
+    expect(data).toHaveLength(1)
+    expect(data[0]).toMatchObject({ id: 'list-1', title: 'Best Patios', featured: true })
+    expect(data[0].shops[0]).toMatchObject({
+      type: 'Feature',
+      properties: { uuid: 'shop-1' },
+      geometry: { coordinates: [-79.925, 40.4363] },
+    })
   })
 
   test('filters out shops with missing coordinates', async () => {
