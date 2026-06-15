@@ -15,6 +15,7 @@ interface Props {
 
 export default function AmenityReportModal({ isOpen, onClose, onSuccess, amenities, shopId }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -27,6 +28,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
             const formData = new FormData(e.currentTarget)
             const selected = formData.getAll('amenities') as string[]
             setIsSubmitting(true)
+            setError(null)
             try {
               const res = await fetch('/api/shops/report-amenities', {
                 method: 'POST',
@@ -38,6 +40,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               onClose()
             } catch (err) {
               console.error('Error submitting amenity report:', err)
+              setError('Something went wrong submitting your update. Please try again.')
             } finally {
               setIsSubmitting(false)
             }
@@ -81,6 +84,9 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               </div>
             ))}
           </div>
+          {error && (
+            <p className="mt-4 text-sm text-red-600">{error}</p>
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
