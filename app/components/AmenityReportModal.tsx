@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 
 import { Checkbox, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
-import { amenityMap } from './AmenityChip'
+import { amenityMap } from '@/lib/amenities'
 
 interface Props {
   isOpen: boolean

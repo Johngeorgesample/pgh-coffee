@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
+import { AMENITY_KEYS } from '@/lib/amenityKeys'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -12,6 +13,25 @@ export async function POST(request: Request) {
 
   if (!shop_id || !Array.isArray(amenities)) {
     return NextResponse.json({ error: 'Missing shop_id or amenities' }, { status: 400 })
+  }
+
+  if (!amenities.every((amenity) => AMENITY_KEYS.includes(amenity))) {
+    return NextResponse.json({ error: 'Invalid amenity value' }, { status: 400 })
+  }
+
+  const { data: shop, error: shopError } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('uuid', shop_id)
+    .single()
+
+  if (shopError && shopError.code !== 'PGRST116') {
+    logger.error('Error validating shop', { error: shopError.message })
+    return NextResponse.json({ error: 'Error validating shop' }, { status: 500 })
+  }
+
+  if (!shop) {
+    return NextResponse.json({ error: 'Shop not found' }, { status: 404 })
   }
 
   const { data, error } = await supabase
