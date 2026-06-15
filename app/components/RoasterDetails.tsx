@@ -4,6 +4,10 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Instagram } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
+import LocationList from '@/app/components/LocationList'
+import useShopsStore from '@/stores/coffeeShopsStore'
+import { formatDataToGeoJSON } from '../utils/utils'
+import { DbShop } from '@/types/shop-types'
 
 interface TRoaster {
   id: string
@@ -18,9 +22,11 @@ interface TRoaster {
     name: string
     slug: string
   }
+  shops?: DbShop[]
 }
 
 export const RoasterDetails = ({ slug }: { slug: string }) => {
+  const { setOverrideShops } = useShopsStore()
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
   const plausible = useAnalytics()
@@ -52,6 +58,13 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
       window.history.pushState(null, '', url.toString())
     }
   }, [roaster])
+
+  useEffect(() => {
+    if (roaster?.shops && roaster.shops.length > 0) {
+      setOverrideShops(formatDataToGeoJSON(roaster.shops))
+    }
+    return () => setOverrideShops(null)
+  }, [roaster, setOverrideShops])
 
   if (loading) {
     return (
@@ -130,6 +143,13 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
             <p className="text-sm text-gray-500">
               Part of <span className="font-medium">{roaster.company.name}</span>
             </p>
+          </div>
+        )}
+
+        {roaster.shops && roaster.shops.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <p className="mb-2 text-gray-700">Where to find this roaster&apos;s coffee</p>
+            <LocationList coffeeShops={formatDataToGeoJSON(roaster.shops).features} />
           </div>
         )}
       </div>

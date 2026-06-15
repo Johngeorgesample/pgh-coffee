@@ -22,6 +22,20 @@ const getRoaster = async (slug: string) => {
   return data
 }
 
+const getRoasterShops = async (roasterId: string) => {
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*, company:company_id(*)')
+    .eq('roaster_id', roasterId)
+
+  if (error) {
+    logger.error('Error fetching roaster shops', { error: error.message })
+    return null
+  }
+
+  return data
+}
+
 export async function GET(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
   const { slug } = params
@@ -32,5 +46,14 @@ export async function GET(req: NextRequest, props: { params: Promise<{ slug: str
     return NextResponse.json({ message: 'Roaster not found' }, { status: 404 })
   }
 
-  return NextResponse.json(roasterData)
+  const shops = await getRoasterShops(roasterData.id)
+
+  if (shops === null) {
+    return NextResponse.json({ error: 'Error fetching roaster shops' }, { status: 500 })
+  }
+
+  return NextResponse.json({
+    ...roasterData,
+    shops,
+  })
 }
