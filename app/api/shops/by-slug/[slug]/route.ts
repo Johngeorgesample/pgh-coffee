@@ -12,7 +12,7 @@ export const GET = withMetrics('shops/by-slug/[slug]', async (req: NextRequest, 
   const shop = prefix ? await getShopByUuidPrefix(prefix) : null
 
   if (!shop) {
-    metrics.shopNotFound(slug)
+    metrics.shopNotFound(prefix ? 'no_match' : 'invalid_slug')
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
