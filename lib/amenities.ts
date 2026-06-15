@@ -1,6 +1,3 @@
-// Canonical list of amenity keys accepted by the amenity report API.
-// Keep in sync with `amenityMap` in app/components/AmenityChip.tsx
-// (tests/unit/amenities.test.ts asserts the two stay in sync).
 export const AMENITY_KEYS = [
   'free_wifi',
   'no_wifi',

@@ -1,15 +1,12 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
-// Create mock functions for the Supabase chains
 const mockShopValidationResult = vi.fn()
 const mockInsertResult = vi.fn()
 
-// Mock Supabase client
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: (table: string) => {
       if (table === 'shops') {
-        // Chain: select().eq().single()
         return {
           select: () => ({
             eq: () => ({
@@ -19,7 +16,6 @@ vi.mock('@supabase/supabase-js', () => ({
         }
       }
       if (table === 'amenity_reports') {
-        // Chain: insert()
         return {
           insert: mockInsertResult,
         }

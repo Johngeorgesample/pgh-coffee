@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid amenity value' }, { status: 400 })
   }
 
-  // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
     .select('uuid')
