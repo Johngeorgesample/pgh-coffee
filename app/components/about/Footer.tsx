@@ -12,7 +12,7 @@ export default function Footer() {
               d="M34.94,10.53 l21.81,48.63 h-51.62 l60.37,180.31 h119 l60.37,-180.31 h-51.62 l21.81,-48.63 z"
             />
           </svg>
-          <h1 className="flex items-center text-2xl">pgh.coffee</h1>
+          <p className="flex items-center text-2xl">pgh.coffee</p>
         </div>
 
         <p className="text-xs text-slate-400 italic">© 2026 Crafted with ❤️ and ☕ in Pittsburgh.</p>
