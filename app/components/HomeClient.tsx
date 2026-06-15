@@ -29,6 +29,7 @@ export default function HomeClient() {
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
+    params.delete('shop')
     params.delete('company')
     params.delete('roaster')
     params.delete('news')
