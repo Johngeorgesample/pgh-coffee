@@ -8,7 +8,7 @@ import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useShopRouteSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
@@ -36,7 +36,9 @@ export default function HomeClient() {
     params.delete('event')
     params.delete('events')
     url.search = params.toString()
-    if (pathname.startsWith('/shops/')) {
+    // Closing the panel always returns to the bare map, so drop any detail path
+    // (/shops/, /events/, /news/).
+    if (pathname !== '/') {
       url.pathname = '/'
     }
     router.replace(url.toString())
@@ -59,8 +61,8 @@ export default function HomeClient() {
   useShopRouteSync()
   useURLCompanySync()
   useURLRoasterSync()
-  useURLNewsSync()
-  useURLEventSync()
+  useNewsRouteSync()
+  useEventRouteSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -76,7 +78,8 @@ export default function HomeClient() {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
       const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      if (!hasContentParam && !pathname.startsWith('/shops/')) {
+      const onDetailPath = ['/shops/', '/events/', '/news/'].some(p => pathname.startsWith(p))
+      if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
       }
     }

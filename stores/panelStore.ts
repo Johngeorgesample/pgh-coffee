@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
 import { buildShopSlug } from '@/app/utils/shopSlug'
+import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
 type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
@@ -51,15 +52,17 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
       }
       return null
     case 'news':
-      if (hasProps(content, 'id') && content.props.id) {
-        return { type: 'query', key: 'news', value: content.props.id as string }
+      if (hasProps(content, 'id') && content.props.id && hasProps(content, 'title') && content.props.title) {
+        const id = content.props.id as string
+        const title = content.props.title as string
+        return { type: 'path', value: `/news/${buildContentSlug({ id, title })}` }
       }
       return { type: 'query', key: 'news', value: '' }
     case 'event':
       if (hasProps(content, 'event')) {
-        const event = content.props.event as { id: string }
+        const event = content.props.event as { id: string; title: string }
         if (event?.id) {
-          return { type: 'query', key: 'event', value: event.id }
+          return { type: 'path', value: `/events/${buildContentSlug(event)}` }
         }
       }
       return null

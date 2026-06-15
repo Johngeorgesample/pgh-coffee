@@ -57,7 +57,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
     })
 
     const shopParam = `${event.shop.name}_${event.shop.neighborhood}`
-    window.location.href = `?shop=${encodeURIComponent(shopParam)}`
+    window.location.href = `/?shop=${encodeURIComponent(shopParam)}`
   }
 
   const handleRoasterClick = () => {
@@ -71,7 +71,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    window.location.href = `?roaster=${encodeURIComponent(event.roaster.slug)}`
+    window.location.href = `/?roaster=${encodeURIComponent(event.roaster.slug)}`
   }
 
   const handleExternalLink = () => {
