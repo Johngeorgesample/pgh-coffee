@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Checkbox, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { amenityMap } from './AmenityChip'
@@ -15,6 +15,11 @@ interface Props {
 
 export default function AmenityReportModal({ isOpen, onClose, onSuccess, amenities, shopId }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isOpen) setError(null)
+  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -27,6 +32,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
             const formData = new FormData(e.currentTarget)
             const selected = formData.getAll('amenities') as string[]
             setIsSubmitting(true)
+            setError(null)
             try {
               const res = await fetch('/api/shops/report-amenities', {
                 method: 'POST',
@@ -38,6 +44,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               onClose()
             } catch (err) {
               console.error('Error submitting amenity report:', err)
+              setError('Something went wrong submitting your update. Please try again.')
             } finally {
               setIsSubmitting(false)
             }
@@ -81,6 +88,9 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
               </div>
             ))}
           </div>
+          {error && (
+            <p role="alert" className="mt-4 text-sm text-red-600">{error}</p>
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
