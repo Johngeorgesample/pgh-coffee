@@ -18,8 +18,11 @@ import {
   CreditCard,
   type LucideIcon,
 } from 'lucide-react'
+import type { AmenityKey } from './amenityKeys'
 
-export const amenityMap: Record<string, { label: string; icon: LucideIcon }> = {
+export { AMENITY_KEYS, type AmenityKey } from './amenityKeys'
+
+export const amenityMap = {
   free_wifi: { label: 'Free Wi-Fi', icon: Wifi },
   no_wifi: { label: 'No Wi-Fi', icon: WifiOff },
   onsite_parking: { label: 'Onsite Parking', icon: Car },
@@ -41,8 +44,7 @@ export const amenityMap: Record<string, { label: string; icon: LucideIcon }> = {
   card_only: { label: 'Card Only', icon: CreditCard },
   restroom: { label: 'Restroom', icon: DoorOpen },
   no_restroom: { label: 'No Restroom', icon: DoorClosed },
-}
+} satisfies Record<AmenityKey, { label: string; icon: LucideIcon }>
 
-export type AmenityKey = keyof typeof amenityMap
-
-export const AMENITY_KEYS = Object.keys(amenityMap) as AmenityKey[]
+export const getAmenity = (key: string): { label: string; icon: LucideIcon } | undefined =>
+  (amenityMap as Record<string, { label: string; icon: LucideIcon }>)[key]

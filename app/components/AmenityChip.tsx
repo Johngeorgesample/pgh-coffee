@@ -1,4 +1,4 @@
-import { amenityMap } from '@/lib/amenities'
+import { getAmenity } from '@/lib/amenities'
 
 interface AmenityChipProps {
   amenity: string
@@ -7,7 +7,7 @@ interface AmenityChipProps {
 }
 
 export default function AmenityChip({ amenity, active, onClick }: AmenityChipProps) {
-  const entry = amenityMap[amenity]
+  const entry = getAmenity(amenity)
   if (!entry) return null
 
   const Icon = entry.icon

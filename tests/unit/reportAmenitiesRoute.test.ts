@@ -109,7 +109,7 @@ describe('Amenity Report API Route - POST', () => {
   test('returns 404 when shop_id does not exist', async () => {
     mockShopValidationResult.mockResolvedValueOnce({
       data: null,
-      error: { message: 'No rows found' },
+      error: { code: 'PGRST116', message: 'No rows found' },
     })
 
     const request = new Request('http://localhost:3000/api/shops/report-amenities', {
@@ -126,6 +126,28 @@ describe('Amenity Report API Route - POST', () => {
 
     expect(response.status).toBe(404)
     expect(data.error).toBe('Shop not found')
+  })
+
+  test('returns 500 when the shop lookup itself fails', async () => {
+    mockShopValidationResult.mockResolvedValueOnce({
+      data: null,
+      error: { code: '08006', message: 'connection failure' },
+    })
+
+    const request = new Request('http://localhost:3000/api/shops/report-amenities', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        shop_id: 'shop-uuid-123',
+        amenities: ['free_wifi'],
+      }),
+    })
+
+    const response = await POST(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error validating shop')
   })
 
   test('returns 500 on Supabase insert failure', async () => {
