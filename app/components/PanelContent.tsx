@@ -40,14 +40,7 @@ export default function PanelContent(props: IProps) {
         {roaster && (
           <p className="mt-2 text-xs text-stone-400">
             Beans:{' '}
-            {roaster.is_local ? (
-              <button
-                className="hover:text-stone-600 transition-colors"
-                onClick={() => setPanelContent(<RoasterDetails slug={roaster.slug} />, 'roaster')}
-              >
-                {roaster.name}
-              </button>
-            ) : roaster.website ? (
+            {roaster.is_local === false && roaster.website ? (
               <a
                 href={roaster.website}
                 target="_blank"
@@ -56,6 +49,13 @@ export default function PanelContent(props: IProps) {
               >
                 {roaster.name}
               </a>
+            ) : roaster.slug ? (
+              <button
+                className="hover:text-stone-600 transition-colors"
+                onClick={() => setPanelContent(<RoasterDetails slug={roaster.slug} />, 'roaster')}
+              >
+                {roaster.name}
+              </button>
             ) : (
               roaster.name
             )}
