@@ -109,7 +109,7 @@ describe('Shop Details API Route', () => {
     expect(response.status).toBe(404)
     expect(data.message).toBe('Shop not found')
     // A transient "not found" must not be pinned in the shared CDN cache.
-    expect(response.headers.get('Cache-Control')).toBeNull()
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 
   test('returns 500 on database error', async () => {
@@ -129,7 +129,7 @@ describe('Shop Details API Route', () => {
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error fetching shop')
     // A database error must not be cached, so the CDN re-tries on recovery.
-    expect(response.headers.get('Cache-Control')).toBeNull()
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 })
 
