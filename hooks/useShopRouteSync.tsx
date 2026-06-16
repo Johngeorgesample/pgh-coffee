@@ -3,33 +3,57 @@ import { useParams } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
+import { ExploreContent } from '@/app/components/ExploreContent'
 import { TShop } from '@/types/shop-types'
 import { buildShopSlug } from '@/app/utils/shopSlug'
 
 export const useShopRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
-  const { currentShop, setCurrentShop } = useShopsStore()
-  const { setPanelContent } = usePanelStore()
 
+  // Store actions are read via getState() rather than closed over so the effect
+  // genuinely depends only on `slug` — no exhaustive-deps suppression needed.
   useEffect(() => {
-    if (!slug) {
-      if (currentShop?.properties?.uuid) {
+    const { currentShop, setCurrentShop } = useShopsStore.getState()
+
+    // Undo the shop selection and panel this hook put up, returning to the
+    // explore panel — but only when a shop is actually showing, so we don't
+    // clobber a company/roaster/news panel that lives on the bare `/` route.
+    const clearShopPanel = () => {
+      if (useShopsStore.getState().currentShop?.properties?.uuid) {
         setCurrentShop({} as TShop)
       }
+      if (usePanelStore.getState().panelMode === 'shop') {
+        usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
+      }
+    }
+
+    // Leaving the shop route (e.g. browser back to `/`).
+    if (!slug) {
+      clearShopPanel()
       return
     }
 
+    // Already showing this shop (e.g. it was selected from the map before the
+    // route changed) — nothing to fetch.
     if (currentShop?.properties && buildShopSlug(currentShop.properties) === slug) {
       return
     }
 
-    fetch(`/api/shops/by-slug/${encodeURIComponent(slug)}`)
+    const controller = new AbortController()
+    fetch(`/api/shops/by-slug/${encodeURIComponent(slug)}`, { signal: controller.signal })
       .then(res => (res.ok ? res.json() : Promise.reject(new Error('Shop not found'))))
       .then(data => {
-        setCurrentShop(data)
-        setPanelContent(<ShopDetails shop={data} />, 'shop')
+        useShopsStore.getState().setCurrentShop(data)
+        usePanelStore.getState().setPanelContent(<ShopDetails shop={data} />, 'shop')
       })
-      .catch(console.error)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        // Unresolvable slug or fetch failure: drop any stale shop details
+        // instead of leaving the previous shop's panel visible.
+        console.error(err)
+        clearShopPanel()
+      })
+
+    return () => controller.abort()
   }, [slug])
 }

@@ -11,7 +11,7 @@ export default function MapError({ error, reset }: { error: Error; reset: () => 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
       <div>
-        <p className="text-lg font-medium">Something went wrong loading this shop.</p>
+        <p className="text-lg font-medium">Something went wrong.</p>
         <p className="text-sm text-gray-500">Please try again in a moment.</p>
       </div>
       <button
