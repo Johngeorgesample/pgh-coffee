@@ -3,7 +3,7 @@ import { createElement } from 'react'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 
 const navigate = vi.fn()
-let replaceState: ReturnType<typeof vi.fn>
+let replaceState: ReturnType<typeof vi.spyOn>
 
 function setPathname(pathname: string) {
   Object.defineProperty(window, 'location', {
@@ -23,12 +23,14 @@ describe('panelStore back() URL sync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     setPanelNavigate(navigate)
-    replaceState = vi.fn()
-    window.history.replaceState = replaceState
+    replaceState = vi.spyOn(window.history, 'replaceState').mockImplementation(() => {})
     usePanelStore.getState().reset()
   })
 
-  afterEach(() => setPanelNavigate(null))
+  afterEach(() => {
+    setPanelNavigate(null)
+    replaceState.mockRestore()
+  })
 
   test('backing out of a /shops/[slug] route goes through the router, not replaceState', () => {
     setPathname('/shops/klvn-larimer-e3bd219a')

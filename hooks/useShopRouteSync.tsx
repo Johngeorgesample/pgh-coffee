@@ -27,14 +27,13 @@ export const useShopRouteSync = () => {
       }
     }
 
-    // Leaving the shop route (e.g. browser back to `/`).
     if (!slug) {
       clearShopPanel()
       return
     }
 
-    // Already showing this shop (e.g. it was selected from the map before the
-    // route changed) — nothing to fetch.
+    // Skip the fetch when the shop was already selected from the map before the
+    // route caught up.
     if (currentShop?.properties && buildShopSlug(currentShop.properties) === slug) {
       return
     }
