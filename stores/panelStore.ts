@@ -94,7 +94,15 @@ function updateURL(param: URLTarget | null) {
     url.pathname = '/'
   }
 
-  window.history.replaceState({}, '', url.toString())
+  // A pathname change must go through the App Router — replaceState updates the
+  // address bar but doesn't notify the router, leaving usePathname()/useParams()
+  // stale (e.g. backing out of a /shops/[slug] route). Same-pathname query
+  // updates stay on replaceState; the query panels read window.location directly.
+  if (panelNavigate && url.pathname !== window.location.pathname) {
+    panelNavigate(url.pathname + url.search)
+  } else {
+    window.history.replaceState({}, '', url.toString())
+  }
 }
 
 interface PanelState {
@@ -145,17 +153,14 @@ const usePanelStore = create<PanelState>()(
           const top = history[history.length - 1]
           const target = getURLParamForEntry(top)
 
-          if (target?.type === 'path' && panelNavigate) {
-            // Returning to a shop entry: pre-sync currentShop so useShopRouteSync
-            // short-circuits instead of refetching, then do a real route
-            // navigation to keep useParams()/usePathname() in sync.
-            if (hasProps(top.content, 'shop')) {
-              useCoffeeShopsStore.getState().setCurrentShop(top.content.props.shop as TShop)
-            }
-            panelNavigate(target.value)
-          } else {
-            updateURL(target)
+          // Returning to a shop entry: pre-sync currentShop so the route change
+          // updateURL triggers is short-circuited by useShopRouteSync instead of
+          // refetching (and re-pushing a panel entry).
+          if (target?.type === 'path' && hasProps(top.content, 'shop')) {
+            useCoffeeShopsStore.getState().setCurrentShop(top.content.props.shop as TShop)
           }
+
+          updateURL(target)
 
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
