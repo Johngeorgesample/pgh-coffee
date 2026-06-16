@@ -86,7 +86,7 @@ describe('Shop by-slug API Route', () => {
     expect(data.message).toBe('Shop not found')
   })
 
-  test('returns 404 on database error', async () => {
+  test('returns 500 (not 404) on database error so an outage is not masked as not-found', async () => {
     mockLimit.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
     const slug = 'some-slug-12345678'
@@ -96,7 +96,7 @@ describe('Shop by-slug API Route', () => {
     const response = await GET(request, { params })
     const data = await response.json()
 
-    expect(response.status).toBe(404)
-    expect(data.message).toBe('Shop not found')
+    expect(response.status).toBe(500)
+    expect(data.message).toBe('Error fetching shop')
   })
 })

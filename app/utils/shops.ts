@@ -33,9 +33,12 @@ export const getShopByUuidPrefix = async (prefix: string): Promise<DbShop | null
     .lte('uuid', `${prefix}-ffff-ffff-ffff-ffffffffffff`)
     .limit(1)
 
+  // Throw on a real query failure so callers can tell "the lookup failed" apart
+  // from "no shop has this prefix" (data[0] === undefined). Swallowing the error
+  // into null would mask a DB outage as a 404.
   if (error) {
-    logger.error('Error fetching shops', { error: error.message })
-    return null
+    logger.error('Error fetching shop by uuid prefix', { error: error.message })
+    throw new Error(`Failed to fetch shop by uuid prefix: ${error.message}`)
   }
 
   return data[0] ?? null

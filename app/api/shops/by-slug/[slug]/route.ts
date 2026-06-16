@@ -9,10 +9,21 @@ export const GET = withMetrics('shops/by-slug/[slug]', async (req: NextRequest, 
   const { slug } = await props.params
 
   const prefix = extractUuidPrefix(slug)
-  const shop = prefix ? await getShopByUuidPrefix(prefix) : null
+  if (!prefix) {
+    metrics.shopNotFound('invalid_slug')
+    return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
+  }
+
+  let shop
+  try {
+    shop = await getShopByUuidPrefix(prefix)
+  } catch {
+    metrics.apiError('shops/by-slug/[slug]')
+    return NextResponse.json({ message: 'Error fetching shop' }, { status: 500 })
+  }
 
   if (!shop) {
-    metrics.shopNotFound(prefix ? 'no_match' : 'invalid_slug')
+    metrics.shopNotFound('no_match')
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
