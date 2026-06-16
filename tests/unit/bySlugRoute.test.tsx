@@ -3,15 +3,17 @@ import { NextRequest } from 'next/server'
 
 const mockLimit = vi.fn()
 
-// Mock Supabase client. getShopByUuidPrefix filters in the query via
-// .select(...).like('uuid', `${prefix}%`).limit(1), so the chain resolves
-// at .limit().
+// Mock Supabase client. getShopByUuidPrefix prefix-matches the uuid column via
+// a bounded range (.gte(...).lte(...)) rather than LIKE, because `uuid` is a
+// Postgres uuid type with no LIKE operator. The chain resolves at .limit().
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({
       select: () => ({
-        like: () => ({
-          limit: mockLimit,
+        gte: () => ({
+          lte: () => ({
+            limit: mockLimit,
+          }),
         }),
       }),
     }),
