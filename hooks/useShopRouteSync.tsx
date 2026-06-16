@@ -40,7 +40,14 @@ export const useShopRouteSync = () => {
 
     const controller = new AbortController()
     fetch(`/api/shops/by-slug/${encodeURIComponent(slug)}`, { signal: controller.signal })
-      .then(res => (res.ok ? res.json() : Promise.reject(new Error('Shop not found'))))
+      .then(async res => {
+        if (!res.ok) {
+          // Surface the actual status so a 500 logs as an outage, not a 404.
+          const message = await res.json().then(body => body?.message).catch(() => null)
+          throw new Error(`Shop fetch failed (${res.status})${message ? `: ${message}` : ''}`)
+        }
+        return res.json()
+      })
       .then(data => {
         useShopsStore.getState().setCurrentShop(data)
         usePanelStore.getState().setPanelContent(<ShopDetails shop={data} />, 'shop')

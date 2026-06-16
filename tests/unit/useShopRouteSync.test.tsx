@@ -53,7 +53,7 @@ describe('useShopRouteSync', () => {
     h.slug = 'bad-slug-deadbeef'
     h.shopState.currentShop = shopWithUuid // stale previously-viewed shop
     h.panelState.panelMode = 'shop'
-    ;(fetch as any).mockResolvedValueOnce({ ok: false })
+    ;(fetch as any).mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({ message: 'Error fetching shop' }) })
 
     renderHook(() => useShopRouteSync())
 
