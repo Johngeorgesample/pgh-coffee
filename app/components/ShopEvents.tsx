@@ -15,6 +15,7 @@ type EventEntry = {
   shop?: {
     name: string
     neighborhood: string
+    uuid: string
   }
 }
 
