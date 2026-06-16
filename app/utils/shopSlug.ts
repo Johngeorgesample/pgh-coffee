@@ -11,7 +11,10 @@ const COMBINING_MARKS = new RegExp(`[${String.fromCharCode(0x0300)}-${String.fro
  * strict guarantee, but collisions across the shop dataset are negligible.
  */
 export function buildShopSlug(shop: { name: string; neighborhood: string; uuid: string }): string {
-  return `${slugify(shop.name)}-${slugify(shop.neighborhood)}-${shop.uuid.slice(0, 8)}`
+  // Lowercase the prefix so it always agrees with extractUuidPrefix() (which
+  // lowercases): an uppercase-hex uuid would otherwise yield a slug that
+  // disagrees with the route value and cause avoidable refetches.
+  return `${slugify(shop.name)}-${slugify(shop.neighborhood)}-${shop.uuid.slice(0, 8).toLowerCase()}`
 }
 
 export function slugify(text: string): string {

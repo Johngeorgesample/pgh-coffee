@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainer from './MapContainer'
 import { ExploreContent } from './ExploreContent'
-import { useShopRouteSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
@@ -71,6 +70,13 @@ export default function HomeClient() {
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
+
+  // Let panelStore drive real route navigation when panel history returns to a
+  // shop entry, so the address bar and App Router params stay in sync.
+  useEffect(() => {
+    setPanelNavigate(href => router.push(href))
+    return () => setPanelNavigate(null)
+  }, [router])
 
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {

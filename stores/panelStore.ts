@@ -70,6 +70,17 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
   }
 }
 
+// Real Next.js navigation, registered by HomeClient. The store uses it when
+// panel history returns to a shop entry (a /shops/[slug] route) so the App
+// Router's useParams()/usePathname() stay in sync — replaceState changes the
+// address bar but does not notify the router. Query panels live on `/` and read
+// window.location directly, so they keep using replaceState below.
+let panelNavigate: ((href: string) => void) | null = null
+
+export function setPanelNavigate(fn: ((href: string) => void) | null) {
+  panelNavigate = fn
+}
+
 function updateURL(param: URLTarget | null) {
   const url = new URL(window.location.href)
   URL_PARAMS.forEach(p => url.searchParams.delete(p))
@@ -132,8 +143,19 @@ const usePanelStore = create<PanelState>()(
 
           const history = state.history.slice(0, -1)
           const top = history[history.length - 1]
+          const target = getURLParamForEntry(top)
 
-          updateURL(getURLParamForEntry(top))
+          if (target?.type === 'path' && panelNavigate) {
+            // Returning to a shop entry: pre-sync currentShop so useShopRouteSync
+            // short-circuits instead of refetching, then do a real route
+            // navigation to keep useParams()/usePathname() in sync.
+            if (hasProps(top.content, 'shop')) {
+              useCoffeeShopsStore.getState().setCurrentShop(top.content.props.shop as TShop)
+            }
+            panelNavigate(target.value)
+          } else {
+            updateURL(target)
+          }
 
           return { history, panelMode: top.mode, panelContent: top.content }
         }),
