@@ -22,7 +22,7 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
   const coordinates = shop.geometry?.coordinates
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ left: 0 })
+    if (scrollRef.current) scrollRef.current.scrollLeft = 0
   }, [uuid])
 
   function handleIssueSuccess() {
