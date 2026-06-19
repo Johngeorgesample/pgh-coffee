@@ -25,7 +25,7 @@ const groupByNeighborhood = (features: TShop[]): [string, TShop[]][] => {
 }
 
 export const Company = ({ slug }: { slug: string }) => {
-  const { setOverrideShops } = useShopsStore()
+  const { setOverrideShops, setSearchValue } = useShopsStore()
   const [company, setCompany] = useState<TCompany | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -154,11 +154,16 @@ export const Company = ({ slug }: { slug: string }) => {
           <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Locations</h2>
           {grouped.map(([neighborhood, shops]) => (
             <div key={neighborhood}>
-              <div className="flex items-center gap-1.5 mt-4 text-gray-900">
-                <MapPinIcon className="h-4 w-4 text-gray-400" />
-                <h3 className="text-sm font-medium">{neighborhood}</h3>
+              <button
+                type="button"
+                onClick={() => setSearchValue(neighborhood)}
+                aria-label={`Show all shops in ${neighborhood}`}
+                className="group flex items-center gap-1.5 mt-4 text-gray-900 hover:text-gray-950"
+              >
+                <MapPinIcon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+                <h3 className="text-sm font-medium group-hover:underline">{neighborhood}</h3>
                 <span className="text-xs text-gray-400">({shops.length})</span>
-              </div>
+              </button>
               <LocationList coffeeShops={shops} hideShopNames={true} showAddresses={true} />
             </div>
           ))}
