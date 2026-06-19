@@ -8,6 +8,7 @@ interface IProps {
   distance?: string
   shop: TShop
   hideShopName?: boolean
+  showAddress?: boolean
   units?: TUnits
   onMouseEnter?: () => void
   onMouseLeave?: () => void
@@ -75,8 +76,8 @@ export default function ShopCard(props: IProps) {
         )}
         <div className="flex justify-between mt-1">
           <p className="w-fit text-sm mb-1 text-left text-white border border-transparent flex items-center gap-1">
-            <MapPinIcon className="h-4 w-4" />
-            {props.shop.properties.neighborhood}
+            <MapPinIcon className="h-4 w-4 shrink-0" />
+            {props.showAddress ? props.shop.properties.address : props.shop.properties.neighborhood}
           </p>
           {props.distance && props.units && (
             <p className="italic text-sm text-white">
