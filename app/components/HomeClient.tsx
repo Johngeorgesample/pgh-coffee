@@ -7,6 +7,7 @@ import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainerLazy from './MapContainerLazy'
+import MapErrorFallback from './MapErrorFallback'
 import { ExploreContent } from './ExploreContent'
 import { useURLShopSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -18,8 +19,16 @@ import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
-    useShopsStore()
+  const {
+    allShops,
+    fetchCoffeeShops,
+    loadError,
+    currentShop,
+    setCurrentShop,
+    searchValue,
+    setSearchValue,
+    clearAmenityFilters,
+  } = useShopsStore()
   const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
@@ -119,6 +128,9 @@ export default function HomeClient() {
       <MapContainerLazy
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
+      {loadError && allShops.features.length === 0 && (
+        <MapErrorFallback onRetry={() => fetchCoffeeShops()} />
+      )}
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>
         {panelContent}
       </Panel>

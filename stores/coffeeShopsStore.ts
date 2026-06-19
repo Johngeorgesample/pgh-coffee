@@ -6,6 +6,7 @@ import { doesShopMatchFilter } from '@/app/utils/utils'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
+  loadError: boolean
   fetchCoffeeShops: () => Promise<void>
   setAllShops: (data: TShop[]) => void
   currentShop: TShop
@@ -33,6 +34,8 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         features: [],
       },
 
+      loadError: false,
+
       setAllShops: (data: TShop[] | { type: string; features: TShop[] }) =>
         set(prev => {
           const isGeoJSON = typeof data === 'object' && 'type' in data && 'features' in data
@@ -54,10 +57,14 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         }
         try {
           const response = await fetch('/api/shops/geojson')
+          if (!response.ok) {
+            throw new Error(`Failed to load shops: ${response.status}`)
+          }
           const data: TFeatureCollection = await response.json()
-          set({ allShops: data })
+          set({ allShops: data, loadError: false })
         } catch (error) {
           console.error('Error fetching coffee shops:', error)
+          set({ loadError: true })
         }
       },
 

@@ -16,7 +16,7 @@ const fetchShops = async () => {
     .order('name', { ascending: true })
   if (error) {
     logger.error('Error fetching shops', { error: error.message })
-    return []
+    return null
   }
   return data
 }
@@ -24,11 +24,10 @@ const fetchShops = async () => {
 
 export const GET = withMetrics('shops/geojson', async () => {
   const shops = await fetchShops()
-  const geojson = formatDataToGeoJSON(shops)
 
   if (!shops) {
-    return NextResponse.json({ error: 'Error creating GeoJSON' }, { status: 500 })
+    return NextResponse.json({ error: 'Error fetching shops' }, { status: 500 })
   }
 
-  return NextResponse.json(geojson)
+  return NextResponse.json(formatDataToGeoJSON(shops))
 })
