@@ -5,6 +5,7 @@ import { Instagram } from 'lucide-react'
 import LocationList from '@/app/components/LocationList'
 import { useState, useEffect } from 'react'
 import useShopsStore from '@/stores/coffeeShopsStore'
+import { useAnalytics } from '@/hooks'
 import { formatDataToGeoJSON } from '../utils/utils'
 import { TCompany, TShop } from '@/types/shop-types'
 
@@ -26,6 +27,7 @@ const groupByNeighborhood = (features: TShop[]): [string, TShop[]][] => {
 
 export const Company = ({ slug }: { slug: string }) => {
   const { setOverrideShops, setSearchValue } = useShopsStore()
+  const plausible = useAnalytics()
   const [company, setCompany] = useState<TCompany | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -64,6 +66,7 @@ export const Company = ({ slug }: { slug: string }) => {
   }, [company, setOverrideShops])
 
   const handleNeighborhoodClick = (neighborhood: string) => {
+    plausible('NeighborhoodClick', { props: { neighborhood, company: company?.slug } })
     const url = new URL(window.location.href)
     url.searchParams.delete('company')
     url.searchParams.delete('shop')
