@@ -169,9 +169,7 @@ export const Company = ({ slug }: { slug: string }) => {
                 aria-label={`Show all shops in ${neighborhood}`}
                 className="group flex items-center gap-1.5 mt-4 text-gray-900 hover:text-gray-950"
               >
-                <MapPinIcon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
                 <h3 className="text-sm font-medium group-hover:underline">{neighborhood}</h3>
-                <span className="text-xs text-gray-400">({shops.length})</span>
               </button>
               <LocationList coffeeShops={shops} hideShopNames={true} showAddresses={true} />
             </div>
