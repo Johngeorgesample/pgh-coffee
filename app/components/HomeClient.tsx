@@ -14,6 +14,7 @@ import usePanelStore from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
+import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
@@ -57,6 +58,7 @@ export default function HomeClient() {
   useURLRoasterSync()
   useURLNewsSync()
   useURLEventSync()
+  useURLNeighborhoodSync()
 
   useEffect(() => {
     if (!searchValue) return

@@ -11,7 +11,7 @@ type PanelEntry = {
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,

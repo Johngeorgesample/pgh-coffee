@@ -63,6 +63,15 @@ export const Company = ({ slug }: { slug: string }) => {
     return () => setOverrideShops(null)
   }, [company, setOverrideShops])
 
+  const handleNeighborhoodClick = (neighborhood: string) => {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('company')
+    url.searchParams.delete('shop')
+    url.searchParams.set('neighborhood', neighborhood)
+    window.history.pushState(null, '', url.toString())
+    setSearchValue(neighborhood)
+  }
+
   if (loading) {
     return (
       <div className="flex h-full flex-col overflow-y-auto animate-pulse">
@@ -156,7 +165,7 @@ export const Company = ({ slug }: { slug: string }) => {
             <div key={neighborhood}>
               <button
                 type="button"
-                onClick={() => setSearchValue(neighborhood)}
+                onClick={() => handleNeighborhoodClick(neighborhood)}
                 aria-label={`Show all shops in ${neighborhood}`}
                 className="group flex items-center gap-1.5 mt-4 text-gray-900 hover:text-gray-950"
               >

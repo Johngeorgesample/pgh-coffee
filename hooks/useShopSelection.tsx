@@ -20,6 +20,7 @@ export function useShopSelection() {
       if (!isOnMap) {
         url.pathname = '/'
       }
+      params.delete('neighborhood')
       params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
       url.search = params.toString()
       router.push(url.toString())
