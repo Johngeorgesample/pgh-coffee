@@ -38,19 +38,21 @@ describe('panelStore back() URL sync', () => {
     setPanelContent(companyEntry, 'company')
     setPanelContent(shopEntry, 'shop')
 
-    back() // -> company entry; pathname changes /shops/... -> /
+    back() // -> company entry; pathname changes /shops/... -> /companies/acme
 
-    expect(navigate).toHaveBeenCalledWith('/?company=acme')
+    expect(navigate).toHaveBeenCalledWith('/companies/acme')
     expect(replaceState).not.toHaveBeenCalled()
   })
 
   test('a same-pathname query change stays on replaceState (no router navigation)', () => {
     setPathname('/')
     const { setPanelContent, back } = usePanelStore.getState()
-    setPanelContent(companyEntry, 'company')
+    // The events list lives on `/` as a query panel (?events), so backing to it
+    // is a same-pathname change that should use replaceState, not the router.
     setPanelContent(createElement('div', {}), 'events')
+    setPanelContent(shopEntry, 'shop')
 
-    back() // -> company entry; pathname stays /
+    back() // -> events entry; pathname stays /
 
     expect(replaceState).toHaveBeenCalled()
     expect(navigate).not.toHaveBeenCalled()
