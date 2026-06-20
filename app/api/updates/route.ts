@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, TIME_SENSITIVE_TTL } from '@/lib/cacheHeaders'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -35,5 +36,5 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching updates' }, { status: 500 })
   }
 
-  return NextResponse.json(updates)
+  return NextResponse.json(updates, { headers: publicCacheHeaders(TIME_SENSITIVE_TTL) })
 }

@@ -44,6 +44,8 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual(mockEvents)
+    // Successful event responses are safe for the shared CDN to cache.
+    expect(response.headers.get('Cache-Control')).toContain('s-maxage=60')
     expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
     expect(mockEq).not.toHaveBeenCalledWith('shop_id', expect.anything())
     expect(mockEq).not.toHaveBeenCalledWith('roaster_id', expect.anything())
@@ -78,5 +80,7 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error fetching events')
+    // A database error must not be pinned in the shared CDN cache.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 })
