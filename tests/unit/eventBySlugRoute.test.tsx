@@ -3,14 +3,17 @@ import { NextRequest } from 'next/server'
 
 const mockLimit = vi.fn()
 
-// getEventByIdPrefix filters in the query via
-// .select(...).like('id', `${prefix}%`).limit(1), so the chain resolves at .limit().
+// getEventByIdPrefix prefix-matches the uuid `id` column via a bounded range
+// (.gte(...).lte(...)) rather than LIKE, because `uuid` is a Postgres uuid type
+// with no LIKE operator. The chain resolves at .limit().
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({
       select: () => ({
-        like: () => ({
-          limit: mockLimit,
+        gte: () => ({
+          lte: () => ({
+            limit: mockLimit,
+          }),
         }),
       }),
     }),
