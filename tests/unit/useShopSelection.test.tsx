@@ -76,7 +76,7 @@ describe('useShopSelection', () => {
       address: '123 Main St, Pittsburgh, PA 15213',
       photo: 'test-photo.jpg',
       website: 'https://testcoffee.com',
-      uuid: '12345'
+      uuid: '12345678-aaaa-bbbb-cccc-111111111111'
     },
     geometry: {
       type: 'Point',
@@ -143,6 +143,6 @@ describe('useShopSelection', () => {
 
     // Navigating to the shop's own route replaces whatever was on the map view
     // (e.g. a company drill-down); there is no carried-over query state.
-    expect(mockPush).toHaveBeenCalledWith('/shops/test-coffee-shop-downtown-12345')
+    expect(mockPush).toHaveBeenCalledWith('/shops/test-coffee-shop-downtown-12345678')
   })
 })

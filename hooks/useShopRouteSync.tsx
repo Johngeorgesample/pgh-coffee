@@ -15,9 +15,10 @@ export const useShopRouteSync = () => {
   useEffect(() => {
     const { currentShop, setCurrentShop } = useShopsStore.getState()
 
-    // Undo the shop selection and panel this hook put up, returning to the
-    // explore panel — but only when a shop is actually showing, so we don't
-    // clobber a company/roaster/news panel that lives on the bare `/` route.
+    // Leaving a shop route: always drop the selected shop (so the map marker
+    // de-highlights) when one is set, but only reset the panel to explore when a
+    // shop panel is actually showing, so we don't clobber a company/roaster/news
+    // panel that lives on the bare `/` route.
     const clearShopPanel = () => {
       if (useShopsStore.getState().currentShop?.properties?.uuid) {
         setCurrentShop({} as TShop)
