@@ -21,6 +21,13 @@ export function useShopSelection() {
         url.pathname = '/'
       }
       params.delete('neighborhood')
+      // Selecting a shop replaces any other content selection (e.g. a company
+      // drill-down), so clear the mutually-exclusive params first.
+      params.delete('company')
+      params.delete('roaster')
+      params.delete('news')
+      params.delete('event')
+      params.delete('events')
       params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
       url.search = params.toString()
       router.push(url.toString())
