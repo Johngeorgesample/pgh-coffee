@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
-import MapContainer from './MapContainer'
+import MapContainerLazy from './MapContainerLazy'
 import { ExploreContent } from './ExploreContent'
-import { useShopRouteSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
+import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
@@ -36,7 +36,9 @@ export default function HomeClient() {
     params.delete('event')
     params.delete('events')
     url.search = params.toString()
-    if (pathname.startsWith('/shops/')) {
+    // Closing the panel always returns to the bare map, so drop any detail path
+    // (/shops/, /events/, /news/).
+    if (pathname !== '/') {
       url.pathname = '/'
     }
     router.replace(url.toString())
@@ -59,8 +61,9 @@ export default function HomeClient() {
   useShopRouteSync()
   useURLCompanySync()
   useURLRoasterSync()
-  useURLNewsSync()
-  useURLEventSync()
+  useNewsRouteSync()
+  useEventRouteSync()
+  useURLNeighborhoodSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -72,11 +75,19 @@ export default function HomeClient() {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
 
+  // Let panelStore drive real route navigation when panel history returns to a
+  // shop entry, so the address bar and App Router params stay in sync.
+  useEffect(() => {
+    setPanelNavigate(href => router.push(href))
+    return () => setPanelNavigate(null)
+  }, [router])
+
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
       const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      if (!hasContentParam && !pathname.startsWith('/shops/')) {
+      const onDetailPath = ['/shops/', '/events/', '/news/'].some(p => pathname.startsWith(p))
+      if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
       }
     }
@@ -118,7 +129,7 @@ export default function HomeClient() {
   return (
     <div className="relative w-full h-full">
       {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
-      <MapContainer
+      <MapContainerLazy
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>

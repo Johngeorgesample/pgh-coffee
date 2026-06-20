@@ -1,8 +1,10 @@
 'use client'
 
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useCopyToClipboard, useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
+import { buildShopSlug } from '@/app/utils/shopSlug'
 import { EventCardData } from './EventCard'
 import CopyLinkToast from './CopyLinkToast'
 
@@ -42,6 +44,7 @@ interface EventDetailsProps {
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = useAnalytics()
+  const router = useRouter()
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
@@ -56,8 +59,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    const shopParam = `${event.shop.name}_${event.shop.neighborhood}`
-    window.location.href = `?shop=${encodeURIComponent(shopParam)}`
+    router.push(`/shops/${buildShopSlug(event.shop)}`)
   }
 
   const handleRoasterClick = () => {
@@ -71,7 +73,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    window.location.href = `?roaster=${encodeURIComponent(event.roaster.slug)}`
+    window.location.href = `/?roaster=${encodeURIComponent(event.roaster.slug)}`
   }
 
   const handleExternalLink = () => {

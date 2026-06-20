@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { permanentRedirect } from 'next/navigation'
-import { getShopByNameAndNeighborhood } from '@/app/utils/shops'
-import { buildShopSlug } from '@/app/utils/shopSlug'
+import { getEventByIdPrefix } from '@/app/utils/events'
+import { getUpdateByIdPrefix } from '@/app/utils/updates'
+import { buildContentSlug } from '@/app/utils/slug'
 import { getAllShopsForSeo, buildShopListJsonLd, jsonLdToString } from '@/app/utils/seo'
 
 type Props = {
@@ -23,12 +24,22 @@ export const metadata: Metadata = {
 }
 
 export default async function Home({ searchParams }: Props) {
-  const shopParam = (await searchParams).shop
+  const params = await searchParams
 
-  if (typeof shopParam === 'string') {
-    const [name, neighborhood] = shopParam.split('_')
-    const shop = name && neighborhood ? await getShopByNameAndNeighborhood(name, neighborhood) : null
-    if (shop) permanentRedirect(`/shops/${buildShopSlug(shop)}`)
+  // Redirect legacy detail links (?event=, ?news=) to their real paths.
+  // The list params (?events, ?news with no value) fall through to the map.
+  // Legacy ?shop= links are intentionally no longer redirected (the base branch
+  // dropped that path); they just land on the bare map.
+  const eventParam = params.event
+  if (typeof eventParam === 'string' && eventParam) {
+    const event = await getEventByIdPrefix(eventParam)
+    if (event) permanentRedirect(`/events/${buildContentSlug(event)}`)
+  }
+
+  const newsParam = params.news
+  if (typeof newsParam === 'string' && newsParam) {
+    const update = await getUpdateByIdPrefix(newsParam)
+    if (update) permanentRedirect(`/news/${buildContentSlug(update)}`)
   }
 
   const jsonLd = buildShopListJsonLd(await getAllShopsForSeo())

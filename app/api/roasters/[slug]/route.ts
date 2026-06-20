@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -32,5 +33,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ slug: str
     return NextResponse.json({ message: 'Roaster not found' }, { status: 404 })
   }
 
-  return NextResponse.json(roasterData)
+  return NextResponse.json(roasterData, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }

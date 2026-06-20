@@ -16,6 +16,7 @@ interface Favorite {
 export default function Favorites() {
   const [favorites, setFavorites] = useState<Favorite[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   const hasFavorites = favorites && favorites.length > 0
 
@@ -31,14 +32,29 @@ export default function Favorites() {
         setFavorites(Array.isArray(data) ? data : [])
         setLoading(false)
       })
-      .catch((error) => {
-        console.error('Failed to fetch favorites:', error)
-        setFavorites([])
+      .catch((err) => {
+        console.error('Failed to fetch favorites:', err)
+        setError(true)
         setLoading(false)
       })
   }, [])
 
   if (loading) return <div>Loading...</div>
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Heart className="h-12 w-12 text-gray-300 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Couldn&apos;t load your favorites</h3>
+          <p className="text-gray-500 max-w-sm">
+            Something went wrong while loading your favorites. Please try refreshing the page.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       {hasFavorites ? (

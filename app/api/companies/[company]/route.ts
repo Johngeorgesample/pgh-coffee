@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -55,5 +56,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
   return NextResponse.json({
     ...companyData,
     shops
-  })
+  }, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }
