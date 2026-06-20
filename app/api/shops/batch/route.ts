@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   const ids = idsParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
 
   if (ids.length === 0) {
-    return NextResponse.json([])
+    return NextResponse.json([], { headers: publicCacheHeaders(SHOP_DATA_TTL) })
   }
 
   const shops = await fetchShopsByIds(ids)

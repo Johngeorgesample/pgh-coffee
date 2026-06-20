@@ -30,7 +30,7 @@ export const GET = withMetrics('shops/geojson', async () => {
   // CDN would pin for the full TTL — turning a transient outage into "no shops"
   // for every user.
   if (!shops) {
-    return NextResponse.json({ error: 'Error creating GeoJSON' }, { status: 500 })
+    return NextResponse.json({ error: 'Error fetching shops' }, { status: 500 })
   }
 
   const geojson = formatDataToGeoJSON(shops)
