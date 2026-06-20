@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, TIME_SENSITIVE_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -44,5 +45,5 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching events' }, { status: 500 })
   }
 
-  return NextResponse.json(events)
+  return NextResponse.json(events, { headers: publicCacheHeaders(TIME_SENSITIVE_TTL) })
 }

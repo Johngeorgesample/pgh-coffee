@@ -6,13 +6,14 @@ import { useAnalytics, useShopRouteSync, useURLEventSync, useURLNewsSync, useMed
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
-import MapContainer from './MapContainer'
+import MapContainerLazy from './MapContainerLazy'
 import { ExploreContent } from './ExploreContent'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
+import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
@@ -60,6 +61,7 @@ export default function HomeClient() {
   useURLRoasterSync()
   useURLNewsSync()
   useURLEventSync()
+  useURLNeighborhoodSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -124,7 +126,7 @@ export default function HomeClient() {
   return (
     <div className="relative w-full h-full">
       {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
-      <MapContainer
+      <MapContainerLazy
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>

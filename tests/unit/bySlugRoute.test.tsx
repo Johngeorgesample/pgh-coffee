@@ -57,6 +57,7 @@ describe('Shop by-slug API Route', () => {
     expect(response.status).toBe(200)
     expect(data.properties.name).toBe('Trace Echo + Ghost Coffee')
     expect(data.properties.neighborhood).toBe('Lawrenceville')
+    expect(response.headers.get('Cache-Control')).toContain('s-maxage')
   })
 
   test('returns 404 without querying the database when the slug has no uuid suffix', async () => {
@@ -98,5 +99,6 @@ describe('Shop by-slug API Route', () => {
 
     expect(response.status).toBe(500)
     expect(data.message).toBe('Error fetching shop')
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage')
   })
 })

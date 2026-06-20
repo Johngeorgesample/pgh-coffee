@@ -4,6 +4,7 @@ import { extractUuidPrefix } from '@/app/utils/shopSlug'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
 import { metrics } from '@/lib/metrics'
 import { withMetrics } from '@/lib/withMetrics'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 export const GET = withMetrics('shops/by-slug/[slug]', async (req: NextRequest, props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params
@@ -28,5 +29,5 @@ export const GET = withMetrics('shops/by-slug/[slug]', async (req: NextRequest, 
   }
 
   metrics.shopViewed(shop.name, shop.neighborhood)
-  return NextResponse.json(formatDBShopAsFeature(shop))
+  return NextResponse.json(formatDBShopAsFeature(shop), { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 })
