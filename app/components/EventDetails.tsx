@@ -73,7 +73,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    window.location.href = `/?roaster=${encodeURIComponent(event.roaster.slug)}`
+    router.push(`/roasters/${encodeURIComponent(event.roaster.slug)}`)
   }
 
   const handleExternalLink = () => {

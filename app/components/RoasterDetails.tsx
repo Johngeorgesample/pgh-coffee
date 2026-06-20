@@ -41,18 +41,6 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     fetchRoaster()
   }, [slug, plausible])
 
-  useEffect(() => {
-    if (roaster?.slug) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.delete('company')
-      params.set('roaster', roaster.slug)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [roaster])
-
   if (loading) {
     return (
       <div className="px-6 lg:px-4 mt-24 lg:mt-16 flex flex-col animate-pulse">

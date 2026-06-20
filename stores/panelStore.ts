@@ -48,7 +48,7 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
       return null
     case 'roaster':
       if (hasProps(content, 'slug') && content.props.slug) {
-        return { type: 'query', key: 'roaster', value: content.props.slug as string }
+        return { type: 'path', value: `/roasters/${content.props.slug as string}` }
       }
       return null
     case 'news':

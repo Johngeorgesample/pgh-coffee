@@ -1,33 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-const getRoaster = async (slug: string) => {
-  const { data, error } = await supabase
-    .from('roaster')
-    .select('*, company:company_id(*)')
-    .eq('slug', slug)
-    .single()
-
-  if (error) {
-    logger.error('Error fetching roaster', { error: error.message })
-    return null
-  }
-
-  return data
-}
+import { getRoasterBySlug } from '@/app/utils/roasters'
 
 export async function GET(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
   const { slug } = params
 
-  const roasterData = await getRoaster(slug)
+  const roasterData = await getRoasterBySlug(slug)
 
   if (!roasterData) {
     return NextResponse.json({ message: 'Roaster not found' }, { status: 404 })
