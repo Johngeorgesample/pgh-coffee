@@ -132,4 +132,17 @@ describe('useShopSelection', () => {
     expect(mockSetSearchValue).toHaveBeenCalledWith('')
     expect(mockClearAmenityFilters).toHaveBeenCalled()
   })
+
+  test('handleShopSelect replaces a lingering company param with the shop param', () => {
+    mockLocation.href = 'https://example.com/?company=some-roasting-co'
+    const { result } = renderHook(() => useShopSelection())
+
+    act(() => {
+      result.current.handleShopSelect(mockShop)
+    })
+
+    const pushedUrl = new URL(mockPush.mock.calls[0][0])
+    expect(pushedUrl.searchParams.has('company')).toBe(false)
+    expect(pushedUrl.searchParams.get('shop')).toBe('Test Coffee Shop_Downtown')
+  })
 })
