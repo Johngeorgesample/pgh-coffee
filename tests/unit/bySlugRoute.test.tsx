@@ -3,15 +3,17 @@ import { NextRequest } from 'next/server'
 
 const mockLimit = vi.fn()
 
-// Mock Supabase client. getShopByUuidPrefix filters in the query via
-// .select(...).like('uuid', `${prefix}%`).limit(1), so the chain resolves
-// at .limit().
+// Mock Supabase client. getShopByUuidPrefix prefix-matches the uuid column via
+// a bounded range (.gte(...).lte(...)) rather than LIKE, because `uuid` is a
+// Postgres uuid type with no LIKE operator. The chain resolves at .limit().
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({
       select: () => ({
-        like: () => ({
-          limit: mockLimit,
+        gte: () => ({
+          lte: () => ({
+            limit: mockLimit,
+          }),
         }),
       }),
     }),
@@ -55,6 +57,7 @@ describe('Shop by-slug API Route', () => {
     expect(response.status).toBe(200)
     expect(data.properties.name).toBe('Trace Echo + Ghost Coffee')
     expect(data.properties.neighborhood).toBe('Lawrenceville')
+    expect(response.headers.get('Cache-Control')).toContain('s-maxage')
   })
 
   test('returns 404 without querying the database when the slug has no uuid suffix', async () => {
@@ -84,7 +87,7 @@ describe('Shop by-slug API Route', () => {
     expect(data.message).toBe('Shop not found')
   })
 
-  test('returns 404 on database error', async () => {
+  test('returns 500 (not 404) on database error so an outage is not masked as not-found', async () => {
     mockLimit.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
     const slug = 'some-slug-12345678'
@@ -94,7 +97,8 @@ describe('Shop by-slug API Route', () => {
     const response = await GET(request, { params })
     const data = await response.json()
 
-    expect(response.status).toBe(404)
-    expect(data.message).toBe('Shop not found')
+    expect(response.status).toBe(500)
+    expect(data.message).toBe('Error fetching shop')
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage')
   })
 })

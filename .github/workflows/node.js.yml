@@ -1,4 +1,4 @@
-name: Run unit tests
+name: CI
 
 on:
   push:
@@ -24,4 +24,17 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
-    - run: npm test
+    - name: Lint
+      run: npm run lint
+    - name: Build (typecheck + compile)
+      run: npm run build
+      env:
+        # Placeholder, non-functional values. Several API route modules build a
+        # Supabase client at import time; `next build` evaluates them during
+        # page-data collection and `createClient` throws if the URL is missing.
+        # The build never connects (all routes are request-time dynamic), so
+        # fake values suffice. Do NOT use a real key here.
+        SUPABASE_URL: https://placeholder.supabase.co
+        SUPABASE_ANON_KEY: placeholder-anon-key
+    - name: Test
+      run: npm test

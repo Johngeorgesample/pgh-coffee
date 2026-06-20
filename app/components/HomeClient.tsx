@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
-import MapContainer from './MapContainer'
+import MapContainerLazy from './MapContainerLazy'
 import { ExploreContent } from './ExploreContent'
-import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
+import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
@@ -63,6 +63,7 @@ export default function HomeClient() {
   useURLRoasterSync()
   useNewsRouteSync()
   useEventRouteSync()
+  useURLNeighborhoodSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -73,6 +74,13 @@ export default function HomeClient() {
   useEffect(() => {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
+
+  // Let panelStore drive real route navigation when panel history returns to a
+  // shop entry, so the address bar and App Router params stay in sync.
+  useEffect(() => {
+    setPanelNavigate(href => router.push(href))
+    return () => setPanelNavigate(null)
+  }, [router])
 
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
@@ -121,7 +129,7 @@ export default function HomeClient() {
   return (
     <div className="relative w-full h-full">
       {!largeViewport && !presented && <SearchFAB handleClick={() => setPresented(true)} />}
-      <MapContainer
+      <MapContainerLazy
         currentShopCoordinates={[currentShop?.geometry?.coordinates[0], currentShop?.geometry?.coordinates[1]]}
       />
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>

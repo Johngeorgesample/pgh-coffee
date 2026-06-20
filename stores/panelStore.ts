@@ -13,7 +13,7 @@ type PanelEntry = {
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,
@@ -73,6 +73,17 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
   }
 }
 
+// Real Next.js navigation, registered by HomeClient. The store uses it when
+// panel history returns to a shop entry (a /shops/[slug] route) so the App
+// Router's useParams()/usePathname() stay in sync — replaceState changes the
+// address bar but does not notify the router. Query panels live on `/` and read
+// window.location directly, so they keep using replaceState below.
+let panelNavigate: ((href: string) => void) | null = null
+
+export function setPanelNavigate(fn: ((href: string) => void) | null) {
+  panelNavigate = fn
+}
+
 function updateURL(param: URLTarget | null) {
   const url = new URL(window.location.href)
   URL_PARAMS.forEach(p => url.searchParams.delete(p))
@@ -86,7 +97,15 @@ function updateURL(param: URLTarget | null) {
     url.pathname = '/'
   }
 
-  window.history.replaceState({}, '', url.toString())
+  // A pathname change must go through the App Router — replaceState updates the
+  // address bar but doesn't notify the router, leaving usePathname()/useParams()
+  // stale (e.g. backing out of a /shops/[slug] route). Same-pathname query
+  // updates stay on replaceState; the query panels read window.location directly.
+  if (panelNavigate && url.pathname !== window.location.pathname) {
+    panelNavigate(url.pathname + url.search)
+  } else {
+    window.history.replaceState({}, '', url.toString())
+  }
 }
 
 interface PanelState {
@@ -135,8 +154,16 @@ const usePanelStore = create<PanelState>()(
 
           const history = state.history.slice(0, -1)
           const top = history[history.length - 1]
+          const target = getURLParamForEntry(top)
 
-          updateURL(getURLParamForEntry(top))
+          // Returning to a shop entry: pre-sync currentShop so the route change
+          // updateURL triggers is short-circuited by useShopRouteSync instead of
+          // refetching (and re-pushing a panel entry).
+          if (target?.type === 'path' && hasProps(top.content, 'shop')) {
+            useCoffeeShopsStore.getState().setCurrentShop(top.content.props.shop as TShop)
+          }
+
+          updateURL(target)
 
           return { history, panelMode: top.mode, panelContent: top.content }
         }),

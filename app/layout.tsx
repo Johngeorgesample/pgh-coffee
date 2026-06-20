@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Nav from '@/app/components/Nav'
 import { FaroInit } from '@/app/components/FaroInit'
+import { ServiceWorkerRegister } from '@/app/components/ServiceWorkerRegister'
 import { AuthProvider } from '@/app/components/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className}>
         <AuthProvider>
           <FaroInit />
+          <ServiceWorkerRegister />
           <Nav />
           <main>{children}</main>
         </AuthProvider>

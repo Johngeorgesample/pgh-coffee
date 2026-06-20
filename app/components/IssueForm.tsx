@@ -69,6 +69,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
       if (!response.ok) {
         const errorResponse = await response.json()
         console.error('Error:', errorResponse.error)
+        setError('Something went wrong submitting your correction. Please try again.')
         setIsSubmitting(false)
       } else {
         setIsSubmitting(false)
@@ -76,6 +77,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
       }
     } catch (error) {
       console.error('Unexpected error:', error)
+      setError('Something went wrong submitting your correction. Please try again.')
       setIsSubmitting(false)
     }
   }

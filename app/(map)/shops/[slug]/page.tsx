@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import { extractUuidPrefix } from '@/app/utils/shopSlug'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
+import { formatDBShopAsFeature } from '@/app/utils/utils'
+import ShopSeed from './ShopSeed'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -14,5 +16,5 @@ export default async function ShopPage({ params }: Props) {
 
   if (!shop) notFound()
 
-  return null
+  return <ShopSeed shop={formatDBShopAsFeature(shop)} />
 }

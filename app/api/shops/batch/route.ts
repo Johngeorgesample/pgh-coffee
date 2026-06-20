@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -37,7 +38,7 @@ export async function GET(request: Request) {
   const ids = idsParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
 
   if (ids.length === 0) {
-    return NextResponse.json([])
+    return NextResponse.json(formatDataToGeoJSON([]), { headers: publicCacheHeaders(SHOP_DATA_TTL) })
   }
 
   const shops = await fetchShopsByIds(ids)
@@ -50,5 +51,5 @@ export async function GET(request: Request) {
   }
 
   const geojson = formatDataToGeoJSON(shops)
-  return NextResponse.json(geojson)
+  return NextResponse.json(geojson, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }
