@@ -76,7 +76,7 @@ describe('useShopSelection', () => {
       address: '123 Main St, Pittsburgh, PA 15213',
       photo: 'test-photo.jpg',
       website: 'https://testcoffee.com',
-      uuid: '12345'
+      uuid: '12345678-aaaa-bbbb-cccc-111111111111'
     },
     geometry: {
       type: 'Point',
@@ -133,7 +133,7 @@ describe('useShopSelection', () => {
     expect(mockClearAmenityFilters).toHaveBeenCalled()
   })
 
-  test('handleShopSelect replaces a lingering company param with the shop param', () => {
+  test('handleShopSelect navigates to the shop route, superseding any prior drill-down', () => {
     mockLocation.href = 'https://example.com/?company=some-roasting-co'
     const { result } = renderHook(() => useShopSelection())
 
@@ -141,8 +141,8 @@ describe('useShopSelection', () => {
       result.current.handleShopSelect(mockShop)
     })
 
-    const pushedUrl = new URL(mockPush.mock.calls[0][0])
-    expect(pushedUrl.searchParams.has('company')).toBe(false)
-    expect(pushedUrl.searchParams.get('shop')).toBe('Test Coffee Shop_Downtown')
+    // Navigating to the shop's own route replaces whatever was on the map view
+    // (e.g. a company drill-down); there is no carried-over query state.
+    expect(mockPush).toHaveBeenCalledWith('/shops/test-coffee-shop-downtown-12345678')
   })
 })

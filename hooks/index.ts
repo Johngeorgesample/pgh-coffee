@@ -1,5 +1,5 @@
 export * from './useAnalytics'
-export * from './useURLShopSync'
+export * from './useShopRouteSync'
 export * from './useURLNewsSync'
 export * from './useURLEventSync'
 export * from './useShopSelection'

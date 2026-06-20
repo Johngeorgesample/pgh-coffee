@@ -5,6 +5,7 @@ import { TShop } from '@/types/shop-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
+import { buildShopSlug } from '@/app/utils/shopSlug'
 
 export function useShopSelection() {
   const plausible = useAnalytics()
@@ -12,26 +13,8 @@ export function useShopSelection() {
   const { setCurrentShop, setSearchValue, clearAmenityFilters } = useShopsStore()
   const { setPanelContent } = usePanelStore()
 
-  const appendSearchParamToURL = useCallback(
-    (shop: TShop) => {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      const isOnMap = url.pathname === '/'
-      if (!isOnMap) {
-        url.pathname = '/'
-      }
-      params.delete('neighborhood')
-      // Selecting a shop replaces any other content selection (e.g. a company
-      // drill-down), so clear the mutually-exclusive params first.
-      params.delete('company')
-      params.delete('roaster')
-      params.delete('news')
-      params.delete('event')
-      params.delete('events')
-      params.set('shop', `${shop.properties.name}_${shop.properties.neighborhood}`)
-      url.search = params.toString()
-      router.push(url.toString())
-    },
+  const navigateToShop = useCallback(
+    (shop: TShop) => router.push(`/shops/${buildShopSlug(shop.properties)}`),
     [router],
   )
 
@@ -40,7 +23,7 @@ export function useShopSelection() {
       setCurrentShop(shop)
       setSearchValue('')
       clearAmenityFilters()
-      appendSearchParamToURL(shop)
+      navigateToShop(shop)
       setPanelContent(<ShopDetails shop={shop} />, 'shop')
 
       document.getElementById('header')?.parentElement?.scrollTo({
@@ -54,7 +37,7 @@ export function useShopSelection() {
         },
       })
     },
-    [appendSearchParamToURL, plausible, setCurrentShop, setSearchValue, clearAmenityFilters, setPanelContent],
+    [navigateToShop, plausible, setCurrentShop, setSearchValue, clearAmenityFilters, setPanelContent],
   )
 
   return { handleShopSelect }
