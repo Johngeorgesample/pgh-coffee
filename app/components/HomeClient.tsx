@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics, useShopRouteSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -36,7 +36,9 @@ export default function HomeClient() {
     params.delete('event')
     params.delete('events')
     url.search = params.toString()
-    if (pathname.startsWith('/shops/')) {
+    // Closing the panel always returns to the bare map, so drop any detail path
+    // (/shops/, /events/, /news/).
+    if (pathname !== '/') {
       url.pathname = '/'
     }
     router.replace(url.toString())
@@ -59,8 +61,8 @@ export default function HomeClient() {
   useShopRouteSync()
   useURLCompanySync()
   useURLRoasterSync()
-  useURLNewsSync()
-  useURLEventSync()
+  useNewsRouteSync()
+  useEventRouteSync()
   useURLNeighborhoodSync()
 
   useEffect(() => {
@@ -84,7 +86,8 @@ export default function HomeClient() {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
       const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      if (!hasContentParam && !pathname.startsWith('/shops/')) {
+      const onDetailPath = ['/shops/', '/events/', '/news/'].some(p => pathname.startsWith(p))
+      if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
       }
     }

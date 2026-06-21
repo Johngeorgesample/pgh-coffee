@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore from '@/stores/panelStore'
 import ShopDetails from '@/app/components/ShopDetails'
@@ -9,9 +9,14 @@ import { buildShopSlug } from '@/app/utils/shopSlug'
 
 export const useShopRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
+  const pathname = usePathname()
+
+  // `slug` is shared by every [slug] route (shops, events, news), so only act
+  // when we're actually on a shop page.
+  const onShopRoute = pathname.startsWith('/shops/')
 
   // Store actions are read via getState() rather than closed over so the effect
-  // genuinely depends only on `slug` — no exhaustive-deps suppression needed.
+  // depends only on `slug` and `onShopRoute` — no exhaustive-deps suppression.
   useEffect(() => {
     const { currentShop, setCurrentShop } = useShopsStore.getState()
 
@@ -28,7 +33,7 @@ export const useShopRouteSync = () => {
       }
     }
 
-    if (!slug) {
+    if (!onShopRoute || !slug) {
       clearShopPanel()
       return
     }
@@ -62,5 +67,5 @@ export const useShopRouteSync = () => {
       })
 
     return () => controller.abort()
-  }, [slug])
+  }, [slug, onShopRoute])
 }
