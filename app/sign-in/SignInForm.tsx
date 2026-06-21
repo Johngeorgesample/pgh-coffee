@@ -1,24 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AuthForm from '@/app/components/AuthForm'
 
-export default function SignInForm() {
-  const router = useRouter()
+function SignInFormInner() {
+  const { push, refresh } = useRouter()
   const searchParams = useSearchParams()
-  const [urlError, setUrlError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const errorParam = searchParams.get('error')
-    if (errorParam === 'auth_failed') {
-      setUrlError('Authentication failed. Please try again.')
-    }
-  }, [searchParams])
+  const urlError = readError(searchParams)
 
   const handleSuccess = () => {
-    router.push('/')
-    router.refresh()
+    push('/')
+    refresh()
   }
 
   return (
@@ -30,5 +23,16 @@ export default function SignInForm() {
       )}
       <AuthForm onSuccess={handleSuccess} />
     </div>
+  )
+}
+
+const readError = (params: URLSearchParams): string | null =>
+  params.get('error') === 'auth_failed' ? 'Authentication failed. Please try again.' : null
+
+export default function SignInForm() {
+  return (
+    <Suspense fallback={<div className="bg-white rounded-2xl shadow-lg p-8 animate-pulse h-96" />}>
+      <SignInFormInner />
+    </Suspense>
   )
 }

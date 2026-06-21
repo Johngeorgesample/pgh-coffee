@@ -58,10 +58,10 @@ export const parseYMDLocal = (ymd: string) => {
   return new Date(y, m - 1, d)
 }
 
+const ymdShortFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'short' })
+
 export const fmtYMD = (ymd?: string) =>
-  ymd
-    ? new Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(parseYMDLocal(ymd))
-    : ''
+  ymd ? ymdShortFormatter.format(parseYMDLocal(ymd)) : ''
 
 /**
  * Checks if a date is in the past.
