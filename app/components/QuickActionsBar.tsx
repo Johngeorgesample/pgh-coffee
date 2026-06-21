@@ -6,6 +6,7 @@ import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
 import FavoriteButton from './FavoriteButton'
 import ReportIssueButton from './ReportIssueButton'
+import ClaimShopButton from './ClaimShopButton'
 import IssueModal from './IssueModal'
 import IssueSuccessDialog from './IssueSuccessDialog'
 
@@ -38,6 +39,7 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
         <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
         <ReportIssueButton onClick={() => setShowIssueModal(true)} />
+        <ClaimShopButton shopUUID={uuid} shopName={name} />
       </div>
 
       <IssueModal shop={shop} isOpen={showIssueModal} onClose={() => setShowIssueModal(false)} onSuccess={handleIssueSuccess} />
