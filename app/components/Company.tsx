@@ -4,6 +4,7 @@ import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, MapPinIcon } from '@
 import { Instagram } from 'lucide-react'
 import LocationList from '@/app/components/LocationList'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useAnalytics } from '@/hooks'
 import { formatDataToGeoJSON } from '../utils/utils'
@@ -28,6 +29,7 @@ const groupByNeighborhood = (features: TShop[]): [string, TShop[]][] => {
 export const Company = ({ slug }: { slug: string }) => {
   const { setOverrideShops, setSearchValue } = useShopsStore()
   const plausible = useAnalytics()
+  const router = useRouter()
   const [company, setCompany] = useState<TCompany | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -47,17 +49,6 @@ export const Company = ({ slug }: { slug: string }) => {
   }, [slug])
 
   useEffect(() => {
-    if (company?.slug) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.set('company', company.slug)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [company])
-
-  useEffect(() => {
     if (company?.shops) {
       const shopsGeoJSON = formatDataToGeoJSON(company.shops)
       setOverrideShops(shopsGeoJSON)
@@ -67,11 +58,9 @@ export const Company = ({ slug }: { slug: string }) => {
 
   const handleNeighborhoodClick = (neighborhood: string) => {
     plausible('NeighborhoodClick', { props: { neighborhood, company: company?.slug } })
-    const url = new URL(window.location.href)
-    url.searchParams.delete('company')
-    url.searchParams.delete('shop')
-    url.searchParams.set('neighborhood', neighborhood)
-    window.history.pushState(null, '', url.toString())
+    // Leave the /companies/{slug} route through the App Router so usePathname
+    // updates; setSearchValue then drives the search panel for the neighborhood.
+    router.push(`/?neighborhood=${encodeURIComponent(neighborhood)}`)
     setSearchValue(neighborhood)
   }
 

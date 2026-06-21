@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useMediaQuery } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -11,7 +11,6 @@ import { ExploreContent } from './ExploreContent'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
-import { useURLCompanySync } from '@/hooks/useURLCompanySync'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
@@ -58,7 +57,7 @@ export default function HomeClient() {
   }
 
   useShopRouteSync()
-  useURLCompanySync()
+  useCompanyRouteSync()
   useRoasterRouteSync()
   useNewsRouteSync()
   useEventRouteSync()
@@ -85,7 +84,7 @@ export default function HomeClient() {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
       const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      const onDetailPath = ['/shops/', '/events/', '/news/'].some(p => pathname.startsWith(p))
+      const onDetailPath = ['/shops/', '/events/', '/news/', '/roasters/', '/companies/'].some(p => pathname.startsWith(p))
       if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
       }
