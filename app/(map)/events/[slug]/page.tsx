@@ -1,16 +1,27 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { extractUuidPrefix } from '@/app/utils/slug'
-import { getEventByIdPrefix } from '@/app/utils/events'
+import { getEventForSeo, buildEventMetadata, buildEventJsonLd, jsonLdToString } from '@/app/utils/seo'
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const event = await getEventForSeo((await params).slug)
+  return event ? buildEventMetadata(event) : {}
+}
+
 export default async function EventPage({ params }: Props) {
-  const prefix = extractUuidPrefix((await params).slug)
-  const event = prefix ? await getEventByIdPrefix(prefix) : null
+  const event = await getEventForSeo((await params).slug)
 
   if (!event) notFound()
 
-  return null
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildEventJsonLd(event)) }} />
+      {/* EventDetails renders its own <h1> after client-side fetch; this keeps a
+          server-rendered heading for crawlers. */}
+      <h1 className="sr-only">{event.title}</h1>
+    </>
+  )
 }

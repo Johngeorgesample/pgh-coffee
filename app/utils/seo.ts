@@ -1,11 +1,14 @@
 import { cache } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import type { Metadata } from 'next'
-import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSite, WithContext } from 'schema-dts'
+import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, Event, NewsArticle, OrganizationLeaf, Place, WebSite, WithContext } from 'schema-dts'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
 import { buildShopSlug, extractUuidPrefix } from '@/app/utils/shopSlug'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
+import { buildContentSlug } from '@/app/utils/slug'
+import { getEventByIdPrefix } from '@/app/utils/events'
+import { getUpdateByIdPrefix } from '@/app/utils/updates'
 
 export const SITE_URL = 'https://pgh.coffee'
 export const SITE_NAME = 'pgh.coffee'
@@ -223,5 +226,186 @@ export function buildShopListJsonLd(shops: ShopListEntry[]): WithContext<Collect
         url: buildShopUrl(shop),
       })),
     },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Events & news (updates)
+// ---------------------------------------------------------------------------
+
+export interface SeoShopRef {
+  name: string
+  neighborhood?: string | null
+  address?: string | null
+  latitude?: number | null
+  longitude?: number | null
+}
+
+export interface SeoEvent {
+  id: string
+  title: string
+  description?: string | null
+  url?: string | null
+  event_date?: string | null
+  shop?: SeoShopRef | null
+}
+
+export interface SeoUpdate {
+  id: string
+  title: string
+  description?: string | null
+  url?: string | null
+  post_date?: string | null
+}
+
+export interface ContentListEntry {
+  id: string
+  title: string
+}
+
+export function buildEventPath(event: ContentListEntry): string {
+  return `/events/${buildContentSlug(event)}`
+}
+
+export function buildEventUrl(event: ContentListEntry): string {
+  return `${SITE_URL}${buildEventPath(event)}`
+}
+
+export function buildNewsPath(update: ContentListEntry): string {
+  return `/news/${buildContentSlug(update)}`
+}
+
+export function buildNewsUrl(update: ContentListEntry): string {
+  return `${SITE_URL}${buildNewsPath(update)}`
+}
+
+/**
+ * Resolves the event for a `/events/{slug}` page from its id prefix. Wrapped in
+ * cache() so generateMetadata and the page body share one query per request.
+ */
+export const getEventForSeo = cache(async (slug: string): Promise<SeoEvent | null> => {
+  const prefix = extractUuidPrefix(slug)
+  return prefix ? await getEventByIdPrefix(prefix) : null
+})
+
+/** Same as getEventForSeo, for `/news/{slug}` pages. */
+export const getUpdateForSeo = cache(async (slug: string): Promise<SeoUpdate | null> => {
+  const prefix = extractUuidPrefix(slug)
+  return prefix ? await getUpdateByIdPrefix(prefix) : null
+})
+
+export const getAllEventsForSeo = cache(async (): Promise<ContentListEntry[]> => {
+  const supabase = getSupabase()
+  const { data, error } = await supabase.from('events').select('id, title').order('event_date', { ascending: false })
+
+  if (error || !data) {
+    if (error) logger.error('Error fetching events for SEO', { error: error.message })
+    return []
+  }
+
+  return data as ContentListEntry[]
+})
+
+export const getAllUpdatesForSeo = cache(async (): Promise<ContentListEntry[]> => {
+  const supabase = getSupabase()
+  const { data, error } = await supabase.from('updates').select('id, title').order('post_date', { ascending: false })
+
+  if (error || !data) {
+    if (error) logger.error('Error fetching updates for SEO', { error: error.message })
+    return []
+  }
+
+  return data as ContentListEntry[]
+})
+
+export function buildEventMetadata(event: SeoEvent): Metadata {
+  const title = `${event.title} | pgh.coffee`
+  const description =
+    event.description?.trim() ||
+    `${event.title}${event.shop ? ` at ${event.shop.name}` : ''} — a coffee event in Pittsburgh.`
+  const path = buildEventPath(event)
+
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title, description, type: 'article', url: path },
+    twitter: { card: 'summary', title, description },
+  }
+}
+
+function buildEventPlace(shop: SeoShopRef): Place {
+  const parsed = shop.address ? parseAddress(shop.address) : null
+
+  return {
+    '@type': 'Place',
+    name: shop.name,
+    ...(parsed
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: parsed.streetAddress,
+            addressLocality: parsed.addressLocality,
+            addressRegion: parsed.addressRegion,
+            postalCode: parsed.postalCode,
+            addressCountry: 'US',
+          },
+        }
+      : shop.address
+        ? { address: shop.address }
+        : {}),
+    ...(shop.latitude != null && shop.longitude != null
+      ? { geo: { '@type': 'GeoCoordinates', latitude: shop.latitude, longitude: shop.longitude } }
+      : {}),
+  }
+}
+
+/**
+ * Builds Event JSON-LD from real event data only. Fields without source data
+ * (endDate, offers, performer) are omitted rather than guessed.
+ */
+export function buildEventJsonLd(event: SeoEvent): WithContext<Event> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    url: buildEventUrl(event),
+    ...(event.event_date ? { startDate: event.event_date } : {}),
+    ...(event.description ? { description: event.description } : {}),
+    ...(event.shop ? { location: buildEventPlace(event.shop) } : {}),
+  }
+}
+
+export function buildNewsMetadata(update: SeoUpdate): Metadata {
+  const title = `${update.title} | pgh.coffee`
+  const description = update.description?.trim() || `${update.title} — Pittsburgh coffee news.`
+  const path = buildNewsPath(update)
+
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title, description, type: 'article', url: path },
+    twitter: { card: 'summary', title, description },
+  }
+}
+
+/**
+ * Builds NewsArticle JSON-LD from real update data only. The canonical
+ * `/news/{slug}` URL is used for both url and mainEntityOfPage; the external
+ * source link (update.url) is intentionally not the canonical.
+ */
+export function buildNewsJsonLd(update: SeoUpdate): WithContext<NewsArticle> {
+  const url = buildNewsUrl(update)
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: update.title,
+    url,
+    mainEntityOfPage: url,
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    ...(update.post_date ? { datePublished: update.post_date } : {}),
+    ...(update.description ? { description: update.description } : {}),
   }
 }
