@@ -41,6 +41,7 @@ export type EventCardData = {
   shop?: {
     name: string
     neighborhood: string
+    uuid: string
   }
   roaster?: Pick<RoasterRef, 'name' | 'slug'>
 }
