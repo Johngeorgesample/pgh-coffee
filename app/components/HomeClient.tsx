@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useMediaQuery } from '@/hooks'
+import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -12,7 +12,6 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLCompanySync } from '@/hooks/useURLCompanySync'
-import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
@@ -60,7 +59,7 @@ export default function HomeClient() {
 
   useShopRouteSync()
   useURLCompanySync()
-  useURLRoasterSync()
+  useRoasterRouteSync()
   useNewsRouteSync()
   useEventRouteSync()
   useURLNeighborhoodSync()
