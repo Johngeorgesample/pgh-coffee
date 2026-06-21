@@ -4,12 +4,11 @@ import { useShopRouteSync } from '@/hooks/useShopRouteSync'
 
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
-  pathname: '/' as string,
   shopState: { currentShop: {} as any, setCurrentShop: vi.fn() },
   panelState: { panelMode: 'explore' as string, reset: vi.fn(), setPanelContent: vi.fn() },
 }))
 
-vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
+vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }) }))
 vi.mock('@/stores/coffeeShopsStore', () => ({ __esModule: true, default: { getState: () => h.shopState } }))
 vi.mock('@/stores/panelStore', () => ({ __esModule: true, default: { getState: () => h.panelState } }))
 vi.mock('@/app/components/ShopDetails', () => ({ __esModule: true, default: () => null }))
@@ -23,7 +22,6 @@ describe('useShopRouteSync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     h.slug = undefined
-    h.pathname = '/'
     h.shopState.currentShop = {}
     h.panelState.panelMode = 'explore'
     vi.stubGlobal('fetch', vi.fn())
@@ -53,7 +51,6 @@ describe('useShopRouteSync', () => {
 
   test('a failed slug fetch clears the stale shop panel instead of leaving it visible', async () => {
     h.slug = 'bad-slug-deadbeef'
-    h.pathname = '/shops/bad-slug-deadbeef'
     h.shopState.currentShop = shopWithUuid // stale previously-viewed shop
     h.panelState.panelMode = 'shop'
     ;(fetch as any).mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({ message: 'Error fetching shop' }) })
@@ -68,19 +65,7 @@ describe('useShopRouteSync', () => {
 
   test('does not refetch when the current shop already matches the slug', () => {
     h.slug = 'klvn-larimer-e3bd219a'
-    h.pathname = '/shops/klvn-larimer-e3bd219a'
     h.shopState.currentShop = shopWithUuid
-
-    renderHook(() => useShopRouteSync())
-
-    expect(fetch).not.toHaveBeenCalled()
-  })
-
-  test('does not treat an events/news [slug] route as a shop', () => {
-    // `slug` is shared by /shops, /events and /news; on a non-shop route the
-    // hook must not fetch the slug as a shop.
-    h.slug = 'first-friday-strip-district-deadbeef'
-    h.pathname = '/events/first-friday-strip-district-deadbeef'
 
     renderHook(() => useShopRouteSync())
 

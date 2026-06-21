@@ -17,7 +17,7 @@ const formatNewsDate = (dateStr: string) => {
   })
 }
 
-export const NewsDetails = ({ id }: { id: string; title?: string }) => {
+export const NewsDetails = ({ id }: { id: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
@@ -43,6 +43,19 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
     fetchNews()
   }, [id, plausible])
 
+  useEffect(() => {
+    if (news?.id) {
+      const url = new URL(window.location.href)
+      const params = new URLSearchParams(url.search)
+      params.delete('shop')
+      params.delete('company')
+      params.delete('roaster')
+      params.set('news', news.id)
+      url.search = params.toString()
+      window.history.pushState(null, '', url.toString())
+    }
+  }, [news])
+
   const handleShopClick = () => {
     if (news?.shop_id && news?.shop) {
       handleShopSelect(formatDBShopAsFeature(news.shop))
@@ -55,9 +68,8 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
       props: { newsId: news.id, newsTitle: news.title, roasterSlug: news.roaster.slug },
     })
     const url = new URL(window.location.href)
-    // Leaving the /news/{slug} page back to the map for the roaster overlay.
-    url.pathname = '/'
-    const params = new URLSearchParams()
+    const params = new URLSearchParams(url.search)
+    params.delete('news')
     params.set('roaster', news.roaster.slug)
     url.search = params.toString()
     window.history.pushState(null, '', url.toString())

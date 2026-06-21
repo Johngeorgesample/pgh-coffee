@@ -1,10 +1,8 @@
 'use client'
-import { useRouter } from 'next/navigation'
 import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useShopSelection, useAnalytics } from '@/hooks'
 import usePanelStore from '@/stores/panelStore'
-import { buildContentSlug } from '@/app/utils/slug'
 import { NewsDetails } from './NewsDetails'
 import { NewsItem, getTagStyle } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
@@ -19,7 +17,6 @@ type NewsCardProps = {
 export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
   const { setPanelContent } = usePanelStore()
-  const router = useRouter()
   const plausible = useAnalytics()
   const primaryTag = item.tags?.[0] ?? 'news'
   const styles = getTagStyle(primaryTag)
@@ -30,8 +27,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
       plausible('NewsCardClick', {
         props: { newsId: item.id, newsTitle: item.title },
       })
-      router.push(`/news/${buildContentSlug({ id: item.id, title: item.title })}`)
-      setPanelContent(<NewsDetails id={item.id} title={item.title} />, 'news')
+      setPanelContent(<NewsDetails id={item.id} />, 'news')
     }
   }
 
