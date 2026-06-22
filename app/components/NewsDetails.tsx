@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { useShopSelection, useCopyToClipboard, useAnalytics } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
@@ -22,6 +23,7 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   const [loading, setLoading] = useState(true)
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const plausible = useAnalytics()
+  const router = useRouter()
   const { handleShopSelect } = useShopSelection()
 
   useEffect(() => {
@@ -54,14 +56,7 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
     plausible('NewsDetailsRoasterClick', {
       props: { newsId: news.id, newsTitle: news.title, roasterSlug: news.roaster.slug },
     })
-    const url = new URL(window.location.href)
-    // Leaving the /news/{slug} page back to the map for the roaster overlay.
-    url.pathname = '/'
-    const params = new URLSearchParams()
-    params.set('roaster', news.roaster.slug)
-    url.search = params.toString()
-    window.history.pushState(null, '', url.toString())
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    router.push(`/roasters/${encodeURIComponent(news.roaster.slug)}`)
   }
 
   const handleExternalLink = () => {
