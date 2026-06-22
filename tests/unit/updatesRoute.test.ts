@@ -53,6 +53,9 @@ describe('Updates API Route - GET', () => {
     expect(response.status).toBe(200)
     expect(data).toEqual(updates)
     expect(mockEqResult).toHaveBeenCalledWith('shop_id', 'shop-1')
+    // The body varies by shop_id, so it must not be cached on the shared CDN
+    // (which keys on path only) — otherwise one shop's updates leak to all.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 
   test('returns 500 on database error', async () => {

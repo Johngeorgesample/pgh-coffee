@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { formatDataToGeoJSON } from '../../../utils/utils'
 import { logger } from '@/lib/logger'
-import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -38,7 +37,7 @@ export async function GET(request: Request) {
   const ids = idsParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
 
   if (ids.length === 0) {
-    return NextResponse.json(formatDataToGeoJSON([]), { headers: publicCacheHeaders(SHOP_DATA_TTL) })
+    return NextResponse.json(formatDataToGeoJSON([]))
   }
 
   const shops = await fetchShopsByIds(ids)
@@ -50,6 +49,9 @@ export async function GET(request: Request) {
     )
   }
 
+  // No shared-CDN cache: this response varies by the `ids` query string, but the
+  // CDN keys its cache on the path alone, so a cached copy would be served for
+  // different id sets, returning the wrong shops.
   const geojson = formatDataToGeoJSON(shops)
-  return NextResponse.json(geojson, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
+  return NextResponse.json(geojson)
 }
