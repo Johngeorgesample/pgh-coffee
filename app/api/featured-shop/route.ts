@@ -74,7 +74,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
     .eq('uuid', winnerUuid)
 
   if (error || !data?.[0]) {
@@ -85,15 +85,9 @@ export async function GET() {
   const shop: DbShop = {
     ...row,
     company: Array.isArray(row.company) ? row.company[0] ?? null : row.company,
+    roasterRef: Array.isArray(row.roasterRef) ? row.roasterRef[0] ?? null : row.roasterRef,
   }
-  const base = formatDBShopAsFeature(shop)
-  const feature = {
-    ...base,
-    properties: {
-      ...base.properties,
-      roaster: shop.roaster ?? '',
-    },
-  }
+  const feature = formatDBShopAsFeature(shop)
 
   const ttl = secondsUntilNextMidnightTz() // cache until next ET midnight
 

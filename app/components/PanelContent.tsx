@@ -4,6 +4,7 @@ import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
 import ShopLocation from './ShopLocation'
+import ShopRoaster from './ShopRoaster'
 import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
 
@@ -12,12 +13,18 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities } = props.shop.properties
+  const { address, photos, amenities, roaster } = props.shop.properties
   const coordinates = props.shop.geometry?.coordinates
 
   return (
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
+
+      {roaster && (
+        <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+          <ShopRoaster roaster={roaster} />
+        </div>
+      )}
 
       {photos && <PhotoGrid photos={photos} />}
 
