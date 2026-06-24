@@ -202,4 +202,25 @@ describe('buildShopMetadata', () => {
     expect(twitter?.images).toBeUndefined()
     expect(twitter?.card).toBeUndefined()
   })
+
+  test('prefers the trimmed shop description over the generated template', () => {
+    const shop: DbShop = { ...baseShop, description: '  A long-running Regent Square coffee bar.  ' }
+    const metadata = buildShopMetadata(shop)
+    const expected = 'A long-running Regent Square coffee bar.'
+    const twitter = metadata.twitter as { description?: string } | undefined
+
+    expect(metadata.description).toBe(expected)
+    expect(metadata.openGraph?.description).toBe(expected)
+    expect(twitter?.description).toBe(expected)
+  })
+
+  test('falls back to the generated template when the description is whitespace-only', () => {
+    const shop: DbShop = { ...baseShop, description: '   ' }
+    const metadata = buildShopMetadata(shop)
+    const expected =
+      '61B Cafe is an independent coffee shop in Regent Square, Pittsburgh — 1108 S Braddock Ave, Pittsburgh, PA 15218.'
+
+    expect(metadata.description).toBe(expected)
+    expect(metadata.openGraph?.description).toBe(expected)
+  })
 })

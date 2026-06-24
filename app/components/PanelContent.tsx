@@ -14,11 +14,18 @@ interface IProps {
 
 export default function PanelContent(props: IProps) {
   const { address, photos, amenities, roaster } = props.shop.properties
+  const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
   return (
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
+
+      {description && (
+        <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+        </div>
+      )}
 
       {roaster && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
