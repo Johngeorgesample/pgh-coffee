@@ -1,11 +1,10 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
-import usePanelStore from '@/stores/panelStore'
-import { Company } from '@/app/components/Company'
 
 interface IProps {
   shop: TShop
@@ -14,7 +13,7 @@ interface IProps {
 export default function PanelHeader(props: IProps) {
   const { name, neighborhood, photo, company } = props.shop.properties
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
+  const router = useRouter()
 
   const hasPhoto = !!photo
 
@@ -34,7 +33,7 @@ export default function PanelHeader(props: IProps) {
                 plausible('ViewAllLocationsClick', {
                   props: { company: company.slug },
                 })
-                setPanelContent(<Company slug={company.slug} />, 'company')
+                router.push(`/companies/${company.slug}`)
               }}
               className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm
                            hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full 

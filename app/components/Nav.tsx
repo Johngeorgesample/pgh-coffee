@@ -28,7 +28,7 @@ export default function Nav() {
               d="M34.94,10.53 l21.81,48.63 h-51.62 l60.37,180.31 h119 l60.37,-180.31 h-51.62 l21.81,-48.63 z"
             />
           </svg>
-          <h1 className="flex items-center text-2xl">pgh.coffee</h1>
+          <p className="flex items-center text-2xl">pgh.coffee</p>
         </Link>
       </span>
       <div className="hidden sm:flex items-center gap-6">

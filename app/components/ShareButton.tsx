@@ -12,10 +12,11 @@ export default function ShareButton() {
       <button
         type="button"
         onClick={copyCurrentUrl}
-        className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors"
+        aria-label="Share"
+        title="Share"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors"
       >
-        <Share2 className="size-4" />
-        Share
+        <Share2 className="size-[18px]" />
       </button>
       <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </>

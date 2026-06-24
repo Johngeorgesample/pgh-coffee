@@ -37,7 +37,7 @@ export async function GET(request: Request) {
   const ids = idsParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
 
   if (ids.length === 0) {
-    return NextResponse.json([])
+    return NextResponse.json(formatDataToGeoJSON([]))
   }
 
   const shops = await fetchShopsByIds(ids)
@@ -49,6 +49,9 @@ export async function GET(request: Request) {
     )
   }
 
+  // No shared-CDN cache: this response varies by the `ids` query string, but the
+  // CDN keys its cache on the path alone, so a cached copy would be served for
+  // different id sets, returning the wrong shops.
   const geojson = formatDataToGeoJSON(shops)
   return NextResponse.json(geojson)
 }

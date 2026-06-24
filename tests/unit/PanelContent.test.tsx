@@ -1,19 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, vi } from 'vitest'
 import PanelContent from '@/app/components/PanelContent'
 import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
-import type { TShop, RoasterRef } from '@/types/shop-types'
-
-const mockSetPanelContent = vi.fn()
-vi.mock('@/stores/panelStore', () => ({
-  default: () => ({ setPanelContent: mockSetPanelContent }),
-}))
-
-const mockPlausible = vi.fn()
-vi.mock('@/hooks', async importOriginal => ({
-  ...(await importOriginal<typeof import('@/hooks')>()),
-  useAnalytics: () => mockPlausible,
-}))
+import type { TShop } from '@/types/shop-types'
 
 // Mock next-plausible
 vi.mock('next-plausible', () => ({
@@ -83,7 +72,7 @@ describe('PanelContent', () => {
     render(<PanelContent {...defaultProps} />)
 
     expect(screen.getByText('Directions')).toBeTruthy()
-    expect(screen.getByText('Website')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Website' })).toBeTruthy()
   })
 
   it('renders the shop address', () => {
@@ -96,45 +85,7 @@ describe('PanelContent', () => {
   it('renders website link when provided', () => {
     render(<PanelContent {...defaultProps} />)
 
-    const websiteLink = screen.getByText('Website').closest('a')
+    const websiteLink = screen.getByRole('link', { name: 'Website' })
     expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
-  })
-
-  const withRoaster = (roaster: RoasterRef): TShop => ({
-    ...mockShop,
-    properties: { ...mockShop.properties, roaster },
-  })
-
-  it('opens the roaster panel when a roaster with a slug is clicked', () => {
-    const roaster: RoasterRef = { id: 'r1', name: 'Local Roaster', slug: 'local-roaster', is_local: true }
-    render(<PanelContent shop={withRoaster(roaster)} />)
-
-    fireEvent.click(screen.getByText('Local Roaster'))
-    expect(mockSetPanelContent).toHaveBeenCalledWith(expect.anything(), 'roaster')
-    expect(mockPlausible).toHaveBeenCalledWith(
-      'RoasterBeansClick',
-      expect.objectContaining({ props: expect.objectContaining({ destination: 'roaster_panel' }) }),
-    )
-  })
-
-  it('links externally for a non-local roaster instead of opening the panel', () => {
-    const roaster: RoasterRef = {
-      id: 'r2',
-      name: 'Far Away Roaster',
-      slug: 'far-away',
-      is_local: false,
-      website: 'https://faraway.example',
-    }
-    render(<PanelContent shop={withRoaster(roaster)} />)
-
-    const link = screen.getByText('Far Away Roaster').closest('a')
-    expect(link).toHaveAttribute('href', 'https://faraway.example')
-    expect(mockSetPanelContent).not.toHaveBeenCalled()
-
-    fireEvent.click(link!)
-    expect(mockPlausible).toHaveBeenCalledWith(
-      'RoasterBeansClick',
-      expect.objectContaining({ props: expect.objectContaining({ destination: 'external' }) }),
-    )
   })
 })

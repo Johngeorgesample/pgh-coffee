@@ -9,10 +9,11 @@ export default function ReportIssueButton({ onClick }: ReportIssueButtonProps) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors"
+      aria-label="Report an issue"
+      title="Report an issue"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors"
     >
-      <Flag className="size-4" />
-      Report
+      <Flag className="size-[18px]" />
     </button>
   )
 }
