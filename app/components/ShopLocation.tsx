@@ -7,19 +7,15 @@ interface IProps {
   coordinates: [number, number]
 }
 
-const MAPBOX_TOKEN = process.env.MAPBOX_ACCESS_TOKEN
-
 /**
- * Builds a Mapbox Static Images URL with a marker at the shop. Returns null
- * when the token is missing or the shop has no real coordinates (utils default
- * unset coords to [0, 0]), so we don't render a pin in the Atlantic.
+ * Points at our own static-map proxy (CDN-cached) rather than Mapbox directly,
+ * so repeat views don't each burn a Mapbox request. Returns null when the shop
+ * has no real coordinates (utils default unset coords to [0, 0]) so we don't
+ * render a map of the Atlantic.
  */
 const buildStaticMapUrl = (lng: number, lat: number) => {
-  if (!MAPBOX_TOKEN || (lng === 0 && lat === 0)) return null
-  // Match the main map's style (see MapContainer). No Mapbox marker — the
-  // map is centered on the shop, so we overlay a CSS dot to match the main
-  // map's yellow circle marker instead of a pin.
-  return `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${lng},${lat},14,0/600x320@2x?access_token=${MAPBOX_TOKEN}`
+  if (lng === 0 && lat === 0) return null
+  return `/api/shops/static-map?lng=${lng}&lat=${lat}`
 }
 
 export default function ShopLocation({ address, coordinates }: IProps) {
