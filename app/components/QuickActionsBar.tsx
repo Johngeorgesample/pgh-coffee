@@ -32,10 +32,10 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
 
   return (
     <>
-      <div ref={scrollRef} className="flex gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200 overflow-x-auto [&>button]:shrink-0">
+      <div ref={scrollRef} className="flex items-center gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
+        <DirectionsButton coordinates={coordinates} />
         <FavoriteButton shopUUID={uuid} shopName={name} />
         <ShareButton />
-        <DirectionsButton coordinates={coordinates} />
         {website && <WebsiteButton website={website} />}
         <ReportIssueButton onClick={() => setShowIssueModal(true)} />
       </div>

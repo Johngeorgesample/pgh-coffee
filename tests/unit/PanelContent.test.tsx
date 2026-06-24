@@ -72,7 +72,7 @@ describe('PanelContent', () => {
     render(<PanelContent {...defaultProps} />)
 
     expect(screen.getByText('Directions')).toBeTruthy()
-    expect(screen.getByText('Website')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Website' })).toBeTruthy()
   })
 
   it('renders the shop address', () => {
@@ -85,7 +85,7 @@ describe('PanelContent', () => {
   it('renders website link when provided', () => {
     render(<PanelContent {...defaultProps} />)
 
-    const websiteLink = screen.getByText('Website').closest('a')
+    const websiteLink = screen.getByRole('link', { name: 'Website' })
     expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
   })
 })
