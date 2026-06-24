@@ -19,9 +19,11 @@ export default function PanelContent(props: IProps) {
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
 
-      <div className="px-4 sm:px-6 py-5">
+      <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
+      </div>
 
+      <div className="px-4 sm:px-6 py-5">
         <ShopAmenities
           amenities={amenities ?? []}
           shopId={props.shop.properties.uuid}
