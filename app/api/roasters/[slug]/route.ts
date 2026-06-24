@@ -1,6 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getRoasterBySlug } from '@/app/utils/roasters'
+
+const supabaseUrl = process.env.SUPABASE_URL as string
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Shops that serve this roaster's coffee (joined via shops.roaster_id), so the
+// roaster page can show where to drink it. Mirrors getCompanyShops.
+const getRoasterShops = async (roasterId: string) => {
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*, company:company_id(*)')
+    .eq('roaster_id', roasterId)
+
+  if (error) {
+    logger.error('Error fetching roaster shops', { error: error.message })
+    return null
+  }
+
+  return data
+}
 
 export async function GET(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
@@ -12,5 +34,11 @@ export async function GET(req: NextRequest, props: { params: Promise<{ slug: str
     return NextResponse.json({ message: 'Roaster not found' }, { status: 404 })
   }
 
-  return NextResponse.json(roasterData, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
+  const shops = await getRoasterShops(roasterData.id)
+
+  if (shops === null) {
+    return NextResponse.json({ error: 'Error fetching roaster shops' }, { status: 500 })
+  }
+
+  return NextResponse.json({ ...roasterData, shops }, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }

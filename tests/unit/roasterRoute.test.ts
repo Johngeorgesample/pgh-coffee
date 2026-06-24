@@ -1,14 +1,21 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
-const mockSingleResult = vi.fn()
+// The route makes two distinct queries:
+//   roaster: select().eq().single()  -> terminal single (via getRoasterBySlug)
+//   shops:   select().eq()           -> terminal eq (awaited)
+const mockRoasterSingle = vi.fn()
+const mockShopsEq = vi.fn()
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
-    from: () => ({
+    from: (table: string) => ({
       select: () => ({
-        eq: () => ({
-          single: mockSingleResult,
-        }),
+        eq: (...args: unknown[]) => {
+          if (table === 'roaster') {
+            return { single: mockRoasterSingle }
+          }
+          return mockShopsEq(...args)
+        },
       }),
     }),
   }),
@@ -30,24 +37,38 @@ describe('Roaster API Route - GET', () => {
       params: Promise.resolve({ slug }),
     })
 
-  test('returns the roaster when found', async () => {
+  test('returns the roaster with its shops when found', async () => {
     const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster' }
-    mockSingleResult.mockResolvedValueOnce({ data: roaster, error: null })
+    const shops = [{ name: 'Shop A' }]
+    mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: shops, error: null })
 
     const response = await call('test-roaster')
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data).toEqual(roaster)
+    expect(data).toEqual({ ...roaster, shops })
   })
 
   test('returns 404 when the roaster is not found', async () => {
-    mockSingleResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows' } })
+    mockRoasterSingle.mockResolvedValueOnce({ data: null, error: { message: 'No rows' } })
 
     const response = await call('missing')
     const data = await response.json()
 
     expect(response.status).toBe(404)
     expect(data.message).toBe('Roaster not found')
+  })
+
+  test('returns 500 when the shops query errors', async () => {
+    const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster' }
+    mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: null, error: { message: 'boom' } })
+
+    const response = await call('test-roaster')
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error fetching roaster shops')
   })
 })
