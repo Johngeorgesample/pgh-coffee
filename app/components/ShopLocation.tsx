@@ -15,7 +15,7 @@ interface IProps {
  */
 const buildStaticMapUrl = (lng: number, lat: number) => {
   if (lng === 0 && lat === 0) return null
-  return `/api/shops/static-map?lng=${lng}&lat=${lat}`
+  return `/api/shops/static-map/${lng}/${lat}`
 }
 
 export default function ShopLocation({ address, coordinates }: IProps) {

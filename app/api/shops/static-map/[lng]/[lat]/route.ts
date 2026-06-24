@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 
 // Don't let Next apply a fixed ISR window; the Cache-Control below drives CDN
@@ -24,14 +24,17 @@ const inBounds = (lng: number, lat: number) =>
 // Round to ~1m so trivially-different coordinates share a cached image.
 const round = (n: number) => Math.round(n * 1e5) / 1e5
 
-export async function GET(req: NextRequest) {
+// Coordinates live in the path (not the query string) so the shared CDN — which
+// keys on path alone — caches a distinct image per shop instead of leaking one
+// shop's map across coordinates. See tests/unit/cdnCacheInvariant.test.ts.
+export async function GET(_req: Request, ctx: { params: Promise<{ lng: string; lat: string }> }) {
   if (!MAPBOX_TOKEN) {
     return NextResponse.json({ error: 'Mapbox token not configured' }, { status: 500 })
   }
 
-  const params = req.nextUrl.searchParams
-  const lng = Number(params.get('lng'))
-  const lat = Number(params.get('lat'))
+  const { lng: lngParam, lat: latParam } = await ctx.params
+  const lng = Number(lngParam)
+  const lat = Number(latParam)
 
   if (!Number.isFinite(lng) || !Number.isFinite(lat) || !inBounds(lng, lat)) {
     return NextResponse.json({ error: 'Invalid or out-of-area coordinates' }, { status: 400 })
