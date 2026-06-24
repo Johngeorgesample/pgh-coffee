@@ -368,7 +368,7 @@ UPDATE shops SET description = $d$Coop De Ville is an entertainment venue and re
 UPDATE shops SET description = $d$De Fer Coffee & Tea is a Pittsburgh roaster founded in 2017 by Matt and Vanessa Marietti and now employee-owned, with coffee roasted in house. Its Smallman Street cafe sits at the heart of the Strip District, serving the company's espresso, drip, and tea.$d$ WHERE uuid = 'a2073115-c84e-422e-97eb-9d87fdceecf4'; -- De Fer Coffee & Tea / Strip District
 UPDATE shops SET description = $d$James Cafe is a bright cafe on Smallman Street in the Strip District, drawing on European style for its everyday gatherings. It serves Passenger Coffee as espresso, drip, and rotating pour overs, alongside Bellocq teas. House-made grab-and-go salads, sandwiches, and small bites round out the menu.$d$ WHERE uuid = '2d44ec5c-da94-4577-aa05-7aca62751f99'; -- James Cafe / Strip District
 UPDATE shops SET description = $d$La Prima Espresso Co. was founded in 1988 by Sam Patti and roasts Italian-style espresso at its Manchester roastery. Its 21st Street location anchors the company in the Strip District, the neighborhood that has been home to La Prima's flagship since the start.$d$ WHERE uuid = '5d3e9ef9-8e82-4230-8e7d-4eb718263809'; -- La Prima / Strip District
-UPDATE shops SET description = $d$Novaria Coffee Co. is a specialty Syrian coffee shop on Penn Avenue in the Strip District. Its traditional Syrian coffee blends coffee, cardamom, and water, served on a gold tray with a small sweet to pour yourself. The menu also spans Japanese-style cold brew, pour-overs, and lattes.$d$ WHERE uuid = 'd278cff3-3cbc-4184-9973-5bc879eda844'; -- Novaria Coffee Co. / Strip District
+UPDATE shops SET description = $d$Novaria Coffee Co. is a specialty Syrian coffee shop on Penn Avenue in the Strip District. Its traditional Syrian coffee blends coffee, cardamom, and water, served on a gold tray with a small sweet and poured at the table. The menu also spans Japanese-style cold brew, pour-overs, and lattes.$d$ WHERE uuid = 'd278cff3-3cbc-4184-9973-5bc879eda844'; -- Novaria Coffee Co. / Strip District
 UPDATE shops SET description = $d$Prestogeorge Coffee & Tea has roasted coffee on Penn Avenue in the Strip District since 1958, with beans roasted in store. Beyond coffee, it stocks more than 300 loose-leaf teas, making it a longtime fixture of the neighborhood's market district.$d$ WHERE uuid = '3d159551-183a-464f-8baa-f52dc779f57e'; -- Prestogeorge Coffee & Tea / Strip District
 UPDATE shops SET description = $d$The Roaming Bean began as a mobile coffee operation popping up at events before opening a permanent cafe on Smallman Street in the Strip District in early 2026. The plant-filled space is known for signature lattes topped with flavored cold foam, in flavors like cookie butter, tiramisu, and honey lavender, plus baked goods. The truck still runs events alongside the cafe.$d$ WHERE uuid = '6e2659d0-623a-43b1-92e4-bd16467af9f0'; -- The Roaming Bean / Strip District
 
@@ -422,9 +422,9 @@ UNION ALL SELECT 'roaster', count(*), count(*) FILTER (WHERE description IS NULL
 UNION ALL SELECT 'shops', count(*), count(*) FILTER (WHERE description IS NULL OR description='') FROM shops;
 
 -- First/second-person leakage (should return no rows).
-SELECT 'companies' t, name FROM companies WHERE description ~* '\m(we|our|us|you|your|yours)\M'
-UNION ALL SELECT 'roaster', name FROM roaster WHERE description ~* '\m(we|our|us|you|your|yours)\M'
-UNION ALL SELECT 'shops', name FROM shops WHERE description ~* '\m(we|our|us|you|your|yours)\M';
+SELECT 'companies' t, name FROM companies WHERE description ~* '\m(we|our|us|you|your|yours|yourself|yourselves)\M'
+UNION ALL SELECT 'roaster', name FROM roaster WHERE description ~* '\m(we|our|us|you|your|yours|yourself|yourselves)\M'
+UNION ALL SELECT 'shops', name FROM shops WHERE description ~* '\m(we|our|us|you|your|yours|yourself|yourselves)\M';
 
 -- Length outliers (should return no rows).
 SELECT 'companies' t, name, length(description) FROM companies WHERE length(description) > 450
