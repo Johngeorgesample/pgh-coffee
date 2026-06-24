@@ -1,4 +1,4 @@
-import { Globe } from 'lucide-react'
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
 interface WebsiteButtonProps {
   website: string
@@ -10,10 +10,11 @@ export default function WebsiteButton({ website }: WebsiteButtonProps) {
       href={website}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors"
+      aria-label="Website"
+      title="Website"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors"
     >
-      <Globe className="size-4" />
-      Website
+      <ArrowTopRightOnSquareIcon className="size-[18px]" />
     </a>
   )
 }
