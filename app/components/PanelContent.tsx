@@ -13,7 +13,8 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster, description } = props.shop.properties
+  const { address, photos, amenities, roaster } = props.shop.properties
+  const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
   return (

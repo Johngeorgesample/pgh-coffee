@@ -88,4 +88,30 @@ describe('PanelContent', () => {
     const websiteLink = screen.getByRole('link', { name: 'Website' })
     expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
   })
+
+  it('renders the description block when description is a non-empty string', () => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, description: '  A cozy neighborhood cafe.  ' },
+    }
+    render(<PanelContent {...defaultProps} shop={shop} />)
+
+    // Rendered trimmed
+    expect(screen.getByText('A cozy neighborhood cafe.')).toBeInTheDocument()
+  })
+
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['empty string', ''],
+    ['whitespace only', '   '],
+  ])('does not render the description block for %s', (_label, description) => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, description },
+    }
+    render(<PanelContent {...defaultProps} shop={shop} />)
+
+    expect(screen.queryByText(/cafe/i)).not.toBeInTheDocument()
+  })
 })
