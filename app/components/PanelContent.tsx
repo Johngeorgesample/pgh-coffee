@@ -3,7 +3,7 @@ import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
-import { getGoogleMapsUrl } from './DirectionsButton'
+import ShopLocation from './ShopLocation'
 import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
 
@@ -20,19 +20,7 @@ export default function PanelContent(props: IProps) {
       <QuickActionsBar shop={props.shop} />
 
       <div className="px-4 sm:px-6 py-5">
-        <a
-          href={getGoogleMapsUrl({
-            latitude: coordinates[0],
-            longitude: coordinates[1],
-          })}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block group"
-        >
-          <address className="not-italic text-sm font-medium text-stone-800 group-hover:text-amber-700 transition-colors leading-snug">
-            {address}
-          </address>
-        </a>
+        <ShopLocation address={address} coordinates={coordinates} />
 
         <ShopAmenities
           amenities={amenities ?? []}
