@@ -1,67 +1,44 @@
-import { DbShop, TFeatureCollection } from '@/types/shop-types'
+import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
 
-export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
-  const myObj: TFeatureCollection = {
-    type: 'FeatureCollection',
-    features: [],
-  }
-
-  shops.forEach(shop => {
-    myObj.features.push({
-      type: 'Feature',
-      properties: {
-        name: shop.name,
-        company: shop.company,
-        neighborhood: shop.neighborhood,
-        website: shop.website,
-        address: shop.address,
-        photo: shop.photo ?? undefined,
-        photos: shop.photos ?? undefined,
-        uuid: shop.uuid,
-        amenities: shop.amenities ?? undefined,
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [shop.longitude ?? 0, shop.latitude ?? 0],
-      },
-    })
-  })
-
-  return myObj
-}
-
-export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['features'][number] => {
-  const roaster = shop.roasterRef
+// The roaster a shop serves (joined via roaster_id), flagged in-house when it
+// belongs to the same company as the shop. Shared by every shop→feature path so
+// the roaster card shows regardless of how a shop was selected (map vs. direct).
+const toFeatureRoaster = (shop: DbShop): TShopRoaster | null =>
+  shop.roasterRef
     ? {
         name: shop.roasterRef.name,
         slug: shop.roasterRef.slug,
-        // In-house when the roaster belongs to the same company as the shop.
         inHouse: !!shop.company?.id && shop.company.id === shop.roasterRef.company_id,
       }
     : null
 
-  return (
-    {
-      type: 'Feature',
-      properties: {
-        name: shop.name,
-        company: shop.company,
-        neighborhood: shop.neighborhood,
-        website: shop.website,
-        address: shop.address,
-        photo: shop.photo ?? undefined,
-        photos: shop.photos ?? undefined,
-        uuid: shop.uuid,
-        amenities: shop.amenities ?? undefined,
-        roaster,
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [shop.longitude ?? 0, shop.latitude ?? 0],
-      }
-    }
-  )
-}
+const toFeature = (shop: DbShop): TShop => ({
+  type: 'Feature',
+  properties: {
+    name: shop.name,
+    company: shop.company,
+    neighborhood: shop.neighborhood,
+    website: shop.website,
+    address: shop.address,
+    photo: shop.photo ?? undefined,
+    photos: shop.photos ?? undefined,
+    uuid: shop.uuid,
+    amenities: shop.amenities ?? undefined,
+    roaster: toFeatureRoaster(shop),
+  },
+  geometry: {
+    type: 'Point',
+    coordinates: [shop.longitude ?? 0, shop.latitude ?? 0],
+  },
+})
+
+export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => ({
+  type: 'FeatureCollection',
+  features: shops.map(toFeature),
+})
+
+export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['features'][number] =>
+  toFeature(shop)
 
 export const parseYMDLocal = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number)
