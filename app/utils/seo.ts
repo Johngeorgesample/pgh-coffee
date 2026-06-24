@@ -108,7 +108,9 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
  */
 export function buildShopMetadata(shop: DbShop): Metadata {
   const title = `${shop.name} | ${shop.neighborhood} | pgh.coffee`
-  const description = `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
+  const description =
+    shop.description?.trim() ||
+    `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
   const path = buildShopPath(shop)
 
   const metadata: Metadata = {

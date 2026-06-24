@@ -25,6 +25,7 @@ const toFeature = (shop: DbShop): TShop => ({
     uuid: shop.uuid,
     amenities: shop.amenities ?? undefined,
     roaster: toFeatureRoaster(shop),
+    description: shop.description ?? undefined,
   },
   geometry: {
     type: 'Point',
