@@ -421,10 +421,10 @@ SELECT 'companies' t, count(*) total, count(*) FILTER (WHERE description IS NULL
 UNION ALL SELECT 'roaster', count(*), count(*) FILTER (WHERE description IS NULL OR description='') FROM roaster
 UNION ALL SELECT 'shops', count(*), count(*) FILTER (WHERE description IS NULL OR description='') FROM shops;
 
--- First-person leakage (should return no rows).
-SELECT 'companies' t, name FROM companies WHERE description ~* '\m(we|our|us)\M'
-UNION ALL SELECT 'roaster', name FROM roaster WHERE description ~* '\m(we|our|us)\M'
-UNION ALL SELECT 'shops', name FROM shops WHERE description ~* '\m(we|our|us)\M';
+-- First/second-person leakage (should return no rows).
+SELECT 'companies' t, name FROM companies WHERE description ~* '\m(we|our|us|you|your|yours)\M'
+UNION ALL SELECT 'roaster', name FROM roaster WHERE description ~* '\m(we|our|us|you|your|yours)\M'
+UNION ALL SELECT 'shops', name FROM shops WHERE description ~* '\m(we|our|us|you|your|yours)\M';
 
 -- Length outliers (should return no rows).
 SELECT 'companies' t, name, length(description) FROM companies WHERE length(description) > 450

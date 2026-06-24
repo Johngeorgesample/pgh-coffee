@@ -1,13 +1,15 @@
 -- Rollback for descriptions-backfill.sql
 --
--- Fully reverses the up script:
+-- Reverses the up script:
 --   1. Restores companies.description and roaster.description for every row the
 --      up script overwrote, to the exact value captured before it ran.
 --   2. Drops the additive shops.description column (which also discards the shop
 --      descriptions, since they lived only in that column).
 --
--- The pre-up values were captured from the live database while the up script was
--- still unapplied. Run this only against a database in the post-up state.
+-- The pre-up values are baked in from a snapshot of the live database taken while
+-- the up script was still unapplied. This restores those captured values
+-- unconditionally, so run it only against a post-up database and be aware it will
+-- overwrite any manual edits made to these rows after the up script ran.
 
 -- ============================================================================
 -- RESTORE COMPANIES  (18 rows: 16 were NULL, 2 were empty string)
