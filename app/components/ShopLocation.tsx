@@ -26,7 +26,9 @@ export default function ShopLocation({ address, coordinates }: IProps) {
   const mapsHref = getGoogleMapsUrl({ latitude: coordinates[0], longitude: coordinates[1] })
 
   return (
-    <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="block group">
+    <>
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Location</p>
+      <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="block group">
       {mapUrl && (
         <div className="relative mb-3">
           <img
@@ -43,6 +45,7 @@ export default function ShopLocation({ address, coordinates }: IProps) {
         <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0" />
         {address}
       </address>
-    </a>
+      </a>
+    </>
   )
 }
