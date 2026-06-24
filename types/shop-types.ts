@@ -12,6 +12,7 @@ export interface TCompany {
   description: string
   instagram_handle: string
   shops?: DbShop[]
+  roaster?: { name: string; slug: string } | null
 }
 
 export type TCompanyReference = Omit<TCompany, 'shops'>

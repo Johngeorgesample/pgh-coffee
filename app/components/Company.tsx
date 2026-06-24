@@ -1,7 +1,8 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, MapPinIcon } from '@heroicons/react/24/outline'
-import { Instagram } from 'lucide-react'
+import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { Flame, Instagram } from 'lucide-react'
+import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -149,6 +150,26 @@ export const Company = ({ slug }: { slug: string }) => {
 
         {company.description && (
           <p className="text-sm text-gray-600 leading-relaxed">{company.description}</p>
+        )}
+
+        {company.roaster && (
+          <Link
+            href={`/roasters/${company.roaster.slug}`}
+            className="group mt-5 flex items-center gap-3 rounded-xl border border-gray-200 p-3 transition-colors hover:border-gray-300 hover:bg-gray-50"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-yellow-300 text-gray-950">
+              <Flame className="h-4 w-4" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                In-house roaster
+              </span>
+              <span className="block truncate text-sm font-medium text-gray-900">
+                {company.roaster.name}
+              </span>
+            </span>
+            <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400 transition-colors group-hover:text-gray-600" />
+          </Link>
         )}
 
         <div className="mt-6">
