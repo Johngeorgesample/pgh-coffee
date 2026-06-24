@@ -180,7 +180,7 @@ export const Company = ({ slug }: { slug: string }) => {
                 type="button"
                 onClick={() => handleNeighborhoodClick(neighborhood)}
                 aria-label={`Show all shops in ${neighborhood}`}
-                className="group flex items-center gap-1.5 mt-4 text-gray-900 hover:text-gray-950"
+                className="group flex items-center gap-1.5 mt-4 -mb-4 text-gray-900 hover:text-gray-950"
               >
                 <h3 className="text-sm font-medium group-hover:underline">{neighborhood}</h3>
               </button>
