@@ -89,15 +89,19 @@ describe('PanelContent', () => {
     expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
   })
 
-  it('renders the description block when description is a non-empty string', () => {
+  // The description intro block is the only <p> with this class combination.
+  const descriptionSelector = 'p.text-sm.text-gray-600.leading-relaxed'
+
+  it('renders the description block (trimmed) when description is a non-empty string', () => {
     const shop: TShop = {
       ...mockShop,
       properties: { ...mockShop.properties, description: '  A cozy neighborhood cafe.  ' },
     }
-    render(<PanelContent {...defaultProps} shop={shop} />)
+    const { container } = render(<PanelContent {...defaultProps} shop={shop} />)
 
-    // Rendered trimmed
-    expect(screen.getByText('A cozy neighborhood cafe.')).toBeInTheDocument()
+    const paragraph = container.querySelector(descriptionSelector)
+    expect(paragraph).toBeInTheDocument()
+    expect(paragraph).toHaveTextContent('A cozy neighborhood cafe.')
   })
 
   it.each([
@@ -110,8 +114,8 @@ describe('PanelContent', () => {
       ...mockShop,
       properties: { ...mockShop.properties, description },
     }
-    render(<PanelContent {...defaultProps} shop={shop} />)
+    const { container } = render(<PanelContent {...defaultProps} shop={shop} />)
 
-    expect(screen.queryByText(/cafe/i)).not.toBeInTheDocument()
+    expect(container.querySelector(descriptionSelector)).toBeNull()
   })
 })
