@@ -19,6 +19,8 @@ export default function PanelContent(props: IProps) {
     <div className="bg-[#FAF9F7]">
       <QuickActionsBar shop={props.shop} />
 
+      {photos && <PhotoGrid photos={photos} />}
+
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
       </div>
@@ -34,7 +36,6 @@ export default function PanelContent(props: IProps) {
       <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
 
       {/* Child components */}
-      {photos && <PhotoGrid photos={photos} />}
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
