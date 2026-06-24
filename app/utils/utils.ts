@@ -31,6 +31,15 @@ export const formatDataToGeoJSON = (shops: DbShop[]): TFeatureCollection => {
 }
 
 export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['features'][number] => {
+  const roaster = shop.roasterRef
+    ? {
+        name: shop.roasterRef.name,
+        slug: shop.roasterRef.slug,
+        // In-house when the roaster belongs to the same company as the shop.
+        inHouse: !!shop.company?.id && shop.company.id === shop.roasterRef.company_id,
+      }
+    : null
+
   return (
     {
       type: 'Feature',
@@ -44,6 +53,7 @@ export const formatDBShopAsFeature = (shop: DbShop): TFeatureCollection['feature
         photos: shop.photos ?? undefined,
         uuid: shop.uuid,
         amenities: shop.amenities ?? undefined,
+        roaster,
       },
       geometry: {
         type: 'Point',
