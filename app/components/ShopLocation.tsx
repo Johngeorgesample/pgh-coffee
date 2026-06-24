@@ -16,8 +16,9 @@ const MAPBOX_TOKEN = process.env.MAPBOX_ACCESS_TOKEN
  */
 const buildStaticMapUrl = (lng: number, lat: number) => {
   if (!MAPBOX_TOKEN || (lng === 0 && lat === 0)) return null
+  // Match the main map's style (see MapContainer).
   const marker = `pin-l+fbbf24(${lng},${lat})`
-  return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${marker}/${lng},${lat},14,0/600x320@2x?access_token=${MAPBOX_TOKEN}`
+  return `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${marker}/${lng},${lat},14,0/600x320@2x?access_token=${MAPBOX_TOKEN}`
 }
 
 export default function ShopLocation({ address, coordinates }: IProps) {
