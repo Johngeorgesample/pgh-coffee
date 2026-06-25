@@ -85,8 +85,9 @@ export default function ShopHours({ shop }: IProps) {
   const [rows, setRows] = useState<HoursRow[] | null>(null)
   const shopId = shop.properties.uuid
 
-  // Snapshot Pittsburgh time on mount (the panel remounts per shop selection).
-  const now = useMemo(() => pittsburghNow(), [])
+  // Snapshot Pittsburgh time per shop. ShopHours re-renders (not remounts) when
+  // switching shops, so keying this to shopId refreshes "now" on each selection.
+  const now = useMemo(() => pittsburghNow(), [shopId])
 
   useEffect(() => {
     if (!shopId) {
