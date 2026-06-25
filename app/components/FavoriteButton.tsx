@@ -91,9 +91,14 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
         aria-label={isFavorited ? 'Favorited' : 'Favorite'}
         aria-pressed={isFavorited}
         title={isFavorited ? 'Favorited' : 'Favorite'}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50"
+        className={`inline-flex flex-1 items-center justify-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold transition-colors disabled:opacity-50 ${
+          isFavorited
+            ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
+            : 'bg-gray-950 hover:bg-gray-800 text-white'
+        }`}
       >
-        <Heart className={`size-[18px] transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+        <Heart className={`h-4 w-4 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+        {isFavorited ? 'Favorited' : 'Favorite'}
       </button>
 
       <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />

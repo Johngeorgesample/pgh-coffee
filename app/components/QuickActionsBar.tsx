@@ -33,8 +33,8 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
   return (
     <>
       <div ref={scrollRef} className="flex items-center gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
-        <DirectionsButton coordinates={coordinates} />
         <FavoriteButton shopUUID={uuid} shopName={name} />
+        <DirectionsButton coordinates={coordinates} />
         <ShareButton />
         {website && <WebsiteButton website={website} />}
         <ReportIssueButton onClick={() => setShowIssueModal(true)} />

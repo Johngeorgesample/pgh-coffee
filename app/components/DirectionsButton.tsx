@@ -16,10 +16,11 @@ export default function DirectionsButton({ coordinates }: DirectionsButtonProps)
       })}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex flex-1 items-center justify-center gap-1.5 bg-gray-950 hover:bg-gray-800 text-white px-4 py-2.5 rounded-full text-sm font-semibold transition-colors"
+      aria-label="Directions"
+      title="Directions"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors"
     >
-      <MapPin className="h-4 w-4" />
-      Directions
+      <MapPin className="size-[18px]" />
     </a>
   )
 }
