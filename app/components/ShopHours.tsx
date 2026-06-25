@@ -90,6 +90,10 @@ export default function ShopHours({ shop }: IProps) {
   const now = useMemo(() => pittsburghNow(), [shopId])
 
   useEffect(() => {
+    // Clear the previous shop's rows so the section renders null (not stale
+    // hours/badge) while the new shop's fetch is in flight — ShopHours
+    // reconciles across shop selections rather than remounting.
+    setRows(null)
     if (!shopId) {
       setRows([])
       return
