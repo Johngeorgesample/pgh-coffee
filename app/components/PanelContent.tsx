@@ -35,10 +35,6 @@ export default function PanelContent(props: IProps) {
 
       {photos && <PhotoGrid photos={photos} />}
 
-      <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
-        <ShopLocation address={address} coordinates={coordinates} />
-      </div>
-
       <div className="px-4 sm:px-6 py-5">
         <ShopAmenities
           amenities={amenities ?? []}
@@ -46,10 +42,14 @@ export default function PanelContent(props: IProps) {
         />
       </div>
 
-      {/* Divider */}
       <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
 
-      {/* Child components */}
+      <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+        <ShopLocation address={address} coordinates={coordinates} />
+      </div>
+
+      <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
+
       <ShopNews shop={props.shop} />
       <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
