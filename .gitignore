@@ -41,3 +41,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated apply-once hours data — Google Places content is 30-day-max cached
+# content under the Maps Platform terms; must not be committed (schema lives in
+# hours-schema.sql). Re-run the crawl to regenerate.
+migrations/hours-backfill.sql
+migrations/hours-backfill-results.json
