@@ -34,13 +34,13 @@ export default function PanelContent(props: IProps) {
         </div>
       )}
 
+      <ShopHours shop={props.shop} />
+
       {photos && <PhotoGrid photos={photos} />}
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
       </div>
-
-      <ShopHours shop={props.shop} />
 
       <div className="px-4 sm:px-6 py-5">
         <ShopAmenities
