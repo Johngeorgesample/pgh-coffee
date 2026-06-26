@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ClockIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
-import { HoursRow, formatTime, isOpenNow, pittsburghNow } from '@/lib/hours'
+import { HoursRow, formatTime, isOpenNow, pittsburghNow } from '@/app/utils/hours'
 import ShopHoursSkeleton from './ShopHoursSkeleton'
 
 interface IProps {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { HoursRow, formatTime, isOpenNow } from '@/lib/hours'
+import { HoursRow, formatTime, isOpenNow } from '@/app/utils/hours'
 
 // day_of_week: 0=Sun .. 6=Sat
 const row = (day: number, opens: string, closes: string, spans = false): HoursRow => ({
