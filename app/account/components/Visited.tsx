@@ -6,7 +6,6 @@ import { MapPinCheck, MapPin } from 'lucide-react'
 import ShopCard from '@/app/components/ShopCard'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import type { DbShop } from '@/types/shop-types'
-import VisitedProgress from './VisitedProgress'
 
 interface Visit {
   id: string
@@ -58,8 +57,6 @@ export default function Visited() {
 
   return (
     <div className="space-y-6">
-      <VisitedProgress />
-
       {hasVisits ? (
         <ul>
           {visits.map((visit) => (
