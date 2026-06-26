@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { MapPinCheck } from 'lucide-react'
+import { Stamp } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
 import VisitedToast from './VisitedToast'
 import { useAuth } from './AuthProvider'
@@ -93,7 +93,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
         title={isVisited ? 'Visited' : 'Mark as visited'}
         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50"
       >
-        <MapPinCheck className={`size-[18px] transition-colors ${isVisited ? 'fill-green-500 text-white' : ''}`} />
+        <Stamp className={`size-[18px] transition-colors ${isVisited ? 'fill-green-500 text-white' : ''}`} />
       </button>
 
       <VisitedToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />

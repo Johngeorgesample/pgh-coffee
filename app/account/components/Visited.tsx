@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { MapPinCheck, MapPin } from 'lucide-react'
+import { Stamp, MapPin } from 'lucide-react'
 import ShopCard from '@/app/components/ShopCard'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import type { DbShop } from '@/types/shop-types'
@@ -45,7 +45,7 @@ export default function Visited() {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <MapPinCheck className="h-12 w-12 text-gray-300 mb-4" />
+          <Stamp className="h-12 w-12 text-gray-300 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Couldn&apos;t load your passport</h3>
           <p className="text-gray-500 max-w-sm">
             Something went wrong while loading your visited shops. Please try refreshing the page.
@@ -58,15 +58,21 @@ export default function Visited() {
   return (
     <div className="space-y-6">
       {hasVisits ? (
-        <ul>
-          {visits.map((visit) => (
-            <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-          ))}
-        </ul>
+        <div className="space-y-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Passport</h1>
+            <p className="text-gray-500">Keep track of the coffee shops you&apos;ve visited.</p>
+          </div>
+          <ul>
+            {visits.map((visit) => (
+              <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
+            ))}
+          </ul>
+        </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <MapPinCheck className="h-12 w-12 text-gray-300 mb-4" />
+            <Stamp className="h-12 w-12 text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No visits yet</h3>
             <p className="text-gray-500 max-w-sm">
               Mark the shops you&apos;ve been to and watch your passport fill up.

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   Heart,
-  MapPinCheck,
+  Stamp,
   Settings,
   Menu,
   X,
@@ -14,7 +14,7 @@ import {
 
 const navigation = [
   { name: 'Dashboard', href: '/account', icon: LayoutDashboard },
-  { name: 'Passport', href: '/account/visited', icon: MapPinCheck },
+  { name: 'Passport', href: '/account/visited', icon: Stamp },
   { name: 'Favorites', href: '/account/favorites', icon: Heart },
   // { name: 'Settings', href: '/account/settings', icon: Settings },
 ]

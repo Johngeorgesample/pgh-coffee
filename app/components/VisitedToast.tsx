@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
-import { MapPinCheck } from 'lucide-react'
+import { Stamp } from 'lucide-react'
 import Link from 'next/link'
 
 interface VisitedToastProps {
@@ -35,7 +35,7 @@ export default function VisitedToast({ isOpen, onClose, shopName }: VisitedToast
               leaveTo="opacity-0 translate-y-4"
             >
               <DialogPanel className="bg-stone-900 text-white rounded-xl px-4 py-3 shadow-lg flex flex-col lg:flex-row items-center gap-3">
-                <MapPinCheck className="w-5 h-5 fill-green-500 text-white flex-shrink-0" />
+                <Stamp className="w-5 h-5 fill-green-500 text-white flex-shrink-0" />
                 <p className="text-sm">
                   <span className="font-medium">{shopName}</span> marked as visited
                 </p>
