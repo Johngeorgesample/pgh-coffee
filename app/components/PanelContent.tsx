@@ -7,6 +7,7 @@ import ShopLocation from './ShopLocation'
 import ShopRoaster from './ShopRoaster'
 import PhotoGrid from './PhotoGrid'
 import ShopAmenities from './ShopAmenities'
+import ShopHours from './ShopHours'
 
 interface IProps {
   shop: TShop
@@ -32,6 +33,8 @@ export default function PanelContent(props: IProps) {
           <ShopRoaster roaster={roaster} />
         </div>
       )}
+
+      <ShopHours shop={props.shop} />
 
       {photos && <PhotoGrid photos={photos} />}
 
