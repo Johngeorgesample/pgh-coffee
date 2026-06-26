@@ -38,23 +38,21 @@ export default function PanelContent(props: IProps) {
 
       {photos && <PhotoGrid photos={photos} />}
 
-      <div className="px-4 sm:px-6 py-5">
-        <ShopAmenities
-          amenities={amenities ?? []}
-          shopId={props.shop.properties.uuid}
-        />
-      </div>
+      {amenities && amenities?.length > 0 && (
+        <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+          <ShopAmenities amenities={amenities ?? []} shopId={props.shop.properties.uuid} />
+        </div>
+      )}
 
-      <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
+      <div className="py-5 border-b border-stone-200">
+        <ShopNews shop={props.shop} />
+        <ShopEvents shop={props.shop} />
+      </div>
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
       </div>
 
-      <div className="h-px bg-stone-200 mx-4 sm:mx-6" />
-
-      <ShopNews shop={props.shop} />
-      <ShopEvents shop={props.shop} />
       <NearbyShops shop={props.shop} />
     </div>
   )
