@@ -5,6 +5,7 @@ import DirectionsButton from './DirectionsButton'
 import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
 import FavoriteButton from './FavoriteButton'
+import VisitedButton from './VisitedButton'
 import ReportIssueButton from './ReportIssueButton'
 import IssueModal from './IssueModal'
 import IssueSuccessDialog from './IssueSuccessDialog'
@@ -35,6 +36,7 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
       <div ref={scrollRef} className="flex items-center gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
         <DirectionsButton coordinates={coordinates} />
         <FavoriteButton shopUUID={uuid} shopName={name} />
+        <VisitedButton shopUUID={uuid} shopName={name} />
         <ShareButton />
         {website && <WebsiteButton website={website} />}
         <ReportIssueButton onClick={() => setShowIssueModal(true)} />
