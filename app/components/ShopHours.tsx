@@ -40,14 +40,9 @@ const formatTime = (time: string): string => {
   return m === 0 ? `${hour12} ${period}` : `${hour12}:${String(m).padStart(2, '0')} ${period}`
 }
 
-const isOpen24h = (row: HoursRow): boolean =>
-  !row.spans_midnight && row.opens_at.startsWith('00:00') && row.closes_at.startsWith('23:59')
-
-// One day's label, e.g. "7 AM – 6 PM", "Open 24 hours", or split "7 AM – 2 PM, 5 PM – 9 PM".
+// One day's label, e.g. "7 AM – 6 PM", or split "7 AM – 2 PM, 5 PM – 9 PM".
 const formatDayRanges = (rows: HoursRow[]): string =>
-  rows
-    .map(r => (isOpen24h(r) ? 'Open 24 hours' : `${formatTime(r.opens_at)} – ${formatTime(r.closes_at)}`))
-    .join(', ')
+  rows.map(r => `${formatTime(r.opens_at)} – ${formatTime(r.closes_at)}`).join(', ')
 
 // Pittsburgh-local "now", so open-now and the highlighted row stay correct no
 // matter the viewer's timezone (stored times are America/New_York wall-clock).
