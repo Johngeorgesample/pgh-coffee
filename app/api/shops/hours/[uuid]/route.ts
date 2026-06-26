@@ -8,10 +8,9 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Reads only shop_hours: it's the sole hours table with a public-read RLS policy.
-// shop_hours_meta is admin-only (no policies), so the anon key can't see it — and
-// the display needs nothing from it. A present day-row means open then; a missing
-// day means closed; zero rows means we have no schedule to show.
+// A present day-row means open
+// A missing day means closed
+// Zero rows means we have no schedule to show
 export const GET = withMetrics(
   'shops/hours/[uuid]',
   async (_req: NextRequest, props: { params: Promise<{ uuid: string }> }) => {
