@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ClockIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
+import ShopHoursSkeleton from './ShopHoursSkeleton'
 
 interface IProps {
   shop: TShop
@@ -76,23 +77,6 @@ const isOpenNow = (rows: HoursRow[], now: { day: number; minutes: number }): boo
   })
 }
 
-const HoursSkeleton = () => (
-  <section className="animate-pulse border-b border-stone-200 px-4 py-5 sm:px-6">
-    <div className="mb-2 flex items-center justify-between">
-      <div className="h-4 w-16 rounded bg-gray-200" />
-      <div className="h-4 w-20 rounded bg-gray-200" />
-    </div>
-    <ul className="text-[15px]">
-      {DISPLAY_DAYS.map(({ dow }) => (
-        <li key={dow} className="flex items-center justify-between px-2 py-1.5">
-          <div className="h-4 w-10 rounded bg-gray-200" />
-          <div className="h-4 w-24 rounded bg-gray-200" />
-        </li>
-      ))}
-    </ul>
-  </section>
-)
-
 export default function ShopHours({ shop }: IProps) {
   const [rows, setRows] = useState<HoursRow[] | null>(null)
   const shopId = shop.properties.uuid
@@ -136,7 +120,7 @@ export default function ShopHours({ shop }: IProps) {
     return map
   }, [rows])
 
-  if (rows === null) return <HoursSkeleton />
+  if (rows === null) return <ShopHoursSkeleton />
 
   // No schedule on file: render nothing rather than an empty section.
   if (rows.length === 0) return null
