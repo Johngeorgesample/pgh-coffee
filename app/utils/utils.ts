@@ -24,6 +24,7 @@ const toFeature = (shop: DbShop): TShop => ({
     photos: shop.photos ?? undefined,
     uuid: shop.uuid,
     amenities: shop.amenities ?? undefined,
+    offerings: shop.offerings ?? undefined,
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
   },
