@@ -6,6 +6,7 @@ export const OFFERING_KEYS = [
   // Drink specialties — populated via editorial backfill.
   'espresso',
   'pour_over',
+  'drip',
   'cold_brew',
   'loose_leaf_tea',
   'matcha',

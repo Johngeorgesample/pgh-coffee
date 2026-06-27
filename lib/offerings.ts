@@ -9,6 +9,7 @@ export const offeringMap = {
   full_food_menu: { label: 'Full Food Menu' },
   espresso: { label: 'Espresso' },
   pour_over: { label: 'Pour Over' },
+  drip: { label: 'Drip Coffee' },
   cold_brew: { label: 'Cold Brew' },
   loose_leaf_tea: { label: 'Loose-leaf Tea' },
   matcha: { label: 'Matcha' },
