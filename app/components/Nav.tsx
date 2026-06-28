@@ -21,7 +21,7 @@ export default function Nav() {
     <nav className="h-16 bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
       <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
         <Link className="flex gap-1" href="/" onClick={handleLogoClick}>
-          <img src="/logo_without_name.jpeg" width="36" height="36" alt="pgh.coffee logo" />
+          <img src="/logo_without_name_108.jpeg" width="36" height="36" alt="pgh.coffee logo" />
           <p className="flex items-center text-2xl">pgh.coffee</p>
         </Link>
       </span>
