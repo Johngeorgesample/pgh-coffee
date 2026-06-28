@@ -21,13 +21,7 @@ export default function Nav() {
     <nav className="h-16 bg-yellow-300 flex items-center py-2 px-8 sm:gap-3">
       <span className="flex flex-1 justify-center sm:gap-3 sm:justify-start">
         <Link className="flex gap-1" href="/" onClick={handleLogoClick}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 250 250">
-            <path
-              fill="#000000"
-              stroke="none"
-              d="M34.94,10.53 l21.81,48.63 h-51.62 l60.37,180.31 h119 l60.37,-180.31 h-51.62 l21.81,-48.63 z"
-            />
-          </svg>
+          <img src="/logo_with_no_text_transparent_108.png" width="36" height="36" alt="pgh.coffee logo" />
           <p className="flex items-center text-2xl">pgh.coffee</p>
         </Link>
       </span>
