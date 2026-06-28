@@ -5,7 +5,7 @@ import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import haversineDistance from 'haversine-distance'
 import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
-import ShopList from '@/app/components/ShopList'
+import NearbyShopRow from '@/app/components/NearbyShopRow'
 
 interface IProps {
   shop: TShop
@@ -72,12 +72,17 @@ export default function NearbyShops({ shop }: IProps) {
 
   return (
     <section className="relative mt-3 flex-1 px-4 sm:px-6">
-      <p className="mb-2 text-gray-700">Nearby shops</p>
-      <ShopList
-        coffeeShops={sortedShopsWithDistances.shops}
-        distances={sortedShopsWithDistances.distances}
-        units={units}
-      />
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Nearby shops</p>
+      <ul className="relative">
+        {sortedShopsWithDistances.shops.map((s, index) => (
+          <NearbyShopRow
+            key={s.properties.name + s.properties.address}
+            shop={s}
+            distance={String(sortedShopsWithDistances.distances[index])}
+            units={units}
+          />
+        ))}
+      </ul>
     </section>
   )
 }
