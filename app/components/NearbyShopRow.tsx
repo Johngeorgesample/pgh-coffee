@@ -35,7 +35,7 @@ export default function NearbyShopRow(props: IProps) {
       className="group flex items-center gap-3 py-3 border-b border-stone-200 cursor-pointer"
     >
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-medium text-gray-900">{props.shop.properties.name}</span>
+        <span className="block truncate font-medium text-gray-900 group-hover:text-amber-700 transition-colors">{props.shop.properties.name}</span>
         <span className="block truncate text-sm text-gray-500">{props.shop.properties.neighborhood}</span>
       </span>
 
