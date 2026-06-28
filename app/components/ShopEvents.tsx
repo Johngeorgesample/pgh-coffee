@@ -45,7 +45,7 @@ export const ShopEvents = ({ shop }: Props) => {
   if (loading || !events.length) return null
 
   return (
-    <section className="flex flex-col mt-4 px-4 sm:px-6">
+    <section className="flex flex-col border-b border-stone-200 px-4 py-5 sm:px-6">
       <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Events</p>
 
       <ul className="list-none flex flex-col gap-3">
