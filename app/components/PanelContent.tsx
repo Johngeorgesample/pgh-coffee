@@ -19,7 +19,7 @@ export default function PanelContent(props: IProps) {
   const coordinates = props.shop.geometry?.coordinates
 
   return (
-    <div className="bg-[#FAF9F7]">
+    <div className="bg-[#FAF9F7] mb-8">
       <QuickActionsBar shop={props.shop} />
 
       {description && (
