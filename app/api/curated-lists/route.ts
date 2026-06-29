@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { DbShop, TShop } from '@/types/shop-types'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -44,5 +45,5 @@ export async function GET() {
     return NextResponse.json({ error: 'Error fetching curated lists' }, { status: 500 })
   }
 
-  return NextResponse.json(lists)
+  return NextResponse.json(lists, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }

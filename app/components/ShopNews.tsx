@@ -65,8 +65,7 @@ export const ShopNews = ({ shop }: Props) => {
   if (!relevantNews.length) return null
 
   return (
-    <section className="flex flex-col mt-4 px-4 sm:px-6">
-      <hr className="w-1/2 m-auto mt-2 mb-2" />
+    <section className="flex flex-col border-b border-stone-200 px-4 py-5 sm:px-6">
       <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Updates</p>
 
       <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white">

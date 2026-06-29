@@ -1,5 +1,41 @@
 import { describe, test, expect } from 'vitest'
-import { getSynonyms, normalizeSearchText, doesShopMatchFilter } from '@/app/utils/utils'
+import { getSynonyms, normalizeSearchText, doesShopMatchFilter, formatDBShopAsFeature } from '@/app/utils/utils'
+import { DbShop } from '@/types/shop-types'
+
+const baseShop = {
+  name: 'Test Shop',
+  neighborhood: 'Strip District',
+  address: '1 Main St',
+  website: '',
+  photo: null,
+  photos: null,
+  uuid: 'u1',
+  latitude: 40.45,
+  longitude: -79.98,
+  company: { id: 'co1', slug: 'test-co', name: 'Test Co', website: '', description: '', instagram_handle: '' },
+} as unknown as DbShop
+
+describe('formatDBShopAsFeature roaster mapping', () => {
+  test('marks the roaster in-house when it shares the shop company', () => {
+    const feature = formatDBShopAsFeature({
+      ...baseShop,
+      roasterRef: { name: 'Test Co Roasting', slug: 'test-co', company_id: 'co1' },
+    })
+    expect(feature.properties.roaster).toEqual({ name: 'Test Co Roasting', slug: 'test-co', inHouse: true })
+  })
+
+  test('is not in-house when the roaster belongs to a different company', () => {
+    const feature = formatDBShopAsFeature({
+      ...baseShop,
+      roasterRef: { name: 'Other Roaster', slug: 'other', company_id: 'co2' },
+    })
+    expect(feature.properties.roaster?.inHouse).toBe(false)
+  })
+
+  test('is null when the shop has no roaster', () => {
+    expect(formatDBShopAsFeature(baseShop).properties.roaster).toBeNull()
+  })
+})
 
 describe('getSynonyms', () => {
   test('returns synonyms for "&"', () => {

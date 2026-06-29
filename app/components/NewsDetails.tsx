@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { useShopSelection, useCopyToClipboard, useAnalytics } from '@/hooks'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
@@ -17,11 +18,12 @@ const formatNewsDate = (dateStr: string) => {
   })
 }
 
-export const NewsDetails = ({ id }: { id: string }) => {
+export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   const [news, setNews] = useState<NewsItem | null>(null)
   const [loading, setLoading] = useState(true)
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const plausible = useAnalytics()
+  const router = useRouter()
   const { handleShopSelect } = useShopSelection()
 
   useEffect(() => {
@@ -43,19 +45,6 @@ export const NewsDetails = ({ id }: { id: string }) => {
     fetchNews()
   }, [id, plausible])
 
-  useEffect(() => {
-    if (news?.id) {
-      const url = new URL(window.location.href)
-      const params = new URLSearchParams(url.search)
-      params.delete('shop')
-      params.delete('company')
-      params.delete('roaster')
-      params.set('news', news.id)
-      url.search = params.toString()
-      window.history.pushState(null, '', url.toString())
-    }
-  }, [news])
-
   const handleShopClick = () => {
     if (news?.shop_id && news?.shop) {
       handleShopSelect(formatDBShopAsFeature(news.shop))
@@ -67,13 +56,7 @@ export const NewsDetails = ({ id }: { id: string }) => {
     plausible('NewsDetailsRoasterClick', {
       props: { newsId: news.id, newsTitle: news.title, roasterSlug: news.roaster.slug },
     })
-    const url = new URL(window.location.href)
-    const params = new URLSearchParams(url.search)
-    params.delete('news')
-    params.set('roaster', news.roaster.slug)
-    url.search = params.toString()
-    window.history.pushState(null, '', url.toString())
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    router.push(`/roasters/${encodeURIComponent(news.roaster.slug)}`)
   }
 
   const handleExternalLink = () => {

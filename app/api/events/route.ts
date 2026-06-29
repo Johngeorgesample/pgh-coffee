@@ -44,5 +44,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching events' }, { status: 500 })
   }
 
+  // No shared-CDN cache: this response varies by the shop_id/roaster_id query
+  // string, but the CDN keys its cache on the path alone, so a cached copy
+  // would be served across different filters (every shop showing every event).
   return NextResponse.json(events)
 }

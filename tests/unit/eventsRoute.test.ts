@@ -44,6 +44,9 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual(mockEvents)
+    // This endpoint's body varies by the shop_id/roaster_id query string, which
+    // the CDN does not include in its cache key, so it must not be shared-cached.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
     expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
     expect(mockEq).not.toHaveBeenCalledWith('shop_id', expect.anything())
     expect(mockEq).not.toHaveBeenCalledWith('roaster_id', expect.anything())
@@ -78,5 +81,7 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error fetching events')
+    // A database error must not be pinned in the shared CDN cache.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 })

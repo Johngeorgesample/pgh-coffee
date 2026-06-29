@@ -12,6 +12,7 @@ export interface TCompany {
   description: string
   instagram_handle: string
   shops?: DbShop[]
+  roaster?: { name: string; slug: string } | null
 }
 
 export type TCompanyReference = Omit<TCompany, 'shops'>
@@ -28,7 +29,17 @@ export interface DbShop {
   latitude: number | null
   longitude: number | null
   roaster?: boolean | string
+  // Embedded roaster (joined via roaster_id) whose coffee the shop serves.
+  roasterRef?: { name: string; slug: string; company_id: string | null } | null
   amenities?: string[]
+  description?: string | null
+}
+
+// The roaster a shop serves, plus whether it's the shop's own in-house roaster.
+export interface TShopRoaster {
+  name: string
+  slug: string
+  inHouse: boolean
 }
 
 export interface TFeatureCollection {
@@ -48,6 +59,8 @@ export interface TShop {
     website: string
     uuid: string
     amenities?: string[]
+    roaster?: TShopRoaster | null
+    description?: string | null
     selected?: boolean
   }
   geometry: {

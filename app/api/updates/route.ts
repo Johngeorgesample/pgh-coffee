@@ -35,5 +35,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching updates' }, { status: 500 })
   }
 
+  // No shared-CDN cache: this response varies by the shop_id query string, but
+  // the CDN keys its cache on the path alone, so a cached copy would be served
+  // across different shops (every shop showing every update).
   return NextResponse.json(updates)
 }
