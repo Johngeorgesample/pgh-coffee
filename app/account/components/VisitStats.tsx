@@ -2,58 +2,21 @@
 
 import { useEffect, useState } from 'react'
 import { Stamp, MapPin, Map } from 'lucide-react'
-import type { DbShop } from '@/types/shop-types'
+import { computeStats, type Stats, type Visit } from '@/app/utils/visitStats'
 
-interface Visit {
-  id: string
-  created_at: string
-  shop: DbShop
-}
-
-interface Stats {
-  visited: number
-  total: number
-  topNeighborhood: string | null
-  neighborhoodsVisited: number
-  totalNeighborhoods: number
-}
-
-function computeStats(visits: Visit[], total: number, totalNeighborhoods: number): Stats {
-  const counts: Record<string, number> = {}
-  for (const visit of visits) {
-    const neighborhood = visit.shop?.neighborhood
-    if (neighborhood) {
-      counts[neighborhood] = (counts[neighborhood] ?? 0) + 1
-    }
-  }
-
-  let topNeighborhood: string | null = null
-  let topCount = 0
-  for (const [neighborhood, count] of Object.entries(counts)) {
-    if (count > topCount) {
-      topNeighborhood = neighborhood
-      topCount = count
-    }
-  }
-
-  return {
-    visited: visits.length,
-    total,
-    topNeighborhood,
-    neighborhoodsVisited: Object.keys(counts).length,
-    totalNeighborhoods,
-  }
-}
-
-export default function VisitStats() {
+export default function VisitStats({ visits: visitsProp }: { visits?: Visit[] }) {
   const [stats, setStats] = useState<Stats | null>(null)
 
   useEffect(() => {
+    const visitsPromise = visitsProp
+      ? Promise.resolve(visitsProp)
+      : fetch('/api/visits').then((res) => {
+          if (!res.ok) throw new Error(`Failed to fetch visits: ${res.status}`)
+          return res.json()
+        })
+
     Promise.all([
-      fetch('/api/visits').then((res) => {
-        if (!res.ok) throw new Error(`Failed to fetch visits: ${res.status}`)
-        return res.json()
-      }),
+      visitsPromise,
       fetch('/api/shops/geojson').then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch shops: ${res.status}`)
         return res.json()
@@ -74,7 +37,7 @@ export default function VisitStats() {
         console.error('Failed to load visit stats:', err)
         setStats(null)
       })
-  }, [])
+  }, [visitsProp])
 
   if (!stats) return null
 
