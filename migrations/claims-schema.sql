@@ -6,7 +6,8 @@
 --
 -- shop_claims — one row per ownership claim submitted via POST /api/shops/claim.
 --
--- RLS: this table holds PII (contact_name, business_email, phone, message).
+-- RLS: this table holds PII (contact_name, business_email, phone, social_media,
+-- message).
 -- Anyone may INSERT a claim — the public form posts with the anon key — but there
 -- is no SELECT/UPDATE/DELETE policy, so the anon role cannot read claims back.
 -- Review claims with the service role (SQL editor / server), which bypasses RLS.
@@ -19,6 +20,7 @@ CREATE TABLE IF NOT EXISTS shop_claims (
   role           text,
   business_email text NOT NULL,
   phone          text,
+  social_media   text,
   message        text,
   status         text NOT NULL DEFAULT 'pending', -- pending | approved | rejected
   created_at     timestamptz NOT NULL DEFAULT now()

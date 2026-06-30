@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { shop_id, contact_name, role, business_email, phone, message } = body
+  const { shop_id, contact_name, role, business_email, phone, social_media, message } = body
 
   if (!shop_id || !contact_name || !business_email) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       role,
       business_email,
       phone,
+      social_media,
       message,
       status: 'pending',
     }])

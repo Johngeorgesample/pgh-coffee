@@ -14,6 +14,7 @@ interface IClaimSubmission {
   role: string
   business_email: string
   phone: string
+  social_media: string
   message: string
 }
 
@@ -54,6 +55,7 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
       role: formData.get('role') as string,
       business_email: formData.get('business_email') as string,
       phone: formData.get('phone') as string,
+      social_media: formData.get('social_media') as string,
       message: formData.get('message') as string,
     }
 
@@ -126,22 +128,35 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
           <fieldset className="space-y-6">
             <legend className="text-sm font-semibold text-gray-900 mb-4">How I&apos;ll reach you</legend>
 
-            <div className="flex flex-col md:flex-row justify-between gap-4">
-              <div className="w-full">
-                <label htmlFor="business_email" className="block text-sm font-medium text-gray-900 mb-2">
-                  Business email <span className="text-red-500">*</span>
-                </label>
-                <input id="business_email" name="business_email" required type="email" className={inputClasses} />
-                <p className="mt-2 text-xs text-slate-500">
-                  An email on the shop&apos;s domain speeds up verification.
-                </p>
-              </div>
+            <div>
+              <label htmlFor="business_email" className="block text-sm font-medium text-gray-900 mb-2">
+                Business email <span className="text-red-500">*</span>
+              </label>
+              <input id="business_email" name="business_email" required type="email" className={inputClasses} />
+              <p className="mt-2 text-xs text-slate-500">
+                An email on the shop&apos;s domain speeds up verification.
+              </p>
+            </div>
 
+            <div className="flex flex-col md:flex-row justify-between gap-4">
               <div className="w-full">
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-900 mb-2">
                   Phone
                 </label>
                 <input id="phone" name="phone" type="tel" className={inputClasses} />
+              </div>
+
+              <div className="w-full">
+                <label htmlFor="social_media" className="block text-sm font-medium text-gray-900 mb-2">
+                  Social media
+                </label>
+                <input
+                  id="social_media"
+                  name="social_media"
+                  type="text"
+                  placeholder="@yourshop on Instagram, etc."
+                  className={inputClasses}
+                />
               </div>
             </div>
           </fieldset>
