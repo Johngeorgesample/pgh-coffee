@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import PhotoDialog from './PhotoDialog'
+import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 
 interface IProps {
@@ -11,7 +12,7 @@ interface IProps {
 }
 
 export default function PanelHeader(props: IProps) {
-  const { name, neighborhood, photo, company } = props.shop.properties
+  const { name, neighborhood, photo, company, verified } = props.shop.properties
   const plausible = useAnalytics()
   const router = useRouter()
 
@@ -45,7 +46,10 @@ export default function PanelHeader(props: IProps) {
             </button>
           )}
 
-          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">{name}</h1>
+          <h1 className="flex items-center gap-1.5 text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">
+            {name}
+            {verified && <VerifiedBadge className="mt-0.5" />}
+          </h1>
           <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
         </div>
       </div>
