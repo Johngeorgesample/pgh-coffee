@@ -61,6 +61,7 @@ export interface TShop {
     amenities?: string[]
     roaster?: TShopRoaster | null
     description?: string | null
+    verified?: boolean
     selected?: boolean
   }
   geometry: {
