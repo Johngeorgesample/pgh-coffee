@@ -82,6 +82,7 @@ function gauge(metricName: string, value: number, labels: Record<string, string>
 export const metrics = {
   shopSubmitted:              () => increment('shop_submitted_total'),
   shopReportSubmitted:        () => increment('shop_report_submitted_total'),
+  shopClaimSubmitted:         () => increment('shop_claim_submitted_total'),
   shopAmenityReportSubmitted: () => increment('amenity_report_submitted_total'),
   shopNotFound:               (reason: 'invalid_slug' | 'no_match') => increment('shop_not_found_total', { reason }),
   shopViewed:                 (name: string, neighborhood: string) => increment('shop_view_total', { name, neighborhood }),
