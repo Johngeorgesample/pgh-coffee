@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { InfoIcon } from 'lucide-react'
 import ClaimSuccessDialog from './ClaimSuccessDialog'
 
 interface TProps {
@@ -20,6 +19,21 @@ interface IClaimSubmission {
 
 const inputClasses =
   'block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm'
+
+const steps = [
+  {
+    title: 'Submit your details',
+    body: 'Tell me who you are and how to reach you.',
+  },
+  {
+    title: 'I verify by hand',
+    body: 'I confirm ownership by hand, usually within a few days.',
+  },
+  {
+    title: 'Get verified + early access',
+    body: 'Your shop earns a verified badge, and you’ll be first to manage your own listing when self-serve editing launches.',
+  },
+]
 
 export default function ClaimForm({ shopId, shopName }: TProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -68,44 +82,73 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
   return (
     <section className="max-w-7xl mx-auto px-6 pb-20">
       <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-2xl mx-auto">
-        <div className="mb-6 rounded-lg bg-stone-50 border border-stone-200 px-4 py-3">
+        <div className="mb-8 rounded-lg bg-stone-50 border border-stone-200 px-4 py-3">
           <p className="text-sm text-slate-600">You&apos;re claiming</p>
           <p className="text-lg font-semibold text-gray-900">{shopName}</p>
         </div>
 
-        <form onSubmit={handleForm} ref={claimForm} className="space-y-6">
-          <div>
-            <label htmlFor="contact_name" className="block text-sm font-medium text-gray-900 mb-2">
-              Your name <span className="text-red-500">*</span>
-            </label>
-            <input id="contact_name" name="contact_name" required type="text" className={inputClasses} />
-          </div>
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-gray-900 mb-4">How claiming works</h2>
+          <ol className="space-y-4">
+            {steps.map((step, index) => (
+              <li key={step.title} className="flex gap-3">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-yellow-300 text-xs font-semibold text-black">
+                  {index + 1}
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{step.title}</p>
+                  <p className="text-sm text-slate-600">{step.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
 
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-900 mb-2">
-              Your role at the shop
-            </label>
-            <input id="role" name="role" type="text" placeholder="Owner, manager, …" className={inputClasses} />
-          </div>
+        <form onSubmit={handleForm} ref={claimForm} className="space-y-8 border-t border-stone-200 pt-8">
+          <fieldset className="space-y-6">
+            <legend className="text-sm font-semibold text-gray-900 mb-4">About you</legend>
 
-          <div className="flex flex-col md:flex-row justify-between gap-4">
-            <div className="w-full">
-              <label htmlFor="business_email" className="block text-sm font-medium text-gray-900 mb-2">
-                Business email <span className="text-red-500">*</span>
+            <div>
+              <label htmlFor="contact_name" className="block text-sm font-medium text-gray-900 mb-2">
+                Your name <span className="text-red-500">*</span>
               </label>
-              <input id="business_email" name="business_email" required type="email" className={inputClasses} />
+              <input id="contact_name" name="contact_name" required type="text" className={inputClasses} />
             </div>
 
-            <div className="w-full">
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-900 mb-2">
-                Phone
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-900 mb-2">
+                Your role at the shop
               </label>
-              <input id="phone" name="phone" type="tel" className={inputClasses} />
+              <input id="role" name="role" type="text" placeholder="Owner, manager, …" className={inputClasses} />
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-900 mb-2">
+          <fieldset className="space-y-6">
+            <legend className="text-sm font-semibold text-gray-900 mb-4">How I&apos;ll reach you</legend>
+
+            <div className="flex flex-col md:flex-row justify-between gap-4">
+              <div className="w-full">
+                <label htmlFor="business_email" className="block text-sm font-medium text-gray-900 mb-2">
+                  Business email <span className="text-red-500">*</span>
+                </label>
+                <input id="business_email" name="business_email" required type="email" className={inputClasses} />
+                <p className="mt-2 text-xs text-slate-500">
+                  An email on the shop&apos;s domain speeds up verification.
+                </p>
+              </div>
+
+              <div className="w-full">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-900 mb-2">
+                  Phone
+                </label>
+                <input id="phone" name="phone" type="tel" className={inputClasses} />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="text-sm font-semibold text-gray-900 mb-4">Help confirm it&apos;s you</legend>
+            <label htmlFor="message" className="sr-only">
               Anything that helps confirm ownership
             </label>
             <textarea
@@ -115,15 +158,7 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
               placeholder="A link to your site that lists this email, social handles you manage, etc."
               className={inputClasses}
             />
-          </div>
-
-          <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <InfoIcon aria-hidden="true" className="size-4 shrink-0 mt-0.5 text-yellow-400" />
-            <p className="text-sm text-slate-600">
-              Using an email on the shop&apos;s domain speeds up verification. I review every claim by hand to make
-              sure listings stay in the right hands.
-            </p>
-          </div>
+          </fieldset>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 
