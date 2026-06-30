@@ -6,6 +6,8 @@ import ClaimSuccessDialog from './ClaimSuccessDialog'
 interface TProps {
   shopId: string
   shopName: string
+  neighborhood?: string
+  companyName?: string
 }
 
 interface IClaimSubmission {
@@ -36,7 +38,7 @@ const steps = [
   },
 ]
 
-export default function ClaimForm({ shopId, shopName }: TProps) {
+export default function ClaimForm({ shopId, shopName, neighborhood, companyName }: TProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -87,7 +89,24 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
         <div className="mb-8 rounded-lg bg-stone-50 border border-stone-200 px-4 py-3">
           <p className="text-sm text-slate-600">You&apos;re claiming</p>
           <p className="text-lg font-semibold text-gray-900">{shopName}</p>
+          {neighborhood && <p className="text-sm text-slate-600">{neighborhood}</p>}
         </div>
+
+        {companyName && (
+          <div className="mb-8 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
+            <p className="text-sm text-amber-900">
+              Part of {companyName}. You&apos;re claiming just{' '}
+              {neighborhood ? (
+                <>
+                  the <span className="font-semibold">{neighborhood}</span> location
+                </>
+              ) : (
+                'this location'
+              )}
+              {' '}— each location is claimed separately.
+            </p>
+          </div>
+        )}
 
         <div className="mb-8">
           <h2 className="text-sm font-semibold text-gray-900 mb-4">How claiming works</h2>

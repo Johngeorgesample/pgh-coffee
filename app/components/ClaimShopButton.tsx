@@ -4,10 +4,15 @@ import { BadgeCheck } from 'lucide-react'
 interface ClaimShopButtonProps {
   shopUUID: string
   shopName: string
+  neighborhood?: string
+  companyName?: string | null
 }
 
-export default function ClaimShopButton({ shopUUID, shopName }: ClaimShopButtonProps) {
-  const href = `/claim?shop=${encodeURIComponent(shopUUID)}&name=${encodeURIComponent(shopName)}`
+export default function ClaimShopButton({ shopUUID, shopName, neighborhood, companyName }: ClaimShopButtonProps) {
+  const params = new URLSearchParams({ shop: shopUUID, name: shopName })
+  if (neighborhood) params.set('neighborhood', neighborhood)
+  if (companyName) params.set('company', companyName)
+  const href = `/claim?${params.toString()}`
 
   return (
     <Link

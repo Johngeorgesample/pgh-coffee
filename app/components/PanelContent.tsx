@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster, uuid, name } = props.shop.properties
+  const { address, photos, amenities, roaster, uuid, name, neighborhood, company } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
@@ -26,7 +26,7 @@ export default function PanelContent(props: IProps) {
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         {description && <p className="text-sm text-gray-600 leading-relaxed">{description}</p>}
         <div className={description ? 'mt-4' : ''}>
-          <ClaimShopButton shopUUID={uuid} shopName={name} />
+          <ClaimShopButton shopUUID={uuid} shopName={name} neighborhood={neighborhood} companyName={company?.name} />
         </div>
       </div>
 

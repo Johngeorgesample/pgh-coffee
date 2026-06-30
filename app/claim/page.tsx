@@ -3,11 +3,11 @@ import { Footer } from '@/app/components/about'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string; name?: string }>
+  searchParams: Promise<{ shop?: string; name?: string; neighborhood?: string; company?: string }>
 }
 
 export default async function ClaimAShop({ searchParams }: TProps) {
-  const { shop, name } = await searchParams
+  const { shop, name, neighborhood, company } = await searchParams
 
   return (
     <div>
@@ -24,7 +24,7 @@ export default async function ClaimAShop({ searchParams }: TProps) {
       </header>
 
       {shop ? (
-        <ClaimForm shopId={shop} shopName={name ?? 'this shop'} />
+        <ClaimForm shopId={shop} shopName={name ?? 'this shop'} neighborhood={neighborhood} companyName={company} />
       ) : (
         <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
           <p className="text-lg text-slate-600">
