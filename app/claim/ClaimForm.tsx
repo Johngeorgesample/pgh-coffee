@@ -162,7 +162,7 @@ export default function ClaimForm({ shopId, shopName }: TProps) {
           </fieldset>
 
           <fieldset>
-            <legend className="text-sm font-semibold text-gray-900 mb-4">Help confirm it&apos;s you</legend>
+            <legend className="text-sm font-semibold text-gray-900 mb-4">Anything that proves it&apos;s your shop</legend>
             <label htmlFor="message" className="sr-only">
               Anything that helps confirm ownership
             </label>
