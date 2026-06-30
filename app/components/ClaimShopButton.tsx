@@ -12,7 +12,7 @@ export default function ClaimShopButton({ shopUUID, shopName }: ClaimShopButtonP
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 px-4 py-2.5 rounded-3xl text-sm font-medium border border-stone-200 transition-colors"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors"
     >
       <BadgeCheck className="size-4" />
       Claim this shop

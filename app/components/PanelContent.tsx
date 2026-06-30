@@ -3,6 +3,7 @@ import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
+import ClaimShopButton from './ClaimShopButton'
 import ShopLocation from './ShopLocation'
 import ShopRoaster from './ShopRoaster'
 import PhotoGrid from './PhotoGrid'
@@ -14,7 +15,7 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster } = props.shop.properties
+  const { address, photos, amenities, roaster, uuid, name } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
@@ -22,11 +23,12 @@ export default function PanelContent(props: IProps) {
     <div className="bg-[#FAF9F7] mb-8">
       <QuickActionsBar shop={props.shop} />
 
-      {description && (
-        <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
-          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+      <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+        {description && <p className="text-sm text-gray-600 leading-relaxed">{description}</p>}
+        <div className={description ? 'mt-4' : ''}>
+          <ClaimShopButton shopUUID={uuid} shopName={name} />
         </div>
-      )}
+      </div>
 
       {roaster && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
