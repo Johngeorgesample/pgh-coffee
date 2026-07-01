@@ -9,10 +9,6 @@ import { NewsDetails } from './NewsDetails'
 import { NewsItem, getTagStyle } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
 
-// TODO: replace with a real `image_url` column on the updates table.
-const HARDCODED_IMAGE =
-  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&q=80'
-
 type NewsCardProps = {
   item: NewsItem
   asLink?: boolean
@@ -48,9 +44,11 @@ export const NewsCard = ({ item }: NewsCardProps) => {
 
   return (
     <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex transition-all hover:shadow-md">
-      <button type="button" onClick={handleCardClick} className="shrink-0 cursor-pointer">
-        <img src={HARDCODED_IMAGE} alt={item.title} className="w-28 h-full object-cover" />
-      </button>
+      {item.image_url && (
+        <button type="button" onClick={handleCardClick} className="shrink-0 cursor-pointer">
+          <img src={item.image_url} alt={item.title} className="w-28 h-full object-cover" />
+        </button>
+      )}
       <div className={`p-5 flex-1 min-w-0 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
           <TagBadge tag={primaryTag} variant="compact" />

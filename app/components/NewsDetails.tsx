@@ -9,10 +9,6 @@ import { NewsItem } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
 import CopyLinkToast from './CopyLinkToast'
 
-// TODO: replace with a real `image_url` column on the updates table.
-const HARDCODED_IMAGE =
-  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80'
-
 const formatNewsDate = (dateStr: string) => {
   const date = new Date(dateStr + 'T00:00:00')
   return date.toLocaleDateString('en-US', {
@@ -111,18 +107,26 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
     <div className="flex mt-24 lg:mt-16 h-full flex-col">
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
-        {/* Hero image with overlaid title */}
-        <div className="relative h-56">
-          <img
-            src={HARDCODED_IMAGE}
-            alt={news.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-          <h1 className="absolute bottom-0 left-0 right-0 p-6 font-display text-[28px] font-bold tracking-tight text-white leading-tight">
-            {news.title}
-          </h1>
-        </div>
+        {/* Title — overlaid on the hero image when present, otherwise plain */}
+        {news.image_url ? (
+          <div className="relative h-56">
+            <img
+              src={news.image_url}
+              alt={news.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+            <h1 className="absolute bottom-0 left-0 right-0 p-6 font-display text-[28px] font-bold tracking-tight text-white leading-tight">
+              {news.title}
+            </h1>
+          </div>
+        ) : (
+          <div className="p-6 pb-0">
+            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
+              {news.title}
+            </h1>
+          </div>
+        )}
 
         {/* Details Section */}
         <div className="px-6 pt-6 space-y-6">
