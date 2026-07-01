@@ -106,6 +106,12 @@ export const EventCard = ({
         </div>
       )}
 
+      <img
+        src={HARDCODED_IMAGE}
+        alt={entry.title}
+        className="w-20 shrink-0 object-cover self-stretch"
+      />
+
       <div className="flex-1 p-4 relative">
         <div className="flex items-center gap-2 mb-1">
           <h3 className="font-bold text-base leading-tight text-slate-900">
@@ -135,12 +141,6 @@ export const EventCard = ({
           </p>
         )}
       </div>
-
-      <img
-        src={HARDCODED_IMAGE}
-        alt={entry.title}
-        className="w-20 shrink-0 object-cover self-stretch"
-      />
     </button>
   )
 }

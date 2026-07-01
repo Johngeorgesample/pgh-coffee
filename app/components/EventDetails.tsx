@@ -96,24 +96,21 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
     <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
-        {/* Hero image */}
-        <img
-          src={HARDCODED_IMAGE}
-          alt={event.title}
-          className="w-full h-48 object-cover"
-        />
-
-        {/* Title Section with yellow accent bar */}
-        <div className="flex">
-          <div className="p-6 flex-1">
-            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
-              {event.title}
-            </h1>
-          </div>
+        {/* Hero image with overlaid title */}
+        <div className="relative h-56">
+          <img
+            src={HARDCODED_IMAGE}
+            alt={event.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+          <h1 className="absolute bottom-0 left-0 right-0 p-6 font-display text-[28px] font-bold tracking-tight text-white leading-tight">
+            {event.title}
+          </h1>
         </div>
 
         {/* Details Section */}
-        <div className="px-6 space-y-6">
+        <div className="px-6 pt-6 space-y-6">
           {/* Date and Time row */}
           {event.event_date && (
             <div className="flex gap-6">
