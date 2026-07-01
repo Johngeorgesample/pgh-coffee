@@ -43,8 +43,13 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   }
 
   return (
-    <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex flex-col transition-all hover:shadow-md">
-      <div className={`p-5 border-l-[2px] ${styles.border}`}>
+    <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex transition-all hover:shadow-md">
+      {item.image_url && (
+        <button type="button" onClick={handleCardClick} className="shrink-0 cursor-pointer">
+          <img src={item.image_url} alt={item.title} className="w-28 h-full object-cover" />
+        </button>
+      )}
+      <div className={`p-5 flex-1 min-w-0 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
           <TagBadge tag={primaryTag} variant="compact" />
         </div>
