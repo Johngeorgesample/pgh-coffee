@@ -89,12 +89,13 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   }
 
   return (
-    <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
+    <div className={`flex h-full flex-col ${event.image_url ? '' : 'mt-24 lg:mt-16'} ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
-        {/* Title — overlaid on the hero image when present, otherwise plain */}
+        {/* Title — overlaid on the hero image when present, otherwise plain.
+            With an image the hero fills to the top, behind the floating search bar. */}
         {event.image_url ? (
-          <div className="relative h-56">
+          <div className="relative h-56 sm:h-64">
             <img
               src={event.image_url}
               alt={event.title}

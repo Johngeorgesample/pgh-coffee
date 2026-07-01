@@ -104,12 +104,13 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   }
 
   return (
-    <div className="flex mt-24 lg:mt-16 h-full flex-col">
+    <div className={`flex h-full flex-col ${news.image_url ? '' : 'mt-24 lg:mt-16'}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
-        {/* Title — overlaid on the hero image when present, otherwise plain */}
+        {/* Title — overlaid on the hero image when present, otherwise plain.
+            With an image the hero fills to the top, behind the floating search bar. */}
         {news.image_url ? (
-          <div className="relative h-56">
+          <div className="relative h-56 sm:h-64">
             <img
               src={news.image_url}
               alt={news.title}
