@@ -48,8 +48,8 @@ export const NewsCard = ({ item }: NewsCardProps) => {
 
   return (
     <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex transition-all hover:shadow-md">
-      <button type="button" onClick={handleCardClick} className="shrink-0 self-start cursor-pointer">
-        <img src={HARDCODED_IMAGE} alt={item.title} className="w-28 h-28 object-cover" />
+      <button type="button" onClick={handleCardClick} className="shrink-0 cursor-pointer">
+        <img src={HARDCODED_IMAGE} alt={item.title} className="w-28 h-full object-cover" />
       </button>
       <div className={`p-5 flex-1 min-w-0 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
