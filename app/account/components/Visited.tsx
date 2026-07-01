@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Stamp, MapPin } from 'lucide-react'
-import ShopCard from '@/app/components/ShopCard'
+import ShopList from '@/app/components/ShopList'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import type { DbShop } from '@/types/shop-types'
 
@@ -22,17 +22,17 @@ export default function Visited() {
 
   useEffect(() => {
     fetch('/api/visits')
-      .then((res) => {
+      .then(res => {
         if (!res.ok) {
           throw new Error(`Failed to fetch visits: ${res.status}`)
         }
         return res.json()
       })
-      .then((data) => {
+      .then(data => {
         setVisits(Array.isArray(data) ? data : [])
         setLoading(false)
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Failed to fetch visits:', err)
         setError(true)
         setLoading(false)
@@ -63,11 +63,7 @@ export default function Visited() {
             <h1 className="text-2xl font-bold text-gray-900">Passport</h1>
             <p className="text-gray-500">Keep track of the coffee shops you&apos;ve visited.</p>
           </div>
-          <ul>
-            {visits.map((visit) => (
-              <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-            ))}
-          </ul>
+          <ShopList coffeeShops={visits.map(visit => formatDBShopAsFeature(visit.shop))} />
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
