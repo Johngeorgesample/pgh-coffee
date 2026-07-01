@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Heart, MapPin } from 'lucide-react'
-import ShopCard from '@/app/components/ShopCard'
+import ShopList from '@/app/components/ShopList'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import type { DbShop } from '@/types/shop-types'
 
@@ -58,11 +58,7 @@ export default function Favorites() {
   return (
     <div>
       {hasFavorites ? (
-        <ul>
-          {favorites.map((fav) => (
-            <ShopCard key={fav.id} shop={formatDBShopAsFeature(fav.shop)} />
-          ))}
-        </ul>
+        <ShopList coffeeShops={favorites.map((fav) => formatDBShopAsFeature(fav.shop))} />
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
