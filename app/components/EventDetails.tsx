@@ -42,6 +42,10 @@ interface EventDetailsProps {
   event: EventCardData
 }
 
+// TODO: replace with a real `image_url` column on the events table.
+const HARDCODED_IMAGE =
+  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80'
+
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = useAnalytics()
   const router = useRouter()
@@ -92,6 +96,13 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
     <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
+        {/* Hero image */}
+        <img
+          src={HARDCODED_IMAGE}
+          alt={event.title}
+          className="w-full h-48 object-cover"
+        />
+
         {/* Title Section with yellow accent bar */}
         <div className="flex">
           <div className="p-6 flex-1">

@@ -19,6 +19,10 @@ const formatDateParts = (dateStr: string) => {
   }
 }
 
+// TODO: replace with a real `image_url` column on the events table.
+const HARDCODED_IMAGE =
+  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80'
+
 const NewBadge = () => (
   <span className="inline-flex items-center rounded-full bg-yellow-400/30 px-1.5 py-0.5 text-[10px] font-bold text-yellow-700">
     NEW
@@ -131,6 +135,12 @@ export const EventCard = ({
           </p>
         )}
       </div>
+
+      <img
+        src={HARDCODED_IMAGE}
+        alt={entry.title}
+        className="w-20 shrink-0 object-cover self-stretch"
+      />
     </button>
   )
 }

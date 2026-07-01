@@ -9,6 +9,10 @@ import { NewsItem } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
 import CopyLinkToast from './CopyLinkToast'
 
+// TODO: replace with a real `image_url` column on the updates table.
+const HARDCODED_IMAGE =
+  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80'
+
 const formatNewsDate = (dateStr: string) => {
   const date = new Date(dateStr + 'T00:00:00')
   return date.toLocaleDateString('en-US', {
@@ -107,6 +111,13 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
     <div className="flex mt-24 lg:mt-16 h-full flex-col">
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
+        {/* Hero image */}
+        <img
+          src={HARDCODED_IMAGE}
+          alt={news.title}
+          className="w-full h-48 object-cover"
+        />
+
         {/* Title Section */}
         <div className="flex">
           <div className="p-6 flex-1">
