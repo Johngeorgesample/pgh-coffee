@@ -104,20 +104,31 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   }
 
   return (
-    <div className="flex mt-24 lg:mt-16 h-full flex-col">
+    <div className={`flex h-full flex-col ${news.image_url ? '' : 'mt-24 lg:mt-16'}`}>
       {/* Scrollable Content */}
       <div className="flex-grow overflow-y-auto pb-56">
-        {/* Title Section */}
-        <div className="flex">
-          <div className="p-6 flex-1">
+        {news.image_url ? (
+          <div className="relative h-56 sm:h-64">
+            <img
+              src={news.image_url}
+              alt={news.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+            <h1 className="absolute bottom-0 left-0 right-0 p-6 font-display text-[28px] font-bold tracking-tight text-white leading-tight">
+              {news.title}
+            </h1>
+          </div>
+        ) : (
+          <div className="p-6 pb-0">
             <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
               {news.title}
             </h1>
           </div>
-        </div>
+        )}
 
         {/* Details Section */}
-        <div className="px-6 space-y-6">
+        <div className="px-6 pt-6 space-y-6">
           {/* Tags */}
           {news.tags && news.tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
