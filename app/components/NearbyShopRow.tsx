@@ -13,7 +13,7 @@ interface IProps {
 
 export default function NearbyShopRow(props: IProps) {
   const { handleShopSelect } = useShopSelection()
-  const { setHoveredShop } = useShopsStore()
+  const setHoveredShop = useShopsStore(s => s.setHoveredShop)
 
   const handleClick = () => handleShopSelect(props.shop)
 

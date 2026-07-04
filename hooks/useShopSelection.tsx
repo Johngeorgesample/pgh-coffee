@@ -10,8 +10,10 @@ import { buildShopSlug } from '@/app/utils/shopSlug'
 export function useShopSelection() {
   const plausible = useAnalytics()
   const router = useRouter()
-  const { setCurrentShop, setSearchValue, clearAmenityFilters } = useShopsStore()
-  const { setPanelContent } = usePanelStore()
+  const setCurrentShop = useShopsStore(s => s.setCurrentShop)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
+  const clearAmenityFilters = useShopsStore(s => s.clearAmenityFilters)
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const navigateToShop = useCallback(
     (shop: TShop) => router.push(`/shops/${buildShopSlug(shop.properties)}`),

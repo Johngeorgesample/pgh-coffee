@@ -21,18 +21,22 @@ vi.mock('next-plausible', () => ({
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => ({
-    setCurrentShop: mockSetCurrentShop,
-    setSearchValue: mockSetSearchValue,
-    clearAmenityFilters: mockClearAmenityFilters,
-  }),
+  default: (selector?: (s: unknown) => unknown) => {
+    const state = {
+      setCurrentShop: mockSetCurrentShop,
+      setSearchValue: mockSetSearchValue,
+      clearAmenityFilters: mockClearAmenityFilters,
+    }
+    return selector ? selector(state) : state
+  },
 }))
 
 vi.mock('@/stores/panelStore', () => ({
   __esModule: true,
-  default: () => ({
-    setPanelContent: mockSetPanelContent
-  }),
+  default: (selector?: (s: unknown) => unknown) => {
+    const state = { setPanelContent: mockSetPanelContent }
+    return selector ? selector(state) : state
+  },
 }))
 
 // Mock ShopDetails component

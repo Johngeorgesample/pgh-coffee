@@ -11,7 +11,7 @@ import { RoasterDetails } from '@/app/components/RoasterDetails'
 export const useRoasterRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onRoasterRoute = pathname.startsWith('/roasters/')
 
