@@ -57,10 +57,6 @@ describe('Roaster API Route - GET', () => {
     expect(data).toEqual({ ...roaster, shops })
   })
 
-  // Regression: the shops query once omitted the roaster join, so shops opened
-  // from a roaster's "Where to find this roaster's coffee" list rendered with no
-  // roaster section. toFeatureRoaster reads `roasterRef`, so the query must alias
-  // the roaster join to that name for the roaster card to survive. (issue #317)
   test('fetches the roaster join for each shop so the roaster card can render', async () => {
     const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster' }
     mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
