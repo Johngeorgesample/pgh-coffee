@@ -15,9 +15,17 @@ import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
-    useShopsStore()
-  const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()
+  const allShops = useShopsStore(s => s.allShops)
+  const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
+  const currentShop = useShopsStore(s => s.currentShop)
+  const setCurrentShop = useShopsStore(s => s.setCurrentShop)
+  const searchValue = useShopsStore(s => s.searchValue)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
+  const clearAmenityFilters = useShopsStore(s => s.clearAmenityFilters)
+  const panelContent = usePanelStore(s => s.panelContent)
+  const clearHistory = usePanelStore(s => s.clearHistory)
+  const panelMode = usePanelStore(s => s.panelMode)
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
   const [presented, setPresented] = useState(true)

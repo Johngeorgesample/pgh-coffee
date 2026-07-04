@@ -59,7 +59,7 @@ export const EventCard = ({
 }: EventCardProps) => {
   const plausible = useAnalytics()
   const router = useRouter()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
 
   const handleCardClick = () => {

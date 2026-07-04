@@ -24,8 +24,11 @@ const NewsCardSkeleton = () => (
 
 export const NewsCTA = () => {
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
-  const { news, newsError, newsLoading, fetchNews } = useExploreStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
+  const news = useExploreStore(s => s.news)
+  const newsError = useExploreStore(s => s.newsError)
+  const newsLoading = useExploreStore(s => s.newsLoading)
+  const fetchNews = useExploreStore(s => s.fetchNews)
 
   useEffect(() => {
     fetchNews()

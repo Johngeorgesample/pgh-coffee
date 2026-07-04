@@ -14,7 +14,8 @@ interface MapContainerProps {
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
   const displayedShops = useDisplayedShops()
-  const { hoveredShop, currentShop } = useShopsStore()
+  const hoveredShop = useShopsStore(s => s.hoveredShop)
+  const currentShop = useShopsStore(s => s.currentShop)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'

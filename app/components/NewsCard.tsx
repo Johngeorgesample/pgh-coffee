@@ -18,7 +18,7 @@ type NewsCardProps = {
 
 export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
   const router = useRouter()
   const plausible = useAnalytics()
   const primaryTag = item.tags?.[0] ?? 'news'

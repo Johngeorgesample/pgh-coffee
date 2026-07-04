@@ -11,7 +11,7 @@ import MobileNavDrawer from './MobileNavDrawer'
 export default function Nav() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { user, loading } = useAuth()
-  const { reset } = usePanelStore()
+  const reset = usePanelStore(s => s.reset)
 
   const handleLogoClick = () => {
     reset({ mode: 'explore', content: <ExploreContent /> })

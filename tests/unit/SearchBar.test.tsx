@@ -6,16 +6,23 @@ import SearchBar from '@/app/components/SearchBar'
 const mockUseShopsStore = vi.fn()
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => mockUseShopsStore(),
+  default: (selector?: (s: unknown) => unknown) => {
+    const state = mockUseShopsStore()
+    return selector ? selector(state) : state
+  },
 }))
 
 // Mock the panel store for panelMode and back()
 const mockUsePanelStore = vi.fn()
 vi.mock('@/stores/panelStore', () => ({
   __esModule: true,
-  default: Object.assign(() => mockUsePanelStore(), {
-    getState: () => ({ back: vi.fn() }),
-  }),
+  default: Object.assign(
+    (selector?: (s: unknown) => unknown) => {
+      const state = mockUsePanelStore()
+      return selector ? selector(state) : state
+    },
+    { getState: () => ({ back: vi.fn() }) },
+  ),
 }))
 
 describe('SearchBar', () => {
