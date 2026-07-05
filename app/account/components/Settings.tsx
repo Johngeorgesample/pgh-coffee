@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import ShareLink from './ShareLink'
+import AccountDetails from '../AccountDetails'
 import { useOwnProfile } from '@/hooks'
 
 export default function Settings() {
@@ -82,6 +83,8 @@ export default function Settings() {
 
         {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
       </div>
+
+      <AccountDetails />
     </div>
   )
 }
