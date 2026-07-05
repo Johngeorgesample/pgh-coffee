@@ -13,8 +13,6 @@ export async function GET(
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
 
-  // Not CDN-cached: a user toggling their profile private must take effect
-  // immediately, so this endpoint must never serve stale public data.
   return NextResponse.json(profile, {
     headers: { 'Cache-Control': 'private, no-store' },
   })

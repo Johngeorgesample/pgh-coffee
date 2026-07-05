@@ -19,12 +19,6 @@ export interface PublicProfile {
   visits: Visit[]
 }
 
-/**
- * Resolves a public profile from a `/u/{id}` identifier (the user's uuid),
- * along with the user's visits. Shared by the server page and the
- * `/api/profiles/[id]` route so both agree on the lookup. Returns null when
- * the id doesn't exist or the profile isn't public.
- */
 export const getPublicProfile = cache(async (id: string): Promise<PublicProfile | null> => {
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
