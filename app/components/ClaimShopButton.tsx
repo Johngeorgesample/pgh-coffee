@@ -17,7 +17,7 @@ export default function ClaimShopButton({ shopUUID, shopName, neighborhood, comp
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors"
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3.5 py-2 text-sm font-semibold text-stone-700 shadow-sm hover:bg-stone-50 hover:border-stone-400 active:scale-[0.98] transition-all"
     >
       <BadgeCheck className="size-4" />
       Claim this shop

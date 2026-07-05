@@ -23,12 +23,11 @@ export default function PanelContent(props: IProps) {
     <div className="bg-[#FAF9F7] mb-8">
       <QuickActionsBar shop={props.shop} />
 
-      <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
-        {description && <p className="text-sm text-gray-600 leading-relaxed">{description}</p>}
-        <div className={description ? 'mt-4' : ''}>
-          <ClaimShopButton shopUUID={uuid} shopName={name} neighborhood={neighborhood} companyName={company?.name} />
+      {description && (
+        <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
+          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
         </div>
-      </div>
+      )}
 
       {roaster && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
@@ -51,6 +50,11 @@ export default function PanelContent(props: IProps) {
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
+      </div>
+
+      <div className="px-4 sm:px-6 py-5 border-b border-stone-200 flex items-center justify-between gap-3">
+        <p className="text-sm text-gray-500">Work at {name}?</p>
+        <ClaimShopButton shopUUID={uuid} shopName={name} neighborhood={neighborhood} companyName={company?.name} />
       </div>
 
       <NearbyShops shop={props.shop} />
