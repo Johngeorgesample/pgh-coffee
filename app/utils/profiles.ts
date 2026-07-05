@@ -1,7 +1,6 @@
 import { cache } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-import type { DbShop } from '@/types/shop-types'
 import type { Visit } from '@/app/utils/visitStats'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
