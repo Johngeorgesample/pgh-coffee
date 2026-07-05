@@ -45,8 +45,11 @@ export const getPublicProfile = cache(async (id: string): Promise<PublicProfile 
     .eq('user_id', profile.user_id)
     .order('created_at', { ascending: false })
 
+  // Fail loudly rather than render a real profile as "0 visits": an RLS or
+  // transient DB error must not be presented to visitors as truth.
   if (visitsError) {
     logger.error('Error fetching profile visits', { error: visitsError.message })
+    throw new Error('Failed to load profile visits')
   }
 
   return {
