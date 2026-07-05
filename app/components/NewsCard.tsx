@@ -45,7 +45,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   return (
     <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex transition-all hover:shadow-md">
       {item.image_url && (
-        <button type="button" onClick={handleCardClick} className="shrink-0 cursor-pointer">
+        <button type="button" onClick={handleCardClick} className="hidden sm:block shrink-0 cursor-pointer">
           <img src={item.image_url} alt={item.title} className="w-28 h-full object-cover" />
         </button>
       )}
