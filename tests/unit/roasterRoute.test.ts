@@ -5,18 +5,24 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 //   shops:   select().eq()           -> terminal eq (awaited)
 const mockRoasterSingle = vi.fn()
 const mockShopsEq = vi.fn()
+// Records the select() string used for the shops query, so a test can assert
+// the roaster join is still requested.
+let shopsSelect: string | undefined
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: (table: string) => ({
-      select: () => ({
-        eq: (...args: unknown[]) => {
-          if (table === 'roaster') {
-            return { single: mockRoasterSingle }
-          }
-          return mockShopsEq(...args)
-        },
-      }),
+      select: (columns: string) => {
+        if (table === 'shops') shopsSelect = columns
+        return {
+          eq: (...args: unknown[]) => {
+            if (table === 'roaster') {
+              return { single: mockRoasterSingle }
+            }
+            return mockShopsEq(...args)
+          },
+        }
+      },
     }),
   }),
 }))
@@ -30,6 +36,7 @@ describe('Roaster API Route - GET', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    shopsSelect = undefined
   })
 
   const call = (slug: string) =>
@@ -48,6 +55,16 @@ describe('Roaster API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual({ ...roaster, shops })
+  })
+
+  test('fetches the roaster join for each shop so the roaster card can render', async () => {
+    const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster' }
+    mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: [{ name: 'Shop A' }], error: null })
+
+    await call('test-roaster')
+
+    expect(shopsSelect).toMatch(/roasterRef:roaster_id\(/)
   })
 
   test('returns 404 when the roaster is not found', async () => {

@@ -7,21 +7,26 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 const mockCompanySingle = vi.fn()
 const mockShopsEq = vi.fn()
 const mockRoasterMaybeSingle = vi.fn()
+// Records the column string each table's select() was called with.
+const selectArgs: Record<string, string> = {}
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: (table: string) => ({
-      select: () => ({
-        eq: (...args: unknown[]) => {
-          if (table === 'companies') {
-            return { single: mockCompanySingle }
-          }
-          if (table === 'roaster') {
-            return { maybeSingle: mockRoasterMaybeSingle }
-          }
-          return mockShopsEq(...args)
-        },
-      }),
+      select: (columns: string) => {
+        selectArgs[table] = columns
+        return {
+          eq: (...args: unknown[]) => {
+            if (table === 'companies') {
+              return { single: mockCompanySingle }
+            }
+            if (table === 'roaster') {
+              return { maybeSingle: mockRoasterMaybeSingle }
+            }
+            return mockShopsEq(...args)
+          },
+        }
+      },
     }),
   }),
 }))
@@ -55,6 +60,17 @@ describe('Company API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual({ ...company, shops, roaster })
+  })
+
+  test('fetches the roasterRef join so shops carry roaster info for the roasts section', async () => {
+    const company = { id: 'c1', name: 'Test Co', slug: 'test-co' }
+    mockCompanySingle.mockResolvedValueOnce({ data: company, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: [{ name: 'Shop A' }], error: null })
+    mockRoasterMaybeSingle.mockResolvedValueOnce({ data: null, error: null })
+
+    await call('test-co')
+
+    expect(selectArgs.shops).toContain('roasterRef:roaster_id(name, slug, company_id)')
   })
 
   test('returns 404 when the company is not found', async () => {

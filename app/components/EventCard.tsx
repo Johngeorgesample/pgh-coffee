@@ -36,6 +36,7 @@ export type EventCardData = {
   title: string
   description?: string | null
   url?: string | null
+  image_url?: string | null
   tags?: string[] | null
   post_date?: string
   postDate?: string
@@ -59,7 +60,7 @@ export const EventCard = ({
 }: EventCardProps) => {
   const plausible = useAnalytics()
   const router = useRouter()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
 
   const handleCardClick = () => {

@@ -23,7 +23,10 @@ const FeaturedShopSkeleton = () => (
 )
 
 export default function FeaturedShop() {
-  const { featuredShop, featuredShopError, featuredShopLoading, fetchFeaturedShop } = useExploreStore()
+  const featuredShop = useExploreStore(s => s.featuredShop)
+  const featuredShopError = useExploreStore(s => s.featuredShopError)
+  const featuredShopLoading = useExploreStore(s => s.featuredShopLoading)
+  const fetchFeaturedShop = useExploreStore(s => s.fetchFeaturedShop)
 
   useEffect(() => {
     fetchFeaturedShop()

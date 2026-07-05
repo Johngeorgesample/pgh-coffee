@@ -7,7 +7,7 @@ import { CuratedList } from './CuratedList'
 import {TList} from '@/types/shop-types'
 
 export const CuratedListIndex = () => {
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
   const [lists, setLists] = useState<TList[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

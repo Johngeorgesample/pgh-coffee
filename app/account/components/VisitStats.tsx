@@ -6,6 +6,7 @@ import { computeStats, type Stats, type Visit } from '@/app/utils/visitStats'
 
 export default function VisitStats({ visits: visitsProp }: { visits?: Visit[] }) {
   const [stats, setStats] = useState<Stats | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const visitsPromise = visitsProp
@@ -37,7 +38,18 @@ export default function VisitStats({ visits: visitsProp }: { visits?: Visit[] })
         console.error('Failed to load visit stats:', err)
         setStats(null)
       })
+      .finally(() => setLoading(false))
   }, [visitsProp])
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+      </div>
+    )
+  }
 
   if (!stats) return null
 
@@ -72,6 +84,18 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
         <p className="text-sm font-medium text-gray-500">{label}</p>
       </div>
       <p className="text-2xl font-bold text-gray-900">{value}</p>
+    </div>
+  )
+}
+
+function StatCardSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 animate-pulse">
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-9 h-9 bg-gray-200 rounded-full flex-shrink-0" />
+        <div className="h-4 w-28 rounded bg-gray-200" />
+      </div>
+      <div className="h-8 w-20 rounded bg-gray-200" />
     </div>
   )
 }

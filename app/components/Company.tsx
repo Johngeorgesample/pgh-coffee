@@ -28,7 +28,8 @@ const groupByNeighborhood = (features: TShop[]): [string, TShop[]][] => {
 }
 
 export const Company = ({ slug }: { slug: string }) => {
-  const { setOverrideShops, setSearchValue } = useShopsStore()
+  const setOverrideShops = useShopsStore(s => s.setOverrideShops)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
   const plausible = useAnalytics()
   const router = useRouter()
   const [company, setCompany] = useState<TCompany | null>(null)

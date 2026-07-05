@@ -9,7 +9,10 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import { AmenityFilterList } from './AmenityFilterList'
 
 export const ExploreContent = () => {
-  const { fetchCoffeeShops, setCurrentShop, setHoveredShop, setSearchValue } = useShopsStore()
+  const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
+  const setCurrentShop = useShopsStore(s => s.setCurrentShop)
+  const setHoveredShop = useShopsStore(s => s.setHoveredShop)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
   useEffect(() => {
     setSearchValue('')
     fetchCoffeeShops()
@@ -21,7 +24,7 @@ export const ExploreContent = () => {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
-      <div className="flex flex-col sm:grid gap-4 px-6 lg:px-4 mt-16">
+      <div className="flex flex-col sm:grid gap-3 px-6 lg:px-4 mt-16 mb-8">
         <AmenityFilterList />
         <div>
           <NewsCTA />

@@ -28,7 +28,7 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 export default function ShopCard(props: IProps) {
   const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
-  const { setHoveredShop } = useShopsStore()
+  const setHoveredShop = useShopsStore(s => s.setHoveredShop)
 
   const handleClick = () => {
     if (props.featured) {
