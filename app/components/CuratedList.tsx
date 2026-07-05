@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export const CuratedList = (props: IProps) => {
-  const { setAllShops } = useShopsStore()
+  const setAllShops = useShopsStore(s => s.setAllShops)
   useEffect(() => {
     setAllShops(props.content.shops)
   }, [setAllShops, props.content.shops])

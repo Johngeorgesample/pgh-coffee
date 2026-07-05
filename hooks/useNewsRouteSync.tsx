@@ -14,7 +14,7 @@ export const useNewsRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onNewsRoute = pathname.startsWith('/news/')
   const hasNewsList = searchParams.has('news')

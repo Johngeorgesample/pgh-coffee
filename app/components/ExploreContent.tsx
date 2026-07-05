@@ -9,7 +9,10 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import { AmenityFilterList } from './AmenityFilterList'
 
 export const ExploreContent = () => {
-  const { fetchCoffeeShops, setCurrentShop, setHoveredShop, setSearchValue } = useShopsStore()
+  const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
+  const setCurrentShop = useShopsStore(s => s.setCurrentShop)
+  const setHoveredShop = useShopsStore(s => s.setHoveredShop)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
   useEffect(() => {
     setSearchValue('')
     fetchCoffeeShops()

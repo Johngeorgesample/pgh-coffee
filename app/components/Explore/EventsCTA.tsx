@@ -29,8 +29,11 @@ const EventCardSkeleton = () => (
 
 export const EventsCTA = () => {
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
-  const { events, eventsError, eventsLoading, fetchEvents } = useExploreStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
+  const events = useExploreStore(s => s.events)
+  const eventsError = useExploreStore(s => s.eventsError)
+  const eventsLoading = useExploreStore(s => s.eventsLoading)
+  const fetchEvents = useExploreStore(s => s.fetchEvents)
 
   useEffect(() => {
     fetchEvents()

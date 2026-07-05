@@ -27,7 +27,7 @@ interface TRoaster {
 }
 
 export const RoasterDetails = ({ slug }: { slug: string }) => {
-  const { setOverrideShops } = useShopsStore()
+  const setOverrideShops = useShopsStore(s => s.setOverrideShops)
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
   const [loading, setLoading] = useState(true)
   const plausible = useAnalytics()

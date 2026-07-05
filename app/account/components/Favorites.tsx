@@ -58,11 +58,17 @@ export default function Favorites() {
   return (
     <div>
       {hasFavorites ? (
-        <ul>
-          {favorites.map((fav) => (
-            <ShopCard key={fav.id} shop={formatDBShopAsFeature(fav.shop)} />
-          ))}
-        </ul>
+        <div className="space-y-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Favorites</h1>
+            <p className="text-gray-500">The coffee shops you&apos;ve saved.</p>
+          </div>
+          <ul>
+            {favorites.map((fav) => (
+              <ShopCard key={fav.id} shop={formatDBShopAsFeature(fav.shop)} />
+            ))}
+          </ul>
+        </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">

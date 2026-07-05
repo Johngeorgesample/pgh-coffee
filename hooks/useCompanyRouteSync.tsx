@@ -12,7 +12,7 @@ import { Company } from '@/app/components/Company'
 export const useCompanyRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onCompanyRoute = pathname.startsWith('/companies/')
 

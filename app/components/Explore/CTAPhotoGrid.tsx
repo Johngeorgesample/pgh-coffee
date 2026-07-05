@@ -6,7 +6,7 @@ import ShopSearch from '@/app/components/ShopSearch'
 import { CuratedListIndex } from '../CuratedListIndex'
 
 export const CTAPhotoGrid = () => {
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const items = [
     {

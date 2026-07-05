@@ -9,7 +9,13 @@ const h = vi.hoisted(() => ({
 }))
 
 vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
-vi.mock('@/stores/panelStore', () => ({ __esModule: true, default: () => ({ setPanelContent: h.setPanelContent }) }))
+vi.mock('@/stores/panelStore', () => ({
+  __esModule: true,
+  default: (selector?: (s: unknown) => unknown) => {
+    const state = { setPanelContent: h.setPanelContent }
+    return selector ? selector(state) : state
+  },
+}))
 vi.mock('@/app/components/RoasterDetails', () => ({ RoasterDetails: () => null }))
 
 describe('useRoasterRouteSync', () => {

@@ -14,7 +14,7 @@ export const useEventRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onEventRoute = pathname.startsWith('/events/')
   const hasEventsList = searchParams.has('events')

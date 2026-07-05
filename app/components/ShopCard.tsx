@@ -1,3 +1,5 @@
+'use client'
+
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
@@ -13,6 +15,9 @@ interface IProps {
   onMouseEnter?: () => void
   onMouseLeave?: () => void
   featured?: boolean
+  // Overrides the default map-selection click (store mutation + panel + analytics).
+  // Used outside the map app — e.g. the public profile passport just navigates.
+  onClick?: () => void
 }
 
 export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
@@ -28,9 +33,13 @@ export const generateDistanceText = ({ units, distance }: { units: string; dista
 export default function ShopCard(props: IProps) {
   const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
-  const { setHoveredShop } = useShopsStore()
+  const setHoveredShop = useShopsStore(s => s.setHoveredShop)
 
   const handleClick = () => {
+    if (props.onClick) {
+      props.onClick()
+      return
+    }
     if (props.featured) {
       plausible('FeaturedShopClick', {
         props: {

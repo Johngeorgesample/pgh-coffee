@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const getRoasterShops = async (roasterId: string) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
     .eq('roaster_id', roasterId)
 
   if (error) {

@@ -30,7 +30,8 @@ const amenities = [
 export const AmenityFilterList = () => {
   const plausible = useAnalytics()
   const [isExpanded, setIsExpanded] = useState(false)
-  const { activeAmenityFilters, toggleAmenityFilter } = useShopsStore()
+  const activeAmenityFilters = useShopsStore(s => s.activeAmenityFilters)
+  const toggleAmenityFilter = useShopsStore(s => s.toggleAmenityFilter)
 
   const handleAmenityClick = (amenity: string) => {
     toggleAmenityFilter(amenity)
