@@ -8,10 +8,11 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 
 // Anonymous client: queries run as the `anon` Postgres role, so RLS only ever
-// returns public profiles, the visits of public profiles, and public lists.
-// This is what guarantees the public path can never read private data or any
-// auth.users field (email, etc.).
+// returns public profiles and their visits. This is what guarantees the public
+// path can never read private data or any auth.users field (email, etc.).
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export interface PublicProfile {
   displayName: string | null
@@ -20,6 +21,10 @@ export interface PublicProfile {
 }
 
 export const getPublicProfile = cache(async (id: string): Promise<PublicProfile | null> => {
+  // A profile id is a user_id uuid; anything else can't match a row, and feeding
+  // it to Postgres raises a uuid-syntax error we'd log at error level. Skip it.
+  if (!UUID_RE.test(id)) return null
+
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('user_id, display_name, avatar_url')

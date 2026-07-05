@@ -1,13 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ShopCard from '@/app/components/ShopCard'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { buildShopSlug } from '@/app/utils/shopSlug'
 import type { Visit } from '@/app/utils/visitStats'
 
 const PAGE_SIZE = 10
 
 export default function Passport({ visits }: { visits: Visit[] }) {
+  const router = useRouter()
   const [shown, setShown] = useState(PAGE_SIZE)
 
   if (visits.length === 0) return <p className="text-gray-500">No visits yet.</p>
@@ -15,9 +18,16 @@ export default function Passport({ visits }: { visits: Visit[] }) {
   return (
     <>
       <ul>
-        {visits.slice(0, shown).map((visit) => (
-          <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-        ))}
+        {visits.slice(0, shown).map((visit) => {
+          const feature = formatDBShopAsFeature(visit.shop)
+          return (
+            <ShopCard
+              key={visit.id}
+              shop={feature}
+              onClick={() => router.push(`/shops/${buildShopSlug(feature.properties)}`)}
+            />
+          )
+        })}
       </ul>
       {shown < visits.length && (
         <button

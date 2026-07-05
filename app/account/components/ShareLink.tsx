@@ -1,16 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import { Check, Copy, ExternalLink } from 'lucide-react'
+import { Copy, ExternalLink } from 'lucide-react'
+import { useCopyToClipboard } from '@/hooks'
+import CopyLinkToast from '@/app/components/CopyLinkToast'
 
 export default function ShareLink({ url }: { url: string }) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+  const { showToast, share, closeToast } = useCopyToClipboard()
 
   return (
     <div className="flex items-center gap-2">
@@ -19,11 +14,11 @@ export default function ShareLink({ url }: { url: string }) {
       </code>
       <button
         type="button"
-        onClick={handleCopy}
+        onClick={() => share(url)}
         className="inline-flex items-center gap-1 rounded-lg py-2 px-3 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
       >
-        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-        {copied ? 'Copied' : 'Copy'}
+        <Copy className="h-4 w-4" />
+        Copy
       </button>
       <a
         href={url}
@@ -34,6 +29,7 @@ export default function ShareLink({ url }: { url: string }) {
         <ExternalLink className="h-4 w-4" />
         View
       </a>
+      <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </div>
   )
 }

@@ -1,42 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ShareLink from './ShareLink'
-
-interface Profile {
-  user_id: string
-  display_name: string | null
-  avatar_url: string | null
-  is_public: boolean
-}
+import { useOwnProfile } from '@/hooks'
 
 export default function Settings() {
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { profile, setProfile, loading, error: loadError } = useOwnProfile()
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/profiles')
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to load profile: ${res.status}`)
-        return res.json()
-      })
-      .then((data: Profile | null) => {
-        setProfile(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error('Failed to load profile:', err)
-        setError('Could not load your profile.')
-        setLoading(false)
-      })
-  }, [])
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const handleTogglePublic = async () => {
     if (!profile) return
     setSaving(true)
-    setError(null)
+    setSaveError(null)
     try {
       const res = await fetch('/api/profiles', {
         method: 'PATCH',
@@ -45,13 +21,13 @@ export default function Settings() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? 'Something went wrong.')
+        setSaveError(data.error ?? 'Something went wrong.')
         return
       }
       setProfile(data)
     } catch (err) {
       console.error('Failed to save profile:', err)
-      setError('Something went wrong.')
+      setSaveError('Something went wrong.')
     } finally {
       setSaving(false)
     }
@@ -63,6 +39,7 @@ export default function Settings() {
     profile?.user_id && typeof window !== 'undefined'
       ? `${window.location.origin}/u/${profile.user_id}`
       : null
+  const error = saveError ?? loadError
 
   return (
     <div className="space-y-6">
@@ -84,26 +61,26 @@ export default function Settings() {
             onClick={handleTogglePublic}
             disabled={saving}
             role="switch"
-              aria-checked={profile?.is_public ?? false}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors disabled:opacity-50 ${
-                profile?.is_public ? 'bg-yellow-400' : 'bg-gray-200'
+            aria-checked={profile?.is_public ?? false}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors disabled:opacity-50 ${
+              profile?.is_public ? 'bg-yellow-400' : 'bg-gray-200'
+            }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform mt-0.5 ${
+                profile?.is_public ? 'translate-x-5' : 'translate-x-0.5'
               }`}
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform mt-0.5 ${
-                  profile?.is_public ? 'translate-x-5' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
+            />
+          </button>
+        </div>
+
+        {profile?.is_public && shareUrl && (
+          <div className="mt-4">
+            <ShareLink url={shareUrl} />
           </div>
+        )}
 
-          {profile?.is_public && shareUrl && (
-            <div className="mt-4">
-              <ShareLink url={shareUrl} />
-            </div>
-          )}
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
       </div>
     </div>
   )

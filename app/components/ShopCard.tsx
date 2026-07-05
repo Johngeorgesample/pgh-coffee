@@ -15,6 +15,9 @@ interface IProps {
   onMouseEnter?: () => void
   onMouseLeave?: () => void
   featured?: boolean
+  // Overrides the default map-selection click (store mutation + panel + analytics).
+  // Used outside the map app — e.g. the public profile passport just navigates.
+  onClick?: () => void
 }
 
 export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
@@ -33,6 +36,10 @@ export default function ShopCard(props: IProps) {
   const setHoveredShop = useShopsStore(s => s.setHoveredShop)
 
   const handleClick = () => {
+    if (props.onClick) {
+      props.onClick()
+      return
+    }
     if (props.featured) {
       plausible('FeaturedShopClick', {
         props: {

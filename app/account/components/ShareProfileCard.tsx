@@ -1,20 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import ShareLink from './ShareLink'
+import { useOwnProfile } from '@/hooks'
 
 export default function ShareProfileCard() {
-  const [profile, setProfile] = useState<{ user_id: string; is_public: boolean } | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/profiles')
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setProfile(data))
-      .catch(() => setProfile(null))
-      .finally(() => setLoading(false))
-  }, [])
+  const { profile, loading } = useOwnProfile()
 
   if (loading || !profile) return null
 

@@ -48,7 +48,7 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Auto-create a profile row on signup, seeding display_name / avatar_url from
--- the OAuth metadata. Stays private with no username until the user claims one.
+-- the OAuth metadata. Stays private until the user opts in.
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS trigger
 LANGUAGE plpgsql
