@@ -1,21 +1,20 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { User } from 'lucide-react'
-import ShopCard from '@/app/components/ShopCard'
 import VisitStats from '@/app/account/components/VisitStats'
-import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { getPublicProfile } from '@/app/utils/profiles'
+import Passport from './Passport'
 
 type Props = {
-  params: Promise<{ username: string }>
+  params: Promise<{ id: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { username } = await params
-  const profile = await getPublicProfile(username)
+  const { id } = await params
+  const profile = await getPublicProfile(id)
   if (!profile) return { title: 'Profile not found' }
 
-  const name = profile.displayName || `@${profile.username}`
+  const name = profile.displayName || 'Coffee lover'
   return {
     title: `${name} · pgh.coffee`,
     description: `${name} has visited ${profile.visits.length} Pittsburgh coffee shops.`,
@@ -23,12 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PublicProfilePage({ params }: Props) {
-  const { username } = await params
-  const profile = await getPublicProfile(username)
+  const { id } = await params
+  const profile = await getPublicProfile(id)
 
   if (!profile) notFound()
 
-  const name = profile.displayName || `@${profile.username}`
+  const name = profile.displayName || 'Coffee lover'
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50">
@@ -44,7 +43,6 @@ export default async function PublicProfilePage({ params }: Props) {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
-              <p className="text-sm text-gray-500">@{profile.username}</p>
             </div>
           </div>
         </div>
@@ -53,34 +51,8 @@ export default async function PublicProfilePage({ params }: Props) {
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-gray-900">Passport</h2>
-          {profile.visits.length > 0 ? (
-            <ul>
-              {profile.visits.map((visit) => (
-                <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500">No visits yet.</p>
-          )}
+          <Passport visits={profile.visits} />
         </section>
-
-        {profile.lists.map((list) => (
-          <section key={list.id} className="space-y-4">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">{list.name}</h2>
-              {list.description && <p className="text-gray-500">{list.description}</p>}
-            </div>
-            {list.shops.length > 0 ? (
-              <ul>
-                {list.shops.map((shop) => (
-                  <ShopCard key={shop.uuid} shop={formatDBShopAsFeature(shop)} />
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">No shops in this list yet.</p>
-            )}
-          </section>
-        ))}
       </div>
     </div>
   )

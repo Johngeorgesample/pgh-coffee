@@ -6,20 +6,17 @@
 -- user_lists (is_public + "own or public" SELECT policy).
 --
 -- profiles — one row per user. A profile becomes publicly viewable at
---            /u/<username> once the user claims a username AND sets is_public.
---            Public identity is display_name + avatar_url ONLY; email and other
+--            /u/<user_id> once the user sets is_public. There are no chosen
+--            usernames; the profile is addressed by its user_id uuid. Public
+--            identity is display_name + avatar_url ONLY; email and other
 --            auth.users fields are never exposed through this table.
-
-CREATE EXTENSION IF NOT EXISTS citext;
 
 CREATE TABLE IF NOT EXISTS profiles (
   user_id      uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  username     citext UNIQUE,
   display_name text,
   avatar_url   text,
   is_public    boolean NOT NULL DEFAULT false,
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT username_format CHECK (username IS NULL OR username ~ '^[a-z0-9_]{3,30}$')
+  created_at   timestamptz NOT NULL DEFAULT now()
 );
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;

@@ -3,11 +3,11 @@ import { getPublicProfile } from '@/app/utils/profiles'
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ username: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const { username } = await params
+  const { id } = await params
 
-  const profile = await getPublicProfile(username)
+  const profile = await getPublicProfile(id)
 
   if (!profile) {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 })

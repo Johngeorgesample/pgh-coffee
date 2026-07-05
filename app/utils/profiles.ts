@@ -13,32 +13,23 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 // auth.users field (email, etc.).
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-export interface PublicList {
-  id: string
-  name: string
-  description: string | null
-  shops: DbShop[]
-}
-
 export interface PublicProfile {
-  username: string
   displayName: string | null
   avatarUrl: string | null
   visits: Visit[]
-  lists: PublicList[]
 }
 
 /**
- * Resolves a public profile from a `/u/{username}` identifier, along with the
- * user's visits and public lists. Shared by the server page and the
- * `/api/profiles/[username]` route so both agree on the lookup. Returns null
- * when the username doesn't exist or the profile isn't public.
+ * Resolves a public profile from a `/u/{id}` identifier (the user's uuid),
+ * along with the user's visits. Shared by the server page and the
+ * `/api/profiles/[id]` route so both agree on the lookup. Returns null when
+ * the id doesn't exist or the profile isn't public.
  */
-export const getPublicProfile = cache(async (username: string): Promise<PublicProfile | null> => {
+export const getPublicProfile = cache(async (id: string): Promise<PublicProfile | null> => {
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('user_id, username, display_name, avatar_url')
-    .eq('username', username)
+    .select('user_id, display_name, avatar_url')
+    .eq('user_id', id)
     .eq('is_public', true)
     .maybeSingle()
 
@@ -49,43 +40,19 @@ export const getPublicProfile = cache(async (username: string): Promise<PublicPr
 
   if (!profile) return null
 
-  const [visitsResult, listsResult] = await Promise.all([
-    supabase
-      .from('user_visits')
-      .select('id, created_at, shop:shops (*)')
-      .eq('user_id', profile.user_id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('user_lists')
-      .select('id, name, description, items:user_list_items (shop:shops (*))')
-      .eq('user_id', profile.user_id)
-      .eq('is_public', true)
-      .order('created_at', { ascending: false }),
-  ])
+  const { data: visitsData, error: visitsError } = await supabase
+    .from('user_visits')
+    .select('id, created_at, shop:shops (*)')
+    .eq('user_id', profile.user_id)
+    .order('created_at', { ascending: false })
 
-  if (visitsResult.error) {
-    logger.error('Error fetching profile visits', { error: visitsResult.error.message })
+  if (visitsError) {
+    logger.error('Error fetching profile visits', { error: visitsError.message })
   }
-  if (listsResult.error) {
-    logger.error('Error fetching profile lists', { error: listsResult.error.message })
-  }
-
-  const visits = (visitsResult.data ?? []) as unknown as Visit[]
-
-  const lists: PublicList[] = (listsResult.data ?? []).map((list) => ({
-    id: list.id,
-    name: list.name,
-    description: list.description,
-    shops: ((list.items ?? []) as unknown as { shop: DbShop }[])
-      .map((item) => item.shop)
-      .filter(Boolean),
-  }))
 
   return {
-    username: profile.username,
     displayName: profile.display_name,
     avatarUrl: profile.avatar_url,
-    visits,
-    lists,
+    visits: (visitsData ?? []) as unknown as Visit[],
   }
 })
