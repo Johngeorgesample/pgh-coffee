@@ -70,8 +70,6 @@ describe('Company API Route - GET', () => {
 
     await call('test-co')
 
-    // Without this join roasterRef is absent and toFeature maps roaster to null,
-    // hiding the roasts section for shops opened from the company page.
     expect(selectArgs.shops).toContain('roasterRef:roaster_id(name, slug, company_id)')
   })
 
