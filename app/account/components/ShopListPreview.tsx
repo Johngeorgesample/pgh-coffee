@@ -43,7 +43,20 @@ export default function ShopListPreview({
       .finally(() => setLoading(false))
   }, [endpoint])
 
-  if (loading || error) return null
+  if (error) return null
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 animate-pulse">
+        <div className="h-6 w-32 rounded bg-gray-200 mb-4" />
+        <div className="space-y-3">
+          {Array.from({ length: PREVIEW_COUNT }).map((_, i) => (
+            <div key={i} className="h-16 rounded-lg bg-gray-100" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
