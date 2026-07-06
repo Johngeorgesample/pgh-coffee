@@ -31,7 +31,10 @@ export async function POST(request: Request) {
   const { claim_type, target_id, contact_name, role, business_email, phone, social_media, message } = body
 
   const target = TARGETS[claim_type as keyof typeof TARGETS]
-  if (!target || !target_id || !contact_name || !business_email) {
+  if (!target) {
+    return NextResponse.json({ error: 'Invalid or missing claim type' }, { status: 400 })
+  }
+  if (!target_id || !contact_name || !business_email) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 

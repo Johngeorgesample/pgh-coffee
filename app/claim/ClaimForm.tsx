@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { ClaimTarget } from '@/app/utils/claims'
+import type { ClaimTarget } from '@/app/utils/claims'
 import ClaimSuccessDialog from './ClaimSuccessDialog'
 
 interface TProps {
