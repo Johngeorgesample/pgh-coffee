@@ -78,4 +78,13 @@ describe('Claim API Route - POST', () => {
     expect(response.status).toBe(201)
     expect(mockInsertResult).toHaveBeenCalledWith([expect.objectContaining({ status: 'pending' })])
   })
+
+  test('returns 500 when the claim insert fails', async () => {
+    mockShopValidationResult.mockResolvedValueOnce({ data: { uuid: 'shop-uuid-123' }, error: null })
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'insert failed' } })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(500)
+  })
 })

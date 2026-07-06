@@ -17,7 +17,7 @@
 
 CREATE TABLE IF NOT EXISTS shop_claims (
   id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  shop_id        uuid NOT NULL REFERENCES shops(uuid),
+  shop_id        uuid NOT NULL REFERENCES shops(uuid) ON DELETE CASCADE,
   contact_name   text NOT NULL,
   role           text,
   business_email text NOT NULL,
