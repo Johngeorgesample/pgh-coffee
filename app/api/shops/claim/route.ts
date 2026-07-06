@@ -9,8 +9,6 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-// A claim targets exactly one entity. Each type maps to the table we validate the
-// target against and the claims column the id lands in.
 const TARGETS = {
   shop: { table: 'shops', idColumn: 'uuid', fkColumn: 'shop_id' },
   company: { table: 'companies', idColumn: 'id', fkColumn: 'company_id' },
@@ -38,17 +36,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  // Every target id (shop uuid, company id, roaster id) is a uuid. A non-uuid is
-  // bad client input — reject it before querying so it 400s rather than surfacing
-  // as a DB error / apiError 500.
   if (!UUID_RE.test(target_id)) {
     return NextResponse.json({ error: 'Invalid target id' }, { status: 400 })
   }
 
-  // Validate that the entity being claimed actually exists. For a shop or roaster
-  // also pull its company_id so ownership resolution is enforced here, not just in
-  // the page — a company owns its shops and roaster, so a company-owned target is
-  // claimed against the company. A company has no company_id to roll up to.
   const selectColumns = claim_type === 'company' ? target.idColumn : `${target.idColumn}, company_id`
   const { data: entity, error: entityError } = await supabase
     .from(target.table)
@@ -100,10 +91,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error submitting claim' }, { status: 500 })
   }
 
-  // Log only non-PII identifiers — contact_name/business_email would ship to Loki.
-  // Use the resolved type/id so a company-owned shop counts as a company claim.
   logger.info('Claim submitted', { claim_type: persistedType, target_id: persistedId })
   metrics.claimSubmitted(persistedType)
-  // Return a minimal, stable payload rather than echoing the insert result.
   return NextResponse.json({ ok: true }, { status: 201 })
 }
