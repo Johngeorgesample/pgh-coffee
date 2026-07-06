@@ -12,6 +12,8 @@
 -- is no SELECT/UPDATE/DELETE policy, so the anon role cannot read claims back.
 -- Review claims with the service role (SQL editor / server), which bypasses RLS.
 -- The API insert does not chain .select(), so it never needs read access to succeed.
+-- The INSERT policy pins status to 'pending' so a direct anon-key insert can't
+-- self-approve a claim — only the service role can move a claim to approved.
 
 CREATE TABLE IF NOT EXISTS shop_claims (
   id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -22,7 +24,7 @@ CREATE TABLE IF NOT EXISTS shop_claims (
   phone          text,
   social_media   text,
   message        text,
-  status         text NOT NULL DEFAULT 'pending', -- pending | approved | rejected
+  status         text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
   created_at     timestamptz NOT NULL DEFAULT now()
 );
 
@@ -32,5 +34,5 @@ CREATE INDEX IF NOT EXISTS shop_claims_status_idx  ON shop_claims(status);
 ALTER TABLE shop_claims ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
-  CREATE POLICY "Anyone can submit a claim" ON shop_claims FOR INSERT TO anon, authenticated WITH CHECK (true);
+  CREATE POLICY "Anyone can submit a claim" ON shop_claims FOR INSERT TO anon, authenticated WITH CHECK (status = 'pending');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;

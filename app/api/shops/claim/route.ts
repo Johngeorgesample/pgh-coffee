@@ -45,7 +45,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error submitting claim' }, { status: 500 })
   }
 
-  logger.info('Shop claim submitted', { shop_id, contact_name, business_email })
+  // Log only the shop_id — contact_name/business_email are PII and would ship to Loki.
+  logger.info('Shop claim submitted', { shop_id })
   metrics.shopClaimSubmitted()
   return NextResponse.json(data, { status: 201 })
 }
