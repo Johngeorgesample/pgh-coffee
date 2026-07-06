@@ -111,6 +111,20 @@ describe('Claim API Route - POST', () => {
     ])
   })
 
+  test('resolves a company-owned shop claim up to company_id', async () => {
+    // A shop with a company_id is owned by that company, so the claim must persist
+    // against company_id even when the request says claim_type: 'shop'.
+    mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID, company_id: COMPANY_ID }, error: null })
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: null })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(201)
+    const inserted = mockInsertResult.mock.calls[0][0][0]
+    expect(inserted.company_id).toBe(COMPANY_ID)
+    expect(inserted.shop_id).toBeUndefined()
+  })
+
   test('persists a company claim against company_id, not shop_id', async () => {
     mockEntityValidation.mockResolvedValueOnce({ data: { id: COMPANY_ID }, error: null })
     mockInsertResult.mockResolvedValueOnce({ data: null, error: null })

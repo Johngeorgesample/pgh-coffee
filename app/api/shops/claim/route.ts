@@ -45,10 +45,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid target id' }, { status: 400 })
   }
 
-  // Validate that the entity being claimed actually exists.
+  // Validate that the entity being claimed actually exists. For a shop or roaster
+  // also pull its company_id so ownership resolution is enforced here, not just in
+  // the page — a company owns its shops and roaster, so a company-owned target is
+  // claimed against the company. A company has no company_id to roll up to.
+  const selectColumns = claim_type === 'company' ? target.idColumn : `${target.idColumn}, company_id`
   const { data: entity, error: entityError } = await supabase
     .from(target.table)
-    .select(target.idColumn)
+    .select(selectColumns)
     .eq(target.idColumn, target_id)
     .single()
 
@@ -64,10 +68,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
   }
 
+  // Resolve up the ownership tree: a company-owned shop/roaster is persisted against
+  // company_id, so a direct API call can't record a leaf claim the page would have
+  // rolled up. Only a company-less shop/roaster stays a leaf claim.
+  const ownerCompanyId = (entity as { company_id?: string | null }).company_id
+  let persistedType = claim_type as keyof typeof TARGETS
+  let persistedColumn: string = target.fkColumn
+  let persistedId: string = target_id
+  if ((claim_type === 'shop' || claim_type === 'roaster') && ownerCompanyId) {
+    persistedType = 'company'
+    persistedColumn = 'company_id'
+    persistedId = ownerCompanyId
+  }
+
   const { error } = await supabase
     .from('claims')
     .insert([{
-      [target.fkColumn]: target_id,
+      [persistedColumn]: persistedId,
       contact_name,
       role,
       business_email,
@@ -84,8 +101,9 @@ export async function POST(request: Request) {
   }
 
   // Log only non-PII identifiers — contact_name/business_email would ship to Loki.
-  logger.info('Claim submitted', { claim_type, target_id })
-  metrics.claimSubmitted(claim_type)
+  // Use the resolved type/id so a company-owned shop counts as a company claim.
+  logger.info('Claim submitted', { claim_type: persistedType, target_id: persistedId })
+  metrics.claimSubmitted(persistedType)
   // Return a minimal, stable payload rather than echoing the insert result.
   return NextResponse.json({ ok: true }, { status: 201 })
 }
