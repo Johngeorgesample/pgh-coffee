@@ -28,7 +28,7 @@ const steps = [
 
 // A company claim covers everything the company owns; spell that out so the owner
 // knows they're not claiming just one location.
-function coverageNote(target: ClaimTarget): string | null {
+const coverageNote = (target: ClaimTarget) => {
   if (target.type !== 'company') return null
   const count = target.locationCount ?? 0
   const locations = count === 1 ? '1 location' : `${count} locations`
@@ -185,7 +185,11 @@ export default function ClaimForm({ target }: TProps) {
             />
           </fieldset>
 
-          {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p role="alert" className="text-sm text-red-600">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
