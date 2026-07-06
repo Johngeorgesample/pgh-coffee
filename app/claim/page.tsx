@@ -5,7 +5,7 @@ import ClaimPreview from './ClaimPreview'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string; company?: string; roaster?: string }>
+  searchParams: Promise<{ shop?: string | string[]; company?: string | string[]; roaster?: string | string[] }>
 }
 
 const HEADINGS: Record<ClaimType, string> = {
@@ -14,10 +14,16 @@ const HEADINGS: Record<ClaimType, string> = {
   roaster: "Your roastery's on the map. Make it yours.",
 }
 
+// A search param can repeat (?shop=a&shop=b arrives as an array); take the first.
+function first(value?: string | string[]): string | undefined {
+  return Array.isArray(value) ? value[0] : value
+}
+
 export default async function ClaimAListing({ searchParams }: TProps) {
   const params = await searchParams
-  const hasEntry = Boolean(params.shop || params.company || params.roaster)
-  const target = hasEntry ? await resolveClaimTarget(params) : null
+  const entry = { shop: first(params.shop), company: first(params.company), roaster: first(params.roaster) }
+  const hasEntry = Boolean(entry.shop || entry.company || entry.roaster)
+  const target = hasEntry ? await resolveClaimTarget(entry) : null
 
   return (
     <div>

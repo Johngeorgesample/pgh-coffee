@@ -55,8 +55,11 @@ export async function resolveClaimTarget(params: {
   }
 
   if (params.shop) {
-    // The first uuid group is the prefix the lookup expects.
-    const shop = await getShopByUuidPrefix(params.shop.slice(0, 8))
+    // The first uuid group is the prefix the lookup expects. Only query a
+    // well-formed 8-hex prefix — a malformed bound makes the lookup throw.
+    const prefix = params.shop.slice(0, 8)
+    if (!/^[0-9a-f]{8}$/i.test(prefix)) return null
+    const shop = await getShopByUuidPrefix(prefix)
     if (!shop) return null
     if (shop.company) return companyTarget(shop.company.id, shop.company.name)
     return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined }
