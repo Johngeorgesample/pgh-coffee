@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
 import LocationList from '@/app/components/LocationList'
+import VerifiedBadge from '@/app/components/VerifiedBadge'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
 import { DbShop } from '@/types/shop-types'
@@ -19,6 +20,7 @@ interface TRoaster {
   website: string | null
   instagram: string | null
   description: string | null
+  is_verified?: boolean
   company?: {
     name: string
     slug: string
@@ -93,7 +95,10 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
             <Flame className="w-3.5 h-3.5" />
             Coffee roaster
           </span>
-          <h1 className="text-3xl sm:text-4xl font-serif tracking-tight leading-tight">{roaster.name}</h1>
+          <h1 className="flex items-center gap-1.5 text-3xl sm:text-4xl font-serif tracking-tight leading-tight">
+            {roaster.name}
+            {roaster.is_verified && <VerifiedBadge className="mt-1" />}
+          </h1>
           {roaster.company && (
             <div className="mt-1.5 text-sm text-white/85">
               Part of{' '}
