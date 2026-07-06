@@ -2,12 +2,11 @@ import { createClient } from '@supabase/supabase-js'
 import { getShopByUuidPrefix } from './shops'
 import { getCompanyBySlug } from './companies'
 import { getRoasterBySlug } from './roasters'
+import type { ClaimType } from '@/types/claim-types'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-export type ClaimType = 'shop' | 'company' | 'roaster'
 
 // What the claim page shows and the form submits. `id` is the value that lands in
 // the matching claims.{type}_id column.

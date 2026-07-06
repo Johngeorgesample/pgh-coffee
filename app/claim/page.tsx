@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Footer } from '@/app/components/about'
-import { resolveClaimTarget, ClaimType } from '@/app/utils/claims'
+import { resolveClaimTarget } from '@/app/utils/claims'
+import type { ClaimType } from '@/types/claim-types'
 import ClaimPreview from './ClaimPreview'
 import ClaimForm from './ClaimForm'
 
