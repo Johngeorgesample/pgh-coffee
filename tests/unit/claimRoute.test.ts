@@ -52,11 +52,20 @@ describe('Claim API Route - POST', () => {
   })
 
   test('rejects a claim for a shop that does not exist', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116', message: 'No rows found' } })
 
     const response = await post(validClaim)
 
     expect(response.status).toBe(404)
+    expect(mockInsertResult).not.toHaveBeenCalled()
+  })
+
+  test('surfaces a real validation error as 500, not a 404', async () => {
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: '57014', message: 'query timeout' } })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(500)
     expect(mockInsertResult).not.toHaveBeenCalled()
   })
 

@@ -30,14 +30,14 @@ export default async function ClaimAShop({ searchParams }: TProps) {
         </div>
       </header>
 
-      {shop ? (
+      {shopRow ? (
         <>
-          <ClaimShopPreview name={shopRow?.name} neighborhood={shopRow?.neighborhood} photo={shopRow?.photo ?? undefined} />
+          <ClaimShopPreview name={shopRow.name} neighborhood={shopRow.neighborhood} photo={shopRow.photo ?? undefined} />
           <ClaimForm
-            shopId={shop}
-            shopName={shopRow?.name ?? 'this shop'}
-            neighborhood={shopRow?.neighborhood}
-            companyName={shopRow?.company?.name}
+            shopId={shopRow.uuid}
+            shopName={shopRow.name}
+            neighborhood={shopRow.neighborhood}
+            companyName={shopRow.company?.name}
           />
         </>
       ) : (

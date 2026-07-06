@@ -22,11 +22,19 @@ export async function POST(request: Request) {
     .eq('uuid', shop_id)
     .single()
 
-  if (shopError || !shop) {
+  // PGRST116 is "no rows" — a genuine 404. Any other error is a real failure
+  // (DB down, bad query) and must not masquerade as "shop not found".
+  if (shopError && shopError.code !== 'PGRST116') {
+    logger.error('Error validating shop for claim', { error: shopError.message })
+    metrics.apiError('shops/claim')
+    return NextResponse.json({ error: 'Error submitting claim' }, { status: 500 })
+  }
+
+  if (!shop) {
     return NextResponse.json({ error: 'Shop not found' }, { status: 404 })
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('shop_claims')
     .insert([{
       shop_id,
@@ -48,5 +56,6 @@ export async function POST(request: Request) {
   // Log only the shop_id — contact_name/business_email are PII and would ship to Loki.
   logger.info('Shop claim submitted', { shop_id })
   metrics.shopClaimSubmitted()
-  return NextResponse.json(data, { status: 201 })
+  // Return a minimal, stable payload rather than echoing the insert result.
+  return NextResponse.json({ ok: true }, { status: 201 })
 }
