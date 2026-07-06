@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
 import LocationList from '@/app/components/LocationList'
+import ClaimButton from '@/app/components/ClaimButton'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { formatDataToGeoJSON } from '../utils/utils'
 import { DbShop } from '@/types/shop-types'
@@ -146,6 +147,11 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
         {roaster.description && (
           <p className="text-sm text-gray-600 leading-relaxed">{roaster.description}</p>
         )}
+
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <p className="text-sm text-gray-500">Run {roaster.name}?</p>
+          <ClaimButton href={`/claim?roaster=${slug}`} label="Claim this roaster" />
+        </div>
 
         {roaster.shops && roaster.shops.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200">

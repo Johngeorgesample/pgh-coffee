@@ -5,6 +5,7 @@ import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
+import ClaimButton from '@/app/components/ClaimButton'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -156,6 +157,11 @@ export const Company = ({ slug }: { slug: string }) => {
         {company.description && (
           <p className="text-sm text-gray-600 leading-relaxed">{company.description}</p>
         )}
+
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <p className="text-sm text-gray-500">Own {company.name}?</p>
+          <ClaimButton href={`/claim?company=${slug}`} label="Claim this brand" />
+        </div>
 
         {company.roaster && (
           <Link
