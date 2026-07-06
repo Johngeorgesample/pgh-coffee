@@ -2,11 +2,11 @@ import VerifiedBadge from '@/app/components/VerifiedBadge'
 
 interface IProps {
   name?: string
-  neighborhood?: string
+  subtitle?: string
   photo?: string
 }
 
-export default function ClaimShopPreview({ name, neighborhood, photo }: IProps) {
+export default function ClaimPreview({ name, subtitle, photo }: IProps) {
   if (!name) return null
 
   return (
@@ -23,7 +23,7 @@ export default function ClaimShopPreview({ name, neighborhood, photo }: IProps) 
               {name}
               <VerifiedBadge className="mt-0.5" />
             </h2>
-            {neighborhood && <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>}
+            {subtitle && <p className="text-base text-white/80 mt-0.5">{subtitle}</p>}
           </div>
         </div>
       </div>

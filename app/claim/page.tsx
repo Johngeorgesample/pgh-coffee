@@ -1,48 +1,47 @@
 import Link from 'next/link'
 import { Footer } from '@/app/components/about'
-import { getShopByUuidPrefix } from '@/app/utils/shops'
-import ClaimShopPreview from './ClaimShopPreview'
+import { resolveClaimTarget, ClaimType } from '@/app/utils/claims'
+import ClaimPreview from './ClaimPreview'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string | string[] }>
+  searchParams: Promise<{ shop?: string | string[]; company?: string | string[]; roaster?: string | string[] }>
 }
 
-export default async function ClaimAShop({ searchParams }: TProps) {
-  const { shop } = await searchParams
+const HEADINGS: Record<ClaimType, string> = {
+  shop: "Your shop's on the map. Make it yours.",
+  company: "Your brand's on the map. Make it yours.",
+  roaster: "Your roastery's on the map. Make it yours.",
+}
 
-  // `shop` may be missing or repeated (?shop=a&shop=b arrives as an array).
-  // The first uuid group is the prefix the lookup expects, so only query when we
-  // have a well-formed 8-hex prefix — otherwise a malformed bound makes the
-  // lookup throw and turns /claim into a 500. Everything the page shows comes
-  // from this row.
-  const rawShop = Array.isArray(shop) ? shop[0] : shop
-  const prefix = rawShop?.slice(0, 8)
-  const shopRow = prefix && /^[0-9a-f]{8}$/i.test(prefix) ? await getShopByUuidPrefix(prefix) : null
+// A search param can repeat (?shop=a&shop=b arrives as an array); take the first.
+function first(value?: string | string[]): string | undefined {
+  return Array.isArray(value) ? value[0] : value
+}
+
+export default async function ClaimAListing({ searchParams }: TProps) {
+  const params = await searchParams
+  const entry = { shop: first(params.shop), company: first(params.company), roaster: first(params.roaster) }
+  const hasEntry = Boolean(entry.shop || entry.company || entry.roaster)
+  const target = hasEntry ? await resolveClaimTarget(entry) : null
 
   return (
     <div>
       <header className="max-w-7xl mx-auto px-6 py-16">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">
-            You built the spot. Make it official.
+            {target ? HEADINGS[target.type] : "You're on the map. Make it yours."}
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
-            Claim your shop to get a verified badge and a head start managing your own listing when self-serve editing
-            launches.
+            Claim your listing to get a verified badge and a head start managing it when self-serve editing launches.
           </p>
         </div>
       </header>
 
-      {shopRow ? (
+      {target ? (
         <>
-          <ClaimShopPreview name={shopRow.name} neighborhood={shopRow.neighborhood} photo={shopRow.photo ?? undefined} />
-          <ClaimForm
-            shopId={shopRow.uuid}
-            shopName={shopRow.name}
-            neighborhood={shopRow.neighborhood}
-            companyName={shopRow.company?.name}
-          />
+          <ClaimPreview name={target.name} subtitle={target.subtitle} photo={target.photo} />
+          <ClaimForm target={target} />
         </>
       ) : (
         <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
