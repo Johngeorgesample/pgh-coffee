@@ -1,6 +1,6 @@
 -- Schema for the verified-shop badge.
 --
--- Apply by hand (no migration framework in this repo). Purely additive: adds two
+-- Apply by hand (no migration framework in this repo). Purely additive: adds three
 -- columns to the existing shops table. Safe to run on a live table — the default
 -- backfills existing rows to unverified, and no rows are rewritten beyond that.
 --

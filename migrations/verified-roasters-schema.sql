@@ -1,6 +1,6 @@
 -- Verified badge for roasters. Mirrors verified-schema.sql (shops).
 --
--- Apply by hand (no migration framework in this repo). Purely additive: adds two
+-- Apply by hand (no migration framework in this repo). Purely additive: adds three
 -- columns to the existing roaster table. Safe to run on a live table — the default
 -- backfills existing rows to unverified, and no rows are rewritten beyond that.
 --
