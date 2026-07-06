@@ -28,7 +28,7 @@ export default async function ClaimAShop({ searchParams }: TProps) {
         <>
           {name && (
             <section className="max-w-2xl mx-auto px-6 pb-8">
-              <p className="text-sm text-slate-500 text-center mb-3">Here's how your listing will look:</p>
+              <p className="text-sm text-slate-500 text-center mb-3">Here&apos;s how your listing will look:</p>
               <div className="rounded-xl border border-stone-200 bg-white px-5 py-4 shadow-sm">
                 <div className="flex items-center gap-1.5">
                   <h2 className="text-2xl font-serif font-normal tracking-tight">{name}</h2>
