@@ -11,6 +11,7 @@ export interface TCompany {
   website: string
   description: string
   instagram_handle: string
+  is_verified?: boolean
   shops?: DbShop[]
   roaster?: { name: string; slug: string } | null
 }
