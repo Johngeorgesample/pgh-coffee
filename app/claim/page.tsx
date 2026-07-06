@@ -1,44 +1,41 @@
 import Link from 'next/link'
 import { Footer } from '@/app/components/about'
-import { getShopByUuidPrefix } from '@/app/utils/shops'
-import ClaimShopPreview from './ClaimShopPreview'
+import { resolveClaimTarget, ClaimType } from '@/app/utils/claims'
+import ClaimPreview from './ClaimPreview'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string }>
+  searchParams: Promise<{ shop?: string; company?: string; roaster?: string }>
 }
 
-export default async function ClaimAShop({ searchParams }: TProps) {
-  const { shop } = await searchParams
+const HEADINGS: Record<ClaimType, string> = {
+  shop: "Your shop's on the map. Make it yours.",
+  company: "Your brand's on the map. Make it yours.",
+  roaster: "Your roastery's on the map. Make it yours.",
+}
 
-  // The first uuid group is the prefix the lookup expects. Everything the page
-  // shows (name, neighborhood, photo, company) comes from this row, so the claim
-  // link only needs the uuid.
-  const shopRow = shop ? await getShopByUuidPrefix(shop.slice(0, 8)) : null
+export default async function ClaimAListing({ searchParams }: TProps) {
+  const params = await searchParams
+  const hasEntry = Boolean(params.shop || params.company || params.roaster)
+  const target = hasEntry ? await resolveClaimTarget(params) : null
 
   return (
     <div>
       <header className="max-w-7xl mx-auto px-6 py-16">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">
-            You built the spot. Make it official.
+            {target ? HEADINGS[target.type] : "You're on the map. Make it yours."}
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
-            Claim your shop to get a verified badge and a head start managing your own listing when self-serve editing
-            launches.
+            Claim your listing to get a verified badge and a head start managing it when self-serve editing launches.
           </p>
         </div>
       </header>
 
-      {shop ? (
+      {target ? (
         <>
-          <ClaimShopPreview name={shopRow?.name} neighborhood={shopRow?.neighborhood} photo={shopRow?.photo ?? undefined} />
-          <ClaimForm
-            shopId={shop}
-            shopName={shopRow?.name ?? 'this shop'}
-            neighborhood={shopRow?.neighborhood}
-            companyName={shopRow?.company?.name}
-          />
+          <ClaimPreview name={target.name} subtitle={target.subtitle} photo={target.photo} />
+          <ClaimForm target={target} />
         </>
       ) : (
         <section className="max-w-2xl mx-auto px-6 pb-20 text-center">

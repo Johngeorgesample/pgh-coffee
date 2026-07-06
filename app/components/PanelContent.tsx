@@ -3,7 +3,7 @@ import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
-import ClaimShopButton from './ClaimShopButton'
+import ClaimButton from './ClaimButton'
 import ShopLocation from './ShopLocation'
 import ShopRoaster from './ShopRoaster'
 import PhotoGrid from './PhotoGrid'
@@ -54,7 +54,7 @@ export default function PanelContent(props: IProps) {
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200 flex items-center justify-between gap-3">
         <p className="text-sm text-gray-500">Work at {name}?</p>
-        <ClaimShopButton shopUUID={uuid} />
+        <ClaimButton href={`/claim?shop=${uuid}`} label="Claim this shop" />
       </div>
 
       <NearbyShops shop={props.shop} />

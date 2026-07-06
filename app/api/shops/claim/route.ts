@@ -7,29 +7,38 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// A claim targets exactly one entity. Each type maps to the table we validate the
+// target against and the claims column the id lands in.
+const TARGETS = {
+  shop: { table: 'shops', idColumn: 'uuid', fkColumn: 'shop_id' },
+  company: { table: 'companies', idColumn: 'id', fkColumn: 'company_id' },
+  roaster: { table: 'roaster', idColumn: 'id', fkColumn: 'roaster_id' },
+} as const
+
 export async function POST(request: Request) {
   const body = await request.json()
-  const { shop_id, contact_name, role, business_email, phone, social_media, message } = body
+  const { claim_type, target_id, contact_name, role, business_email, phone, social_media, message } = body
 
-  if (!shop_id || !contact_name || !business_email) {
+  const target = TARGETS[claim_type as keyof typeof TARGETS]
+  if (!target || !target_id || !contact_name || !business_email) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  // Validate that the shop being claimed actually exists
-  const { data: shop, error: shopError } = await supabase
-    .from('shops')
-    .select('uuid')
-    .eq('uuid', shop_id)
+  // Validate that the entity being claimed actually exists.
+  const { data: entity, error: entityError } = await supabase
+    .from(target.table)
+    .select(target.idColumn)
+    .eq(target.idColumn, target_id)
     .single()
 
-  if (shopError || !shop) {
-    return NextResponse.json({ error: 'Shop not found' }, { status: 404 })
+  if (entityError || !entity) {
+    return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
   }
 
   const { data, error } = await supabase
-    .from('shop_claims')
+    .from('claims')
     .insert([{
-      shop_id,
+      [target.fkColumn]: target_id,
       contact_name,
       role,
       business_email,
@@ -45,7 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Error submitting claim' }, { status: 500 })
   }
 
-  logger.info('Shop claim submitted', { shop_id, contact_name, business_email })
-  metrics.shopClaimSubmitted()
+  logger.info('Claim submitted', { claim_type, target_id, contact_name, business_email })
+  metrics.claimSubmitted()
   return NextResponse.json(data, { status: 201 })
 }
