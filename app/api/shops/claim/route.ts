@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
   // Log only non-PII identifiers — contact_name/business_email would ship to Loki.
   logger.info('Claim submitted', { claim_type, target_id })
-  metrics.claimSubmitted()
+  metrics.claimSubmitted(claim_type)
   // Return a minimal, stable payload rather than echoing the insert result.
   return NextResponse.json({ ok: true }, { status: 201 })
 }

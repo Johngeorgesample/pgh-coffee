@@ -123,6 +123,19 @@ describe('Claim API Route - POST', () => {
     expect(inserted.shop_id).toBeUndefined()
   })
 
+  test('persists a roaster claim against roaster_id', async () => {
+    const ROASTER_ID = '33333333-3333-3333-3333-333333333333'
+    mockEntityValidation.mockResolvedValueOnce({ data: { id: ROASTER_ID }, error: null })
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: null })
+
+    const response = await post({ ...validClaim, claim_type: 'roaster', target_id: ROASTER_ID })
+
+    expect(response.status).toBe(201)
+    const inserted = mockInsertResult.mock.calls[0][0][0]
+    expect(inserted.roaster_id).toBe(ROASTER_ID)
+    expect(inserted.shop_id).toBeUndefined()
+  })
+
   test('returns 500 when the claim insert fails', async () => {
     mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID }, error: null })
     mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'insert failed' } })

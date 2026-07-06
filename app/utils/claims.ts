@@ -26,10 +26,14 @@ export interface ClaimTarget {
 // claim always targets the company when one exists. Count what it covers off
 // company_id only — a shop's roaster_id is "serves this coffee", not ownership.
 async function companyTarget(id: string, name: string): Promise<ClaimTarget> {
-  const [{ count }, { data: roasters }] = await Promise.all([
+  const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
     supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id),
     supabase.from('roaster').select('id').eq('company_id', id).limit(1),
   ])
+  // Throw rather than silently show misleading coverage (0 locations / no roaster)
+  // if a query fails — mirrors getShopByUuidPrefix, which throws on query failure.
+  if (countError) throw new Error(`Failed to count company shops: ${countError.message}`)
+  if (roasterError) throw new Error(`Failed to look up company roaster: ${roasterError.message}`)
   return { type: 'company', id, name, locationCount: count ?? 0, hasRoaster: (roasters?.length ?? 0) > 0 }
 }
 
