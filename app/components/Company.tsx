@@ -4,6 +4,7 @@ import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon, Ma
 import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
+import VerifiedBadge from '@/app/components/VerifiedBadge'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -108,7 +109,10 @@ export const Company = ({ slug }: { slug: string }) => {
             <BuildingStorefrontIcon className="w-3.5 h-3.5" />
             Coffee company
           </span>
-          <h1 className="text-3xl sm:text-4xl font-serif tracking-tight leading-tight">{company.name}</h1>
+          <h1 className="flex items-center gap-1.5 text-3xl sm:text-4xl font-serif tracking-tight leading-tight">
+            {company.name}
+            {company.is_verified && <VerifiedBadge className="mt-1" />}
+          </h1>
           <div className="flex items-center gap-2 mt-1.5 text-sm text-white/85">
             <span>
               {locationCount} {locationCount === 1 ? 'location' : 'locations'}
