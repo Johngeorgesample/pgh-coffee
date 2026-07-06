@@ -5,16 +5,20 @@ import ClaimShopPreview from './ClaimShopPreview'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string }>
+  searchParams: Promise<{ shop?: string | string[] }>
 }
 
 export default async function ClaimAShop({ searchParams }: TProps) {
   const { shop } = await searchParams
 
-  // The first uuid group is the prefix the lookup expects. Everything the page
-  // shows (name, neighborhood, photo, company) comes from this row, so the claim
-  // link only needs the uuid.
-  const shopRow = shop ? await getShopByUuidPrefix(shop.slice(0, 8)) : null
+  // `shop` may be missing or repeated (?shop=a&shop=b arrives as an array).
+  // The first uuid group is the prefix the lookup expects, so only query when we
+  // have a well-formed 8-hex prefix — otherwise a malformed bound makes the
+  // lookup throw and turns /claim into a 500. Everything the page shows comes
+  // from this row.
+  const rawShop = Array.isArray(shop) ? shop[0] : shop
+  const prefix = rawShop?.slice(0, 8)
+  const shopRow = prefix && /^[0-9a-f]{8}$/i.test(prefix) ? await getShopByUuidPrefix(prefix) : null
 
   return (
     <div>

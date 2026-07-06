@@ -7,12 +7,20 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export async function POST(request: Request) {
   const body = await request.json()
   const { shop_id, contact_name, role, business_email, phone, social_media, message } = body
 
   if (!shop_id || !contact_name || !business_email) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+  }
+
+  // A non-uuid shop_id is bad client input, not a server error — reject it before
+  // querying so it 400s rather than surfacing as a DB error / apiError 500.
+  if (!UUID_RE.test(shop_id)) {
+    return NextResponse.json({ error: 'Invalid shop id' }, { status: 400 })
   }
 
   // Validate that the shop being claimed actually exists

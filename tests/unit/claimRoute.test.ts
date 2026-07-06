@@ -18,7 +18,7 @@ vi.mock('@supabase/supabase-js', () => ({
 }))
 
 const validClaim = {
-  shop_id: 'shop-uuid-123',
+  shop_id: '11111111-1111-1111-1111-111111111111',
   contact_name: 'Jane Roaster',
   business_email: 'jane@example.com',
 }
@@ -45,7 +45,14 @@ describe('Claim API Route - POST', () => {
   }
 
   test('rejects a claim missing a business email before touching the database', async () => {
-    const response = await post({ shop_id: 'shop-uuid-123', contact_name: 'Jane Roaster' })
+    const response = await post({ shop_id: '11111111-1111-1111-1111-111111111111', contact_name: 'Jane Roaster' })
+
+    expect(response.status).toBe(400)
+    expect(mockShopValidationResult).not.toHaveBeenCalled()
+  })
+
+  test('rejects a malformed shop_id with 400 before touching the database', async () => {
+    const response = await post({ ...validClaim, shop_id: 'not-a-uuid' })
 
     expect(response.status).toBe(400)
     expect(mockShopValidationResult).not.toHaveBeenCalled()
