@@ -3,6 +3,7 @@ import NearbyShops from './NearbyShops'
 import { ShopNews } from './ShopNews'
 import { ShopEvents } from './ShopEvents'
 import QuickActionsBar from './QuickActionsBar'
+import ClaimShopButton from './ClaimShopButton'
 import ShopLocation from './ShopLocation'
 import ShopRoaster from './ShopRoaster'
 import PhotoGrid from './PhotoGrid'
@@ -14,7 +15,7 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster } = props.shop.properties
+  const { address, photos, amenities, roaster, uuid, name } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
@@ -49,6 +50,11 @@ export default function PanelContent(props: IProps) {
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
+      </div>
+
+      <div className="px-4 sm:px-6 py-5 border-b border-stone-200 flex items-center justify-between gap-3">
+        <p className="text-sm text-gray-500">Work at {name}?</p>
+        <ClaimShopButton shopUUID={uuid} />
       </div>
 
       <NearbyShops shop={props.shop} />
