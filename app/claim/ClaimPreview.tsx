@@ -1,6 +1,7 @@
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 
 interface IProps {
+  // @TODO this should never be null
   name?: string
   subtitle?: string
   photo?: string
