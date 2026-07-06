@@ -150,6 +150,21 @@ describe('Claim API Route - POST', () => {
     expect(inserted.shop_id).toBeUndefined()
   })
 
+  test('resolves a company-owned roaster claim up to company_id', async () => {
+    // A roaster with a company_id is owned by that company, so the claim must
+    // persist against company_id even when the request says claim_type: 'roaster'.
+    const ROASTER_ID = '33333333-3333-3333-3333-333333333333'
+    mockEntityValidation.mockResolvedValueOnce({ data: { id: ROASTER_ID, company_id: COMPANY_ID }, error: null })
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: null })
+
+    const response = await post({ ...validClaim, claim_type: 'roaster', target_id: ROASTER_ID })
+
+    expect(response.status).toBe(201)
+    const inserted = mockInsertResult.mock.calls[0][0][0]
+    expect(inserted.company_id).toBe(COMPANY_ID)
+    expect(inserted.roaster_id).toBeUndefined()
+  })
+
   test('returns 500 when the claim insert fails', async () => {
     mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID }, error: null })
     mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'insert failed' } })
