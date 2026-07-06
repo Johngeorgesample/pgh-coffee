@@ -16,7 +16,7 @@ const HEADINGS: Record<ClaimType, string> = {
 }
 
 // A search param can repeat (?shop=a&shop=b arrives as an array); take the first.
-function first(value?: string | string[]): string | undefined {
+const first = (value?: string | string[]) => {
   return Array.isArray(value) ? value[0] : value
 }
 
@@ -39,6 +39,7 @@ export default async function ClaimAListing({ searchParams }: TProps) {
         </div>
       </header>
 
+      {/* @TODO should never be null */}
       {target ? (
         <>
           <ClaimPreview name={target.name} subtitle={target.subtitle} photo={target.photo} />
