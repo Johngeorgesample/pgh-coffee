@@ -1,14 +1,20 @@
 import Link from 'next/link'
 import { Footer } from '@/app/components/about'
+import { getShopByUuidPrefix } from '@/app/utils/shops'
 import ClaimShopPreview from './ClaimShopPreview'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
-  searchParams: Promise<{ shop?: string; name?: string; neighborhood?: string; company?: string }>
+  searchParams: Promise<{ shop?: string }>
 }
 
 export default async function ClaimAShop({ searchParams }: TProps) {
-  const { shop, name, neighborhood, company } = await searchParams
+  const { shop } = await searchParams
+
+  // The first uuid group is the prefix the lookup expects. Everything the page
+  // shows (name, neighborhood, photo, company) comes from this row, so the claim
+  // link only needs the uuid.
+  const shopRow = shop ? await getShopByUuidPrefix(shop.slice(0, 8)) : null
 
   return (
     <div>
@@ -26,8 +32,13 @@ export default async function ClaimAShop({ searchParams }: TProps) {
 
       {shop ? (
         <>
-          <ClaimShopPreview shopId={shop} name={name} neighborhood={neighborhood} />
-          <ClaimForm shopId={shop} shopName={name ?? 'this shop'} neighborhood={neighborhood} companyName={company} />
+          <ClaimShopPreview name={shopRow?.name} neighborhood={shopRow?.neighborhood} photo={shopRow?.photo ?? undefined} />
+          <ClaimForm
+            shopId={shop}
+            shopName={shopRow?.name ?? 'this shop'}
+            neighborhood={shopRow?.neighborhood}
+            companyName={shopRow?.company?.name}
+          />
         </>
       ) : (
         <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
