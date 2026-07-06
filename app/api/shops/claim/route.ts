@@ -10,7 +10,16 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export async function POST(request: Request) {
-  const body = await request.json()
+  let body
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+
   const { shop_id, contact_name, role, business_email, phone, social_media, message } = body
 
   if (!shop_id || !contact_name || !business_email) {

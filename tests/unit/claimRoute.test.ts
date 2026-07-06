@@ -51,6 +51,19 @@ describe('Claim API Route - POST', () => {
     expect(mockShopValidationResult).not.toHaveBeenCalled()
   })
 
+  test('rejects an invalid JSON body with 400', async () => {
+    const response = await POST(
+      new Request('http://localhost:3000/api/shops/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{not valid json',
+      })
+    )
+
+    expect(response.status).toBe(400)
+    expect(mockShopValidationResult).not.toHaveBeenCalled()
+  })
+
   test('rejects a malformed shop_id with 400 before touching the database', async () => {
     const response = await post({ ...validClaim, shop_id: 'not-a-uuid' })
 
