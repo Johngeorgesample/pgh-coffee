@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Footer } from '@/app/components/about'
+import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimForm from './ClaimForm'
 
 interface TProps {
@@ -24,7 +25,21 @@ export default async function ClaimAShop({ searchParams }: TProps) {
       </header>
 
       {shop ? (
-        <ClaimForm shopId={shop} shopName={name ?? 'this shop'} neighborhood={neighborhood} companyName={company} />
+        <>
+          {name && (
+            <section className="max-w-2xl mx-auto px-6 pb-8">
+              <p className="text-sm text-slate-500 text-center mb-3">Here's how your listing will look:</p>
+              <div className="rounded-xl border border-stone-200 bg-white px-5 py-4 shadow-sm">
+                <div className="flex items-center gap-1.5">
+                  <h2 className="text-2xl font-serif font-normal tracking-tight">{name}</h2>
+                  <VerifiedBadge className="mt-0.5" />
+                </div>
+                {neighborhood && <p className="text-base text-slate-500 mt-0.5">{neighborhood}</p>}
+              </div>
+            </section>
+          )}
+          <ClaimForm shopId={shop} shopName={name ?? 'this shop'} neighborhood={neighborhood} companyName={company} />
+        </>
       ) : (
         <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
           <p className="text-lg text-slate-600">
