@@ -9,11 +9,11 @@
 --               API as `properties.verified` and drives the panel badge.
 -- verified_at — when verification was granted, for audit and so a shop can be
 --               cleanly un-verified later.
---
--- NOTE: a link back to the claim that granted verification
--- (e.g. verified_claim_id uuid REFERENCES claims(id)) is intentionally left
--- out until claims is actually live in Supabase — a FK to a not-yet-created
--- table would fail to apply. Add it in the same migration that creates claims.
+-- verified_claim_id — the claim that granted verification, for provenance when a
+--               claim is reviewed by hand. FK to claims(id), so apply
+--               claims-schema.sql before this file. ON DELETE SET NULL: pruning a
+--               claim drops the link, it doesn't un-verify the shop.
 
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS is_verified boolean NOT NULL DEFAULT false;
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS verified_at timestamptz;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS verified_claim_id uuid REFERENCES claims(id) ON DELETE SET NULL;

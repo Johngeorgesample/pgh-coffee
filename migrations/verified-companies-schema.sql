@@ -9,6 +9,9 @@
 --               hand-reviewed claims row targeting the company). Surfaced through
 --               /api/companies/[company] and drives the company page badge.
 -- verified_at — when verification was granted, for audit and clean un-verifying.
+-- verified_claim_id — the claim that granted verification, for provenance. FK to
+--               claims(id), so apply claims-schema.sql before this file.
 
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS is_verified boolean NOT NULL DEFAULT false;
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS verified_at timestamptz;
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS verified_claim_id uuid REFERENCES claims(id) ON DELETE SET NULL;
