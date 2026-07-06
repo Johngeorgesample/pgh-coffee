@@ -1,9 +1,7 @@
 'use client'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
-import PhotoDialog from './PhotoDialog'
 import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
 
