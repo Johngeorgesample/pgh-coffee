@@ -98,3 +98,9 @@ Coffee shops must meet these criteria (enforced in submission form):
 ### Distance Units
 
 User preference for distance units (miles/kilometers) is stored in localStorage with key `distanceUnits`. Default is miles.
+
+## Working agreement
+
+- Before saying a change is done, run `npm run lint` and `npm test` and report the actual result. Don't claim it works without exercising it.
+- Non-trivial logic (a branch, a parser, a money/auth path) leaves one runnable check behind — not a suite, just the smallest test that fails if the logic breaks.
+- If you're unsure why something breaks, say so and investigate. Don't guess at a fix and present it as certain.
