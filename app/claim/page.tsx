@@ -27,9 +27,6 @@ const entryFrom = (params: Awaited<TProps['searchParams']>) => ({
   roaster: first(params.roaster),
 })
 
-// Give a claim link a target-specific unfurl so it sells itself when shared in a
-// DM, instead of the generic site card. Falls back to the site default when the
-// link has no resolvable target.
 export async function generateMetadata({ searchParams }: TProps): Promise<Metadata> {
   const entry = entryFrom(await searchParams)
   const target = entry.shop || entry.company || entry.roaster ? await resolveClaimTarget(entry) : null
