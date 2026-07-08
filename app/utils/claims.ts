@@ -8,8 +8,6 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// What the claim page shows and the form submits. `id` is the value that lands in
-// the matching claims.{type}_id column.
 export interface ClaimTarget {
   type: ClaimType
   id: string
@@ -24,6 +22,7 @@ export interface ClaimTarget {
 // A company owns its shops and its roaster, and one person owns the company, so a
 // claim always targets the company when one exists. Count what it covers off
 // company_id only — a shop's roaster_id is "serves this coffee", not ownership.
+// @TODO why are we making DB calls here?
 async function companyTarget(id: string, name: string): Promise<ClaimTarget> {
   const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
     supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id),
