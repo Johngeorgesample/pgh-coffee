@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { Footer } from '@/app/components/about'
 import { resolveClaimTarget } from '@/app/utils/claims'
 import type { ClaimType } from '@/types/claim-types'
@@ -20,9 +21,30 @@ const first = (value?: string | string[]) => {
   return Array.isArray(value) ? value[0] : value
 }
 
+const entryFrom = (params: Awaited<TProps['searchParams']>) => ({
+  shop: first(params.shop),
+  company: first(params.company),
+  roaster: first(params.roaster),
+})
+
+export async function generateMetadata({ searchParams }: TProps): Promise<Metadata> {
+  const entry = entryFrom(await searchParams)
+  const target = entry.shop || entry.company || entry.roaster ? await resolveClaimTarget(entry) : null
+  if (!target) return {}
+
+  const title = `Claim ${target.name} · pgh.coffee`
+  const description = 'Verify your listing to get a verified badge and a head start managing it when self-serve editing launches.'
+  const images = target.photo ? [target.photo] : undefined
+  return {
+    title,
+    description,
+    openGraph: { title, description, images },
+    twitter: { card: 'summary_large_image', title, description, images },
+  }
+}
+
 export default async function ClaimAListing({ searchParams }: TProps) {
-  const params = await searchParams
-  const entry = { shop: first(params.shop), company: first(params.company), roaster: first(params.roaster) }
+  const entry = entryFrom(await searchParams)
   const hasEntry = Boolean(entry.shop || entry.company || entry.roaster)
   const target = hasEntry ? await resolveClaimTarget(entry) : null
 
