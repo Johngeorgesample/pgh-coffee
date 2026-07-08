@@ -11,6 +11,7 @@ export interface TCompany {
   website: string
   description: string
   instagram_handle: string
+  is_verified?: boolean
   shops?: DbShop[]
   roaster?: { name: string; slug: string } | null
 }
@@ -33,6 +34,7 @@ export interface DbShop {
   roasterRef?: { name: string; slug: string; company_id: string | null } | null
   amenities?: string[]
   description?: string | null
+  is_verified?: boolean
 }
 
 // The roaster a shop serves, plus whether it's the shop's own in-house roaster.
@@ -61,6 +63,7 @@ export interface TShop {
     amenities?: string[]
     roaster?: TShopRoaster | null
     description?: string | null
+    verified?: boolean
     selected?: boolean
   }
   geometry: {
