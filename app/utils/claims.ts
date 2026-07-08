@@ -23,7 +23,7 @@ export interface ClaimTarget {
 // claim always targets the company when one exists. Count what it covers off
 // company_id only — a shop's roaster_id is "serves this coffee", not ownership.
 // @TODO why are we making DB calls here?
-async function companyTarget(id: string, name: string): Promise<ClaimTarget> {
+async function companyTarget(id: string, name: string, logo?: string | null): Promise<ClaimTarget> {
   const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
     supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id),
     supabase.from('roaster').select('id').eq('company_id', id).limit(1),
@@ -32,7 +32,7 @@ async function companyTarget(id: string, name: string): Promise<ClaimTarget> {
   // if a query fails — mirrors getShopByUuidPrefix, which throws on query failure.
   if (countError) throw new Error(`Failed to count company shops: ${countError.message}`)
   if (roasterError) throw new Error(`Failed to look up company roaster: ${roasterError.message}`)
-  return { type: 'company', id, name, locationCount: count ?? 0, hasRoaster: (roasters?.length ?? 0) > 0 }
+  return { type: 'company', id, name, photo: logo ?? undefined, locationCount: count ?? 0, hasRoaster: (roasters?.length ?? 0) > 0 }
 }
 
 // Resolve a `/claim` entry (shop uuid, company slug, or roaster slug) to the entity
@@ -44,16 +44,16 @@ export async function resolveClaimTarget(params: {
 }): Promise<ClaimTarget | null> {
   if (params.company) {
     const company = await getCompanyBySlug(params.company)
-    return company ? companyTarget(company.id, company.name) : null
+    return company ? companyTarget(company.id, company.name, company.logo) : null
   }
 
   if (params.roaster) {
     const roaster = await getRoasterBySlug(params.roaster)
     if (!roaster) return null
     if (roaster.company_id && roaster.company) {
-      return companyTarget(roaster.company.id, roaster.company.name)
+      return companyTarget(roaster.company.id, roaster.company.name, roaster.company.logo)
     }
-    return { type: 'roaster', id: roaster.id, name: roaster.name }
+    return { type: 'roaster', id: roaster.id, name: roaster.name, photo: roaster.logo ?? undefined }
   }
 
   if (params.shop) {
@@ -63,7 +63,7 @@ export async function resolveClaimTarget(params: {
     if (!/^[0-9a-f]{8}$/i.test(prefix)) return null
     const shop = await getShopByUuidPrefix(prefix)
     if (!shop) return null
-    if (shop.company) return companyTarget(shop.company.id, shop.company.name)
+    if (shop.company) return companyTarget(shop.company.id, shop.company.name, shop.company.logo)
     return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined }
   }
 
