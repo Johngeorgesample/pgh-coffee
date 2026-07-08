@@ -118,4 +118,20 @@ describe('PanelContent', () => {
 
     expect(container.querySelector(descriptionSelector)).toBeNull()
   })
+
+  it('renders the claim button when the shop is not verified', () => {
+    render(<PanelContent {...defaultProps} />)
+
+    expect(screen.getByRole('link', { name: /Claim this shop/ })).toBeInTheDocument()
+  })
+
+  it('hides the claim button when the shop is verified', () => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, verified: true },
+    }
+    render(<PanelContent {...defaultProps} shop={shop} />)
+
+    expect(screen.queryByRole('link', { name: /Claim this shop/ })).toBeNull()
+  })
 })

@@ -153,10 +153,12 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           <p className="text-sm text-gray-600 leading-relaxed">{roaster.description}</p>
         )}
 
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <p className="text-sm text-gray-500">Run {roaster.name}?</p>
-          <ClaimButton href={`/claim?roaster=${slug}`} label="Claim this roaster" />
-        </div>
+        {!roaster.is_verified && (
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <p className="text-sm text-gray-500">Run {roaster.name}?</p>
+            <ClaimButton href={`/claim?roaster=${slug}`} label="Claim this roaster" />
+          </div>
+        )}
 
         {roaster.shops && roaster.shops.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200">
