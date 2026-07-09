@@ -7,6 +7,7 @@ import { isPast } from '@/app/utils/utils'
 import { buildShopSlug } from '@/app/utils/shopSlug'
 import { EventCardData } from './EventCard'
 import CopyLinkToast from './CopyLinkToast'
+import VerifiedBadge from './VerifiedBadge'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -148,8 +149,9 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   onClick={handleShopClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
-                  <div className="text-slate-900 font-bold text-[15px]">
+                  <div className="flex items-center gap-1 text-slate-900 font-bold text-[15px]">
                     {event.shop.name}
+                    {(event.shop.is_verified || event.shop.company?.is_verified) && <VerifiedBadge />}
                   </div>
                   <div className="text-sm text-gray-500 mt-0.5">
                     {event.shop.neighborhood}
@@ -176,8 +178,9 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   onClick={handleRoasterClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
-                  <div className="text-slate-900 font-bold text-[15px]">
+                  <div className="flex items-center gap-1 text-slate-900 font-bold text-[15px]">
                     {event.roaster.name}
+                    {event.roaster.is_verified && <VerifiedBadge />}
                   </div>
                 </button>
               </div>
