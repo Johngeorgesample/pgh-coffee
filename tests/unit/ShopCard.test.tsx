@@ -114,6 +114,26 @@ describe('ShopCard', () => {
     expect(handleShopSelectMock).toHaveBeenCalledWith(mockShop)
   })
 
+  it('shows verified badge for a verified shop', () => {
+    const shop = { ...mockShop, properties: { ...mockShop.properties, verified: true } }
+    render(<ShopCard {...defaultProps} shop={shop} />)
+    expect(screen.getByText('Verified')).toBeTruthy()
+  })
+
+  it('shows verified badge when the owning company is verified', () => {
+    const shop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, company: { is_verified: true } },
+    } as TShop
+    render(<ShopCard {...defaultProps} shop={shop} />)
+    expect(screen.getByText('Verified')).toBeTruthy()
+  })
+
+  it('shows no verified badge for an unverified shop', () => {
+    render(<ShopCard {...defaultProps} />)
+    expect(screen.queryByText('Verified')).toBeNull()
+  })
+
   it('has correct accessibility attributes', () => {
     render(<ShopCard {...defaultProps} />)
     const card = screen.getByRole('button')
