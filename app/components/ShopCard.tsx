@@ -1,6 +1,7 @@
 'use client'
 
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import VerifiedBadge from './VerifiedBadge'
 import { TShop } from '@/types/shop-types'
 import { TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -81,7 +82,10 @@ export default function ShopCard(props: IProps) {
       <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.7),transparent_100%)]"></div>
       <div className="px-2 py-1 absolute bottom-0 w-full">
         {!props.hideShopName && (
-          <p className="font-medium text-white text-2xl text-left block">{props.shop.properties.name}</p>
+          <p className="font-medium text-white text-2xl text-left flex items-center gap-1.5">
+            <span className="truncate">{props.shop.properties.name}</span>
+            {(props.shop.properties.verified || props.shop.properties.company?.is_verified) && <VerifiedBadge />}
+          </p>
         )}
         <div className="flex justify-between mt-1">
           <p className="w-fit text-sm mb-1 text-left text-white border border-transparent flex items-center gap-1">

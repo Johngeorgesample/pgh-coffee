@@ -40,7 +40,7 @@ export const getPublicProfile = cache(async (id: string): Promise<PublicProfile 
 
   const { data: visitsData, error: visitsError } = await supabase
     .from('user_visits')
-    .select('id, created_at, shop:shops (*)')
+    .select('id, created_at, shop:shops (*, company:company_id (*))')
     .eq('user_id', profile.user_id)
     .order('created_at', { ascending: false })
 
