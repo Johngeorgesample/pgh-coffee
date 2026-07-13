@@ -53,7 +53,7 @@ export default function SubmitForm() {
         console.error('Error:', errorResponse.error)
         setIsSubmitting(false)
       } else {
-        getFaro()?.api.pushEvent('shop_submitted', { neighborhood: data.neighborhood ?? '' })
+        getFaro()?.api.pushEvent('shop_submitted', { name: data.name })
         setSuccessDialogIsOpen(true)
         submitForm.current?.reset()
         setNeighborhoodValue('')
