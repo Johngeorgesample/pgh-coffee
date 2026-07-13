@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { getFaro } from '@/lib/faro'
 
 interface AuthFormProps {
   onSuccess: () => void
@@ -42,6 +43,8 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
           setError('An account with this email already exists. Please sign in instead.')
           return
         }
+
+        getFaro()?.api.pushEvent('account_created')
 
         if (data.user && !data.session) {
           setError('Please check your email to confirm your account before signing in.')

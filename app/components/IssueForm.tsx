@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { TShop } from '@/types/shop-types'
+import { getFaro } from '@/lib/faro'
 
 interface IProps {
   shop: TShop
@@ -72,6 +73,7 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
         setError('Something went wrong submitting your correction. Please try again.')
         setIsSubmitting(false)
       } else {
+        getFaro()?.api.pushEvent('shop_reported', { shop_id: shop.properties.uuid })
         setIsSubmitting(false)
         onSuccess()
       }

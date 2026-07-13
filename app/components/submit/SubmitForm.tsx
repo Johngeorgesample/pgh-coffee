@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
 import { neighborhoods } from '@/data/neighborhoods'
+import { getFaro } from '@/lib/faro'
 import SuccessDialog from '@/app/submit-a-shop/SuccessDialog'
 import { InfoIcon } from 'lucide-react'
 
@@ -52,6 +53,7 @@ export default function SubmitForm() {
         console.error('Error:', errorResponse.error)
         setIsSubmitting(false)
       } else {
+        getFaro()?.api.pushEvent('shop_submitted', { neighborhood: data.neighborhood ?? '' })
         setSuccessDialogIsOpen(true)
         submitForm.current?.reset()
         setNeighborhoodValue('')
