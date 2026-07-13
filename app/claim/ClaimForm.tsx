@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import { getFaro } from '@/lib/faro'
 import type { ClaimTarget } from '@/app/utils/claims'
 import ClaimSuccessDialog from './ClaimSuccessDialog'
 
@@ -74,6 +75,7 @@ export default function ClaimForm({ target }: TProps) {
         setError(errorResponse.error ?? 'Something went wrong. Please try again.')
         setIsSubmitting(false)
       } else {
+        getFaro()?.api.pushEvent('claim_submitted', { claim_type: target.type, target_id: target.id })
         setSuccessDialogIsOpen(true)
         claimForm.current?.reset()
         setIsSubmitting(false)
