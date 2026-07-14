@@ -38,8 +38,7 @@ export async function generateMetadata({ searchParams }: TProps): Promise<Metada
   return {
     title,
     description,
-    openGraph: { title, description, images },
-    twitter: { card: 'summary_large_image', title, description, images },
+    openGraph: { siteName: 'pgh.coffee', title, description, images },
   }
 }
 
