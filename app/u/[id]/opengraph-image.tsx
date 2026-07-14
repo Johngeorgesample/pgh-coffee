@@ -141,6 +141,9 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             <Stat value={stats.topNeighborhood} label="top neighborhood" valueSize={40} />
           )}
         </div>
+        <div style={{ fontSize: 30, fontWeight: 600, color: gray900 }}>
+          Track your own coffee passport at pgh.coffee &rarr;
+        </div>
       </Card>
     ),
     size,

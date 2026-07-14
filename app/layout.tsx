@@ -13,26 +13,25 @@ const inter = Inter({ subsets: ['latin'] })
 const organizationJsonLd = buildOrganizationJsonLd()
 const websiteJsonLd = buildWebsiteJsonLd()
 
+const siteDescription =
+  "A guide to independent coffee in Pittsburgh, PA. Explore shops across the city's neighborhoods and track your visits with a coffee passport."
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  title: 'pgh.coffee',
+  description: siteDescription,
+  // No images here: app/opengraph-image.tsx provides the site-default og:image
+  // and survives child routes' openGraph objects (config images replace this
+  // whole object wholesale, which is how the old static image kept vanishing).
   openGraph: {
+    siteName: 'pgh.coffee',
     title: 'pgh.coffee',
-    description: 'A guide to coffee in Pittsburgh, PA',
-    images: [
-      {
-        url: 'https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/pgh-coffee-misc/opengraph-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'A guide to coffee in Pittsburgh, PA',
-      },
-    ],
+    description: siteDescription,
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'pgh.coffee',
-    description: 'A guide to coffee in Pittsburgh, PA',
-    images: ['https://uljutxoijtvtcxvatqso.supabase.co/storage/v1/object/public/pgh-coffee-misc/twitter-image.png'],
-  },
+  // Card type only: title/description/image intentionally unset so X falls back
+  // to the og:* tags, letting per-route openGraph (and file-based opengraph-image)
+  // drive Twitter cards instead of this layout's static values leaking everywhere.
+  twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {
