@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 import { getPublicProfile } from '@/app/utils/profiles'
 import { computeStats } from '@/app/utils/visitStats'
 
@@ -67,10 +68,17 @@ function Card({ children }: { children: React.ReactNode }) {
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [profile, { data: shops }] = await Promise.all([
+  const [profile, { data: shops, error: shopsError }] = await Promise.all([
     getPublicProfile(id),
     supabase.from('shops').select('neighborhood'),
   ])
+
+  // Fail loudly rather than render "69 of 0": social crawlers cache the image,
+  // so a transient DB error would be presented as truth long after it resolves.
+  if (shopsError) {
+    logger.error('Error fetching shop totals for OG image', { error: shopsError.message })
+    throw new Error('Failed to load shop totals')
+  }
 
   if (!profile) {
     return new ImageResponse(
@@ -88,7 +96,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const total = shops?.length ?? 0
   const totalNeighborhoods = new Set(shops?.map((s) => s.neighborhood).filter(Boolean)).size
   const stats = computeStats(profile.visits, total, totalNeighborhoods)
-  // ponytail: no avatar — an unreachable avatar URL would fail the whole image render
   const name = profile.displayName || 'Coffee lover'
 
   return new ImageResponse(
