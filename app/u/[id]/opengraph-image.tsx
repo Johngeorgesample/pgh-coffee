@@ -18,6 +18,11 @@ const logoSrc = `data:image/png;base64,${readFileSync(
   join(process.cwd(), 'public', 'logo_with_no_text_transparent_108.png'),
 ).toString('base64')}`
 
+// Full-size (2000px) logo so the oversized watermark stays crisp.
+const watermarkSrc = `data:image/png;base64,${readFileSync(
+  join(process.cwd(), 'public', 'logo_with_no_text_transparent.png'),
+).toString('base64')}`
+
 const yellow = '#fde047' // matches nav bg-yellow-300
 const gray900 = '#111827'
 const gray500 = '#6b7280'
@@ -33,7 +38,31 @@ function Stat({ value, label, valueSize = 64 }: { value: string; label: string; 
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: 'white' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        // Cream + dot grid: passport-page texture instead of stark white.
+        // SVG tile because satori doesn't tile radial-gradient patterns.
+        backgroundColor: '#fffbeb',
+        backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
+          `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='4' cy='4' r='2.5' fill='#e0ddd2'/></svg>`,
+        )}")`,
+        backgroundSize: '32px 32px',
+        backgroundRepeat: 'repeat',
+      }}
+    >
+      {/* Faint keystone watermark; header and stats draw over it. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={watermarkSrc}
+        width={520}
+        height={520}
+        alt=""
+        style={{ position: 'absolute', right: -70, bottom: -90, opacity: 0.06 }}
+      />
       <div
         style={{
           display: 'flex',
@@ -41,13 +70,13 @@ function Card({ children }: { children: React.ReactNode }) {
           gap: 16,
           background: yellow,
           padding: '24px 64px',
-          fontSize: 40,
+          fontSize: '4.5rem',
           fontWeight: 700,
           color: gray900,
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoSrc} width={48} height={48} alt="" />
+        <img src={logoSrc} width={90} height={90} alt="" />
         pgh.coffee
       </div>
       <div
