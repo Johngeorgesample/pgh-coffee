@@ -103,9 +103,9 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
  * Builds OG/Twitter metadata for a shop page from real shop data. Now that shops
  * live at a real `/shops/{slug}` path, canonical/og:url are expressed through the
  * metadata API (resolved against metadataBase in the root layout).
- * Image/photo fields are only set when present. (Note: this openGraph object
- * replaces the layout's wholesale, so a photo-less shop would emit no og:image —
- * every shop currently has a photo, so this stays theoretical.)
+ * This openGraph object replaces the layout's wholesale, so a photo-less shop
+ * falls back to the site-default OG image rather than emitting no og:image
+ * (photo is nullable in the DB even though every shop currently has one).
  */
 export function buildShopMetadata(shop: DbShop): Metadata {
   const title = `${shop.name} | ${shop.neighborhood} | pgh.coffee`
@@ -129,9 +129,9 @@ export function buildShopMetadata(shop: DbShop): Metadata {
     // inherited and X falls back to these og:* tags for title/description/image.
   }
 
-  if (shop.photo) {
-    metadata.openGraph!.images = [{ url: shop.photo, alt: shop.name }]
-  }
+  metadata.openGraph!.images = shop.photo
+    ? [{ url: shop.photo, alt: shop.name }]
+    : ['/opengraph-image']
 
   return metadata
 }
