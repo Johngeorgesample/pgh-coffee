@@ -21,8 +21,10 @@ export const metadata: Metadata = {
   title: 'pgh.coffee',
   description: siteDescription,
   // No images here: app/opengraph-image.tsx provides the site-default og:image
-  // and survives child routes' openGraph objects (config images replace this
-  // whole object wholesale, which is how the old static image kept vanishing).
+  // for routes that don't define their own openGraph. It does NOT survive a
+  // child route's openGraph object (that replaces the parent's wholesale, images
+  // included) — which is why segments defining openGraph either set an image or
+  // re-export the default via their own opengraph-image.tsx.
   openGraph: {
     siteName: 'pgh.coffee',
     title: 'pgh.coffee',

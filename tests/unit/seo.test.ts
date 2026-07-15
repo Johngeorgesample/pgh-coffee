@@ -193,11 +193,13 @@ describe('buildShopMetadata', () => {
     expect(metadata.twitter).toBeUndefined()
   })
 
-  test('omits image fields when the shop has no photo, allowing site default to be inherited', () => {
+  test('falls back to the site-default OG image when the shop has no photo', () => {
+    // The openGraph object replaces the layout's wholesale, so without an
+    // explicit fallback a photo-less shop would emit no og:image at all.
     const shop: DbShop = { ...baseShop, photo: null }
     const metadata = buildShopMetadata(shop)
 
-    expect(metadata.openGraph?.images).toBeUndefined()
+    expect(metadata.openGraph?.images).toEqual(['/opengraph-image'])
     expect(metadata.twitter).toBeUndefined()
   })
 
