@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { TShop } from '@/types/shop-types'
 import IssueForm from './IssueForm'
 
@@ -14,9 +14,15 @@ interface Props {
 export default function IssueModal({ isOpen, onClose, onSuccess, shop }: Props) {
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <DialogBackdrop
+        transition
+        className="fixed inset-0 bg-black/30 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in"
+      />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="relative max-w-md w-full bg-white rounded-xl p-6 shadow-xl">
+        <DialogPanel
+          transition
+          className="relative max-w-md w-full bg-white rounded-xl p-6 shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in sm:data-closed:translate-y-0 sm:data-closed:scale-95"
+        >
           <button
             type="button"
             onClick={onClose}
