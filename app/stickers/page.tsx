@@ -31,11 +31,10 @@ export default function Stickers() {
           </div>
 
           <div className="relative">
-            {/* ponytail: placeholder until a real sticker photo exists — swap the src, keep the frame */}
             <img
               alt="pgh.coffee sticker"
               className="rounded-2xl shadow-2xl object-cover h-[500px] w-full"
-              src="/logo_with_background_with_text.jpeg"
+              src="/stickers.jpg"
             />
           </div>
         </div>
