@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Mail, Coffee } from 'lucide-react'
 import { Footer } from '@/app/components/about'
+import { buildShopPath } from '@/app/utils/seo'
+
+// Shops I've dropped a stack off at. Hand-maintained: if a shop runs out, pull it.
+const STICKER_SHOPS = [
+  { name: 'Dynamic Coffee: La Galeria', neighborhood: 'East Liberty', uuid: 'fa42ce7e-6cca-4f61-930f-f3a52bd6e015' },
+]
 
 export const metadata: Metadata = {
   title: 'Stickers | pgh.coffee',
@@ -36,34 +41,34 @@ export default function Stickers() {
         </div>
       </header>
 
-      <section className="max-w-4xl mx-auto px-6 pb-20 space-y-12">
-        <div className="text-center">
-          <h2 className="text-4xl font-black tracking-tight mb-4">How to get one</h2>
+      <section className="max-w-2xl mx-auto px-6 pb-20 space-y-10">
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Want one mailed to you?</h2>
+          <p className="text-lg text-slate-600 leading-relaxed">
+            <a className="font-bold text-slate-900 underline underline-offset-4 hover:text-yellow-600" href={MAILTO}>
+              Send me an address.
+            </a>{' '}
+            Anywhere in the world, no charge. I only use it to mail the sticker.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="border-2 border-gray-200 rounded-2xl p-8 space-y-4">
-            <Coffee className="text-yellow-500" size={32} />
-            <h3 className="text-2xl font-bold">Find one in the wild</h3>
-            <p className="text-slate-600 leading-relaxed">
-              A growing number of shops keep a stack by the register. Order something, ask nicely, take one.
-            </p>
-            <Link className="inline-block font-bold underline underline-offset-4 hover:text-yellow-600" href="/">
-              Browse the map
-            </Link>
-          </div>
-
-          <div className="border-2 border-gray-200 rounded-2xl p-8 space-y-4">
-            <Mail className="text-yellow-500" size={32} />
-            <h3 className="text-2xl font-bold">Have one mailed to you</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Anywhere in the world, no charge, no catch. Send me an address and I&apos;ll put one in an envelope. I only
-              use it to mail the sticker.
-            </p>
-            <a className="inline-block font-bold underline underline-offset-4 hover:text-yellow-600" href={MAILTO}>
-              Email me an address
-            </a>
-          </div>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Out and about?</h2>
+          <p className="text-lg text-slate-600 leading-relaxed">
+            Order something and ask — stickers live by the register at:
+          </p>
+          <ul className="list-disc pl-5 space-y-2">
+            {STICKER_SHOPS.map(shop => (
+              <li key={shop.uuid} className="text-lg text-slate-600 leading-relaxed">
+                <Link
+                  className="font-bold text-slate-900 underline underline-offset-4 hover:text-yellow-600"
+                  href={buildShopPath(shop)}
+                >
+                  {shop.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
