@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Footer } from '@/app/components/about'
 import { buildShopPath } from '@/app/utils/seo'
 
-// Shops I've dropped a stack off at. Hand-maintained: if a shop runs out, pull it.
 const STICKER_SHOPS = [
   { name: 'Dynamic Coffee: La Galeria', neighborhood: 'East Liberty', uuid: 'fa42ce7e-6cca-4f61-930f-f3a52bd6e015' },
 ]
