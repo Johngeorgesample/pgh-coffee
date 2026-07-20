@@ -5,6 +5,8 @@ import { buildShopPath } from '@/app/utils/seo'
 
 const STICKER_SHOPS = [
   { name: 'Dynamic Coffee: La Galeria', neighborhood: 'East Liberty', uuid: 'fa42ce7e-6cca-4f61-930f-f3a52bd6e015' },
+  { name: "Delanie's Coffee", neighborhood: 'Shadyside', uuid: '82252d12-3e03-4116-8d76-33b5849aea2b' },
+  { name: 'Commonplace Coffee', neighborhood: 'Shadyside', uuid: 'd2aafc02-2f93-4e08-8651-34cfe925f9a6' },
 ]
 
 export const metadata: Metadata = {
