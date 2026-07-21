@@ -58,7 +58,7 @@ The application is available at <http://localhost:3000>.
 This project uses [Vitest](https://vitest.dev/) for the tests.
 The `/tests/unit` directory contains the test files.
 
-To run all the tests, do this step:
+To run all the tests, do this:
 
 ```bash
 npm test
