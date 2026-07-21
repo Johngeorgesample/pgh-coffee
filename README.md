@@ -72,7 +72,7 @@ For the endpoints and the response schemas, refer to [pgh.coffee/api-docs](https
 
 ## License
 
-The MIT License applies to this project. For more data, refer to the LICENSE file.
+The MIT License applies to this project. For more information, refer to the LICENSE file.
 
 ## Credits
 
