@@ -2,74 +2,78 @@
 
 <https://pgh.coffee/>
 
-<img width="3537" height="2055" alt="Screenshot of UI" src="public/readme_screenshot.png" />
+<img width="3537" height="2055" alt="Screenshot of the UI" src="public/readme_screenshot.png" />
 
+This repository contains the source code for pgh.coffee.
+The website helps users to find coffee shops in Pittsburgh, PA.
+The website uses Next.js for the application.
+It uses Supabase for the PostgreSQL database.
+It uses Zustand for state control and Tailwind CSS for styles.
 
-This repository contains the source code for pgh.coffee — a website focused on helping users discover coffee shops in Pittsburgh, PA. The site uses Next.js, Supabase for its PostgreSQL database, Zustand for state management, and Tailwind CSS for styling.
-
-## Table of Contents
+## Contents
 - [Overview](#overview)
-- [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Tests](#tests)
 - [API Documentation](#api-documentation)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Credits](#credits)
 
-## Getting Started
+## Installation
 
-Follow these steps to get started with the project:
-
-1. **Clone the Repository:**
+1. **Clone the repository.**
 
 ```bash
 git clone https://github.com/johngeorgeample/pgh-coffee.git
 cd pgh-coffee
 ```
 
-2. **Install Dependencies:**
+2. **Install the dependencies.**
 
-```
+```bash
 npm install
 ```
 
-3. **Get Mapbox Access Token**
+3. **Get a Mapbox access token.**
 
-- Visit [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/) and create an access token with all Public scopes checked.
-- Duplicate `.env.example` as `.env` and enter your Mapbox Access Token.
+- Go to [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/).
+- Create an access token. Select all the Public scopes.
 
-4. **Set up database**
+4. **Make the environment file.**
 
-_Coming soon_
+- Copy `.env.example` to `.env`.
+- Put your Mapbox access token in `MAPBOX_ACCESS_TOKEN`.
+- Put your Supabase project URL in `NEXT_PUBLIC_SUPABASE_URL`.
+- Put your Supabase anonymous key in `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
-5. **Run the Next.js App:**
+5. **Start the development server.**
 
-```
+```bash
 npm run dev
 ```
 
-The app will be accessible at <http://localhost:3000>.
+The application is available at <http://localhost:3000>.
 
 ## Tests
 
-This project uses [Vitest](https://vitest.dev/) as its testing framework. Tests are located in the `/tests/unit` directory.
+This project uses [Vitest](https://vitest.dev/) for the tests.
+The `/tests/unit` directory contains the test files.
 
-### Running Tests
+To run all the tests, do this step:
 
 ```bash
-# Run all tests
-npm run test
+npm test
 ```
 
 ## API Documentation
 
-If you’re interested in the dataset, pgh.coffee provides a public API that you can use to access information about coffee shops in Pittsburgh.
+pgh.coffee gives a public API. Use the API to get data about the coffee shops in Pittsburgh.
 
-Full API documentation, including endpoints and response schemas, is available at [pgh.coffee/api-docs](https://pgh.coffee/api-docs).
+For the endpoints and the response schemas, refer to [pgh.coffee/api-docs](https://pgh.coffee/api-docs).
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The MIT License applies to this project. For more data, refer to the LICENSE file.
 
-## Acknowledgments
+## Credits
 
-- Special thanks to the Pittsburgh coffee community for their support and contributions to the data source.
+Thank you to the Pittsburgh coffee community for the support and the data.
