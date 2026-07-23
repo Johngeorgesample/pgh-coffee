@@ -4,7 +4,8 @@ import type { Metadata } from 'next'
 import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSite, WithContext } from 'schema-dts'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
-import { buildShopSlug, extractUuidPrefix } from '@/app/utils/shopSlug'
+import { buildShopSlug, extractUuidPrefix, slugify } from '@/app/utils/shopSlug'
+import { areaPath, groupShopsIntoAreas } from '@/app/utils/neighborhoodAreas'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
 
 export const SITE_URL = 'https://pgh.coffee'
@@ -77,6 +78,8 @@ export interface ShopListEntry {
   name: string
   neighborhood: string
   uuid: string
+  address: string
+  description: string | null
 }
 
 /**
@@ -88,7 +91,7 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('shops')
-    .select('name, neighborhood, uuid')
+    .select('name, neighborhood, uuid, address, description')
     .order('name', { ascending: true })
 
   if (error || !data) {
@@ -202,6 +205,52 @@ export function buildWebsiteJsonLd(): WithContext<WebSite> {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
+  }
+}
+
+export interface NeighborhoodArea {
+  area: string
+  shops: ShopListEntry[]
+}
+
+export const getNeighborhoodAreas = cache(async (): Promise<NeighborhoodArea[]> => {
+  return groupShopsIntoAreas(await getAllShopsForSeo())
+})
+
+export const getAreaBySlug = cache(async (slug: string): Promise<NeighborhoodArea | null> => {
+  const areas = await getNeighborhoodAreas()
+  return areas.find(({ area }) => slugify(area) === slug) ?? null
+})
+
+export function buildAreaMetadata({ area, shops }: NeighborhoodArea): Metadata {
+  const title = `Coffee shops in ${area} | pgh.coffee`
+  const description = `${shops.length} independent coffee shops in ${area}, Pittsburgh — an up-to-date local guide with addresses and a map for each.`
+  const path = areaPath(area)
+
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title, description, type: 'website', url: path },
+    twitter: { title, description },
+  }
+}
+
+export function buildAreaJsonLd({ area, shops }: NeighborhoodArea): WithContext<CollectionPageLeaf> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Coffee shops in ${area}`,
+    url: `${SITE_URL}${areaPath(area)}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: shops.map((shop, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: shop.name,
+        url: buildShopUrl(shop),
+      })),
+    },
   }
 }
 
