@@ -19,10 +19,6 @@ const AREA_GROUPS: Record<string, string> = {
   'Central Business District': 'Downtown',
 }
 
-// Every area with at least one shop gets a page: with a photo, address, and
-// description per shop, even a single-shop listing carries real content.
-export const MIN_SHOPS_FOR_AREA_PAGE = 1
-
 export function areaForNeighborhood(neighborhood: string): string {
   return AREA_GROUPS[neighborhood] ?? neighborhood
 }
@@ -32,9 +28,8 @@ export function areaPath(area: string): string {
 }
 
 /**
- * Groups shops into searchable areas, dropping areas too small to make a
- * substantive landing page. Sorted by shop count so index pages lead with the
- * densest areas.
+ * Groups shops into searchable areas, sorted by shop count so index pages lead
+ * with the densest areas.
  */
 export function groupShopsIntoAreas<T extends { neighborhood: string }>(shops: T[]): { area: string; shops: T[] }[] {
   const byArea = new Map<string, T[]>()
@@ -43,7 +38,6 @@ export function groupShopsIntoAreas<T extends { neighborhood: string }>(shops: T
     byArea.set(area, [...(byArea.get(area) ?? []), shop])
   }
   return Array.from(byArea)
-    .filter(([, areaShops]) => areaShops.length >= MIN_SHOPS_FOR_AREA_PAGE)
     .map(([area, areaShops]) => ({ area, shops: areaShops }))
     .sort((a, b) => b.shops.length - a.shops.length)
 }

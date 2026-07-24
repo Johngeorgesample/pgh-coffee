@@ -5,8 +5,7 @@ import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
-import useShopsStore from '@/stores/coffeeShopsStore'
-import { areaForNeighborhood, areaPath, MIN_SHOPS_FOR_AREA_PAGE } from '@/app/utils/neighborhoodAreas'
+import { areaForNeighborhood, areaPath } from '@/app/utils/neighborhoodAreas'
 
 interface IProps {
   shop: TShop
@@ -21,13 +20,8 @@ export default function PanelHeader(props: IProps) {
 
   const hasPhoto = !!photo
 
-  // Only link the neighborhood when its area landing page exists (same
-  // shop-count threshold the server uses to decide which pages to render).
+  // Every neighborhood with a shop has a landing page, so this shop's always does.
   const area = areaForNeighborhood(neighborhood)
-  const areaShopCount = useShopsStore(
-    state => state.allShops.features.filter(f => areaForNeighborhood(f.properties.neighborhood) === area).length
-  )
-  const areaHasPage = areaShopCount >= MIN_SHOPS_FOR_AREA_PAGE
 
   return (
     <div id="header" data-testid="header">
@@ -62,17 +56,13 @@ export default function PanelHeader(props: IProps) {
             {isVerified && <VerifiedBadge className="mt-0.5" />}
           </h1>
           <p className="text-base text-white/80 mt-0.5">
-            {areaHasPage ? (
-              <Link
-                href={areaPath(area)}
-                onClick={e => e.stopPropagation()}
-                className="underline underline-offset-2 hover:text-white"
-              >
-                {neighborhood}
-              </Link>
-            ) : (
-              neighborhood
-            )}
+            <Link
+              href={areaPath(area)}
+              onClick={e => e.stopPropagation()}
+              className="underline underline-offset-2 hover:text-white"
+            >
+              {neighborhood}
+            </Link>
           </p>
         </div>
       </div>
