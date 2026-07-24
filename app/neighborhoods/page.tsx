@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getNeighborhoodAreas } from '@/app/utils/seo'
-import { areaPath } from '@/app/utils/neighborhoodAreas'
+import { areaPath, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { Footer } from '@/app/components/about'
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default async function NeighborhoodsPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
                 <div className="relative p-3 text-white">
                   <p className="text-lg font-medium leading-tight">{area}</p>
-                  <p className="text-xs text-white/80">{shops.length} shops</p>
+                  <p className="text-xs text-white/80">{shops.length} {shopNoun(shops.length)}</p>
                 </div>
               </Link>
             </li>

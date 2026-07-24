@@ -27,6 +27,10 @@ export function areaPath(area: string): string {
   return `/neighborhoods/${slugify(area)}`
 }
 
+export function shopNoun(count: number): string {
+  return count === 1 ? 'shop' : 'shops'
+}
+
 /**
  * Groups shops into searchable areas, sorted by shop count so index pages lead
  * with the densest areas.

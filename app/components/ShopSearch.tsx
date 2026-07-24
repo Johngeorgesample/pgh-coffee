@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopList from '@/app/components/ShopList'
-import { areaPath, groupShopsIntoAreas } from '@/app/utils/neighborhoodAreas'
+import { areaPath, groupShopsIntoAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { slugify } from '@/app/utils/shopSlug'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 
@@ -40,7 +40,7 @@ export default function ShopSearch() {
             <MapPinIcon className="h-4 w-4 shrink-0" />
             <span>
               <span className="font-medium">Coffee shops in {area}</span>
-              <span className="ml-2 text-stone-500">{shops.length} shops</span>
+              <span className="ml-2 text-stone-500">{shops.length} {shopNoun(shops.length)}</span>
             </span>
           </Link>
         ))}

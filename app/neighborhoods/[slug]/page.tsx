@@ -8,6 +8,7 @@ import {
   buildShopPath,
   jsonLdToString,
 } from '@/app/utils/seo'
+import { shopNoun } from '@/app/utils/neighborhoodAreas'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import { Footer } from '@/app/components/about'
 
@@ -30,7 +31,7 @@ export default async function NeighborhoodPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildAreaJsonLd(area)) }} />
       <h1 className="text-3xl font-serif tracking-tight">Coffee shops in {area.area}</h1>
       <p className="mt-2 text-stone-600">
-        {area.shops.length} independent coffee shops in {area.area}, Pittsburgh.
+        {area.shops.length} independent coffee {shopNoun(area.shops.length)} in {area.area}, Pittsburgh.
       </p>
       <ul className="mt-8 divide-y divide-stone-200">
         {area.shops.map(shop => (

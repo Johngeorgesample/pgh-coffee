@@ -5,7 +5,7 @@ import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSit
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
 import { buildShopSlug, extractUuidPrefix, slugify } from '@/app/utils/shopSlug'
-import { areaPath, groupShopsIntoAreas } from '@/app/utils/neighborhoodAreas'
+import { areaPath, groupShopsIntoAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
 
 export const SITE_URL = 'https://pgh.coffee'
@@ -231,7 +231,7 @@ export const getAreaBySlug = cache(async (slug: string): Promise<NeighborhoodAre
 
 export function buildAreaMetadata({ area, shops }: NeighborhoodArea): Metadata {
   const title = `Coffee shops in ${area} | pgh.coffee`
-  const description = `${shops.length} independent coffee shops in ${area}, Pittsburgh — an up-to-date local guide with addresses and a map for each.`
+  const description = `${shops.length} independent coffee ${shopNoun(shops.length)} in ${area}, Pittsburgh — an up-to-date local guide with addresses and a map for each.`
   const path = areaPath(area)
 
   return {
