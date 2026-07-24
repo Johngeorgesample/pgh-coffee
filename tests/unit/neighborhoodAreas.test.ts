@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { areaForNeighborhood, areaPath, groupShopsIntoAreas } from '@/app/utils/neighborhoodAreas'
+import { areaForNeighborhood, areaPath, groupShopsIntoAreas, nearestAreas } from '@/app/utils/neighborhoodAreas'
 
 describe('neighborhood areas', () => {
   it('folds granular neighborhoods into their searchable area', () => {
@@ -26,6 +26,20 @@ describe('neighborhood areas', () => {
       ['Lawrenceville', 3],
       ['Shadyside', 2],
     ])
+  })
+
+  it('ranks areas by distance from the current area centroid', () => {
+    const at = (latitude: number, longitude: number) => ({ latitude, longitude })
+    const current = { area: 'Here', shops: [at(40.44, -79.99)] }
+    const all = [
+      current,
+      { area: 'Near', shops: [at(40.45, -79.98)] },
+      { area: 'Far', shops: [at(40.6, -80.2)] },
+      { area: 'NoCoords', shops: [{ latitude: null, longitude: null }] },
+    ]
+
+    // excludes the current area and areas with no coordinates
+    expect(nearestAreas(current, all, 5).map(a => a.area)).toEqual(['Near', 'Far'])
   })
 
   it('builds slugged area paths', () => {

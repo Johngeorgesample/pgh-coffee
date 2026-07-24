@@ -82,6 +82,8 @@ export interface ShopListEntry {
   description: string | null
   photo: string | null
   verified: boolean
+  latitude: number | null
+  longitude: number | null
 }
 
 /**
@@ -93,7 +95,9 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('shops')
-    .select('name, neighborhood, uuid, address, description, photo, is_verified, company:company_id(is_verified)')
+    .select(
+      'name, neighborhood, uuid, address, description, photo, latitude, longitude, is_verified, company:company_id(is_verified)'
+    )
     .order('name', { ascending: true })
 
   if (error || !data) {

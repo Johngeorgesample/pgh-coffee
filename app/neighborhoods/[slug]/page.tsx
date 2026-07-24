@@ -3,12 +3,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
   getAreaBySlug,
+  getNeighborhoodAreas,
   buildAreaMetadata,
   buildAreaJsonLd,
   buildShopPath,
   jsonLdToString,
 } from '@/app/utils/seo'
-import { shopNoun } from '@/app/utils/neighborhoodAreas'
+import { areaPath, nearestAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import { Footer } from '@/app/components/about'
 
@@ -24,6 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NeighborhoodPage({ params }: Props) {
   const area = await getAreaBySlug((await params).slug)
   if (!area) notFound()
+
+  const nearby = nearestAreas(area, await getNeighborhoodAreas(), 5)
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">
@@ -57,13 +60,38 @@ export default async function NeighborhoodPage({ params }: Props) {
           </li>
         ))}
       </ul>
+
+      {/* Plain <a> forces a full load so useURLNeighborhoodSync's mount effect
+          runs — a soft Link navigation fires neither mount nor popstate, so the
+          neighborhood filter would never apply. */}
+      <a
+        href={`/?neighborhood=${encodeURIComponent(area.area)}`}
+        className="mt-10 inline-flex items-center gap-2 rounded-full bg-yellow-300 px-5 py-2.5 font-medium text-stone-900 transition hover:bg-yellow-400"
+      >
+        See {area.area} on the map
+        <span aria-hidden>→</span>
+      </a>
+
+      {nearby.length > 0 && (
+        <div className="mt-10">
+          <p className="text-sm font-medium text-stone-500">Nearby neighborhoods</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {nearby.map(({ area: name, shops }) => (
+              <Link
+                key={name}
+                href={areaPath(name)}
+                className="rounded-full border border-stone-200 px-3 py-1.5 text-sm transition hover:border-stone-300 hover:bg-stone-50"
+              >
+                {name} <span className="text-stone-400">{shops.length}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       <p className="mt-10 text-sm">
-        <Link href="/neighborhoods" className="underline underline-offset-2">
+        <Link href="/neighborhoods" className="text-stone-500 underline underline-offset-2 hover:text-stone-700">
           All neighborhoods
-        </Link>{' '}
-        ·{' '}
-        <Link href="/" className="underline underline-offset-2">
-          View the map
         </Link>
       </p>
     </div>
