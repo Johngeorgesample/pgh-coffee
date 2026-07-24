@@ -81,6 +81,7 @@ export interface ShopListEntry {
   address: string
   description: string | null
   photo: string | null
+  verified: boolean
 }
 
 /**
@@ -92,7 +93,7 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('shops')
-    .select('name, neighborhood, uuid, address, description, photo')
+    .select('name, neighborhood, uuid, address, description, photo, is_verified, company:company_id(is_verified)')
     .order('name', { ascending: true })
 
   if (error || !data) {
@@ -100,7 +101,12 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
     return []
   }
 
-  return data as ShopListEntry[]
+  // A shop shows the badge when it's claimed directly or its company is
+  // verified — the same rule PanelHeader/ShopCard apply on the client.
+  return data.map(({ is_verified, company, ...shop }) => ({
+    ...shop,
+    verified: Boolean(is_verified || (company as { is_verified?: boolean } | null)?.is_verified),
+  })) as ShopListEntry[]
 })
 
 /**

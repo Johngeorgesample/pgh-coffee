@@ -8,6 +8,8 @@ import {
   buildShopPath,
   jsonLdToString,
 } from '@/app/utils/seo'
+import VerifiedBadge from '@/app/components/VerifiedBadge'
+import { Footer } from '@/app/components/about'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -23,7 +25,8 @@ export default async function NeighborhoodPage({ params }: Props) {
   if (!area) notFound()
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col">
+    <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildAreaJsonLd(area)) }} />
       <h1 className="text-3xl font-serif tracking-tight">Coffee shops in {area.area}</h1>
       <p className="mt-2 text-stone-600">
@@ -42,7 +45,10 @@ export default async function NeighborhoodPage({ params }: Props) {
                 />
               )}
               <div>
-                <span className="text-lg font-medium underline underline-offset-2">{shop.name}</span>
+                <span className="inline-flex items-center gap-1 text-lg font-medium underline underline-offset-2">
+                  {shop.name}
+                  {shop.verified && <VerifiedBadge />}
+                </span>
                 <p className="text-sm text-stone-600">{shop.address}</p>
                 {shop.description && <p className="mt-1 text-sm text-stone-500">{shop.description}</p>}
               </div>
@@ -59,6 +65,8 @@ export default async function NeighborhoodPage({ params }: Props) {
           View the map
         </Link>
       </p>
+    </div>
+    <Footer />
     </div>
   )
 }
