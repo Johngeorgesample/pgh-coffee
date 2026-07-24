@@ -12,7 +12,7 @@ describe('neighborhood areas', () => {
     expect(areaForNeighborhood('Shadyside')).toBe('Shadyside')
   })
 
-  it('merges grouped neighborhoods and drops areas below the page threshold', () => {
+  it('merges grouped neighborhoods and sorts areas by shop count', () => {
     const shop = (neighborhood: string) => ({ neighborhood })
     const areas = groupShopsIntoAreas([
       shop('Central Lawrenceville'),
@@ -22,9 +22,10 @@ describe('neighborhood areas', () => {
       shop('Shadyside'),
     ])
 
-    expect(areas).toHaveLength(1)
-    expect(areas[0].area).toBe('Lawrenceville')
-    expect(areas[0].shops).toHaveLength(3)
+    expect(areas.map(a => [a.area, a.shops.length])).toEqual([
+      ['Lawrenceville', 3],
+      ['Shadyside', 2],
+    ])
   })
 
   it('builds slugged area paths', () => {

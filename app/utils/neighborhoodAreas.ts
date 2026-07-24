@@ -19,8 +19,9 @@ const AREA_GROUPS: Record<string, string> = {
   'Central Business District': 'Downtown',
 }
 
-// Below this an area page is thin content: it won't rank and dilutes the site.
-export const MIN_SHOPS_FOR_AREA_PAGE = 3
+// Every area with at least one shop gets a page: with a photo, address, and
+// description per shop, even a single-shop listing carries real content.
+export const MIN_SHOPS_FOR_AREA_PAGE = 1
 
 export function areaForNeighborhood(neighborhood: string): string {
   return AREA_GROUPS[neighborhood] ?? neighborhood
