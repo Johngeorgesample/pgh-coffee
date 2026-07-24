@@ -161,8 +161,8 @@ describe('buildOrganizationJsonLd / buildWebsiteJsonLd', () => {
 describe('buildShopListJsonLd', () => {
   test('builds a CollectionPage with one ListItem per shop, 1-indexed', () => {
     const entries = [
-      { name: '61B Cafe', neighborhood: 'Regent Square', uuid: '00000000-0000-0000-0000-000000000000', address: '1108 S Braddock Ave, Pittsburgh, PA 15218', description: null },
-      { name: 'Afters Cafe', neighborhood: 'Squirrel Hill South', uuid: '11111111-1111-1111-1111-111111111111', address: '2124 Murray Ave, Pittsburgh, PA 15217', description: null },
+      { name: '61B Cafe', neighborhood: 'Regent Square', uuid: '00000000-0000-0000-0000-000000000000', address: '1108 S Braddock Ave, Pittsburgh, PA 15218', description: null, photo: null },
+      { name: 'Afters Cafe', neighborhood: 'Squirrel Hill South', uuid: '11111111-1111-1111-1111-111111111111', address: '2124 Murray Ave, Pittsburgh, PA 15217', description: null, photo: null },
     ]
     const jsonLd = buildShopListJsonLd(entries)
 

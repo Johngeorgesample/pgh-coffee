@@ -32,11 +32,21 @@ export default async function NeighborhoodPage({ params }: Props) {
       <ul className="mt-8 divide-y divide-stone-200">
         {area.shops.map(shop => (
           <li key={shop.uuid} className="py-4">
-            <Link href={buildShopPath(shop)} className="text-lg font-medium underline underline-offset-2">
-              {shop.name}
+            <Link href={buildShopPath(shop)} className="flex gap-4">
+              {shop.photo && (
+                <img
+                  src={shop.photo}
+                  alt=""
+                  loading="lazy"
+                  className="h-20 w-20 shrink-0 rounded-md object-cover object-center"
+                />
+              )}
+              <div>
+                <span className="text-lg font-medium underline underline-offset-2">{shop.name}</span>
+                <p className="text-sm text-stone-600">{shop.address}</p>
+                {shop.description && <p className="mt-1 text-sm text-stone-500">{shop.description}</p>}
+              </div>
             </Link>
-            <p className="text-sm text-stone-600">{shop.address}</p>
-            {shop.description && <p className="mt-1 text-sm text-stone-500">{shop.description}</p>}
           </li>
         ))}
       </ul>
