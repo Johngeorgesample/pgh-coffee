@@ -5,11 +5,12 @@ const description =
   "Explore independent coffee shops across Pittsburgh's neighborhoods — find your next favorite spot on the map."
 
 export const metadata: Metadata = {
-  title: 'PGH Coffee',
+  title: 'pgh.coffee',
   description,
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'PGH Coffee',
+    siteName: 'pgh.coffee',
+    title: 'pgh.coffee',
     description,
     url: '/',
   },
