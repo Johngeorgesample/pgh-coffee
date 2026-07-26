@@ -18,7 +18,7 @@ export default function LoginPromptModal({ isOpen, onClose }: LoginPromptModalPr
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
           transition
-          className="max-w-md w-full bg-white rounded-xl p-6 shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in sm:data-closed:translate-y-0 sm:data-closed:scale-95"
+          className="max-w-md w-full bg-white rounded-xl p-6 shadow-xl transition-all motion-safe:data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in sm:motion-safe:data-closed:translate-y-0 sm:motion-safe:data-closed:scale-95"
         >
           <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">
             Sign in to save favorites
