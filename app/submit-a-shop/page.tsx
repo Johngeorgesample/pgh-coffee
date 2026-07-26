@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: '/submit-a-shop' },
   openGraph: {
+    siteName: 'pgh.coffee',
     title: 'Submit a Shop | pgh.coffee',
     description,
     url: '/submit-a-shop',

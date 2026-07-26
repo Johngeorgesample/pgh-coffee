@@ -187,31 +187,29 @@ describe('buildShopMetadata', () => {
     expect(metadata.title).toBe('61B Cafe | Regent Square | pgh.coffee')
     expect(metadata.alternates?.canonical).toBe('/shops/61b-cafe-regent-square-00000000')
     expect(metadata.openGraph?.url).toBe('/shops/61b-cafe-regent-square-00000000')
-    expect(metadata.openGraph?.images).toEqual([{ url: baseShop.photo }])
-    const twitter = metadata.twitter as { card?: string; images?: unknown } | undefined
-    expect(twitter?.card).toBe('summary_large_image')
-    expect(twitter?.images).toEqual([baseShop.photo])
+    expect(metadata.openGraph?.images).toEqual([{ url: baseShop.photo, alt: baseShop.name }])
+    // No twitter object: the layout's { card: 'summary_large_image' } is inherited
+    // and X falls back to the og:* tags.
+    expect(metadata.twitter).toBeUndefined()
   })
 
-  test('omits image fields when the shop has no photo, allowing site default to be inherited', () => {
+  test('falls back to the site-default OG image when the shop has no photo', () => {
+    // The openGraph object replaces the layout's wholesale, so without an
+    // explicit fallback a photo-less shop would emit no og:image at all.
     const shop: DbShop = { ...baseShop, photo: null }
     const metadata = buildShopMetadata(shop)
-    const twitter = metadata.twitter as { card?: string; images?: unknown } | undefined
 
-    expect(metadata.openGraph?.images).toBeUndefined()
-    expect(twitter?.images).toBeUndefined()
-    expect(twitter?.card).toBeUndefined()
+    expect(metadata.openGraph?.images).toEqual(['/opengraph-image'])
+    expect(metadata.twitter).toBeUndefined()
   })
 
   test('prefers the trimmed shop description over the generated template', () => {
     const shop: DbShop = { ...baseShop, description: '  A long-running Regent Square coffee bar.  ' }
     const metadata = buildShopMetadata(shop)
     const expected = 'A long-running Regent Square coffee bar.'
-    const twitter = metadata.twitter as { description?: string } | undefined
 
     expect(metadata.description).toBe(expected)
     expect(metadata.openGraph?.description).toBe(expected)
-    expect(twitter?.description).toBe(expected)
   })
 
   test('falls back to the generated template when the description is whitespace-only', () => {
