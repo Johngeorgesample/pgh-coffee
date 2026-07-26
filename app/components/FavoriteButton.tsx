@@ -21,8 +21,6 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
-  // Pop only when the user adds a favorite, never on initial render of an
-  // already-favorited shop.
   const [justAdded, setJustAdded] = useState(false)
 
   useEffect(() => {

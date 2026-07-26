@@ -21,8 +21,6 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
-  // Pop only when the user marks a visit, never on initial render of an
-  // already-visited shop.
   const [justAdded, setJustAdded] = useState(false)
 
   useEffect(() => {
