@@ -11,6 +11,7 @@ const nextConfig = {
   // file tracing doesn't follow readFileSync(process.cwd()) into the bundle.
   outputFileTracingIncludes: {
     '/u/[id]/opengraph-image': ['./public/logo_with_no_text_transparent*.png'],
+    '/shops/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
   },
 }
 
