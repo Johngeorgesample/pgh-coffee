@@ -187,19 +187,11 @@ describe('buildShopMetadata', () => {
     expect(metadata.title).toBe('61B Cafe | Regent Square | pgh.coffee')
     expect(metadata.alternates?.canonical).toBe('/shops/61b-cafe-regent-square-00000000')
     expect(metadata.openGraph?.url).toBe('/shops/61b-cafe-regent-square-00000000')
-    expect(metadata.openGraph?.images).toEqual([{ url: baseShop.photo, alt: baseShop.name }])
+    // No images: the route's opengraph-image.tsx supplies og:image. Setting one
+    // here would win over the file convention and put us back on raw photos.
+    expect(metadata.openGraph?.images).toBeUndefined()
     // No twitter object: the layout's { card: 'summary_large_image' } is inherited
     // and X falls back to the og:* tags.
-    expect(metadata.twitter).toBeUndefined()
-  })
-
-  test('falls back to the site-default OG image when the shop has no photo', () => {
-    // The openGraph object replaces the layout's wholesale, so without an
-    // explicit fallback a photo-less shop would emit no og:image at all.
-    const shop: DbShop = { ...baseShop, photo: null }
-    const metadata = buildShopMetadata(shop)
-
-    expect(metadata.openGraph?.images).toEqual(['/opengraph-image'])
     expect(metadata.twitter).toBeUndefined()
   })
 
