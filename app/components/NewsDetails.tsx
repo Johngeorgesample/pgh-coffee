@@ -200,8 +200,8 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
         </div>
       </div>
 
-      {/* Fixed Bottom Section — the bar overlaps the scroll region above it, so it
-          needs an explicit stacking order rather than default paint order. */}
+      {/* Fixed Bottom Section — z-10 is a guard, not a confirmed fix: the bar overlaps
+          the scroll region, and no repro of it losing paint order exists in Chrome. */}
       <div className="absolute bottom-0 left-0 right-0 z-10 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
