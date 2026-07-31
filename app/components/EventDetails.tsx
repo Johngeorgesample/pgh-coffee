@@ -90,9 +90,9 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   }
 
   return (
-    <div className={`flex h-full flex-col ${event.image_url ? '' : 'mt-24 lg:mt-16'} ${eventIsPast ? 'opacity-60' : ''}`}>
+    <div className={`flex flex-col ${event.image_url ? 'h-full' : 'mt-24 h-[calc(100%-6rem)] lg:mt-16 lg:h-[calc(100%-4rem)]'} ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-56">
+      <div className="flex-grow overflow-y-auto pb-6">
         {event.image_url ? (
           <div className="relative h-56 sm:h-64">
             <img
@@ -210,8 +210,8 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         </div>
       </div>
 
-      {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+      {/* Bottom Section — a flex sibling, not an overlay, so no stacking order to lose */}
+      <div className="shrink-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {event.url && (

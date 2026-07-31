@@ -104,9 +104,9 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   }
 
   return (
-    <div className={`flex h-full flex-col ${news.image_url ? '' : 'mt-24 lg:mt-16'}`}>
+    <div className={`flex flex-col ${news.image_url ? 'h-full' : 'mt-24 h-[calc(100%-6rem)] lg:mt-16 lg:h-[calc(100%-4rem)]'}`}>
       {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-56">
+      <div className="flex-grow overflow-y-auto pb-6">
         {news.image_url ? (
           <div className="relative h-56 sm:h-64">
             <img
@@ -200,8 +200,8 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
         </div>
       </div>
 
-      {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+      {/* Bottom Section — a flex sibling, not an overlay, so no stacking order to lose */}
+      <div className="shrink-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {news.url && (
