@@ -70,6 +70,41 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   useEffect(panToCurrentShop, [currentShopCoordinates])
 
+  // On arrival via `?neighborhood=`, fit the camera to that neighborhood's shops
+  // (displayedShops is already filtered to them). react-map-gl attaches mapRef
+  // asynchronously without a re-render, so poll via rAF until the map's style is
+  // loaded and the filtered shops have arrived, then fit once. Give up after a
+  // few seconds so a name that filters to nothing can't loop forever.
+  const displayedShopsRef = useRef(displayedShops)
+  displayedShopsRef.current = displayedShops
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has('neighborhood')) return
+    let raf = 0
+    let attempts = 0
+    const tryFit = () => {
+      const map = mapRef.current?.getMap()
+      const points = displayedShopsRef.current.features
+        .map(f => f.geometry.coordinates)
+        .filter(([lng, lat]) => Number.isFinite(lng) && Number.isFinite(lat))
+      if ((!map || !map.isStyleLoaded() || points.length === 0) && attempts++ < 180) {
+        raf = requestAnimationFrame(tryFit)
+        return
+      }
+      if (!map || points.length === 0) return
+      const lngs = points.map(p => p[0])
+      const lats = points.map(p => p[1])
+      map.fitBounds(
+        [
+          [Math.min(...lngs), Math.min(...lats)],
+          [Math.max(...lngs), Math.max(...lats)],
+        ],
+        { padding: 80, maxZoom: 15, duration: 1000 }
+      )
+    }
+    tryFit()
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
 
