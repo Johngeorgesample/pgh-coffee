@@ -34,6 +34,7 @@ export interface DbShop {
   // Embedded roaster (joined via roaster_id) whose coffee the shop serves.
   roasterRef?: { name: string; slug: string; company_id: string | null } | null
   amenities?: string[]
+  offerings?: string[]
   description?: string | null
   is_verified?: boolean
 }
@@ -62,6 +63,7 @@ export interface TShop {
     website: string
     uuid: string
     amenities?: string[]
+    offerings?: string[]
     roaster?: TShopRoaster | null
     description?: string | null
     verified?: boolean
