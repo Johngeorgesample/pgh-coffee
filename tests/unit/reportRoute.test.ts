@@ -32,6 +32,18 @@ vi.mock('@supabase/supabase-js', () => ({
 describe('Report API Route - POST', () => {
   let POST: typeof import('@/app/api/shops/report/route').POST
 
+  const post = (body: Record<string, unknown>) =>
+    POST(
+      new Request('http://localhost:3000/api/shops/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      }),
+    )
+
+  const shopExists = () =>
+    mockShopValidationResult.mockResolvedValueOnce({ data: { uuid: 'shop-uuid-123' }, error: null })
+
   beforeAll(async () => {
     const module = await import('@/app/api/shops/report/route')
     POST = module.POST
@@ -41,62 +53,72 @@ describe('Report API Route - POST', () => {
     vi.clearAllMocks()
   })
 
-  test('successfully submits a report with changed fields', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({
-      data: { uuid: 'shop-uuid-123' },
-      error: null,
-    })
-    mockInsertResult.mockResolvedValueOnce({
-      data: [{ id: 'report-1' }],
-      error: null,
+  test('successfully submits an hours report', async () => {
+    shopExists()
+    mockInsertResult.mockResolvedValueOnce({ data: [{ id: 'report-1' }], error: null })
+
+    const response = await post({
+      shop_id: 'shop-uuid-123',
+      report_type: 'hours',
+      details: 'Closes at 3pm on Sundays',
     })
 
-    const request = new Request('http://localhost:3000/api/shops/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shop_id: 'shop-uuid-123',
-        reported_name: 'Updated Coffee Shop',
-      }),
-    })
+    expect(response.status).toBe(201)
+  })
 
-    const response = await POST(request)
+  test('a closed report needs no details', async () => {
+    shopExists()
+    mockInsertResult.mockResolvedValueOnce({ data: [{ id: 'report-2' }], error: null })
+
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'closed' })
 
     expect(response.status).toBe(201)
   })
 
   test('returns 400 when shop_id is missing', async () => {
-    const request = new Request('http://localhost:3000/api/shops/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        reported_name: 'Updated Coffee Shop',
-      }),
-    })
-
-    const response = await POST(request)
+    const response = await post({ report_type: 'closed' })
     const data = await response.json()
 
     expect(response.status).toBe(400)
     expect(data.error).toBe('Missing shop_id')
   })
 
+  test('returns 400 for an unknown report_type', async () => {
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'bogus' })
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data.error).toBe('Invalid report_type')
+  })
+
+  test('returns 400 when report_type is missing entirely', async () => {
+    const response = await post({ shop_id: 'shop-uuid-123' })
+
+    expect(response.status).toBe(400)
+  })
+
+  // The old route accepted these, which is how the table collected rows saying a
+  // shop was wrong without saying how.
+  test('returns 400 when an hours report has only whitespace for details', async () => {
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'hours', details: '   ' })
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data.error).toBe('Missing details')
+  })
+
+  test('returns 400 when a website report has no website', async () => {
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'website' })
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data.error).toBe('Missing reported_website')
+  })
+
   test('returns 404 when shop_id does not exist', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({
-      data: null,
-      error: { message: 'No rows found' },
-    })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
 
-    const request = new Request('http://localhost:3000/api/shops/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shop_id: 'nonexistent-uuid',
-        reported_name: 'Updated Coffee Shop',
-      }),
-    })
-
-    const response = await POST(request)
+    const response = await post({ shop_id: 'nonexistent-uuid', report_type: 'closed' })
     const data = await response.json()
 
     expect(response.status).toBe(404)
@@ -104,21 +126,9 @@ describe('Report API Route - POST', () => {
   })
 
   test('returns 404 when shop validation returns no data', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: null })
 
-    const request = new Request('http://localhost:3000/api/shops/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shop_id: 'invalid-uuid',
-        reported_name: 'Updated Coffee Shop',
-      }),
-    })
-
-    const response = await POST(request)
+    const response = await post({ shop_id: 'invalid-uuid', report_type: 'closed' })
     const data = await response.json()
 
     expect(response.status).toBe(404)
@@ -126,25 +136,10 @@ describe('Report API Route - POST', () => {
   })
 
   test('returns 500 on Supabase insert failure', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({
-      data: { uuid: 'shop-uuid-123' },
-      error: null,
-    })
-    mockInsertResult.mockResolvedValueOnce({
-      data: null,
-      error: { message: 'Database error' },
-    })
+    shopExists()
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
-    const request = new Request('http://localhost:3000/api/shops/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shop_id: 'shop-uuid-123',
-        reported_name: 'Updated Coffee Shop',
-      }),
-    })
-
-    const response = await POST(request)
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'closed' })
     const data = await response.json()
 
     expect(response.status).toBe(500)
