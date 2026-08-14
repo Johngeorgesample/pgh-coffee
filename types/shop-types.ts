@@ -30,7 +30,6 @@ export interface DbShop {
   uuid: string
   latitude: number | null
   longitude: number | null
-  roaster?: boolean | string
   // Embedded roaster (joined via roaster_id) whose coffee the shop serves.
   roasterRef?: { name: string; slug: string; company_id: string | null } | null
   amenities?: string[]
