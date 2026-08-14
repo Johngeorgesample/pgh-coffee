@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { getPublicProfile } from '@/app/utils/profiles'
@@ -27,9 +28,21 @@ const yellow = '#fde047' // matches nav bg-yellow-300
 const gray900 = '#111827'
 const gray500 = '#6b7280'
 
-function Stat({ value, label, valueSize = 64 }: { value: string; label: string; valueSize?: number }) {
+function Stat({
+  value,
+  label,
+  valueSize = 64,
+  maxWidth,
+}: {
+  value: string
+  label: string
+  valueSize?: number
+  maxWidth?: number
+}) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+    // Spread rather than `maxWidth` directly: satori throws on an undefined
+    // style value instead of ignoring it.
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', ...(maxWidth && { maxWidth }) }}>
       <div style={{ fontSize: valueSize, fontWeight: 700, color: gray900 }}>{value}</div>
       <div style={{ fontSize: 28, color: gray500 }}>{label}</div>
     </div>
@@ -118,7 +131,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
         </Card>
       ),
-      size,
+      { ...size, fonts: ogFonts },
     )
   }
 
@@ -138,14 +151,16 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           <Stat value={`${stats.visited} of ${stats.total}`} label="shops visited" />
           <Stat value={`${stats.neighborhoodsVisited} of ${stats.totalNeighborhoods}`} label="neighborhoods" />
           {stats.topNeighborhood && (
-            <Stat value={stats.topNeighborhood} label="top neighborhood" valueSize={40} />
+            // Wraps rather than running off the card: "Central Lawrenceville"
+            // is wider than the space three stats leave.
+            <Stat value={stats.topNeighborhood} label="top neighborhood" valueSize={40} maxWidth={340} />
           )}
         </div>
-        <div style={{ fontSize: 30, fontWeight: 600, color: gray900 }}>
+        <div style={{ fontSize: 30, fontWeight: 700, color: gray900 }}>
           Track your own coffee passport at pgh.coffee &rarr;
         </div>
       </Card>
     ),
-    size,
+    { ...size, fonts: ogFonts },
   )
 }

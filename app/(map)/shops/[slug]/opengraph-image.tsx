@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { getShopForSeo } from '@/app/utils/seo'
 
 export const size = { width: 1200, height: 630 }
@@ -105,6 +106,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         />
       </div>
     ),
-    size,
+    { ...size, fonts: ogFonts },
   )
 }
