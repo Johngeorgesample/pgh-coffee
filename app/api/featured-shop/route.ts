@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
-import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { formatDBShopAsFeature, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { DbShop } from '@/types/shop-types'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
@@ -74,7 +74,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .eq('uuid', winnerUuid)
 
   if (error || !data?.[0]) {

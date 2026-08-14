@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getCompanyBySlug } from '@/app/utils/companies'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL as string
@@ -12,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const getCompanyShops = async (companyId: string) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .eq('company_id', companyId)
 
   if (error) {

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getRoasterBySlug } from '@/app/utils/roasters'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -13,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const getRoasterShops = async (roasterId: string) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .eq('roaster_id', roasterId)
 
   if (error) {
