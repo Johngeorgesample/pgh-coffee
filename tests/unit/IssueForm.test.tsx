@@ -19,6 +19,9 @@ const mockShop: TShop = {
   },
 }
 
+const submit = () => fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+const choose = (label: RegExp) => fireEvent.click(screen.getByLabelText(label))
+
 describe('IssueForm', () => {
   const onSuccess = vi.fn()
 
@@ -27,109 +30,105 @@ describe('IssueForm', () => {
     vi.stubGlobal('fetch', vi.fn())
   })
 
-  it('renders fields prefilled with the shop’s current values', () => {
+  const mockResponse = (ok: boolean) =>
+    vi.mocked(fetch).mockResolvedValueOnce({ ok, json: () => Promise.resolve({}) } as Response)
+
+  it('reveals the website input only for a website report', () => {
     render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
 
-    expect(screen.getByLabelText(/name/i)).toHaveValue('Test Shop')
-    expect(screen.getByLabelText(/address/i)).toHaveValue('456 Murray Ave, Pittsburgh, PA 15217')
-    expect(screen.getByLabelText(/neighborhood/i)).toHaveValue('Downtown')
-    expect(screen.getByLabelText(/website/i)).toHaveValue('https://testshop.com')
+    expect(screen.queryByLabelText(/^website$/i)).not.toBeInTheDocument()
+
+    choose(/the website is wrong/i)
+
+    expect(screen.getByLabelText(/^website$/i)).toHaveValue('https://testshop.com')
   })
 
-  it('shows an error and does not submit when nothing changed', async () => {
+  it('reveals no input at all for a permanently-closed report', () => {
     render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
 
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    choose(/permanently closed/i)
 
-    await waitFor(() => {
-      expect(screen.getByText('Please change at least one field to report a correction.')).toBeInTheDocument()
-    })
-
-    expect(fetch).not.toHaveBeenCalled()
-    expect(onSuccess).not.toHaveBeenCalled()
+    expect(screen.queryByLabelText(/details/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^website$/i)).not.toBeInTheDocument()
   })
 
-  it('submits only the changed fields', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({}),
-    } as Response)
-
+  it('submits an hours report with its details', async () => {
+    mockResponse(true)
     render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
 
-    fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'New Name' } })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.change(screen.getByLabelText(/details/i), { target: { value: 'Closes at 3pm Sundays' } })
+    submit()
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith('/api/shops/report', expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ shop_id: 'shop-uuid-123', reported_name: 'New Name' }),
+        body: JSON.stringify({
+          shop_id: 'shop-uuid-123',
+          report_type: 'hours',
+          details: 'Closes at 3pm Sundays',
+          reported_website: null,
+        }),
+      }))
+    })
+    expect(onSuccess).toHaveBeenCalled()
+  })
+
+  it('submits a closed report with no free text', async () => {
+    mockResponse(true)
+    render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
+
+    choose(/permanently closed/i)
+    submit()
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith('/api/shops/report', expect.objectContaining({
+        body: JSON.stringify({
+          shop_id: 'shop-uuid-123',
+          report_type: 'closed',
+          details: null,
+          reported_website: null,
+        }),
       }))
     })
   })
 
-  it('calls onSuccess when the submission succeeds', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({}),
-    } as Response)
-
+  it('blocks submission when a report that needs details has none', async () => {
     render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
 
-    fireEvent.change(screen.getByLabelText(/address/i), { target: { value: 'New Address' } })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.change(screen.getByLabelText(/details/i), { target: { value: '   ' } })
+    submit()
 
     await waitFor(() => {
-      expect(onSuccess).toHaveBeenCalled()
+      expect(screen.getByRole('alert')).toHaveTextContent('Please tell us what to fix.')
     })
-  })
-
-  it('shows an error message when the server rejects the submission', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      json: () => Promise.resolve({ error: 'Shop not found' }),
-    } as Response)
-
-    render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
-
-    fireEvent.change(screen.getByLabelText(/address/i), { target: { value: 'New Address' } })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/something went wrong submitting your correction/i)).toBeInTheDocument()
-    })
-
+    expect(fetch).not.toHaveBeenCalled()
     expect(onSuccess).not.toHaveBeenCalled()
   })
 
-  it('shows an error message when the request throws', async () => {
+  it('shows an error and re-enables submit when the server rejects it', async () => {
+    mockResponse(false)
+    render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
+
+    choose(/permanently closed/i)
+    submit()
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent(/something went wrong/i)
+    })
+    expect(onSuccess).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: /^submit$/i })).not.toBeDisabled()
+  })
+
+  it('shows an error when the request throws', async () => {
     vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
-
     render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
 
-    fireEvent.change(screen.getByLabelText(/website/i), { target: { value: 'https://new.example.com' } })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    choose(/permanently closed/i)
+    submit()
 
     await waitFor(() => {
-      expect(screen.getByText(/something went wrong submitting your correction/i)).toBeInTheDocument()
+      expect(screen.getByRole('alert')).toHaveTextContent(/something went wrong/i)
     })
-
     expect(onSuccess).not.toHaveBeenCalled()
-  })
-
-  it('re-enables the submit button after a failed submission', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      json: () => Promise.resolve({ error: 'Shop not found' }),
-    } as Response)
-
-    render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
-
-    fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'New Name' } })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /^submit$/i })).not.toBeDisabled()
-    })
   })
 })
