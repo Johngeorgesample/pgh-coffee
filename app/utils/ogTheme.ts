@@ -10,6 +10,10 @@ export const OG_COLORS = {
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const
 export const OG_CONTENT_TYPE = 'image/png'
 
+// Anything read this way must also be listed under `outputFileTracingIncludes`
+// in next.config.js, per dynamic OG route that renders it — tracing doesn't
+// follow readFileSync(process.cwd(), …) into the bundle, and the miss only
+// shows up as a 500 in production.
 const readPublicImageAsDataUri = (filename: string) =>
   `data:image/png;base64,${readFileSync(join(process.cwd(), 'public', filename)).toString('base64')}`
 
