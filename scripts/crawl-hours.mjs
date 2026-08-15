@@ -22,11 +22,14 @@ function loadEnv() {
   }
   return env;
 }
-const env = loadEnv();
+// Importing this file (the SQL renderers are tested) must not read .env.local
+// or start a crawl, so everything with a side effect waits on being run directly.
+const RUN_DIRECTLY = process.argv[1] === fileURLToPath(import.meta.url);
+const env = RUN_DIRECTLY ? loadEnv() : {};
 const KEY = env.GOOGLE_MAPS_API_KEY;
 const SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
+if (RUN_DIRECTLY && !KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
 
 // ---- helpers ---------------------------------------------------------------
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -323,18 +326,25 @@ function renderCompactSql(results) {
     `-- Same guards: the shop must still exist, and manual/shop_submitted hours are never touched.`,
     ``,
   ];
-  const withHours = results.filter((r) => r.status === "ok" && r.rows.length);
-  return [...header, ...replaceHours(withHours), ...upsertMeta(results)].join("\n");
+  // no_hours shops are cleared but not repopulated — Google dropped their hours,
+  // so keeping the old rows would leave a wrong schedule on the site forever.
+  const cleared = results.filter((r) => r.status === "ok" || r.status === "no_hours");
+  const withHours = results.filter((r) => r.rows.length);
+  return [...header, ...replaceHours(cleared, withHours), ...upsertMeta(results)].join("\n");
 }
 
-function replaceHours(withHours) {
-  if (withHours.length === 0) return ["-- No shops returned hours; nothing to replace.", ""];
-  const uuids = withHours.map((r) => sqlStr(r.shop.uuid)).join(", ");
+function replaceHours(cleared, withHours) {
+  if (cleared.length === 0) return ["-- No shops resolved; nothing to replace.", ""];
+  const uuids = cleared.map((r) => sqlStr(r.shop.uuid)).join(", ");
   const rows = withHours.flatMap((r) => r.rows.map((row) => hoursValues(r.shop.uuid, row)));
-  return [
+  const clear = [
     `DELETE FROM shop_hours WHERE shop_uuid IN (${uuids})`,
     `  AND ${notProtected("shop_hours.shop_uuid")};`,
     ``,
+  ];
+  if (rows.length === 0) return [...clear, "-- No shop returned hours; nothing to insert.", ""];
+  return [
+    ...clear,
     `INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)`,
     `SELECT v.* FROM (VALUES`,
     rows.join(",\n"),
@@ -452,7 +462,11 @@ const VERIFICATION = `-- =======================================================
 -- SELECT count(*) FROM shop_hours h JOIN shop_hours_meta m ON m.shop_uuid=h.shop_uuid
 -- WHERE m.source='google_places' AND m.fetched_at < now() - interval '30 days';`;
 
-main().catch((e) => {
-  console.error("FATAL", e);
-  process.exit(1);
-});
+export { renderSql, renderCompactSql };
+
+if (RUN_DIRECTLY) {
+  main().catch((e) => {
+    console.error("FATAL", e);
+    process.exit(1);
+  });
+}
