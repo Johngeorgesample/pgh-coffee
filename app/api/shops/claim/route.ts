@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
+import { isRealSupabaseError } from '@/lib/supabaseErrors'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -47,9 +48,7 @@ export async function POST(request: Request) {
     .eq(target.idColumn, target_id)
     .single()
 
-  // PGRST116 is "no rows" — a genuine 404. Any other error is a real failure
-  // (DB down, bad query) and must not masquerade as "listing not found".
-  if (entityError && entityError.code !== 'PGRST116') {
+  if (isRealSupabaseError(entityError)) {
     logger.error('Error validating claim target', { error: entityError.message })
     metrics.apiError('shops/claim')
     return NextResponse.json({ error: 'Error submitting claim' }, { status: 500 })
