@@ -22,8 +22,6 @@ describe('ogTheme asset loaders', () => {
     const second = getOgWatermarkSrc()
 
     expect(second).toBe(first)
-    // One read for the logo (previous test) + one for the watermark, not one
-    // shared cache between the two independent once() instances.
     expect(h.readFileSync).toHaveBeenCalledTimes(2)
   })
 })
