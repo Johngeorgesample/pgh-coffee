@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import IssueForm from '@/app/components/IssueForm'
 import { TShop } from '@/types/shop-types'
 
@@ -129,6 +129,24 @@ describe('IssueForm', () => {
     await waitFor(() => {
       expect(screen.getByRole('alert')).toHaveTextContent(/something went wrong/i)
     })
+    expect(onSuccess).not.toHaveBeenCalled()
+  })
+
+  // Regression for S11b: a shop switch remounts this form (keyed by shop uuid
+  // in IssueModal), but doesn't cancel a submission already in flight for the
+  // shop being switched away from.
+  it('does not call onSuccess for a submission whose form has since unmounted', async () => {
+    let resolveFetch: (value: Response) => void = () => {}
+    vi.mocked(fetch).mockReturnValueOnce(new Promise(resolve => { resolveFetch = resolve }))
+    render(<IssueForm shop={mockShop} onSuccess={onSuccess} />)
+
+    choose(/permanently closed/i)
+    submit()
+    cleanup() // simulates the shop switch that would remount this component
+
+    resolveFetch({ ok: true, json: () => Promise.resolve({}) } as Response)
+    await new Promise(resolve => setTimeout(resolve, 0))
+
     expect(onSuccess).not.toHaveBeenCalled()
   })
 })

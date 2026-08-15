@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { TShop } from '@/types/shop-types'
 import { getFaro } from '@/lib/faro'
 import { REPORT_TYPES, ReportType } from '@/lib/reportTypes'
@@ -8,6 +8,13 @@ import { REPORT_TYPES, ReportType } from '@/lib/reportTypes'
 interface IProps {
   shop: TShop
   onSuccess: () => void
+}
+
+interface ReportPayload {
+  shop_id: string
+  report_type: ReportType
+  details: FormDataEntryValue | null
+  reported_website: FormDataEntryValue | null
 }
 
 const inputClasses =
@@ -24,13 +31,39 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
   const [error, setError] = useState<string | null>(null)
   const requires = REPORT_TYPES[reportType].requires
 
-  async function postReport(payload: Record<string, unknown>) {
+  // The form is keyed to the shop, but a switch remounts it while its old
+  // submission may still be in flight — abort that request rather than let
+  // it resolve into onSuccess/setError against whatever is mounted here now.
+  const abortRef = useRef<AbortController | null>(null)
+  useEffect(() => () => abortRef.current?.abort(), [])
+
+  async function postReport(payload: ReportPayload, signal: AbortSignal) {
     const response = await fetch('/api/shops/report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal,
     })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  }
+
+  async function submitReport(payload: ReportPayload, controller: AbortController) {
+    setIsSubmitting(true)
+    try {
+      await postReport(payload, controller.signal)
+      // A real fetch rejects on abort, but a response that was already in
+      // flight can still resolve right as abort() fires — check explicitly
+      // rather than relying on that race going the same way every time.
+      if (controller.signal.aborted) return
+      getFaro()?.api.pushEvent('shop_reported', { shop_id: payload.shop_id, report_type: payload.report_type })
+      onSuccess()
+    } catch (err) {
+      if (controller.signal.aborted) return
+      console.error('Error submitting report:', err)
+      setError('Something went wrong submitting your report. Please try again.')
+    } finally {
+      if (!controller.signal.aborted) setIsSubmitting(false)
+    }
   }
 
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
@@ -43,22 +76,14 @@ export default function IssueForm({ shop, onSuccess }: IProps) {
       return
     }
 
-    setIsSubmitting(true)
-    try {
-      await postReport({
-        shop_id: shop.properties.uuid,
-        report_type: reportType,
-        details: formData.get('details') || null,
-        reported_website: formData.get('reported_website') || null,
-      })
-      getFaro()?.api.pushEvent('shop_reported', { shop_id: shop.properties.uuid, report_type: reportType })
-      onSuccess()
-    } catch (err) {
-      console.error('Error submitting report:', err)
-      setError('Something went wrong submitting your report. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
+    const controller = new AbortController()
+    abortRef.current = controller
+    await submitReport({
+      shop_id: shop.properties.uuid,
+      report_type: reportType,
+      details: formData.get('details') || null,
+      reported_website: formData.get('reported_website') || null,
+    }, controller)
   }
 
   return (

@@ -35,7 +35,11 @@ export default function IssueModal({ isOpen, onClose, onSuccess, shop }: Props) 
           </button>
           <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">Report an issue</DialogTitle>
           <p className="text-sm text-stone-600 mb-4">Tell us what&apos;s out of date and we&apos;ll take a look.</p>
-          <IssueForm shop={shop} onSuccess={onSuccess} />
+          {/* Keyed to the shop: the modal itself stays mounted across a shop
+              switch (HeadlessUI doesn't unmount on close), so without this the
+              form's selection, typed details, and any in-flight submission
+              would carry over from whichever shop it was last opened for. */}
+          <IssueForm key={shop.properties.uuid} shop={shop} onSuccess={onSuccess} />
         </DialogPanel>
       </div>
     </Dialog>
