@@ -10,6 +10,7 @@ import { dirname, resolve as resolvePath } from "node:path";
 // Repo root, derived from this script's location (scripts/ -> repo root).
 const ROOT = resolvePath(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = `${ROOT}/migrations/hours-backfill.sql`;
+const COMPACT_OUT = `${ROOT}/migrations/hours-backfill-compact.sql`;
 
 // ---- env -------------------------------------------------------------------
 function loadEnv() {
@@ -230,6 +231,8 @@ async function main() {
 
   writeFileSync(OUT, renderSql(results));
   console.error(`\nWrote ${OUT}`);
+  writeFileSync(COMPACT_OUT, renderCompactSql(results));
+  console.error(`Wrote ${COMPACT_OUT}`);
   // summary
   const byStatus = {};
   for (const r of results) byStatus[r.status] = (byStatus[r.status] || 0) + 1;
@@ -308,6 +311,70 @@ function renderSql(results) {
   }
   L.push("");
   return L.join("\n");
+}
+
+// The reviewable file above is ~350 statements and a quarter of a megabyte, which
+// rules out applying it through anything that can't stream a file (the Supabase
+// MCP, a SQL console). This is the same data as three statements: the VALUES
+// lists can be split at any comma to apply it in chunks.
+function renderCompactSql(results) {
+  const header = [
+    `-- Compact form of hours-backfill.sql. Generated ${new Date().toISOString()}.`,
+    `-- Same guards: the shop must still exist, and manual/shop_submitted hours are never touched.`,
+    ``,
+  ];
+  const withHours = results.filter((r) => r.status === "ok" && r.rows.length);
+  return [...header, ...replaceHours(withHours), ...upsertMeta(results)].join("\n");
+}
+
+function replaceHours(withHours) {
+  if (withHours.length === 0) return ["-- No shops returned hours; nothing to replace.", ""];
+  const uuids = withHours.map((r) => sqlStr(r.shop.uuid)).join(", ");
+  const rows = withHours.flatMap((r) => r.rows.map((row) => hoursValues(r.shop.uuid, row)));
+  return [
+    `DELETE FROM shop_hours WHERE shop_uuid IN (${uuids})`,
+    `  AND ${notProtected("shop_hours.shop_uuid")};`,
+    ``,
+    `INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)`,
+    `SELECT v.* FROM (VALUES`,
+    rows.join(",\n"),
+    `) v (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)`,
+    `WHERE ${shopExists("v.shop_uuid")} AND ${notProtected("v.shop_uuid")};`,
+    ``,
+  ];
+}
+
+function upsertMeta(results) {
+  return [
+    `INSERT INTO shop_hours_meta (shop_uuid, source, status, google_place_id, match_distance_m, fetched_at)`,
+    `SELECT v.*, now() FROM (VALUES`,
+    results.map(metaValues).join(",\n"),
+    `) v (shop_uuid, source, status, google_place_id, match_distance_m)`,
+    `WHERE ${shopExists("v.shop_uuid")}`,
+    `ON CONFLICT (shop_uuid) DO UPDATE SET`,
+    `  status=EXCLUDED.status, google_place_id=EXCLUDED.google_place_id,`,
+    `  match_distance_m=EXCLUDED.match_distance_m, fetched_at=EXCLUDED.fetched_at`,
+    `WHERE shop_hours_meta.source='google_places';`,
+    ``,
+  ];
+}
+
+function hoursValues(uuid, row) {
+  return `  (${sqlStr(uuid)}::uuid, ${row.day}::smallint, ${sqlStr(row.opens)}::time, ${sqlStr(row.closes)}::time, ${row.spans})`;
+}
+
+function metaValues(r) {
+  return `  (${sqlStr(r.shop.uuid)}::uuid, 'google_places', ${sqlStr(r.status)}, ${
+    r.placeId ? sqlStr(r.placeId) : "NULL::text"
+  }, ${r.dist != null ? r.dist : "NULL"}::double precision)`;
+}
+
+function shopExists(col) {
+  return `EXISTS (SELECT 1 FROM shops s WHERE s.uuid = ${col})`;
+}
+
+function notProtected(col) {
+  return `NOT EXISTS (SELECT 1 FROM shop_hours_meta m WHERE m.shop_uuid = ${col} AND m.source <> 'google_places')`;
 }
 
 function deleteGuard(uuid) {
