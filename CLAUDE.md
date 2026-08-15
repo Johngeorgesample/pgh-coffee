@@ -99,6 +99,13 @@ Coffee shops must meet these criteria (enforced in submission form):
 
 User preference for distance units (miles/kilometers) is stored in localStorage with key `distanceUnits`. Default is miles.
 
+## Build & verification gotchas
+
+- **Don't `npm run build` while `npm run dev` is running.** The build overwrites `.next` under the dev server, which then 500s on every route. The app is fine; only the dev process is poisoned. Stop dev first, or `rm -rf .next` and restart it.
+- **The first build after `rm -rf .next` can die** with `PageNotFoundError: Cannot find module for page: /_document`. Re-running the identical command succeeds. The partial `.nft.json` files it leaves behind are misleading if you're inspecting them.
+- **`og:image` is an absolute `https://pgh.coffee/...` URL in a production build** (relative in dev), so `curl`ing it against a local `next start` silently fetches the deployed site. Swap the origin for localhost before fetching.
+- **Dynamic-segment OG routes aren't served at their source path.** `/shops/<slug>/opengraph-image` 404s; the real path is hashed (`/opengraph-image-11ib4g?<hash>`). Scrape it out of the page's `og:image` meta tag. Static ones like `/opengraph-image` work as written.
+
 ## Working agreement
 
 - Before saying a change is done, run `npm run lint` and `npm test` and report the actual result. Don't claim it works without exercising it.
