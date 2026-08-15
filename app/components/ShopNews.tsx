@@ -5,8 +5,6 @@ import { NewsItem } from '@/types/news-types'
 
 type Props = { shop: TShop }
 
-// /api/updates already filters by shop_id and orders by post_date, so this
-// hands back exactly what ShopNews should render — no client-side re-derive.
 async function fetchShopUpdates(shopId: string, signal: AbortSignal) {
   const qs = new URLSearchParams({ shop_id: shopId })
   const res = await fetch(`/api/updates?${qs.toString()}`, { signal })
@@ -19,9 +17,6 @@ export const ShopNews = ({ shop }: Props) => {
   const shopId = shop.properties.uuid
 
   useEffect(() => {
-    // Clear the previous shop's list before fetching the new one, so a
-    // switch between shops can't leave shop A's news rendered under shop B's
-    // header — whether B has no updates yet, or its fetch fails outright.
     setUpdates([])
     if (!shopId) return
 
@@ -39,7 +34,6 @@ export const ShopNews = ({ shop }: Props) => {
     return () => controller.abort()
   }, [shopId])
 
-  // Nothing to show? render nothing.
   if (!updates.length) return null
 
   return (

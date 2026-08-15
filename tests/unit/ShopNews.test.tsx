@@ -61,8 +61,6 @@ describe('ShopNews', () => {
     const { rerender } = render(<ShopNews shop={shop} />)
     await waitFor(() => expect(screen.getByText('Shop A update')).toBeInTheDocument())
 
-    // Shop B's fetch never settles in this test — the previous shop's list
-    // must already be gone rather than lingering under shop B's panel.
     ;(fetch as any).mockImplementationOnce(() => new Promise(() => {}))
     rerender(<ShopNews shop={otherShop} />)
 
@@ -70,9 +68,6 @@ describe('ShopNews', () => {
   })
 
   test('ignores a stale response that resolves after the shop already changed', async () => {
-    // abort() can't un-settle a request that already resolved at the network
-    // layer — this mock ignores its signal entirely to simulate exactly that,
-    // so the fix must be the `signal.aborted` check, not the abort call itself.
     let resolveShopA: (value: unknown) => void = () => {}
     ;(fetch as any).mockImplementationOnce(
       () => new Promise(resolve => { resolveShopA = resolve }),
@@ -99,9 +94,6 @@ describe('ShopNews', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  // The API already filters by shop_id and orders by post_date, so this locks
-  // in that ShopNews renders exactly what it's given, in that order, with no
-  // client-side re-filter/re-sort.
   test('renders the server-provided updates in the order returned', async () => {
     const updates: NewsItem[] = [
       { id: '1', title: 'Newest update' },
