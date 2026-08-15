@@ -1,8 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, ReactNode } from 'react'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { getPanelNewsItem } from '@/stores/panelStore'
 import { NewsDetails } from '@/app/components/NewsDetails'
 import { News } from '@/app/components/News'
+import { buildContentSlug } from '@/app/utils/slug'
+
+const isSameNewsSlug = (content: ReactNode, slug: string) => {
+  const news = getPanelNewsItem(content)
+  return !!news?.id && !!news?.title && buildContentSlug({ id: news.id, title: news.title }) === slug
+}
 
 /**
  * Syncs the panel from the news routes: `/news/{slug}` opens a single update,
@@ -14,23 +20,33 @@ export const useNewsRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onNewsRoute = pathname.startsWith('/news/')
   const hasNewsList = searchParams.has('news')
 
   useEffect(() => {
     if (onNewsRoute && slug) {
-      fetch(`/api/updates/by-slug/${encodeURIComponent(slug)}`)
+      // Read via getState() rather than closing over the hook, so this effect
+      // depends only on slug/onNewsRoute/hasNewsList (mirrors useShopRouteSync).
+      const { panelMode, panelContent, setPanelContent } = usePanelStore.getState()
+
+      // Skip the fetch when NewsCard's click handler already set this exact
+      // panel before the route caught up.
+      if (panelMode === 'news' && isSameNewsSlug(panelContent, slug)) return
+
+      const controller = new AbortController()
+      fetch(`/api/updates/by-slug/${encodeURIComponent(slug)}`, { signal: controller.signal })
         .then(res => (res.ok ? res.json() : Promise.reject(new Error('News not found'))))
-        .then(news => setPanelContent(<NewsDetails id={news.id} title={news.title} />, 'news'))
-        .catch(console.error)
-      return
+        .then(news => setPanelContent(<NewsDetails news={news} />, 'news'))
+        .catch(err => {
+          if (err.name === 'AbortError') return
+          console.error(err)
+        })
+      return () => controller.abort()
     }
 
     if (hasNewsList) {
-      setPanelContent(<News />, 'news')
+      usePanelStore.getState().setPanelContent(<News />, 'news')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, onNewsRoute, hasNewsList])
 }

@@ -5,7 +5,7 @@ const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
+export const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
 
 /**
  * Resolves a news update from a `/news/{slug}` identifier's id prefix. The `id`

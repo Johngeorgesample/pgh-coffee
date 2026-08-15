@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
+import { NewsItem } from '@/types/news-types'
 import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
@@ -25,6 +26,13 @@ function hasProps<K extends string>(
     content.props !== null &&
     key in content.props
   )
+}
+
+// Shared by getURLParamForEntry's 'news' case and useNewsRouteSync's
+// skip-refetch check, so the two don't drift on what counts as "this panel
+// already shows that news item".
+export function getPanelNewsItem(content: ReactNode) {
+  return hasProps(content, 'news') ? (content.props.news as Pick<NewsItem, 'id' | 'title'>) : undefined
 }
 
 type URLTarget = { type: 'path'; value: string } | { type: 'query'; key: string; value: string }
@@ -51,13 +59,13 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
         return { type: 'path', value: `/roasters/${content.props.slug as string}` }
       }
       return null
-    case 'news':
-      if (hasProps(content, 'id') && content.props.id && hasProps(content, 'title') && content.props.title) {
-        const id = content.props.id as string
-        const title = content.props.title as string
-        return { type: 'path', value: `/news/${buildContentSlug({ id, title })}` }
+    case 'news': {
+      const news = getPanelNewsItem(content)
+      if (news?.id && news?.title) {
+        return { type: 'path', value: `/news/${buildContentSlug({ id: news.id, title: news.title })}` }
       }
       return { type: 'query', key: 'news', value: '' }
+    }
     case 'event':
       if (hasProps(content, 'event')) {
         const event = content.props.event as { id: string; title: string }
