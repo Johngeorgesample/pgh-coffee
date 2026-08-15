@@ -253,6 +253,11 @@ function renderSql(results) {
   L.push(`-- Generated ${new Date().toISOString()}`);
   L.push("");
   L.push("-- ============================================================================");
+  L.push("-- PREFLIGHT  (returns a row: how old the hours you're about to replace are)");
+  L.push("-- ============================================================================");
+  L.push(PREFLIGHT);
+  L.push("");
+  L.push("-- ============================================================================");
   L.push("-- MIGRATION  (creates both tables + RLS; safe to run ahead of the data below)");
   L.push("-- ============================================================================");
   L.push(MIGRATION);
@@ -272,15 +277,17 @@ function renderSql(results) {
         const vals = r.rows
           .map(
             (row) =>
-              `  (${sqlStr(s.uuid)}, ${row.day}, ${sqlStr(row.opens)}, ${sqlStr(
+              `  (${sqlStr(s.uuid)}::uuid, ${row.day}, ${sqlStr(row.opens)}::time, ${sqlStr(
                 row.closes
-              )}, ${row.spans})`
+              )}::time, ${row.spans})`
           )
           .join(",\n");
         L.push(
-          "INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight) VALUES"
+          "INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)"
         );
-        L.push(vals + ";");
+        L.push("SELECT * FROM (VALUES");
+        L.push(vals);
+        L.push(`) v WHERE ${shopStillExists(s.uuid)};`);
       }
       L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist));
       L.push("");
@@ -318,18 +325,35 @@ function deleteGuard(uuid) {
   );
 }
 
+// This file is a snapshot of the shop list at crawl time. A shop deleted since
+// then would fail the FK and abort the whole transaction, so every write is
+// guarded: a vanished shop is skipped instead of taking the run down with it.
+function shopStillExists(uuid) {
+  return `EXISTS (SELECT 1 FROM shops WHERE uuid = ${sqlStr(uuid)})`;
+}
+
 function metaUpsert(uuid, status, placeId, dist) {
   return (
     `INSERT INTO shop_hours_meta (shop_uuid, source, status, google_place_id, match_distance_m, fetched_at)\n` +
-    `VALUES (${sqlStr(uuid)}, 'google_places', ${sqlStr(status)}, ${
+    `SELECT ${sqlStr(uuid)}::uuid, 'google_places', ${sqlStr(status)}, ${
       placeId ? sqlStr(placeId) : "NULL"
-    }, ${dist != null ? dist : "NULL"}, now())\n` +
+    }, ${dist != null ? dist : "NULL"}, now()\n` +
+    `WHERE ${shopStillExists(uuid)}\n` +
     `ON CONFLICT (shop_uuid) DO UPDATE SET\n` +
     `  status=EXCLUDED.status, google_place_id=EXCLUDED.google_place_id,\n` +
     `  match_distance_m=EXCLUDED.match_distance_m, fetched_at=EXCLUDED.fetched_at\n` +
     `WHERE shop_hours_meta.source='google_places';`
   );
 }
+
+// Deliberately an executable SELECT, not a comment: nothing else reports that
+// the live hours have aged past Google's 30-day cache limit, and a commented-out
+// query is exactly what let them sit at 50 days.
+const PREFLIGHT = `SELECT
+  max(now() - fetched_at)                                              AS oldest,
+  count(*) FILTER (WHERE fetched_at < now() - interval '30 days')      AS past_30_day_limit,
+  count(*)                                                             AS shops
+FROM shop_hours_meta WHERE source = 'google_places';`;
 
 const MIGRATION = `
 CREATE TABLE IF NOT EXISTS shop_hours (
