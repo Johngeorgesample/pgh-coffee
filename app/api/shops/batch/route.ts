@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { formatDataToGeoJSON } from '../../../utils/utils'
+import { formatDataToGeoJSON, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 
 // Supabase configuration
@@ -11,7 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchShopsByIds = async (ids: string[]) => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .in('uuid', ids)
     .order('name', { ascending: true })
 

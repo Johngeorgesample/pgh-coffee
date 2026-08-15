@@ -1,5 +1,7 @@
 import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
 
+export const SHOP_WITH_ROASTER_SELECT = '*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)'
+
 // The roaster a shop serves (joined via roaster_id), flagged in-house when it
 // belongs to the same company as the shop. Shared by every shop→feature path so
 // the roaster card shows regardless of how a shop was selected (map vs. direct).

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -13,7 +14,7 @@ export const getShopByUuidPrefix = async (prefix: string): Promise<DbShop | null
   // matches every uuid sharing that prefix while still using the uuid index.
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .gte('uuid', `${prefix}-0000-0000-0000-000000000000`)
     .lte('uuid', `${prefix}-ffff-ffff-ffff-ffffffffffff`)
     .limit(1)

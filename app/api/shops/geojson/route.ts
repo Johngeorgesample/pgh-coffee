@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { formatDataToGeoJSON } from '../../../utils/utils'
+import { formatDataToGeoJSON, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { withMetrics } from '@/lib/withMetrics'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const fetchShops = async () => {
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .order('name', { ascending: true })
   if (error) {
     logger.error('Error fetching shops', { error: error.message })
