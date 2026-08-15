@@ -31,7 +31,7 @@ export const NewsCard = ({ item }: NewsCardProps) => {
         props: { newsId: item.id, newsTitle: item.title },
       })
       router.push(`/news/${buildContentSlug({ id: item.id, title: item.title })}`)
-      setPanelContent(<NewsDetails id={item.id} title={item.title} />, 'news')
+      setPanelContent(<NewsDetails news={item} />, 'news')
     }
   }
 

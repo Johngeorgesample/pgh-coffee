@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { useShopSelection, useCopyToClipboard, useAnalytics } from '@/hooks'
@@ -18,41 +18,26 @@ const formatNewsDate = (dateStr: string) => {
   })
 }
 
-export const NewsDetails = ({ id }: { id: string; title?: string }) => {
-  const [news, setNews] = useState<NewsItem | null>(null)
-  const [loading, setLoading] = useState(true)
+export const NewsDetails = ({ news }: { news: NewsItem }) => {
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const plausible = useAnalytics()
   const router = useRouter()
   const { handleShopSelect } = useShopSelection()
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch(`/api/updates/${id}`)
-        if (!response.ok) throw new Error('News not found')
-        const data = await response.json()
-        setNews(data)
-        plausible('NewsView', {
-          props: { newsId: id, newsTitle: data.title },
-        })
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchNews()
-  }, [id, plausible])
+    plausible('NewsView', {
+      props: { newsId: news.id, newsTitle: news.title },
+    })
+  }, [news.id, news.title, plausible])
 
   const handleShopClick = () => {
-    if (news?.shop_id && news?.shop) {
+    if (news.shop_id && news.shop) {
       handleShopSelect(formatDBShopAsFeature(news.shop))
     }
   }
 
   const handleRoasterClick = () => {
-    if (!news?.roaster) return
+    if (!news.roaster) return
     plausible('NewsDetailsRoasterClick', {
       props: { newsId: news.id, newsTitle: news.title, roasterSlug: news.roaster.slug },
     })
@@ -60,47 +45,10 @@ export const NewsDetails = ({ id }: { id: string; title?: string }) => {
   }
 
   const handleExternalLink = () => {
-    if (!news?.url) return
+    if (!news.url) return
     plausible('NewsExternalLinkClick', {
       props: { newsId: news.id, newsTitle: news.title, url: news.url },
     })
-  }
-
-  if (loading) {
-    return (
-      <div className="flex mt-24 lg:mt-16 h-full flex-col">
-        <div className="flex-grow overflow-y-auto pb-56">
-          <div className="p-6 animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
-            <div className="flex items-start gap-3 mb-6">
-              <div className="bg-gray-200 p-2.5 rounded-lg w-9 h-9"></div>
-              <div>
-                <div className="h-3 bg-gray-200 rounded w-12 mb-2"></div>
-                <div className="h-5 bg-gray-200 rounded w-32"></div>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 pt-6">
-              <div className="h-3 bg-gray-200 rounded w-24 mb-4"></div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!news) {
-    return (
-      <div className="flex mt-24 lg:mt-16 h-full flex-col">
-        <div className="p-6">
-          <p className="text-gray-600">News not found</p>
-        </div>
-      </div>
-    )
   }
 
   return (
