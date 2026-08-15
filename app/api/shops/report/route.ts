@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { REPORT_TYPES, isReportType } from '@/lib/reportTypes'
+import { isRealSupabaseError } from '@/lib/supabaseErrors'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
@@ -33,7 +34,13 @@ export async function POST(request: Request) {
     .eq('uuid', shop_id)
     .single()
 
-  if (shopError || !shop) {
+  if (isRealSupabaseError(shopError)) {
+    logger.error('Error validating shop', { error: shopError.message })
+    metrics.apiError('shops/report')
+    return NextResponse.json({ error: 'Error validating shop' }, { status: 500 })
+  }
+
+  if (!shop) {
     return NextResponse.json({ error: 'Shop not found' }, { status: 404 })
   }
 

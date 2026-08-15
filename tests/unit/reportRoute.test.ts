@@ -116,7 +116,7 @@ describe('Report API Route - POST', () => {
   })
 
   test('returns 404 when shop_id does not exist', async () => {
-    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116', message: 'No rows found' } })
 
     const response = await post({ shop_id: 'nonexistent-uuid', report_type: 'closed' })
     const data = await response.json()
@@ -133,6 +133,31 @@ describe('Report API Route - POST', () => {
 
     expect(response.status).toBe(404)
     expect(data.error).toBe('Shop not found')
+  })
+
+  // Regression for S11a: the route used to treat any Supabase error as "not
+  // found," so a real DB failure during shop validation was reported as a 404
+  // instead of the 500 it actually is.
+  test('returns 500, not 404, when shop validation fails for a reason other than no rows', async () => {
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: '500', message: 'connection refused' } })
+
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'closed' })
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error validating shop')
+  })
+
+  // An error with no `code` at all is not PGRST116, so it must be treated as a
+  // real failure the same as any other non-PGRST116 error.
+  test('returns 500 when a Supabase error has no code at all', async () => {
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'unexpected' } })
+
+    const response = await post({ shop_id: 'shop-uuid-123', report_type: 'closed' })
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error validating shop')
   })
 
   test('returns 500 on Supabase insert failure', async () => {
