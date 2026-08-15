@@ -6,6 +6,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve as resolvePath } from "node:path";
+import { stripLeadingSqlComment } from "./lib/sql.mjs";
 
 // Repo root, derived from this script's location (scripts/ -> repo root).
 const ROOT = resolvePath(dirname(fileURLToPath(import.meta.url)), "..");
@@ -26,6 +27,10 @@ const KEY = env.GOOGLE_MAPS_API_KEY;
 const SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
+
+const MIGRATION = stripLeadingSqlComment(
+  readFileSync(`${ROOT}/migrations/hours-schema.sql`, "utf8")
+);
 
 // ---- helpers ---------------------------------------------------------------
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -330,35 +335,6 @@ function metaUpsert(uuid, status, placeId, dist) {
     `WHERE shop_hours_meta.source='google_places';`
   );
 }
-
-const MIGRATION = `
-CREATE TABLE IF NOT EXISTS shop_hours (
-  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  shop_uuid      uuid NOT NULL REFERENCES shops(uuid) ON DELETE CASCADE,
-  day_of_week    smallint NOT NULL CHECK (day_of_week BETWEEN 0 AND 6),
-  opens_at       time NOT NULL,
-  closes_at      time NOT NULL,
-  spans_midnight boolean NOT NULL DEFAULT false,
-  UNIQUE (shop_uuid, day_of_week, opens_at)
-);
-CREATE INDEX IF NOT EXISTS idx_shop_hours_shop ON shop_hours(shop_uuid);
-ALTER TABLE shop_hours ENABLE ROW LEVEL SECURITY;
-DO $$ BEGIN
-  CREATE POLICY "Enable read access for all users" ON shop_hours FOR SELECT TO public USING (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
-CREATE TABLE IF NOT EXISTS shop_hours_meta (
-  shop_uuid        uuid PRIMARY KEY REFERENCES shops(uuid) ON DELETE CASCADE,
-  source           text NOT NULL DEFAULT 'google_places'
-                     CHECK (source IN ('google_places','manual','shop_submitted')),
-  status           text NOT NULL
-                     CHECK (status IN ('ok','no_hours','not_found','low_confidence','not_operational','error')),
-  google_place_id  text,
-  match_distance_m double precision,
-  fetched_at       timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE shop_hours_meta ENABLE ROW LEVEL SECURITY;
--- No policies: admin/service-role only (not readable/writable by anon).`;
 
 const VERIFICATION = `-- ============================================================================
 -- VERIFICATION
