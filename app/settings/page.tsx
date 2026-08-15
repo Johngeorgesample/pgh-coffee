@@ -4,22 +4,41 @@ import { useEffect, useState } from 'react'
 import { TUnits } from '@/types/unit-types'
 import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
 
+const DISTANCE_PREFERENCE_KEY = 'distanceUnits'
+const DEFAULT_UNIT = DISTANCE_UNITS.Miles as TUnits
+
+// A storage write can throw (e.g. private browsing with storage disabled), and
+// this seed is a best-effort default, not the read path — swallow it the same
+// way handleUnitChange already does, rather than let it fail the mount effect.
+const seedDefaultUnit = () => {
+  try {
+    window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, DEFAULT_UNIT)
+  } catch (error) {
+    console.error('Failed to seed default unit preference:', error)
+  }
+}
+
+// Read once and reuse the same value for both the write and the state, so a
+// first visit (nothing stored yet) can't leave localStorage and the render
+// disagreeing about what the default is. One `stored` check drives both
+// branches, so an empty string is treated as "nothing stored" everywhere,
+// not just in the write, or it would render blank forever without self-healing.
+const readStoredUnitOrSeedDefault = () => {
+  const stored = window.localStorage.getItem(DISTANCE_PREFERENCE_KEY)
+  if (stored) return stored as TUnits
+  seedDefaultUnit()
+  return DEFAULT_UNIT
+}
+
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
   const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>('miles')
   const [isLoading, setIsLoading] = useState(true)
-  const DEFAULT_UNIT = DISTANCE_UNITS.Miles
-  const DISTANCE_PREFERENCE_KEY = 'distanceUnits'
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setUnitFromLocalStorage(window.localStorage.getItem(DISTANCE_PREFERENCE_KEY) as TUnits)
-      if (!window.localStorage.getItem(DISTANCE_PREFERENCE_KEY)) {
-        window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, DEFAULT_UNIT)
-      }
-      setIsLoading(false)
-    }
-  // eslint-disable-next-line
+    if (typeof window === 'undefined') return
+    setUnitFromLocalStorage(readStoredUnitOrSeedDefault())
+    setIsLoading(false)
   }, [])
 
   const handleUnitChange = (newUnit: string) => {
@@ -65,7 +84,7 @@ export default function Settings() {
       </div>
 
       <DistanceUnitsDialog
-        currentUnit={unitFromLocalStorage || DEFAULT_UNIT}
+        currentUnit={unitFromLocalStorage}
         isOpen={distanceUnitsDialogIsOpen}
         handleClose={() => setDistanceUnitsDialogIsOpen(false)}
         onUnitChange={handleUnitChange}
