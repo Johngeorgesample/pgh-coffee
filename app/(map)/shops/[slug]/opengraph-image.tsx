@@ -1,39 +1,21 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { getShopForSeo } from '@/app/utils/seo'
+import { OG_COLORS, OG_IMAGE_SIZE, OG_CONTENT_TYPE, getOgLogoSrc, OG_NO_PHOTO_BACKGROUND } from '@/app/utils/ogTheme'
 
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
+export const size = OG_IMAGE_SIZE
+export const contentType = OG_CONTENT_TYPE
 export const alt = 'pgh.coffee shop'
-
-const logoSrc = `data:image/png;base64,${readFileSync(
-  join(process.cwd(), 'public', 'logo_with_no_text_transparent_108.png'),
-).toString('base64')}`
-
-const yellow = '#fde047' // matches nav bg-yellow-300
-const gray900 = '#111827'
-const gray500 = '#6b7280'
-
-// Cream + dot grid stands in for the photo when a shop has none, matching the
-// passport OG image. Satori won't tile a radial-gradient, hence the SVG tile.
-const noPhotoBackground = {
-  backgroundColor: '#fffbeb',
-  backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='4' cy='4' r='2.5' fill='#e0ddd2'/></svg>`,
-  )}")`,
-  backgroundSize: '32px 32px',
-  backgroundRepeat: 'repeat',
-}
 
 /* eslint-disable @next/next/no-img-element */
 
 function Background({ photo }: { photo: string | null }) {
-  if (!photo) return <div style={{ ...noPhotoBackground, display: 'flex', width: '100%', height: '100%' }} />
+  if (!photo) return <div style={{ ...OG_NO_PHOTO_BACKGROUND, display: 'flex', width: '100%', height: '100%' }} />
   return <img src={photo} width={size.width} height={size.height} alt="" style={{ objectFit: 'cover' }} />
 }
 
 function Header() {
+  const logoSrc = getOgLogoSrc()
+
   return (
     <div
       style={{
@@ -44,11 +26,11 @@ function Header() {
         display: 'flex',
         alignItems: 'center',
         gap: 14,
-        background: yellow,
+        background: OG_COLORS.yellow,
         padding: '20px 56px',
         fontSize: 44,
         fontWeight: 700,
-        color: gray900,
+        color: OG_COLORS.gray900,
       }}
     >
       <img src={logoSrc} width={44} height={44} alt="" />
@@ -70,11 +52,11 @@ function InfoCard({ title, subtitle }: { title: string; subtitle: string }) {
         gap: 8,
         background: 'white',
         padding: '28px 40px',
-        borderLeft: `12px solid ${yellow}`,
+        borderLeft: `12px solid ${OG_COLORS.yellow}`,
       }}
     >
-      <div style={{ fontSize: 58, fontWeight: 700, color: gray900, lineHeight: 1.1 }}>{title}</div>
-      <div style={{ fontSize: 30, color: gray500 }}>{subtitle}</div>
+      <div style={{ fontSize: 58, fontWeight: 700, color: OG_COLORS.gray900, lineHeight: 1.1 }}>{title}</div>
+      <div style={{ fontSize: 30, color: OG_COLORS.gray500 }}>{subtitle}</div>
     </div>
   )
 }
