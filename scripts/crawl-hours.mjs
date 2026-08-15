@@ -28,13 +28,6 @@ const SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
 
-// Read straight from the migration rather than hand-copying its CREATE TABLE
-// statements here, so the two can't silently drift out of sync. Only the DDL
-// is embedded — the migration file's own prose header describes itself (e.g.
-// "see the generated hours-backfill.sql"), which reads as self-referential
-// nonsense once copied into that very generated file. Checked after the env
-// vars above, so a missing API key still surfaces its own actionable error
-// first rather than being preempted by this newer filesystem dependency.
 const MIGRATION = stripLeadingSqlComment(
   readFileSync(`${ROOT}/migrations/hours-schema.sql`, "utf8")
 );

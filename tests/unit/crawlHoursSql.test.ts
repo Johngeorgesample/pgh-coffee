@@ -4,9 +4,6 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { stripLeadingSqlComment } from '@/scripts/lib/sql.mjs'
 
-// Anchored to this test file's location, not process.cwd(), so it resolves
-// the same regardless of which directory vitest is invoked from — matching
-// how crawl-hours.mjs itself resolves ROOT.
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 
 describe('stripLeadingSqlComment', () => {
@@ -36,10 +33,6 @@ describe('stripLeadingSqlComment', () => {
     expect(() => stripLeadingSqlComment('-- just a comment\n-- another line')).toThrow()
   })
 
-  // Regression for S20: crawl-hours.mjs embeds this file's DDL directly into
-  // a generated review file, so the schema's own "see the generated file"
-  // header must not leak into that generated file's contents, and nothing in
-  // the DDL itself should get dropped along with the header.
   test('strips the real hours-schema.sql header down to just its CREATE TABLE statements', () => {
     const schema = readFileSync(join(REPO_ROOT, 'migrations', 'hours-schema.sql'), 'utf8')
 
