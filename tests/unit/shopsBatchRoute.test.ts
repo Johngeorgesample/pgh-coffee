@@ -40,9 +40,6 @@ describe('Shops Batch API Route - GET', () => {
     expect(mockSelect).not.toHaveBeenCalled()
   })
 
-  // Regression for S12: the batch query dropped the roaster join that
-  // geojson/route.ts and by-slug/route.ts both carry, so every shop in the
-  // batch response silently lost its `roaster` property.
   test('queries the roaster join and surfaces it on each shop', async () => {
     mockOrder.mockResolvedValueOnce({
       data: [{

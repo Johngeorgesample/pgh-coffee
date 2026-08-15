@@ -1,7 +1,5 @@
 import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
 
-// One definition shared by every route that queries `shops`, so a roaster join
-// added to one query can't silently drift missing from another.
 export const SHOP_WITH_ROASTER_SELECT = '*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)'
 
 // The roaster a shop serves (joined via roaster_id), flagged in-house when it

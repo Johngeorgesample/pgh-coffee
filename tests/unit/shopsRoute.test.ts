@@ -45,8 +45,6 @@ describe('Shops API Route - GET', () => {
     expect(data).toEqual(shops)
   })
 
-  // Regression: this route once queried '*, company:company_id(*)' with no
-  // roaster join, so every shop it returned was silently missing roaster data.
   test('queries the roaster join', async () => {
     mockOrderResult.mockResolvedValueOnce({ data: [], error: null })
 
