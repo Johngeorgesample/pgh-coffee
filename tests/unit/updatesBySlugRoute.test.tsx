@@ -3,9 +3,6 @@ import { NextRequest } from 'next/server'
 
 const mockLimit = vi.fn()
 
-// getUpdateByIdPrefix prefix-matches the uuid `id` column via a bounded range
-// (.gte(...).lte(...)) rather than LIKE, because `uuid` is a Postgres uuid type
-// with no LIKE operator. The chain resolves at .limit().
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({

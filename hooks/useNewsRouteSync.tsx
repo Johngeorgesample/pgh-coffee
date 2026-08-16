@@ -26,12 +26,8 @@ export const useNewsRouteSync = () => {
 
   useEffect(() => {
     if (onNewsRoute && slug) {
-      // Read via getState() rather than closing over the hook, so this effect
-      // depends only on slug/onNewsRoute/hasNewsList (mirrors useShopRouteSync).
       const { panelMode, panelContent, setPanelContent } = usePanelStore.getState()
 
-      // Skip the fetch when NewsCard's click handler already set this exact
-      // panel before the route caught up.
       if (panelMode === 'news' && isSameNewsSlug(panelContent, slug)) return
 
       const controller = new AbortController()

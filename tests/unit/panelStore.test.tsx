@@ -48,8 +48,6 @@ describe('panelStore back() URL sync', () => {
   })
 
   test('backing out to a news entry restores its /news/[slug] URL', () => {
-    // NewsDetails takes a single `news` object prop (not top-level id/title),
-    // so this locks in that getURLParamForEntry reads it from the right shape.
     setPathname('/')
     const { setPanelContent, back } = usePanelStore.getState()
     setPanelContent(newsEntry, 'news')

@@ -28,9 +28,6 @@ function hasProps<K extends string>(
   )
 }
 
-// Shared by getURLParamForEntry's 'news' case and useNewsRouteSync's
-// skip-refetch check, so the two don't drift on what counts as "this panel
-// already shows that news item".
 export function getPanelNewsItem(content: ReactNode) {
   return hasProps(content, 'news') ? (content.props.news as Pick<NewsItem, 'id' | 'title'>) : undefined
 }
