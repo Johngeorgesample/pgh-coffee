@@ -2,6 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { createElement } from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useNewsRouteSync } from '@/hooks/useNewsRouteSync'
+import { News } from '@/app/components/News'
 
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
@@ -69,6 +70,22 @@ describe('useNewsRouteSync', () => {
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(`/api/updates/by-slug/${h.slug}`, expect.anything())
       expect(h.panelState.setPanelContent).toHaveBeenCalledWith(expect.anything(), 'news')
+    })
+  })
+
+  test('falls back to the news list when the fetch fails, so stale details do not linger', async () => {
+    h.slug = 'some-other-item-99999999'
+    h.pathname = `/news/${h.slug}`
+    h.panelState.panelMode = 'news'
+    h.panelState.panelContent = createElement('div', { news: newsItem })
+    ;(fetch as any).mockResolvedValueOnce({ ok: false, status: 404 })
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    renderHook(() => useNewsRouteSync())
+
+    await waitFor(() => {
+      const [content] = h.panelState.setPanelContent.mock.calls.at(-1)
+      expect(content.type).toBe(News)
     })
   })
 })
