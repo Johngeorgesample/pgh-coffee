@@ -40,8 +40,6 @@ export const useNewsRouteSync = () => {
         .then(news => setPanelContent(<NewsDetails news={news} />, 'news'))
         .catch(err => {
           if (err.name === 'AbortError') return
-          // Unresolvable slug or fetch failure: fall back to the list instead of
-          // leaving the previous item's details showing under the new URL.
           console.error(err)
           setPanelContent(<News />, 'news')
         })
