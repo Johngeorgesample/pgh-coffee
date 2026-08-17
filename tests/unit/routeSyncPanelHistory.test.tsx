@@ -3,6 +3,7 @@ import { renderHook } from '@testing-library/react'
 import { useCompanyRouteSync } from '@/hooks/useCompanyRouteSync'
 import { useRoasterRouteSync } from '@/hooks/useRoasterRouteSync'
 import usePanelStore from '@/stores/panelStore'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 const h = vi.hoisted(() => ({ slug: undefined as string | undefined, pathname: '/', search: '' }))
 
@@ -109,11 +110,10 @@ describe('route sync panel history', () => {
     expect(useShopsStore.getState().overrideShops).toBe(filter)
   })
 
-  test('releases the map filter when the destination panel never arrives', () => {
-    // A valid /events/{slug} whose fetch fails: useEventRouteSync only logs, so no
-    // panel replaces <Company> and it stays mounted with the map pinned to that
-    // company. (A *dead* slug can't reach this — the page calls notFound(), which
-    // unmounts the map layout and the panel with it.)
+  test('releases the map filter as soon as the route leaves', () => {
+    // The destination's hook installs its panel from a fetch, so <Company> stays
+    // mounted — with the map pinned to that company — until it lands. The filter
+    // is the route's, not the panel's, so it goes now rather than on unmount.
     h.slug = 'commonplace-coffee-co'
     h.pathname = '/companies/commonplace-coffee-co'
     const { rerender } = renderRouteSyncs()
