@@ -30,6 +30,7 @@ describe('route sync panel history', () => {
   beforeEach(() => {
     usePanelStore.getState().reset({ mode: 'explore', content: null })
     usePanelStore.getState().clearHistory()
+    useShopsStore.getState().setOverrideShops(null)
     h.slug = undefined
     h.pathname = '/'
     h.search = ''
@@ -70,6 +71,22 @@ describe('route sync panel history', () => {
 
     expect(usePanelStore.getState().panelMode).toBe('explore')
     expect(modes()).toEqual(['explore'])
+  })
+
+  test('releases the map filter on exit even when the destination owns the panel', () => {
+    // /events/{slug} installs its panel asynchronously and only logs on failure,
+    // so a dead slug would otherwise leave <Company> mounted — and the map pinned
+    // to that company — on a route that isn't /companies/.
+    h.slug = 'commonplace-coffee-co'
+    h.pathname = '/companies/commonplace-coffee-co'
+    const { rerender } = renderRouteSyncs()
+    useShopsStore.getState().setOverrideShops({ type: 'FeatureCollection', features: [] })
+
+    h.slug = 'a-dead-event-slug'
+    h.pathname = '/events/a-dead-event-slug'
+    rerender()
+
+    expect(useShopsStore.getState().overrideShops).toBeNull()
   })
 
   test('leaves the panel alone when a query param owns it on /', () => {

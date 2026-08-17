@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import { RoasterDetails } from '@/app/components/RoasterDetails'
 import { ExploreContent } from '@/app/components/ExploreContent'
 import { isPanelOwnedRoute } from '@/app/utils/panelRoutes'
@@ -29,6 +30,8 @@ export const useRoasterRouteSync = () => {
     // Same leak, and same handoff caveat, as the company route: <RoasterDetails>
     // only releases its overrideShops on unmount, so a panel that outlives its
     // route keeps the map filtered to that roaster's stockists on `/`.
+    useShopsStore.getState().setOverrideShops(null)
+
     if (destinationOwnsPanel) return
     if (usePanelStore.getState().panelMode === 'roaster') {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })

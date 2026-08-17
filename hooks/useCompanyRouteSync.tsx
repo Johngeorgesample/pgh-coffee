@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import { Company } from '@/app/components/Company'
 import { ExploreContent } from '@/app/components/ExploreContent'
 import { isPanelOwnedRoute } from '@/app/utils/panelRoutes'
@@ -27,12 +28,16 @@ export const useCompanyRouteSync = () => {
       return
     }
 
-    // Leaving the company route (browser Back, say): drop the panel so <Company>
-    // unmounts and releases the overrideShops it set, otherwise the map on `/`
-    // stays filtered to that company. Skip it when another route-sync hook owns
-    // the destination — it replaces the panel itself, and resetting here would
-    // wipe the history its entry is about to be pushed onto. The mode check keeps
-    // us off a news/events/search panel that legitimately lives on `/`.
+    // Leaving the company route always releases the map filter <Company> set.
+    // Waiting for its unmount isn't enough: on a handoff the destination's hook
+    // might never install its panel (a dead event slug, whose hook only logs), and
+    // the map would stay pinned to this company on a route that isn't its own.
+    useShopsStore.getState().setOverrideShops(null)
+
+    // The panel itself only comes down when no other route-sync hook owns the
+    // destination — resetting during a handoff would wipe the history its entry is
+    // about to be pushed onto. The mode check keeps us off a news/events/search
+    // panel that legitimately lives on the bare `/` route.
     if (destinationOwnsPanel) return
     if (usePanelStore.getState().panelMode === 'company') {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
