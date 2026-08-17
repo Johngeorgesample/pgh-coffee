@@ -77,15 +77,3 @@ export interface RoasterRef {
   name: string
   slug: string
 }
-
-export interface TList {
-  id: string
-  title: string
-  description: string
-  featured: boolean
-  created_by: string
-  created_at: string
-  updated_at: string
-  header?: string
-  shops: TShop[]
-}
