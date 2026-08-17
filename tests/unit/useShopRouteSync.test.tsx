@@ -5,11 +5,16 @@ import { useShopRouteSync } from '@/hooks/useShopRouteSync'
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
   pathname: '/' as string,
+  search: '' as string,
   shopState: { currentShop: {} as any, setCurrentShop: vi.fn() },
   panelState: { panelMode: 'explore' as string, reset: vi.fn(), setPanelContent: vi.fn() },
 }))
 
-vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ slug: h.slug }),
+  usePathname: () => h.pathname,
+  useSearchParams: () => new URLSearchParams(h.search),
+}))
 vi.mock('@/stores/coffeeShopsStore', () => ({ __esModule: true, default: { getState: () => h.shopState } }))
 vi.mock('@/stores/panelStore', () => ({ __esModule: true, default: { getState: () => h.panelState } }))
 vi.mock('@/app/components/ShopDetails', () => ({ __esModule: true, default: () => null }))
@@ -24,6 +29,7 @@ describe('useShopRouteSync', () => {
     vi.clearAllMocks()
     h.slug = undefined
     h.pathname = '/'
+    h.search = ''
     h.shopState.currentShop = {}
     h.panelState.panelMode = 'explore'
     vi.stubGlobal('fetch', vi.fn())
@@ -39,6 +45,21 @@ describe('useShopRouteSync', () => {
     expect(h.shopState.setCurrentShop).toHaveBeenCalledWith({})
     expect(h.panelState.reset).toHaveBeenCalledWith(expect.objectContaining({ mode: 'explore' }))
     expect(fetch).not.toHaveBeenCalled()
+  })
+
+  test('hands the panel to the destination hook but still de-highlights the marker', () => {
+    // The shop panel's "Part of {company}" button routes to /companies/{slug};
+    // the company hook installs that panel, so resetting here would wipe the
+    // history its entry is about to be pushed onto.
+    h.slug = 'de-fer-coffee-tea'
+    h.pathname = '/companies/de-fer-coffee-tea'
+    h.shopState.currentShop = shopWithUuid
+    h.panelState.panelMode = 'shop'
+
+    renderHook(() => useShopRouteSync())
+
+    expect(h.shopState.setCurrentShop).toHaveBeenCalledWith({})
+    expect(h.panelState.reset).not.toHaveBeenCalled()
   })
 
   test('leaving a shop route does not disturb a non-shop panel (e.g. company)', () => {
