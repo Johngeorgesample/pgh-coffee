@@ -5,12 +5,17 @@ import { useRoasterRouteSync } from '@/hooks/useRoasterRouteSync'
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
   pathname: '/' as string,
+  search: '' as string,
   panelMode: 'explore' as string,
   setPanelContent: vi.fn(),
   reset: vi.fn(),
 }))
 
-vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ slug: h.slug }),
+  usePathname: () => h.pathname,
+  useSearchParams: () => new URLSearchParams(h.search),
+}))
 vi.mock('@/stores/panelStore', () => {
   const getState = () => ({
     panelMode: h.panelMode,
@@ -30,6 +35,7 @@ describe('useRoasterRouteSync', () => {
     vi.clearAllMocks()
     h.slug = undefined
     h.pathname = '/'
+    h.search = ''
     h.panelMode = 'explore'
   })
 
@@ -65,6 +71,18 @@ describe('useRoasterRouteSync', () => {
     rerender()
 
     expect(h.reset).toHaveBeenCalledWith({ mode: 'explore', content: expect.anything() })
+  })
+
+  test('hands the panel over instead of tearing it down when another route owns it', () => {
+    // /news/{slug} loads asynchronously, so tearing down here would flash the
+    // Explore panel — and run its mount effects — before the article arrives.
+    h.panelMode = 'roaster'
+    h.slug = 'commonplace-opens-in-bloomfield-a1b2c3'
+    h.pathname = '/news/commonplace-opens-in-bloomfield-a1b2c3'
+
+    renderHook(() => useRoasterRouteSync())
+
+    expect(h.reset).not.toHaveBeenCalled()
   })
 
   test('leaves a non-roaster panel that lives on / alone', () => {

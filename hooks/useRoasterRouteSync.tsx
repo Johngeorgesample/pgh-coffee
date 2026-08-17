@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { useParams, usePathname } from 'next/navigation'
+import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import { RoasterDetails } from '@/app/components/RoasterDetails'
 import { ExploreContent } from '@/app/components/ExploreContent'
+import { isPanelOwnedRoute } from '@/app/utils/panelRoutes'
 
 /**
  * Syncs the panel from the roaster route: `/roasters/{slug}` opens a single
@@ -12,22 +13,25 @@ import { ExploreContent } from '@/app/components/ExploreContent'
 export const useRoasterRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const onRoasterRoute = pathname.startsWith('/roasters/')
+  const destinationOwnsPanel = isPanelOwnedRoute(pathname, searchParams)
 
   // Store actions are read via getState() rather than closed over so the effect
-  // depends only on `slug` and `onRoasterRoute` — no exhaustive-deps suppression.
+  // depends only on the values below — no exhaustive-deps suppression.
   useEffect(() => {
     if (onRoasterRoute && slug) {
       usePanelStore.getState().setPanelContent(<RoasterDetails slug={slug} />, 'roaster')
       return
     }
 
-    // Same leak as the company route: <RoasterDetails> only releases its
-    // overrideShops on unmount, so a panel that outlives its route keeps the map
-    // filtered to that roaster's stockists on `/`.
+    // Same leak, and same handoff caveat, as the company route: <RoasterDetails>
+    // only releases its overrideShops on unmount, so a panel that outlives its
+    // route keeps the map filtered to that roaster's stockists on `/`.
+    if (destinationOwnsPanel) return
     if (usePanelStore.getState().panelMode === 'roaster') {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
     }
-  }, [slug, onRoasterRoute])
+  }, [slug, onRoasterRoute, destinationOwnsPanel])
 }

@@ -5,12 +5,17 @@ import { useCompanyRouteSync } from '@/hooks/useCompanyRouteSync'
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
   pathname: '/' as string,
+  search: '' as string,
   panelMode: 'explore' as string,
   setPanelContent: vi.fn(),
   reset: vi.fn(),
 }))
 
-vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ slug: h.slug }),
+  usePathname: () => h.pathname,
+  useSearchParams: () => new URLSearchParams(h.search),
+}))
 vi.mock('@/stores/panelStore', () => {
   const getState = () => ({
     panelMode: h.panelMode,
@@ -30,6 +35,7 @@ describe('useCompanyRouteSync', () => {
     vi.clearAllMocks()
     h.slug = undefined
     h.pathname = '/'
+    h.search = ''
     h.panelMode = 'explore'
   })
 
@@ -72,6 +78,18 @@ describe('useCompanyRouteSync', () => {
     // the company route must not reset a panel it never owned.
     h.panelMode = 'news'
     h.pathname = '/'
+
+    renderHook(() => useCompanyRouteSync())
+
+    expect(h.reset).not.toHaveBeenCalled()
+  })
+
+  test('hands the panel over instead of tearing it down when another route owns it', () => {
+    // The roaster hook replaces the panel itself; resetting here would wipe the
+    // history its entry is about to be pushed onto, breaking the back arrow.
+    h.panelMode = 'company'
+    h.slug = 'commonplace-roasting'
+    h.pathname = '/roasters/commonplace-roasting'
 
     renderHook(() => useCompanyRouteSync())
 
