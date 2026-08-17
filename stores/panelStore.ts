@@ -50,16 +50,14 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
         }
       }
       return null
-    case 'company':
-      if (hasProps(content, 'slug') && content.props.slug) {
-        return { type: 'path', value: `/companies/${content.props.slug as string}` }
-      }
-      return null
-    case 'roaster':
-      if (hasProps(content, 'slug') && content.props.slug) {
-        return { type: 'path', value: `/roasters/${content.props.slug as string}` }
-      }
-      return null
+    case 'company': {
+      const slug = getPanelSlug(content)
+      return slug ? { type: 'path', value: `/companies/${slug}` } : null
+    }
+    case 'roaster': {
+      const slug = getPanelSlug(content)
+      return slug ? { type: 'path', value: `/roasters/${slug}` } : null
+    }
     case 'news': {
       const news = getPanelNewsItem(content)
       if (news?.id && news?.title) {

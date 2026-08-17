@@ -17,10 +17,9 @@ export const isPanelOwnedRoute = (pathname: string, params: { has: (name: string
   PANEL_PATH_PREFIXES.some(prefix => pathname.startsWith(prefix)) ||
   PANEL_QUERY_PARAMS.some(param => params.has(param))
 
-// Routes whose panel installs its own map filter (overrideShops). A hook leaving
-// for one of these must leave the filter alone: the destination's panel replaces
-// it once its fetch resolves, and clearing on the way out would un-filter the map
-// for the whole request.
+// Routes whose panel installs its own map filter (overrideShops), so a hook
+// leaving for one of these should not clear a filter it doesn't own — the other
+// hook's component is the one managing it.
 const MAP_FILTER_PATH_PREFIXES = ['/companies/', '/roasters/']
 
 export const ownsMapFilter = (pathname: string) =>

@@ -37,11 +37,15 @@ export const useCompanyRouteSync = () => {
     }
 
     // Leaving the company route releases the map filter <Company> set. Waiting for
-    // its unmount isn't enough: on a handoff the destination's hook might never
-    // install its panel (a transient /api/events failure, whose hook only logs),
-    // leaving the map pinned to this company on a route that isn't its own. The
-    // exception is a destination that installs its own filter — clearing there
-    // would un-filter the map for the length of its fetch.
+    // its unmount isn't enough: the destination's hook may replace the panel late,
+    // or not at all, leaving the map pinned to this company on a route that isn't
+    // its own.
+    //
+    // The exception is narrow: it stops this hook from clearing a filter it doesn't
+    // own on a /roasters/A -> /roasters/B move, where the slug dep re-fires this
+    // effect while <RoasterDetails> still holds A's state. It does NOT keep the map
+    // filtered across a company -> roaster move; <Company> unmounts there, and its
+    // own cleanup clears the filter for the length of the roaster fetch.
     if (!destinationOwnsMapFilter) useShopsStore.getState().setOverrideShops(null)
 
     // The panel itself only comes down when no other route-sync hook owns the
