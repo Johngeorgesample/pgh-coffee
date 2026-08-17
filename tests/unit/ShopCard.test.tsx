@@ -74,7 +74,6 @@ describe('ShopCard', () => {
   })
 
   it('renders distance when distance and units are provided', () => {
-    // @ts-expect-error
     render(<ShopCard {...defaultProps} distance="1.23456" units="Miles" />)
 
     expect(screen.getByText('1.23 miles away')).toBeTruthy()
@@ -87,7 +86,6 @@ describe('ShopCard', () => {
     rerender(<ShopCard {...defaultProps} distance="1.23" />)
     expect(screen.queryByText(/away/)).toBeNull()
 
-    // @ts-expect-error
     rerender(<ShopCard {...defaultProps} units="Miles" />)
     expect(screen.queryByText(/away/)).toBeNull()
   })

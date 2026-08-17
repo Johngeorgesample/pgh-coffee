@@ -3,7 +3,7 @@
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import VerifiedBadge from './VerifiedBadge'
 import { TShop } from '@/types/shop-types'
-import { TUnits } from '@/types/unit-types'
+import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useShopSelection, useAnalytics } from '@/hooks'
 
@@ -21,12 +21,12 @@ interface IProps {
   onClick?: () => void
 }
 
-export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
-  if (units === 'Miles') return Math.round(distance * 100) / 100
-  if (units === 'Meters') return Math.round(distance)
-}
+// Total over TUnits, so there is no unmatched branch that could render
+// "undefined miles away".
+export const roundDistance = ({ units, distance }: { units: TUnits; distance: number }) =>
+  units === DISTANCE_UNITS.Miles ? Math.round(distance * 100) / 100 : Math.round(distance)
 
-export const generateDistanceText = ({ units, distance }: { units: string; distance: string }) => {
+export const generateDistanceText = ({ units, distance }: { units: TUnits; distance: string }) => {
   const parsedDistance = parseFloat(distance)
   return `${roundDistance({ units, distance: parsedDistance })} ${units.toLowerCase()} away`
 }
