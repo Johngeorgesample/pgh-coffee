@@ -12,6 +12,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
+import { isPanelOwnedRoute } from '@/app/utils/panelRoutes'
 
 export default function HomeClient() {
   const plausible = useAnalytics()
@@ -91,9 +92,7 @@ export default function HomeClient() {
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
-      const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      const onDetailPath = ['/shops/', '/events/', '/news/', '/roasters/', '/companies/'].some(p => pathname.startsWith(p))
-      if (!hasContentParam && !onDetailPath) {
+      if (!isPanelOwnedRoute(pathname, params)) {
         setPanelContent(<ExploreContent />, 'explore')
       }
     }
