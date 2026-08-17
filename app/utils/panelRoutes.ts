@@ -1,5 +1,10 @@
 const PANEL_PATH_PREFIXES = ['/shops/', '/events/', '/news/', '/roasters/', '/companies/']
-const PANEL_QUERY_PARAMS = ['company', 'roaster', 'news', 'event', 'events']
+
+// Only the params some hook actually reads: useNewsRouteSync reads `news`,
+// useEventRouteSync reads `events`. Listing a param nothing owns (`?company=`,
+// from before companies moved to their own route) would block the teardown for a
+// panel that never arrives.
+const PANEL_QUERY_PARAMS = ['news', 'events']
 
 /**
  * Whether some route-sync hook owns the panel at this location. A route-sync
