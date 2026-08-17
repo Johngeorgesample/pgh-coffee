@@ -5,24 +5,32 @@ import { useRoasterRouteSync } from '@/hooks/useRoasterRouteSync'
 const h = vi.hoisted(() => ({
   slug: undefined as string | undefined,
   pathname: '/' as string,
+  panelMode: 'explore' as string,
   setPanelContent: vi.fn(),
+  reset: vi.fn(),
 }))
 
 vi.mock('next/navigation', () => ({ useParams: () => ({ slug: h.slug }), usePathname: () => h.pathname }))
-vi.mock('@/stores/panelStore', () => ({
-  __esModule: true,
-  default: (selector?: (s: unknown) => unknown) => {
-    const state = { setPanelContent: h.setPanelContent }
-    return selector ? selector(state) : state
-  },
-}))
+vi.mock('@/stores/panelStore', () => {
+  const getState = () => ({
+    panelMode: h.panelMode,
+    setPanelContent: h.setPanelContent,
+    reset: h.reset,
+  })
+  const usePanelStore = (selector?: (s: unknown) => unknown) =>
+    selector ? selector(getState()) : getState()
+  usePanelStore.getState = getState
+  return { __esModule: true, default: usePanelStore }
+})
 vi.mock('@/app/components/RoasterDetails', () => ({ RoasterDetails: () => null }))
+vi.mock('@/app/components/ExploreContent', () => ({ ExploreContent: () => null }))
 
 describe('useRoasterRouteSync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     h.slug = undefined
     h.pathname = '/'
+    h.panelMode = 'explore'
   })
 
   test('opens the roaster panel when on a /roasters/{slug} route', () => {
@@ -43,5 +51,28 @@ describe('useRoasterRouteSync', () => {
     renderHook(() => useRoasterRouteSync())
 
     expect(h.setPanelContent).not.toHaveBeenCalled()
+  })
+
+  test('tears the roaster panel down when the route leaves /roasters', () => {
+    h.slug = 'commonplace-coffee'
+    h.pathname = '/roasters/commonplace-coffee'
+
+    const { rerender } = renderHook(() => useRoasterRouteSync())
+
+    h.panelMode = 'roaster'
+    h.slug = undefined
+    h.pathname = '/'
+    rerender()
+
+    expect(h.reset).toHaveBeenCalledWith({ mode: 'explore', content: expect.anything() })
+  })
+
+  test('leaves a non-roaster panel that lives on / alone', () => {
+    h.panelMode = 'events'
+    h.pathname = '/'
+
+    renderHook(() => useRoasterRouteSync())
+
+    expect(h.reset).not.toHaveBeenCalled()
   })
 })
