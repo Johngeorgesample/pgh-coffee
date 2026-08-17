@@ -15,9 +15,12 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster, uuid, name, verified } = props.shop.properties
+  const { address, photos, amenities, roaster, uuid, name, verified, company } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
+  // A shop owned by a company is claimed through that company, so a verified
+  // company already covers it — same rule PanelHeader applies to the badge.
+  const isVerified = Boolean(verified || company?.is_verified)
 
   return (
     <div className="bg-[#FAF9F7] mb-8">
@@ -52,7 +55,7 @@ export default function PanelContent(props: IProps) {
         <ShopLocation address={address} coordinates={coordinates} />
       </div>
 
-      {!verified && (
+      {!isVerified && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200 flex items-center justify-between gap-3">
           <p className="text-sm text-gray-500">Work at {name}?</p>
           <ClaimButton href={`/claim?shop=${uuid}`} label="Claim this shop" />
