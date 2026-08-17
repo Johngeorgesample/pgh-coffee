@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams, usePathname } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import { Company } from '@/app/components/Company'
+import { ExploreContent } from '@/app/components/ExploreContent'
 
 /**
  * Syncs the panel from the company route: `/companies/{slug}` opens a single
@@ -12,14 +13,23 @@ import { Company } from '@/app/components/Company'
 export const useCompanyRouteSync = () => {
   const { slug } = useParams<{ slug?: string }>()
   const pathname = usePathname()
-  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const onCompanyRoute = pathname.startsWith('/companies/')
 
+  // Store actions are read via getState() rather than closed over so the effect
+  // depends only on `slug` and `onCompanyRoute` — no exhaustive-deps suppression.
   useEffect(() => {
     if (onCompanyRoute && slug) {
-      setPanelContent(<Company slug={slug} />, 'company')
+      usePanelStore.getState().setPanelContent(<Company slug={slug} />, 'company')
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // Leaving the company route (browser Back, say): drop the panel so <Company>
+    // unmounts and releases the overrideShops it set, otherwise the map on `/`
+    // stays filtered to that company. Guarded on the mode so we don't clobber a
+    // news/events/search panel that legitimately lives on the bare `/` route.
+    if (usePanelStore.getState().panelMode === 'company') {
+      usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
+    }
   }, [slug, onCompanyRoute])
 }
