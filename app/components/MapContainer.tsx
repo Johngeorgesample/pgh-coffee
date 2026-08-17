@@ -53,22 +53,25 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const { shopsInView, updateBounds } = useShopsInView(displayedShops.features, showAllPopups)
 
+  // Depend on the coordinates themselves, not the array: callers build a fresh
+  // literal every render, which otherwise re-ran the 1s flyTo on unrelated state
+  // changes (typing in search) and yanked the map back off wherever it was.
+  const [currentLongitude, currentLatitude] = currentShopCoordinates ?? []
+
   const panToCurrentShop = () => {
-    if (currentShopCoordinates?.every(element => Boolean(element))) {
-      if (mapRef.current) {
-        mapRef.current.flyTo({
-          center: [currentShopCoordinates[0], currentShopCoordinates[1]],
-          zoom: mapRef.current.getZoom(),
-          bearing: 0,
-          pitch: 0,
-          duration: 1000,
-          essential: true,
-        })
-      }
-    }
+    if (!currentLongitude || !currentLatitude || !mapRef.current) return
+
+    mapRef.current.flyTo({
+      center: [currentLongitude, currentLatitude],
+      zoom: mapRef.current.getZoom(),
+      bearing: 0,
+      pitch: 0,
+      duration: 1000,
+      essential: true,
+    })
   }
 
-  useEffect(panToCurrentShop, [currentShopCoordinates])
+  useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
