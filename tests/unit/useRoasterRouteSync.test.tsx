@@ -7,6 +7,7 @@ const h = vi.hoisted(() => ({
   pathname: '/' as string,
   search: '' as string,
   panelMode: 'explore' as string,
+  panelSlug: undefined as string | undefined,
   setPanelContent: vi.fn(),
   reset: vi.fn(),
 }))
@@ -19,13 +20,14 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/stores/panelStore', () => {
   const getState = () => ({
     panelMode: h.panelMode,
+    panelContent: null,
     setPanelContent: h.setPanelContent,
     reset: h.reset,
   })
   const usePanelStore = (selector?: (s: unknown) => unknown) =>
     selector ? selector(getState()) : getState()
   usePanelStore.getState = getState
-  return { __esModule: true, default: usePanelStore }
+  return { __esModule: true, default: usePanelStore, getPanelSlug: () => h.panelSlug }
 })
 vi.mock('@/app/components/RoasterDetails', () => ({ RoasterDetails: () => null }))
 vi.mock('@/app/components/ExploreContent', () => ({ ExploreContent: () => null }))
@@ -37,6 +39,7 @@ describe('useRoasterRouteSync', () => {
     h.pathname = '/'
     h.search = ''
     h.panelMode = 'explore'
+    h.panelSlug = undefined
   })
 
   test('opens the roaster panel when on a /roasters/{slug} route', () => {

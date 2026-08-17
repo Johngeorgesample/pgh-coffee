@@ -28,6 +28,10 @@ function hasProps<K extends string>(
   )
 }
 
+export function getPanelSlug(content: ReactNode) {
+  return hasProps(content, 'slug') ? (content.props.slug as string) : undefined
+}
+
 export function getPanelNewsItem(content: ReactNode) {
   return hasProps(content, 'news') ? (content.props.news as Pick<NewsItem, 'id' | 'title'>) : undefined
 }

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { getPanelSlug } from '@/stores/panelStore'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { Company } from '@/app/components/Company'
 import { ExploreContent } from '@/app/components/ExploreContent'
-import { isPanelOwnedRoute } from '@/app/utils/panelRoutes'
+import { isPanelOwnedRoute, ownsMapFilter } from '@/app/utils/panelRoutes'
 
 /**
  * Syncs the panel from the company route: `/companies/{slug}` opens a single
@@ -18,21 +18,31 @@ export const useCompanyRouteSync = () => {
   const searchParams = useSearchParams()
 
   const onCompanyRoute = pathname.startsWith('/companies/')
-  const destinationOwnsPanel = isPanelOwnedRoute(pathname, searchParams)
+  const destinationOwnsPanel = !onCompanyRoute && isPanelOwnedRoute(pathname, searchParams)
+  const destinationOwnsMapFilter = !onCompanyRoute && ownsMapFilter(pathname)
 
   // Store actions are read via getState() rather than closed over so the effect
   // depends only on the values below — no exhaustive-deps suppression.
   useEffect(() => {
     if (onCompanyRoute && slug) {
-      usePanelStore.getState().setPanelContent(<Company slug={slug} />, 'company')
+      const { panelMode, panelContent, setPanelContent } = usePanelStore.getState()
+
+      // The panel back button pops to the company entry and then navigates back to
+      // its route, which re-fires this effect. Pushing again would stack a
+      // duplicate entry and swallow the next back press.
+      if (panelMode === 'company' && getPanelSlug(panelContent) === slug) return
+
+      setPanelContent(<Company slug={slug} />, 'company')
       return
     }
 
-    // Leaving the company route always releases the map filter <Company> set.
-    // Waiting for its unmount isn't enough: on a handoff the destination's hook
-    // might never install its panel (a dead event slug, whose hook only logs), and
-    // the map would stay pinned to this company on a route that isn't its own.
-    useShopsStore.getState().setOverrideShops(null)
+    // Leaving the company route releases the map filter <Company> set. Waiting for
+    // its unmount isn't enough: on a handoff the destination's hook might never
+    // install its panel (a transient /api/events failure, whose hook only logs),
+    // leaving the map pinned to this company on a route that isn't its own. The
+    // exception is a destination that installs its own filter — clearing there
+    // would un-filter the map for the length of its fetch.
+    if (!destinationOwnsMapFilter) useShopsStore.getState().setOverrideShops(null)
 
     // The panel itself only comes down when no other route-sync hook owns the
     // destination — resetting during a handoff would wipe the history its entry is
@@ -42,5 +52,5 @@ export const useCompanyRouteSync = () => {
     if (usePanelStore.getState().panelMode === 'company') {
       usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
     }
-  }, [slug, onCompanyRoute, destinationOwnsPanel])
+  }, [slug, onCompanyRoute, destinationOwnsPanel, destinationOwnsMapFilter])
 }

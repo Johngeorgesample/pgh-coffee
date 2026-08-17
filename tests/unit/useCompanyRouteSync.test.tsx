@@ -7,6 +7,7 @@ const h = vi.hoisted(() => ({
   pathname: '/' as string,
   search: '' as string,
   panelMode: 'explore' as string,
+  panelSlug: undefined as string | undefined,
   setPanelContent: vi.fn(),
   reset: vi.fn(),
 }))
@@ -19,13 +20,14 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/stores/panelStore', () => {
   const getState = () => ({
     panelMode: h.panelMode,
+    panelContent: null,
     setPanelContent: h.setPanelContent,
     reset: h.reset,
   })
   const usePanelStore = (selector?: (s: unknown) => unknown) =>
     selector ? selector(getState()) : getState()
   usePanelStore.getState = getState
-  return { __esModule: true, default: usePanelStore }
+  return { __esModule: true, default: usePanelStore, getPanelSlug: () => h.panelSlug }
 })
 vi.mock('@/app/components/Company', () => ({ Company: () => null }))
 vi.mock('@/app/components/ExploreContent', () => ({ ExploreContent: () => null }))
@@ -37,6 +39,7 @@ describe('useCompanyRouteSync', () => {
     h.pathname = '/'
     h.search = ''
     h.panelMode = 'explore'
+    h.panelSlug = undefined
   })
 
   test('opens the company panel when on a /companies/{slug} route', () => {
@@ -82,6 +85,17 @@ describe('useCompanyRouteSync', () => {
     renderHook(() => useCompanyRouteSync())
 
     expect(h.reset).not.toHaveBeenCalled()
+  })
+
+  test('does not re-push a panel that already shows this company', () => {
+    h.panelMode = 'company'
+    h.panelSlug = 'commonplace-coffee-co'
+    h.slug = 'commonplace-coffee-co'
+    h.pathname = '/companies/commonplace-coffee-co'
+
+    renderHook(() => useCompanyRouteSync())
+
+    expect(h.setPanelContent).not.toHaveBeenCalled()
   })
 
   test('hands the panel over instead of tearing it down when another route owns it', () => {
