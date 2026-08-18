@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
