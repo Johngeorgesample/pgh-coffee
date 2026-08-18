@@ -7,17 +7,18 @@ describe('Settings page', () => {
     window.localStorage.clear()
   })
 
-  // Regression for S19: the page used to read `null` from localStorage on a
-  // first visit, write the default in, but leave state holding the `null` it
-  // had already read — so the unit rendered blank, disagreeing with what a
-  // reload would then read back from the now-seeded localStorage.
-  it('renders the same default unit on a first visit that it persists for a reload', async () => {
+  it('renders the default unit on a first visit without writing to storage', async () => {
     render(<Settings />)
 
     await waitFor(() => {
       expect(screen.getByText('Miles')).toBeInTheDocument()
     })
-    expect(window.localStorage.getItem('distanceUnits')).toBe('Miles')
+    expect(window.localStorage.getItem('distanceUnits')).toBeNull()
+
+    render(<Settings />)
+    await waitFor(() => {
+      expect(screen.getAllByText('Miles')).toHaveLength(2)
+    })
   })
 
   it('renders a previously stored unit unchanged', async () => {
@@ -40,6 +41,16 @@ describe('Settings page', () => {
     await waitFor(() => {
       expect(screen.getByText('Miles')).toBeInTheDocument()
     })
-    expect(window.localStorage.getItem('distanceUnits')).toBe('Miles')
+  })
+
+  it('falls back to the default for an unrecognized stored value', async () => {
+    window.localStorage.setItem('distanceUnits', 'kilometers')
+
+    render(<Settings />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Miles')).toBeInTheDocument()
+    })
+    expect(screen.queryByText('kilometers')).toBeNull()
   })
 })

@@ -1,50 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TUnits } from '@/types/unit-types'
-import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
-
-const DISTANCE_PREFERENCE_KEY = 'distanceUnits'
-const DEFAULT_UNIT = DISTANCE_UNITS.Miles as TUnits
-
-// A storage write can throw (e.g. private browsing with storage disabled), and
-// this seed is a best-effort default, not the read path — swallow it the same
-// way handleUnitChange already does, rather than let it fail the mount effect.
-const seedDefaultUnit = () => {
-  try {
-    window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, DEFAULT_UNIT)
-  } catch (error) {
-    console.error('Failed to seed default unit preference:', error)
-  }
-}
-
-// Read once and reuse the same value for both the write and the state, so a
-// first visit (nothing stored yet) can't leave localStorage and the render
-// disagreeing about what the default is. One `stored` check drives both
-// branches, so an empty string is treated as "nothing stored" everywhere,
-// not just in the write, or it would render blank forever without self-healing.
-const readStoredUnitOrSeedDefault = () => {
-  const stored = window.localStorage.getItem(DISTANCE_PREFERENCE_KEY)
-  if (stored) return stored as TUnits
-  seedDefaultUnit()
-  return DEFAULT_UNIT
-}
+import { DEFAULT_UNITS, DISTANCE_UNITS_STORAGE_KEY, parseUnits, TUnits } from '@/types/unit-types'
+import DistanceUnitsDialog from '@/app/settings/DistanceUnitsDialog'
 
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
-  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>('miles')
+  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>(DEFAULT_UNITS)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    setUnitFromLocalStorage(readStoredUnitOrSeedDefault())
+    setUnitFromLocalStorage(parseUnits(window.localStorage.getItem(DISTANCE_UNITS_STORAGE_KEY)))
     setIsLoading(false)
   }, [])
 
-  const handleUnitChange = (newUnit: string) => {
+  const handleUnitChange = (newUnit: TUnits) => {
     try {
-      window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, newUnit)
-      setUnitFromLocalStorage(newUnit as TUnits)
+      window.localStorage.setItem(DISTANCE_UNITS_STORAGE_KEY, newUnit)
+      setUnitFromLocalStorage(newUnit)
     } catch (error) {
       console.error('Failed to save unit preference:', error)
     }
