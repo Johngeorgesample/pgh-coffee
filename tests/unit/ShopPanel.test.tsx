@@ -40,7 +40,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
 
 // Mock SearchBar component
 vi.mock('@/app/components/SearchBar', () => ({
-  default: ({ onClose }: any) => <div data-testid="search-bar">Search Bar</div>
+  default: () => <div data-testid="search-bar">Search Bar</div>
 }))
 
 beforeAll(() => {

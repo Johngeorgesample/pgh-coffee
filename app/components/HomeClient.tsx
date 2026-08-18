@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -14,8 +14,6 @@ import SearchFAB from './SearchFAB'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
-  const plausible = useAnalytics()
-  const allShops = useShopsStore(s => s.allShops)
   const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
   const currentShop = useShopsStore(s => s.currentShop)
   const setCurrentShop = useShopsStore(s => s.setCurrentShop)

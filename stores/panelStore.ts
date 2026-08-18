@@ -132,12 +132,12 @@ interface PanelState {
 
 const usePanelStore = create<PanelState>()(
   devtools(
-    (set, get) => ({
+    set => ({
       panelMode: 'explore',
       panelContent: null,
       history: [],
 
-      setPanelContent: (content, mode, opts) =>
+      setPanelContent: (content, mode) =>
         set(state => {
           const next: PanelEntry = { mode, content }
 

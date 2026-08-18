@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { describe, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import ShopCard, { roundDistance, generateDistanceText } from '@/app/components/ShopCard'
 import type { TShop } from '@/types/shop-types'

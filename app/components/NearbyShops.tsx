@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState, useEffect } from 'react'
-import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import {
   DEFAULT_UNITS,
@@ -29,7 +28,6 @@ interface ISortedShopsResults {
 const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ shop }: IProps) {
-  const plausible = useAnalytics()
   const allShops = useShopsStore(s => s.allShops)
 
   const [units, setUnits] = useState<TUnits>(DEFAULT_UNITS)
