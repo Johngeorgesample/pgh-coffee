@@ -7,10 +7,6 @@ describe('Settings page', () => {
     window.localStorage.clear()
   })
 
-  // Regression for S19: the page used to render blank on a first visit, because
-  // it read `null` from localStorage and kept it. The default is now derived on
-  // read (parseUnits), so a first visit renders it without writing anything —
-  // and a reload derives the same value from the same absent key.
   it('renders the default unit on a first visit without writing to storage', async () => {
     render(<Settings />)
 
@@ -19,7 +15,6 @@ describe('Settings page', () => {
     })
     expect(window.localStorage.getItem('distanceUnits')).toBeNull()
 
-    // A reload sees the same absent key and must resolve it identically.
     render(<Settings />)
     await waitFor(() => {
       expect(screen.getAllByText('Miles')).toHaveLength(2)
@@ -37,7 +32,7 @@ describe('Settings page', () => {
   })
 
   // An empty string is a stored-but-blank value, not "nothing stored" — it must
-  // resolve to the default rather than rendering blank forever.
+  // self-heal to the default rather than rendering blank forever.
   it('treats an empty stored value the same as nothing stored', async () => {
     window.localStorage.setItem('distanceUnits', '')
 
@@ -48,8 +43,6 @@ describe('Settings page', () => {
     })
   })
 
-  // An unrecognized value (an older build, or hand-edited storage) must not
-  // render raw — it resolves to the default like any other unusable value.
   it('falls back to the default for an unrecognized stored value', async () => {
     window.localStorage.setItem('distanceUnits', 'kilometers')
 

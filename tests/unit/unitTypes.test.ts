@@ -1,9 +1,6 @@
 import { describe, test, expect } from 'vitest'
 import { DEFAULT_UNITS, DISTANCE_UNITS, parseUnits } from '@/types/unit-types'
 
-// parseUnits is the single point where an untrusted storage value becomes a
-// TUnits. Every reader depends on it never handing back something the
-// formatters can't render, which is the bug that hid the distance label.
 describe('parseUnits', () => {
   test('passes through the two real units', () => {
     expect(parseUnits('Miles')).toBe(DISTANCE_UNITS.Miles)
@@ -19,8 +16,6 @@ describe('parseUnits', () => {
     expect(parseUnits('')).toBe(DEFAULT_UNITS)
   })
 
-  // 'kilometers' was a member of the old TUnits union that nothing ever wrote,
-  // and 'miles' was the lowercase initial state that matched no formatter branch.
   test('defaults for legacy and unrecognized values', () => {
     expect(parseUnits('kilometers')).toBe(DEFAULT_UNITS)
     expect(parseUnits('miles')).toBe(DEFAULT_UNITS)

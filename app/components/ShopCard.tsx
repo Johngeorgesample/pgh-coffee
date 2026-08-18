@@ -21,8 +21,6 @@ interface IProps {
   onClick?: () => void
 }
 
-// Total over TUnits, so there is no unmatched branch that could render
-// "undefined miles away".
 export const roundDistance = ({ units, distance }: { units: TUnits; distance: number }) =>
   units === DISTANCE_UNITS.Miles ? Math.round(distance * 100) / 100 : Math.round(distance)
 

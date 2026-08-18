@@ -46,11 +46,6 @@ describe('NearbyShopRow verified badge', () => {
   })
 })
 
-// Regression for the "distances never render" bug: the units prop used to come
-// straight from localStorage, so it was `null` for anyone who had never opened
-// /settings — falsy, so this whole span was skipped. And the one value that did
-// arrive on first render ('miles', lowercase) matched no branch of
-// roundDistance, so it formatted as "undefined miles away".
 describe('NearbyShopRow distance label', () => {
   test('renders a real distance for the default unit', () => {
     render(<NearbyShopRow shop={makeShop()} distance="1.23456" units={DEFAULT_UNITS} />)
