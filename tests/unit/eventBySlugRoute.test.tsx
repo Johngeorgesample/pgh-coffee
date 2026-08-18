@@ -2,23 +2,25 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { NextRequest } from 'next/server'
 
 const mockLimit = vi.fn()
+const mockEq = vi.fn()
 
 // getEventByIdPrefix prefix-matches the uuid `id` column via a bounded range
 // (.gte(...).lte(...)) rather than LIKE, because `uuid` is a Postgres uuid type
 // with no LIKE operator. The chain resolves at .limit().
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    from: () => ({
-      select: () => ({
-        gte: () => ({
-          lte: () => ({
-            limit: mockLimit,
-          }),
-        }),
-      }),
-    }),
-  }),
-}))
+vi.mock('@supabase/supabase-js', () => {
+  const builder: Record<string, unknown> = {
+    select: vi.fn(() => builder),
+    eq: (...args: unknown[]) => {
+      mockEq(...args)
+      return builder
+    },
+    gte: vi.fn(() => builder),
+    lte: vi.fn(() => builder),
+    limit: () => mockLimit(),
+  }
+
+  return { createClient: () => ({ from: () => builder }) }
+})
 
 describe('Event by-slug API Route', () => {
   let GET: typeof import('@/app/api/events/by-slug/[slug]/route').GET
@@ -62,5 +64,13 @@ describe('Event by-slug API Route', () => {
 
     const response = await callWith('whatever-12345678')
     expect(response.status).toBe(404)
+  })
+
+  test('excludes hidden events', async () => {
+    mockLimit.mockResolvedValueOnce({ data: [], error: null })
+
+    await callWith('latte-throwdown-12345678')
+
+    expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
   })
 })

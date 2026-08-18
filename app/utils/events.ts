@@ -7,6 +7,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)'
 
+export const visibleEvents = (select: string = EVENT_SELECT) =>
+  supabase.from('events').select(select).eq('is_hidden', false)
+
 /**
  * Resolves an event from a `/events/{slug}` identifier's id prefix. The `id`
  * column is a Postgres `uuid`, which has no LIKE operator, so we bound a range
@@ -15,9 +18,7 @@ const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster
  * falls within its own prefix range.
  */
 export const getEventByIdPrefix = async (prefix: string) => {
-  const { data, error } = await supabase
-    .from('events')
-    .select(EVENT_SELECT)
+  const { data, error } = await visibleEvents()
     .gte('id', `${prefix}-0000-0000-0000-000000000000`)
     .lte('id', `${prefix}-ffff-ffff-ffff-ffffffffffff`)
     .limit(1)

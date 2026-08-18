@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { getCompanyBySlug } from '@/app/utils/companies'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { visibleEvents } from '@/app/utils/events'
 
 const getCompanyEvents = async (companyId: string) => {
-  const { data, error } = await supabase
-    .from('events')
-    .select('*, shop:shops!inner(*, company:company_id(*))')
+  const { data, error } = await visibleEvents('*, shop:shops!inner(*, company:company_id(*))')
     .eq('shops.company_id', companyId)
 
   if (error) {

@@ -1,18 +1,20 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 const mockSingleResult = vi.fn()
+const mockEq = vi.fn()
 
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          single: mockSingleResult,
-        }),
-      }),
-    }),
-  }),
-}))
+vi.mock('@supabase/supabase-js', () => {
+  const builder: Record<string, unknown> = {
+    select: vi.fn(() => builder),
+    eq: (...args: unknown[]) => {
+      mockEq(...args)
+      return builder
+    },
+    single: () => mockSingleResult(),
+  }
+
+  return { createClient: () => ({ from: () => builder }) }
+})
 
 describe('Event By Id API Route - GET', () => {
   let GET: typeof import('@/app/api/events/[eventId]/route').GET
@@ -51,5 +53,15 @@ describe('Event By Id API Route - GET', () => {
 
     expect(response.status).toBe(404)
     expect(data.error).toBe('Event not found')
+  })
+
+  test('excludes hidden events', async () => {
+    mockSingleResult.mockResolvedValueOnce({ data: null, error: null })
+
+    await GET(new Request('http://localhost:3000/api/events/event-1') as never, {
+      params: Promise.resolve({ eventId: 'event-1' }),
+    })
+
+    expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
   })
 })
