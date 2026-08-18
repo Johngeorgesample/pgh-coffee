@@ -29,26 +29,56 @@ interface TRoaster {
   shops?: DbShop[]
 }
 
+const RoasterSkeleton = () => (
+  <div className="flex h-full flex-col overflow-y-auto animate-pulse">
+    <div className="h-56 sm:h-64 bg-gray-200 shrink-0" />
+    <div className="px-6 lg:px-4 py-6 flex flex-col">
+      <div className="flex gap-2 mb-4">
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-4 bg-gray-200 rounded w-full" />
+        <div className="h-4 bg-gray-200 rounded w-3/4" />
+      </div>
+    </div>
+  </div>
+)
+
+async function fetchRoaster(slug: string, signal: AbortSignal) {
+  const res = await fetch(`/api/roasters/${slug}`, { signal })
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json() as Promise<TRoaster>
+}
+
 export const RoasterDetails = ({ slug }: { slug: string }) => {
   const setOverrideShops = useShopsStore(s => s.setOverrideShops)
   const [roaster, setRoaster] = useState<TRoaster | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'failed'>('loading')
   const plausible = useAnalytics()
 
   useEffect(() => {
-    const fetchRoaster = async () => {
-      try {
-        const response = await fetch(`/api/roasters/${slug}`)
-        const data = await response.json()
+    setRoaster(null)
+    setStatus('loading')
+
+    const controller = new AbortController()
+    fetchRoaster(slug, controller.signal)
+      // abort() can't un-settle a request that already resolved, so this guards
+      // against a previous slug's response landing after a newer one took over.
+      .then(data => {
+        if (controller.signal.aborted) return
         setRoaster(data)
-        plausible('RoasterView', {
-          props: { roasterName: data.name, roasterSlug: slug },
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchRoaster()
+        setStatus('ready')
+        if (data) plausible('RoasterView', { props: { roasterName: data.name, roasterSlug: slug } })
+      })
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        console.error('Error fetching roaster:', err)
+        setStatus('failed')
+      })
+
+    return () => controller.abort()
   }, [slug, plausible])
 
   useEffect(() => {
@@ -58,24 +88,14 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     return () => setOverrideShops(null)
   }, [roaster, setOverrideShops])
 
-  if (loading) {
+  if (status === 'loading') return <RoasterSkeleton />
+  if (status === 'failed') {
     return (
-      <div className="flex h-full flex-col overflow-y-auto animate-pulse">
-        <div className="h-56 sm:h-64 bg-gray-200 shrink-0" />
-        <div className="px-6 lg:px-4 py-6 flex flex-col">
-          <div className="flex gap-2 mb-4">
-            <div className="h-8 w-24 bg-gray-200 rounded-full" />
-            <div className="h-8 w-24 bg-gray-200 rounded-full" />
-          </div>
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-full" />
-            <div className="h-4 bg-gray-200 rounded w-3/4" />
-          </div>
-        </div>
-      </div>
+      <p className="px-6 lg:px-4 mt-24 lg:mt-16">
+        Couldn&apos;t load this roaster. Try again in a moment.
+      </p>
     )
   }
-
   if (!roaster) return <p className="px-6 lg:px-4 mt-24 lg:mt-16">Roaster not found</p>
 
   return (
