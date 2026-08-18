@@ -3,9 +3,6 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 const mockSingleResult = vi.fn()
 const mockEq = vi.fn()
 
-// Self-returning builder (same shape as eventsRoute.test.ts) so the chain doesn't
-// have to be re-nested every time a filter is added, and `eq` calls are recorded
-// for the is_hidden assertion below.
 vi.mock('@supabase/supabase-js', () => {
   const builder: Record<string, unknown> = {
     select: vi.fn(() => builder),
@@ -58,8 +55,6 @@ describe('Event By Id API Route - GET', () => {
     expect(data.error).toBe('Event not found')
   })
 
-  // A hidden event is moderated-off content; serving it to anyone holding the
-  // direct URL defeats the gate. See tests/unit/hiddenEventsInvariant.test.ts.
   test('excludes hidden events', async () => {
     mockSingleResult.mockResolvedValueOnce({ data: null, error: null })
 

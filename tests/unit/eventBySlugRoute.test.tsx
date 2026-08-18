@@ -6,9 +6,7 @@ const mockEq = vi.fn()
 
 // getEventByIdPrefix prefix-matches the uuid `id` column via a bounded range
 // (.gte(...).lte(...)) rather than LIKE, because `uuid` is a Postgres uuid type
-// with no LIKE operator. The chain resolves at .limit(). Self-returning builder
-// (same shape as eventsRoute.test.ts) so `eq` calls are recorded for the
-// is_hidden assertion below.
+// with no LIKE operator. The chain resolves at .limit().
 vi.mock('@supabase/supabase-js', () => {
   const builder: Record<string, unknown> = {
     select: vi.fn(() => builder),
@@ -68,8 +66,6 @@ describe('Event by-slug API Route', () => {
     expect(response.status).toBe(404)
   })
 
-  // The bug this guards: /events/{slug} is a permanent public URL, so a hidden
-  // event stayed fully readable there after being moderated off the list.
   test('excludes hidden events', async () => {
     mockLimit.mockResolvedValueOnce({ data: [], error: null })
 
