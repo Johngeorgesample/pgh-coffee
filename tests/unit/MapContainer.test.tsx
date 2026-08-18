@@ -51,7 +51,6 @@ describe.skip('MapContainer', () => {
     vi.mocked(useShopsStore).mockReturnValue({
       allShops: dataSet,
       fetchCoffeeShops: vi.fn(),
-      setAllShops: vi.fn(),
       currentShop: dataSet.features[0],
       setCurrentShop: vi.fn(),
       hoveredShop: null,
