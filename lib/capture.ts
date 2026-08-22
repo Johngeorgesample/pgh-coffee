@@ -4,6 +4,14 @@ export interface Shop {
   uuid: string
   name: string
   neighborhood: string
+  address: string
+  instagram_handle: string | null
+}
+
+export interface Roaster {
+  uuid: string
+  name: string
+  instagram: string | null
 }
 
 export const supabase = createClient(
@@ -30,6 +38,16 @@ export async function getImageData(request: Request): Promise<{ base64Image: str
     mediaType: contentType || 'image/jpeg',
     base64Image: Buffer.from(buffer).toString('base64'),
   }
+}
+
+/**
+ * The Instagram permalink is never visible in a screenshot of the post, so the
+ * iOS Shortcut passes it as `?url=`. Query string rather than a form field so it
+ * works for both request shapes getImageData accepts.
+ */
+export function getSourceUrl(request: Request): string | null {
+  const url = new URL(request.url).searchParams.get('url')
+  return url?.startsWith('https://') ? url : null
 }
 
 export async function callAnthropicVision<T>(prompt: string, base64Image: string, mediaType: string, maxTokens = 1024): Promise<T> {
@@ -63,53 +81,53 @@ export async function callAnthropicVision<T>(prompt: string, base64Image: string
   return JSON.parse(text) as T
 }
 
-export async function getShopCandidates(base64Image: string, mediaType: string): Promise<Shop[]> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': process.env.ANTHROPIC_API_KEY as string,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 64,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64Image } },
-          { type: 'text', text: 'What is the name of the coffee shop in this Instagram post? Reply with only the shop name, nothing else.' },
-        ],
-      }],
-    }),
-  })
-
-  if (!response.ok) return []
-
-  const result = await response.json()
-  const shopName = result.content[0].text.trim()
-  console.log(`[capture] shop name from first pass: "${shopName}"`)
-
+export async function getAllShops(): Promise<Shop[]> {
   const { data } = await supabase
     .from('shops')
-    .select('uuid, name, neighborhood')
-    .ilike('name', `%${shopName}%`)
-    .limit(10)
+    .select('uuid, name, neighborhood, address, company:company_id(instagram_handle)')
+    .order('name')
 
-  console.log(`[capture] candidates: ${JSON.stringify(data?.map(s => s.name) ?? [])}`)
-  return data ?? []
+  return (data ?? []).map(({ company, ...shop }) => ({
+    ...shop,
+    instagram_handle: (company as unknown as { instagram_handle: string } | null)?.instagram_handle ?? null,
+  })) as Shop[]
 }
 
-export function buildShopContext(candidates: Shop[]): string {
-  if (!candidates.length) return ''
-  return `\nThe following shops are in our database — pick the best match and return its uuid, or null if none fit:\n${candidates.map(s => `- "${s.name}" (${s.neighborhood}) — uuid: ${s.uuid}`).join('\n')}`
+/** Local roasters only: a national brand is far likelier to be mentioned in passing than to host. */
+export async function getAllRoasters(): Promise<Roaster[]> {
+  const { data } = await supabase.from('roaster').select('uuid:id, name, instagram').eq('is_local', true).order('name')
+  return (data ?? []) as unknown as Roaster[]
 }
 
-export function validateShopUUID(candidates: Shop[], uuid: string | null): Shop | null {
+const shopLine = (s: Shop) =>
+  `- "${s.name}" — ${s.neighborhood}, ${s.address}${s.instagram_handle ? ` — @${s.instagram_handle}` : ''} — uuid: ${s.uuid}`
+
+const roasterLine = (r: Roaster) =>
+  `- "${r.name}"${r.instagram ? ` — @${r.instagram}` : ''} — uuid: ${r.uuid}`
+
+/**
+ * Every shop and roaster goes in the prompt rather than a pre-filtered shortlist:
+ * name matching in SQL missed rows over an ampersand ("De Fer Coffee & Tea" vs
+ * "De Fer Coffee and Tea"), and a shortlist of same-named branches gave the model
+ * no way to tell them apart. Handles are listed because the @name at the top of
+ * the screenshot identifies the brand exactly; the address disambiguates branches.
+ */
+export function buildEntityContext(shops: Shop[], roasters: Roaster[]): string {
+  return `
+
+SHOPS — the @handle at the top of the screenshot usually matches one of these:
+${shops.map(shopLine).join('\n')}
+
+ROASTERS:
+${roasters.map(roasterLine).join('\n')}`
+}
+
+export function validateUUID<T extends { uuid: string }>(candidates: T[], uuid: string | null): T | null {
   if (!uuid) return null
-  return candidates.find(s => s.uuid === uuid) ?? null
+  return candidates.find(c => c.uuid === uuid) ?? null
 }
 
+/** The shop's own in-house roaster, used when the post names no roaster of its own. */
 export async function getRoasterID(shopUuid: string): Promise<string | null> {
   const { data: shop } = await supabase
     .from('shops')
