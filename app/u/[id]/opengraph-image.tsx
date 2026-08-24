@@ -1,17 +1,13 @@
 import { ImageResponse } from 'next/og'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { getPublicProfile } from '@/app/utils/profiles'
 import { computeStats } from '@/app/utils/visitStats'
 import { OG_COLORS, OG_IMAGE_SIZE, OG_CONTENT_TYPE, getOgLogoSrc, OG_NO_PHOTO_BACKGROUND, getOgWatermarkSrc } from '@/app/utils/ogTheme'
+import { getClient } from '@/lib/supabase/server-client'
 
 export const size = OG_IMAGE_SIZE
 export const contentType = OG_CONTENT_TYPE
 export const alt = 'pgh.coffee passport'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 function Stat({ value, label, valueSize = 64 }: { value: string; label: string; valueSize?: number }) {
   return (
@@ -79,6 +75,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const supabase = getClient()
   const [profile, { data: shops, error: shopsError }] = await Promise.all([
     getPublicProfile(id),
     supabase.from('shops').select('neighborhood'),

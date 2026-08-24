@@ -1,14 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)'
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
-  supabase.from('events').select(select).eq('is_hidden', false)
+  getClient().from('events').select(select).eq('is_hidden', false)
 
 /**
  * Resolves an event from a `/events/{slug}` identifier's id prefix. The `id`

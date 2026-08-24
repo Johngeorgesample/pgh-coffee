@@ -1,16 +1,11 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { withMetrics } from '@/lib/withMetrics'
 import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 const fetchShops = async (neighborhood?: string) => {
-  let query = supabase.from('shops').select(SHOP_WITH_ROASTER_SELECT).order('name', { ascending: true })
+  let query = getClient().from('shops').select(SHOP_WITH_ROASTER_SELECT).order('name', { ascending: true })
 
   if (neighborhood) {
     query = query.eq('neighborhood', neighborhood)

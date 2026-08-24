@@ -1,9 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 export const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
 
@@ -15,7 +11,7 @@ export const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:r
  * falls within its own prefix range.
  */
 export const getUpdateByIdPrefix = async (prefix: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('updates')
     .select(UPDATE_SELECT)
     .gte('id', `${prefix}-0000-0000-0000-000000000000`)

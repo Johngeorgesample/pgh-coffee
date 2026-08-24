@@ -1,9 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 /**
  * Resolves a company from a `/companies/{slug}` identifier. Companies carry their
@@ -12,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
  * route so both agree on the lookup.
  */
 export const getCompanyBySlug = async (slug: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('companies')
     .select('*')
     .eq('slug', slug)
