@@ -24,7 +24,14 @@ export const useEventRouteSync = () => {
       fetch(`/api/events/by-slug/${encodeURIComponent(slug)}`)
         .then(res => (res.ok ? res.json() : Promise.reject(new Error('Event not found'))))
         .then(event => setPanelContent(<EventDetails event={event} />, 'event'))
-        .catch(console.error)
+        .catch(err => {
+          // Fall back to the events list rather than installing nothing: the
+          // route-exit teardown in the other sync hooks stands down for
+          // /events/{slug} on the promise that this hook replaces the panel, so a
+          // failure here would strand whatever panel the user came from.
+          console.error(err)
+          setPanelContent(<Events />, 'events')
+        })
       return
     }
 
