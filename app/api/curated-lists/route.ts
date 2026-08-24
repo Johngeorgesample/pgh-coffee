@@ -1,14 +1,9 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { DbShop, TShop } from '@/types/shop-types'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 const mapDbShopToTShop = (s: DbShop): TShop | null => {
   if (s.latitude == null || s.longitude == null) return null
@@ -16,7 +11,7 @@ const mapDbShopToTShop = (s: DbShop): TShop | null => {
 }
 
 const fetchCuratedLists = async () => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('curated_lists_with_shops')
     .select('*')
     .order('title', { ascending: true })

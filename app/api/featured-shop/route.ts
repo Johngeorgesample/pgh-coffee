@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { formatDBShopAsFeature, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { DbShop } from '@/types/shop-types'
+import { getClient } from '@/lib/supabase/server-client'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
 export const revalidate = 0
@@ -56,7 +56,7 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
 }
 
 export async function GET() {
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!)
+  const supabase = getClient()
 
   const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
 

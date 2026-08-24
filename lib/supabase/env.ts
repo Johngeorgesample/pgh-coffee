@@ -10,3 +10,16 @@ export function getSupabaseEnv() {
 
   return { supabaseUrl, supabaseAnonKey }
 }
+
+export function getServerSupabaseEnv() {
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      'Missing Supabase server environment variables. Please set SUPABASE_URL and SUPABASE_ANON_KEY.'
+    )
+  }
+
+  return { supabaseUrl, supabaseAnonKey }
+}

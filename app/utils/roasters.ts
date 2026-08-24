@@ -1,9 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 /**
  * Resolves a roaster from a `/roasters/{slug}` identifier. Roasters carry their
@@ -12,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
  * route so both agree on the query.
  */
 export const getRoasterBySlug = async (slug: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('roaster')
     .select('*, company:company_id(*)')
     .eq('slug', slug)

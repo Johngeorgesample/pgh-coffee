@@ -1,15 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+import { getClient } from '@/lib/supabase/server-client'
 
 export interface Shop {
   uuid: string
   name: string
   neighborhood: string
 }
-
-export const supabase = createClient(
-  process.env.SUPABASE_URL as string,
-  process.env.SUPABASE_ANON_KEY as string
-)
 
 export async function getImageData(request: Request): Promise<{ base64Image: string; mediaType: string } | null> {
   const contentType = request.headers.get('content-type') ?? ''
@@ -90,7 +85,7 @@ export async function getShopCandidates(base64Image: string, mediaType: string):
   const shopName = result.content[0].text.trim()
   console.log(`[capture] shop name from first pass: "${shopName}"`)
 
-  const { data } = await supabase
+  const { data } = await getClient()
     .from('shops')
     .select('uuid, name, neighborhood')
     .ilike('name', `%${shopName}%`)
@@ -111,7 +106,7 @@ export function validateShopUUID(candidates: Shop[], uuid: string | null): Shop 
 }
 
 export async function getRoasterID(shopUuid: string): Promise<string | null> {
-  const { data: shop } = await supabase
+  const { data: shop } = await getClient()
     .from('shops')
     .select('company_id')
     .eq('uuid', shopUuid)
@@ -119,7 +114,7 @@ export async function getRoasterID(shopUuid: string): Promise<string | null> {
 
   if (!shop?.company_id) return null
 
-  const { data: roaster } = await supabase
+  const { data: roaster } = await getClient()
     .from('roaster')
     .select('id')
     .eq('company_id', shop.company_id)

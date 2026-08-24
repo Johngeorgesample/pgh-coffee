@@ -1,12 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
 import { getShopByUuidPrefix } from './shops'
 import { getCompanyBySlug } from './companies'
 import { getRoasterBySlug } from './roasters'
 import type { ClaimType } from '@/types/claim-types'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 export interface ClaimTarget {
   type: ClaimType
@@ -24,6 +20,7 @@ export interface ClaimTarget {
 // company_id only — a shop's roaster_id is "serves this coffee", not ownership.
 // @TODO why are we making DB calls here?
 async function companyTarget(id: string, name: string, logo?: string | null): Promise<ClaimTarget> {
+  const supabase = getClient()
   const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
     supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id),
     supabase.from('roaster').select('id').eq('company_id', id).limit(1),
