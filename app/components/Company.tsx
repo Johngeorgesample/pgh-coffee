@@ -51,8 +51,6 @@ export const Company = ({ slug }: { slug: string }) => {
 
     const controller = new AbortController()
     fetchCompany(slug, controller.signal)
-      // abort() can't un-settle a request that already resolved, so this guards
-      // against a previous slug's response landing after a newer one took over.
       .then(data => {
         if (controller.signal.aborted) return
         setCompany(data)
