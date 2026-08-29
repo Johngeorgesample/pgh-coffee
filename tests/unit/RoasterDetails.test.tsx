@@ -10,8 +10,6 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
   default: (selector: (state: unknown) => unknown) => selector({ setOverrideShops: vi.fn() }),
 }))
 
-// Stable identity, like the real useCallback-wrapped hook: a fresh function each
-// render would re-fire the fetch effect on every render.
 const plausible = vi.hoisted(() => vi.fn())
 vi.mock('@/hooks', () => ({ useAnalytics: () => plausible }))
 
