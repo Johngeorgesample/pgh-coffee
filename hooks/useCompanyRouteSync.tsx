@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams, usePathname } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import { Company } from '@/app/components/Company'
+import { clearOwnPanel } from './clearOwnPanel'
 
 /**
  * Syncs the panel from the company route: `/companies/{slug}` opens a single
@@ -17,9 +18,12 @@ export const useCompanyRouteSync = () => {
   const onCompanyRoute = pathname.startsWith('/companies/')
 
   useEffect(() => {
-    if (onCompanyRoute && slug) {
-      setPanelContent(<Company slug={slug} />, 'company')
+    if (!onCompanyRoute || !slug) {
+      clearOwnPanel('company')
+      return
     }
+
+    setPanelContent(<Company slug={slug} />, 'company')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, onCompanyRoute])
 }

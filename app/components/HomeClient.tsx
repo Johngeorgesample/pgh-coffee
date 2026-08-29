@@ -23,6 +23,7 @@ export default function HomeClient() {
   const panelContent = usePanelStore(s => s.panelContent)
   const clearHistory = usePanelStore(s => s.clearHistory)
   const panelMode = usePanelStore(s => s.panelMode)
+  const hidden = usePanelStore(s => s.hidden)
   const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
@@ -129,6 +130,9 @@ export default function HomeClient() {
       document.title = 'PGH Coffee'
     }
   }, [currentShop])
+
+  // A 404 renders inside this layout, so the map and panel step aside for it.
+  if (hidden) return null
 
   return (
     <div className="relative w-full h-full">
