@@ -1,7 +1,20 @@
+'use client'
+
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { Coffee } from 'lucide-react'
+import usePanelStore from '@/stores/panelStore'
 
 export default function NotFound() {
+  const setHidden = usePanelStore(s => s.setHidden)
+
+  // A 404 under /shops, /roasters, /companies, /news or /events renders inside
+  // the map layout, so HomeClient would otherwise mount the map and panel too.
+  useEffect(() => {
+    setHidden(true)
+    return () => setHidden(false)
+  }, [setHidden])
+
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
       <Coffee className="h-12 w-12 text-gray-300 mb-4" />

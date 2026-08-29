@@ -117,6 +117,8 @@ interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
   history: PanelEntry[]
+  /** 404s render inside the map layout, so app/not-found.tsx hides the map and panel. */
+  hidden: boolean
 
   // setters
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
@@ -128,6 +130,8 @@ interface PanelState {
 
   /** Clears the navigation history. Pass { keepCurrent: true } to keep the current panel as the only entry. */
   clearHistory: (opts?: { keepCurrent?: boolean }) => void
+
+  setHidden: (hidden: boolean) => void
 }
 
 const usePanelStore = create<PanelState>()(
@@ -136,6 +140,9 @@ const usePanelStore = create<PanelState>()(
       panelMode: 'explore',
       panelContent: null,
       history: [],
+      hidden: false,
+
+      setHidden: hidden => set({ hidden }),
 
       setPanelContent: (content, mode) =>
         set(state => {
