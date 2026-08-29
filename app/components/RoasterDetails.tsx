@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
 import LocationList from '@/app/components/LocationList'
+import RoasterSkeleton from '@/app/components/RoasterSkeleton'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimButton from '@/app/components/ClaimButton'
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -28,22 +29,6 @@ interface TRoaster {
   }
   shops?: DbShop[]
 }
-
-const RoasterSkeleton = () => (
-  <div className="flex h-full flex-col overflow-y-auto animate-pulse">
-    <div className="h-56 sm:h-64 bg-gray-200 shrink-0" />
-    <div className="px-6 lg:px-4 py-6 flex flex-col">
-      <div className="flex gap-2 mb-4">
-        <div className="h-8 w-24 bg-gray-200 rounded-full" />
-        <div className="h-8 w-24 bg-gray-200 rounded-full" />
-      </div>
-      <div className="space-y-2">
-        <div className="h-4 bg-gray-200 rounded w-full" />
-        <div className="h-4 bg-gray-200 rounded w-3/4" />
-      </div>
-    </div>
-  </div>
-)
 
 async function fetchRoaster(slug: string, signal: AbortSignal) {
   const res = await fetch(`/api/roasters/${slug}`, { signal })
