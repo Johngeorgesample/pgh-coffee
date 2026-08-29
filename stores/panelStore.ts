@@ -7,7 +7,7 @@ import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
+export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
 
 type PanelEntry = {
   mode: PanelMode

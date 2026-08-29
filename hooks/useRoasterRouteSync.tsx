@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams, usePathname } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import { RoasterDetails } from '@/app/components/RoasterDetails'
+import { clearOwnPanel } from './clearOwnPanel'
 
 /**
  * Syncs the panel from the roaster route: `/roasters/{slug}` opens a single
@@ -16,9 +17,12 @@ export const useRoasterRouteSync = () => {
   const onRoasterRoute = pathname.startsWith('/roasters/')
 
   useEffect(() => {
-    if (onRoasterRoute && slug) {
-      setPanelContent(<RoasterDetails slug={slug} />, 'roaster')
+    if (!onRoasterRoute || !slug) {
+      clearOwnPanel('roaster')
+      return
     }
+
+    setPanelContent(<RoasterDetails slug={slug} />, 'roaster')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, onRoasterRoute])
 }

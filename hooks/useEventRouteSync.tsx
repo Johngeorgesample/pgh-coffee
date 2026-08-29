@@ -3,6 +3,7 @@ import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import { EventDetails } from '@/app/components/EventDetails'
 import { Events } from '@/app/components/Events'
+import { clearOwnPanel } from './clearOwnPanel'
 
 /**
  * Syncs the panel from the events routes: `/events/{slug}` opens a single event,
@@ -30,7 +31,10 @@ export const useEventRouteSync = () => {
 
     if (hasEventsList) {
       setPanelContent(<Events />, 'events')
+      return
     }
+
+    clearOwnPanel('event', 'events')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, onEventRoute, hasEventsList])
 }
