@@ -4,8 +4,8 @@ import { TShop } from '@/types/shop-types'
 import DirectionsButton from './DirectionsButton'
 import WebsiteButton from './WebsiteButton'
 import ShareButton from './ShareButton'
-import FavoriteButton from './FavoriteButton'
-import VisitedButton from './VisitedButton'
+import ToggleButton from './ToggleButton'
+import { FAVORITE_TOGGLE_CONFIG, VISITED_TOGGLE_CONFIG } from './toggleConfigs'
 import ReportIssueButton from './ReportIssueButton'
 import IssueModal from './IssueModal'
 import IssueSuccessDialog from './IssueSuccessDialog'
@@ -35,8 +35,8 @@ export default function QuickActionsBar({ shop }: QuickActionsBarProps) {
     <>
       <div ref={scrollRef} className="flex items-center gap-2 px-4 sm:px-6 py-4 bg-white border-b border-stone-200">
         <DirectionsButton coordinates={coordinates} />
-        <FavoriteButton shopUUID={uuid} shopName={name} />
-        <VisitedButton shopUUID={uuid} shopName={name} />
+        <ToggleButton shopUUID={uuid} shopName={name} config={FAVORITE_TOGGLE_CONFIG} />
+        <ToggleButton shopUUID={uuid} shopName={name} config={VISITED_TOGGLE_CONFIG} />
         <ShareButton />
         {website && <WebsiteButton website={website} />}
         <ReportIssueButton onClick={() => setShowIssueModal(true)} />

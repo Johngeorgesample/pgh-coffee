@@ -127,7 +127,7 @@ describe('Visits API Route - POST (Add Visit)', () => {
   test('returns 404 when the shop does not exist', async () => {
     const mockUser = { id: 'user-123' }
     mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
-    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows' } })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116', message: 'No rows found' } })
 
     const request = new Request('http://localhost:3000/api/visits', {
       method: 'POST',
@@ -140,6 +140,27 @@ describe('Visits API Route - POST (Add Visit)', () => {
 
     expect(response.status).toBe(404)
     expect(data.error).toBe('Shop not found')
+  })
+
+  // Regression: the shared toggle route factory used to treat any Supabase
+  // error as "not found," so a real DB failure during shop validation was
+  // reported as a 404 instead of the 500 it actually is.
+  test('returns 500, not 404, when shop validation fails for a reason other than no rows', async () => {
+    const mockUser = { id: 'user-123' }
+    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
+    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { code: '500', message: 'connection refused' } })
+
+    const request = new Request('http://localhost:3000/api/visits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopUUID: 'shop-uuid-456' }),
+    })
+
+    const response = await POST(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Error adding visit')
   })
 
   test('returns 500 on database error', async () => {
