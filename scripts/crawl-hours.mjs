@@ -11,6 +11,7 @@ import { stripLeadingSqlComment } from "./lib/sql.mjs";
 // Repo root, derived from this script's location (scripts/ -> repo root).
 const ROOT = resolvePath(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = `${ROOT}/migrations/hours-backfill.sql`;
+const COMPACT_OUT = `${ROOT}/migrations/hours-backfill-compact.sql`;
 
 // ---- env -------------------------------------------------------------------
 function loadEnv() {
@@ -22,11 +23,14 @@ function loadEnv() {
   }
   return env;
 }
-const env = loadEnv();
+// Importing this file (the SQL renderers are tested) must not read .env.local
+// or start a crawl, so everything with a side effect waits on being run directly.
+const RUN_DIRECTLY = process.argv[1] === fileURLToPath(import.meta.url);
+const env = RUN_DIRECTLY ? loadEnv() : {};
 const KEY = env.GOOGLE_MAPS_API_KEY;
 const SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
+if (RUN_DIRECTLY && !KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
 
 const MIGRATION = stripLeadingSqlComment(
   readFileSync(`${ROOT}/migrations/hours-schema.sql`, "utf8")
@@ -235,6 +239,8 @@ async function main() {
 
   writeFileSync(OUT, renderSql(results));
   console.error(`\nWrote ${OUT}`);
+  writeFileSync(COMPACT_OUT, renderCompactSql(results));
+  console.error(`Wrote ${COMPACT_OUT}`);
   // summary
   const byStatus = {};
   for (const r of results) byStatus[r.status] = (byStatus[r.status] || 0) + 1;
@@ -315,6 +321,77 @@ function renderSql(results) {
   return L.join("\n");
 }
 
+// The reviewable file above is ~350 statements and a quarter of a megabyte, which
+// rules out applying it through anything that can't stream a file (the Supabase
+// MCP, a SQL console). This is the same data as three statements: the VALUES
+// lists can be split at any comma to apply it in chunks.
+function renderCompactSql(results) {
+  const header = [
+    `-- Compact form of hours-backfill.sql. Generated ${new Date().toISOString()}.`,
+    `-- Same guards: the shop must still exist, and manual/shop_submitted hours are never touched.`,
+    ``,
+  ];
+  // no_hours shops are cleared but not repopulated — Google dropped their hours,
+  // so keeping the old rows would leave a wrong schedule on the site forever.
+  const cleared = results.filter((r) => r.status === "ok" || r.status === "no_hours");
+  const withHours = results.filter((r) => r.rows.length);
+  return [...header, ...replaceHours(cleared, withHours), ...upsertMeta(results)].join("\n");
+}
+
+function replaceHours(cleared, withHours) {
+  if (cleared.length === 0) return ["-- No shops resolved; nothing to replace.", ""];
+  const uuids = cleared.map((r) => sqlStr(r.shop.uuid)).join(", ");
+  const rows = withHours.flatMap((r) => r.rows.map((row) => hoursValues(r.shop.uuid, row)));
+  const clear = [
+    `DELETE FROM shop_hours WHERE shop_uuid IN (${uuids})`,
+    `  AND ${notProtected("shop_hours.shop_uuid")};`,
+    ``,
+  ];
+  if (rows.length === 0) return [...clear, "-- No shop returned hours; nothing to insert.", ""];
+  return [
+    ...clear,
+    `INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)`,
+    `SELECT v.* FROM (VALUES`,
+    rows.join(",\n"),
+    `) v (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)`,
+    `WHERE ${shopExists("v.shop_uuid")} AND ${notProtected("v.shop_uuid")};`,
+    ``,
+  ];
+}
+
+function upsertMeta(results) {
+  return [
+    `INSERT INTO shop_hours_meta (shop_uuid, source, status, google_place_id, match_distance_m, fetched_at)`,
+    `SELECT v.*, now() FROM (VALUES`,
+    results.map(metaValues).join(",\n"),
+    `) v (shop_uuid, source, status, google_place_id, match_distance_m)`,
+    `WHERE ${shopExists("v.shop_uuid")}`,
+    `ON CONFLICT (shop_uuid) DO UPDATE SET`,
+    `  status=EXCLUDED.status, google_place_id=EXCLUDED.google_place_id,`,
+    `  match_distance_m=EXCLUDED.match_distance_m, fetched_at=EXCLUDED.fetched_at`,
+    `WHERE shop_hours_meta.source='google_places';`,
+    ``,
+  ];
+}
+
+function hoursValues(uuid, row) {
+  return `  (${sqlStr(uuid)}::uuid, ${row.day}::smallint, ${sqlStr(row.opens)}::time, ${sqlStr(row.closes)}::time, ${row.spans})`;
+}
+
+function metaValues(r) {
+  return `  (${sqlStr(r.shop.uuid)}::uuid, 'google_places', ${sqlStr(r.status)}, ${
+    r.placeId ? sqlStr(r.placeId) : "NULL::text"
+  }, ${r.dist != null ? r.dist : "NULL"}::double precision)`;
+}
+
+function shopExists(col) {
+  return `EXISTS (SELECT 1 FROM shops s WHERE s.uuid = ${col})`;
+}
+
+function notProtected(col) {
+  return `NOT EXISTS (SELECT 1 FROM shop_hours_meta m WHERE m.shop_uuid = ${col} AND m.source <> 'google_places')`;
+}
+
 function deleteGuard(uuid) {
   return (
     `DELETE FROM shop_hours WHERE shop_uuid = ${sqlStr(uuid)}\n` +
@@ -361,7 +438,11 @@ const VERIFICATION = `-- =======================================================
 -- SELECT count(*) FROM shop_hours h JOIN shop_hours_meta m ON m.shop_uuid=h.shop_uuid
 -- WHERE m.source='google_places' AND m.fetched_at < now() - interval '30 days';`;
 
-main().catch((e) => {
-  console.error("FATAL", e);
-  process.exit(1);
-});
+export { renderSql, renderCompactSql };
+
+if (RUN_DIRECTLY) {
+  main().catch((e) => {
+    console.error("FATAL", e);
+    process.exit(1);
+  });
+}
