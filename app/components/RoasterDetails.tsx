@@ -25,6 +25,7 @@ interface TRoaster {
   company?: {
     name: string
     slug: string
+    is_verified?: boolean
   }
   shops?: DbShop[]
 }
@@ -78,6 +79,10 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
 
   if (!roaster) return <p className="px-6 lg:px-4 mt-24 lg:mt-16">Roaster not found</p>
 
+  // A roaster owned by a company is claimed through that company, so a verified
+  // company already covers it — same rule PanelHeader applies to shops.
+  const isVerified = Boolean(roaster.is_verified || roaster.company?.is_verified)
+
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="h-56 sm:h-64 relative bg-gradient-to-br from-stone-700 to-stone-900 shrink-0">
@@ -98,7 +103,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           </span>
           <h1 className="flex items-center gap-1.5 text-3xl sm:text-4xl font-serif tracking-tight leading-tight">
             {roaster.name}
-            {roaster.is_verified && <VerifiedBadge className="mt-1" />}
+            {isVerified && <VerifiedBadge className="mt-1" />}
           </h1>
           {roaster.company && (
             <div className="mt-1.5 text-sm text-white/85">
@@ -153,7 +158,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
           <p className="text-sm text-gray-600 leading-relaxed">{roaster.description}</p>
         )}
 
-        {!roaster.is_verified && (
+        {!isVerified && (
           <div className="mt-5 flex items-center justify-between gap-3">
             <p className="text-sm text-gray-500">Run {roaster.name}?</p>
             <ClaimButton href={`/claim?roaster=${slug}`} label="Claim this roaster" />
