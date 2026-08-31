@@ -2,7 +2,7 @@
 
 import { Sheet } from '@silk-hq/components'
 import Link from 'next/link'
-import { Info, User, ChevronRight, Plus } from 'lucide-react'
+import { Info, User, ChevronRight, Plus, MapPin } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 
 interface IProps {
@@ -35,6 +35,18 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
             <div className="px-6 pb-6 pt-2">
               {/* Navigation Links */}
               <nav className="flex flex-col">
+                <Link
+                  href="/neighborhoods"
+                  onClick={handleLinkClick}
+                  className="flex items-center py-4 border-b border-gray-100"
+                >
+                  <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
+                    <MapPin className="size-5 text-gray-600" />
+                  </span>
+                  <span className="flex-1 ml-4 text-base font-medium text-gray-900">Neighborhoods</span>
+                  <ChevronRight className="size-5 text-gray-400" />
+                </Link>
+
                 <Link
                   href="/about"
                   onClick={handleLinkClick}
