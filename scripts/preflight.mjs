@@ -18,7 +18,7 @@ if (major(process.version) < required) {
 // Matched by path so a sibling project's dev server doesn't block this build.
 if (process.argv[2] === "build") {
   const pids = execSync(
-    `pgrep -f "${process.cwd()}/node_modules/.bin/next dev" || true`
+    `pgrep -f "${process.cwd()}/node_modules/.bin/[n]ext dev" || true`
   )
     .toString()
     .trim();
