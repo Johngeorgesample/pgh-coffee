@@ -1,6 +1,3 @@
-// Guards the two footguns CLAUDE.md documents but nothing enforced: the shell's
-// default node is older than the toolchain needs, and `next build` overwrites
-// the .next that a running `next dev` is serving from.
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
