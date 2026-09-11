@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
 const die = (msg) => {
@@ -16,13 +16,15 @@ if (major(process.version) < required) {
 }
 
 // Matched by path so a sibling project's dev server doesn't block this build.
+// pgrep takes a regex, so the path has to be escaped; it is passed as an argv
+// entry rather than a shell string, which also keeps pgrep from matching the
+// lookup itself. A missing pgrep leaves a non-zero status and the build runs.
 if (process.argv[2] === "build") {
-  const pids = execSync(
-    `pgrep -f "${process.cwd()}/node_modules/.bin/[n]ext dev" || true`
-  )
-    .toString()
-    .trim();
-  if (pids) {
-    die(`next dev is running (pid ${pids.split("\n").join(", ")}); the build would poison its .next. Stop it first.`);
+  const pattern =
+    `${process.cwd()}/node_modules/.bin/next dev`.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const { status, stdout } = spawnSync("pgrep", ["-f", pattern], { encoding: "utf8" });
+  if (status === 0) {
+    const pids = stdout.trim().split("\n").join(", ");
+    die(`next dev is running (pid ${pids}); the build would poison its .next. Stop it first.`);
   }
 }
