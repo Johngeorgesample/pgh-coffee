@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Production server**: `npm start`
 - **Linting**: `npm run lint` (oxlint, not ESLint — there is no `.eslintrc`)
 - **Type check**: `npm run typecheck` (`tsc --noEmit`)
-- **Tests**: `npm test` (Vitest, **watch mode** — use `npx vitest run` for a single pass)
+- **Tests**: `npm test` (Vitest, **watch mode** — use `npm run test:run` for a single pass)
 
 ## Environment Setup
 

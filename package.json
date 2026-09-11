@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "pretest": "node scripts/preflight.mjs",
     "test": "vitest",
+    "pretest:run": "node scripts/preflight.mjs",
+    "test:run": "vitest run",
     "prehours": "node scripts/preflight.mjs",
     "hours": "node scripts/crawl-hours.mjs"
   },
