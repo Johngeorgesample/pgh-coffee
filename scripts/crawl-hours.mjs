@@ -22,11 +22,16 @@ function loadEnv() {
   }
   return env;
 }
-const env = loadEnv();
-const KEY = env.GOOGLE_MAPS_API_KEY;
-const SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
+// Resolved in main(), not at import: reading .env.local up here made the module
+// impossible to import without crawl credentials.
+let KEY, SUPABASE_URL, SUPABASE_ANON;
+function initEnv() {
+  const env = loadEnv();
+  KEY = env.GOOGLE_MAPS_API_KEY;
+  SUPABASE_URL = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL;
+  SUPABASE_ANON = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!KEY) throw new Error("GOOGLE_MAPS_API_KEY missing from .env.local");
+}
 
 const MIGRATION = stripLeadingSqlComment(
   readFileSync(`${ROOT}/migrations/hours-schema.sql`, "utf8")
@@ -181,6 +186,7 @@ function sqlStr(s) {
 }
 
 async function main() {
+  initEnv();
   const shops = await fetchShops();
   console.error(`Fetched ${shops.length} shops`);
 
@@ -248,7 +254,7 @@ async function main() {
   );
 }
 
-function renderSql(results) {
+export function renderSql(results) {
   const L = [];
   L.push("-- Hours-of-operation backfill for pgh.coffee");
   L.push("--");
