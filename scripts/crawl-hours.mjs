@@ -165,7 +165,10 @@ async function fetchShops() {
   const url =
     `${SUPABASE_URL}/rest/v1/shops` +
     `?select=uuid,name,neighborhood,address,latitude,longitude` +
-    `&order=neighborhood,name`;
+    `&order=neighborhood,name` +
+    // Optional uuid arg crawls a single shop, for backfilling one newly added
+    // record without re-hitting Google for all ~170.
+    (process.argv[2] ? `&uuid=eq.${process.argv[2]}` : "");
   const res = await fetch(url, {
     headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
   });
@@ -361,7 +364,11 @@ const VERIFICATION = `-- =======================================================
 -- SELECT count(*) FROM shop_hours h JOIN shop_hours_meta m ON m.shop_uuid=h.shop_uuid
 -- WHERE m.source='google_places' AND m.fetched_at < now() - interval '30 days';`;
 
-main().catch((e) => {
-  console.error("FATAL", e);
-  process.exit(1);
-});
+// Importing this module (e.g. to unit-test renderSql) must not kick off a paid
+// 171-shop Google crawl.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("FATAL", e);
+    process.exit(1);
+  });
+}
