@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-// Importing the crawl script must not need .env.local or a Google key — the
-// module used to read both at import, which also started a paid crawl.
-describe('crawl-hours module safety', () => {
-  it('imports and renders SQL without crawl credentials', async () => {
+// The crawl script used to read .env.local and start a paid Google crawl at
+// import, so this exercises renderSql with neither present.
+describe('crawl-hours renderSql', () => {
+  it('emits an hours row without needing crawl credentials', async () => {
     const { renderSql } = await import('@/scripts/crawl-hours.mjs')
 
     const sql = renderSql([
@@ -13,10 +13,15 @@ describe('crawl-hours module safety', () => {
         placeId: 'place-1',
         dist: 12,
         matchName: 'Test Roasters',
-        rows: [{ day: 1, open: '08:00', close: '17:00', spansMidnight: false }],
+        rows: [
+          { day: 1, opens: '08:00', closes: '17:00', spans: false },
+          { day: 2, opens: '20:00', closes: '02:00', spans: true },
+        ],
       },
     ])
 
-    expect(sql).toContain('abc-123')
+    expect(sql).toContain("('abc-123', 1, '08:00', '17:00', false)")
+    expect(sql).toContain("('abc-123', 2, '20:00', '02:00', true)")
+    expect(sql).not.toContain('undefined')
   })
 })
