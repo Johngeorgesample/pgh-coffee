@@ -18,8 +18,7 @@ if (major(process.version) < required) {
   die(`node ${required}+ required (.nvmrc), running ${process.version}. Run: nvm use`);
 }
 
-// ponytail: matches this repo's own next binary by path, so a sibling project's
-// dev server doesn't trip it. Misses a dev server started via a different path.
+// Matched by path so a sibling project's dev server doesn't block this build.
 if (process.argv[2] === "build") {
   const pids = execSync(
     `pgrep -f "${process.cwd()}/node_modules/.bin/next dev" || true`
