@@ -9,8 +9,13 @@ emits SQL for you to review and apply by hand.
 ### Run
 
 ```bash
-node scripts/crawl-hours.mjs
+npm run hours              # all shops
+npm run hours -- <uuid>    # one shop, for backfilling a newly added record
 ```
+
+Go through `npm run hours` rather than `node scripts/crawl-hours.mjs`: the npm
+script runs the preflight check first, which catches a too-old node before the
+crawl spends money on Google Places calls.
 
 ### Prerequisites (all read from `.env.local`)
 
