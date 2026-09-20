@@ -48,9 +48,6 @@ describe('Shops GeoJSON API Route', () => {
     expect(response.headers.get('Cache-Control')).toContain('s-maxage=300')
   })
 
-  // This one filter is what keeps permanently closed shops off the map, out of
-  // search, out of nearby, and out of the passport's denominator — every one of
-  // those surfaces derives from this response.
   test('excludes permanently closed shops', async () => {
     mockOrder.mockResolvedValueOnce({ data: [], error: null })
 

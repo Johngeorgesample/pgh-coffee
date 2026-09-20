@@ -23,7 +23,6 @@ vi.mock('@supabase/supabase-js', () => ({
             if (table === 'roaster') {
               return { maybeSingle: mockRoasterMaybeSingle }
             }
-            // shops: .eq('company_id', …).eq('permanently_closed', false)
             return { eq: (...closed: unknown[]) => mockShopsEq(...args, ...closed) }
           },
         }

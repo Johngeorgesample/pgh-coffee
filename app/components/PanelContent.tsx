@@ -21,10 +21,6 @@ export default function PanelContent(props: IProps) {
 
   return (
     <div className="bg-[#FAF9F7] mb-8">
-      {/* A closed shop has nothing to act on: no directions worth giving, no hours
-          to trust, no owner to claim it, and favouriting or checking in to it is
-          meaningless. Location, photos and nearby shops still help whoever landed
-          here from an old link. */}
       {!permanentlyClosed && <QuickActionsBar shop={props.shop} />}
 
       {description && (

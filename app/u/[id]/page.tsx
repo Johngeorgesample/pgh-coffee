@@ -17,8 +17,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return { title: 'Profile not found' }
 
   const name = profile.displayName || 'Coffee lover'
-  // Same exclusion as the stat cards, or the share card's text and the page body
-  // disagree about how many shops the person has visited.
   const counted = openVisits(profile.visits)
   const shopCount = counted.length
   const neighborhoodCount = new Set(counted.map((v) => v.shop?.neighborhood).filter(Boolean)).size

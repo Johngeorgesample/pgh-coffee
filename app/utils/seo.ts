@@ -115,9 +115,6 @@ export function buildShopMetadata(shop: DbShop): Metadata {
   return {
     title,
     description,
-    // The page stays reachable for old links and passport stamps, but a dead
-    // business shouldn't keep earning search traffic. It's already out of the
-    // sitemap; this is what actually drops it from the index.
     ...(shop.permanently_closed && { robots: { index: false, follow: true } }),
     alternates: { canonical: path },
     openGraph: {

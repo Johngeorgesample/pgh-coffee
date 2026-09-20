@@ -12,7 +12,6 @@ const AmenityReportModal = dynamic(() => import('./AmenityReportModal'), { ssr: 
 interface IProps {
   amenities: string[]
   shopId: string
-  // A closed shop still lists what it had, but there's nothing left to correct.
   canReport: boolean
 }
 

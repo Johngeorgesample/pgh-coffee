@@ -22,8 +22,6 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <>
-      {/* No CafeOrCoffeeShop markup for a closed shop: telling search engines a
-          dead business is open for coffee is worse than telling them nothing. */}
       {!shop.permanently_closed && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
       )}

@@ -9,8 +9,6 @@ const visit = (id: string, neighborhood: string, permanently_closed = false): Vi
 })
 
 describe('computeStats', () => {
-  // The totals come from /api/shops/geojson, which excludes closed shops. If the
-  // numerator kept counting them the passport would read "3 of 2".
   it('excludes visits to permanently closed shops from the count', () => {
     const visits = [visit('a', 'Larimer'), visit('b', 'Bloomfield'), visit('c', 'Larimer', true)]
 

@@ -14,10 +14,6 @@ export interface Stats {
   totalNeighborhoods: number
 }
 
-// Permanently closed shops leave the totals these stats are measured against, so
-// a visit to one has to leave the count too — otherwise a user who visited a shop
-// that has since closed reads "12 of 11". A visit whose shop row is missing
-// entirely is kept, as it was before.
 export const openVisits = (visits: Visit[]) =>
   visits.filter((visit) => !visit.shop?.permanently_closed)
 

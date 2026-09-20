@@ -83,8 +83,6 @@ export default function ShopCard(props: IProps) {
           <p className="font-medium text-white text-2xl text-left flex items-center gap-1.5">
             <span className="truncate">{props.shop.properties.name}</span>
             {(props.shop.properties.verified || props.shop.properties.company?.is_verified) && <VerifiedBadge />}
-            {/* Closed shops are filtered out of every list but the passport and
-                favourites, where the stamp is history and has to stay. */}
             {props.shop.properties.permanentlyClosed && (
               <span className="shrink-0 rounded-full bg-red-600/90 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
                 Closed

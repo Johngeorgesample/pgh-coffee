@@ -7,9 +7,8 @@ const mockOrderResult = vi.fn()
 const mockEqResult = vi.fn()
 const mockClosedEq = vi.fn()
 const mockSelect = vi.fn((_select: string) => ({
-  // The route always filters out permanently closed shops first, then orders.
-  // `order` is awaited directly when no neighborhood filter is applied, and also
-  // exposes `.eq` for the filtered path. Make it both thenable and chainable.
+  // `order` is awaited directly when no filter is applied, and also exposes
+  // `.eq` for the filtered path. Make it both thenable and chainable.
   eq: (...args: unknown[]) => {
     mockClosedEq(...args)
     return {
