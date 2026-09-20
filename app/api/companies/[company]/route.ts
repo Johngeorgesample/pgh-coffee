@@ -10,6 +10,7 @@ const getCompanyShops = async (companyId: string) => {
     .from('shops')
     .select(SHOP_WITH_ROASTER_SELECT)
     .eq('company_id', companyId)
+    .eq('permanently_closed', false)
 
   if (error) {
     logger.error('Error fetching company shops', { error: error.message })

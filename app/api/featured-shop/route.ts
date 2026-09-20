@@ -58,7 +58,10 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
 export async function GET() {
   const supabase = getClient()
 
-  const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
+  const { data: uuids, error: uuidErr } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('permanently_closed', false)
 
   if (uuidErr || !uuids?.length) {
     return NextResponse.json({ error: 'No shops found' }, { status: 500 })

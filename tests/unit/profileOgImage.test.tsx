@@ -6,7 +6,11 @@ import { expectPng } from '../helpers/ogImage'
 vi.mock('@/app/utils/profiles', () => ({ getPublicProfile: vi.fn() }))
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
-    from: () => ({ select: () => Promise.resolve({ data: [{ neighborhood: 'Bloomfield' }], error: null }) }),
+    from: () => ({
+      select: () => ({
+        eq: () => Promise.resolve({ data: [{ neighborhood: 'Bloomfield' }], error: null }),
+      }),
+    }),
   }),
 }))
 

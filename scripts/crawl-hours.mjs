@@ -165,6 +165,7 @@ async function fetchShops() {
   const url =
     `${SUPABASE_URL}/rest/v1/shops` +
     `?select=uuid,name,neighborhood,address,latitude,longitude` +
+    `&permanently_closed=eq.false` +
     `&order=neighborhood,name`;
   const res = await fetch(url, {
     headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },

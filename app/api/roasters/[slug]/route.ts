@@ -12,6 +12,7 @@ const getRoasterShops = async (roasterId: string) => {
     .from('shops')
     .select(SHOP_WITH_ROASTER_SELECT)
     .eq('roaster_id', roasterId)
+    .eq('permanently_closed', false)
 
   if (error) {
     logger.error('Error fetching roaster shops', { error: error.message })

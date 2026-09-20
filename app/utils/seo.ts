@@ -83,6 +83,7 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
   const { data, error } = await supabase
     .from('shops')
     .select('name, neighborhood, uuid')
+    .eq('permanently_closed', false)
     .order('name', { ascending: true })
 
   if (error || !data) {
@@ -102,15 +103,19 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
  * bare storefront photo cropped to whatever the crawler decides.
  */
 export function buildShopMetadata(shop: DbShop): Metadata {
-  const title = `${shop.name} | ${shop.neighborhood} | pgh.coffee`
-  const description =
-    shop.description?.trim() ||
-    `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
+  const title = shop.permanently_closed
+    ? `${shop.name} (permanently closed) | ${shop.neighborhood} | pgh.coffee`
+    : `${shop.name} | ${shop.neighborhood} | pgh.coffee`
+  const description = shop.permanently_closed
+    ? `${shop.name} in ${shop.neighborhood}, Pittsburgh has permanently closed.`
+    : shop.description?.trim() ||
+      `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
   const path = buildShopPath(shop)
 
   return {
     title,
     description,
+    ...(shop.permanently_closed && { robots: { index: false, follow: true } }),
     alternates: { canonical: path },
     openGraph: {
       siteName: SITE_NAME,
