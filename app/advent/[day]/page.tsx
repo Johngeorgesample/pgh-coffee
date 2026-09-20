@@ -171,7 +171,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
         <section className="mx-auto max-w-7xl px-6 pt-12">
           <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">About the roaster</h2>
           <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
+            <div className="mb-3.5 flex flex-col items-start gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-300 px-2.5 py-1 text-xs font-semibold text-gray-950">
                 <Flame className="size-3.5" />
                 Coffee roaster
