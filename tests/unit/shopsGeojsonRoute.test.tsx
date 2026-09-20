@@ -1,12 +1,13 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 const mockOrder = vi.fn()
+const mockEq = vi.fn(() => ({ order: mockOrder }))
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({
       select: () => ({
-        order: mockOrder,
+        eq: mockEq,
       }),
     }),
   }),
@@ -45,6 +46,17 @@ describe('Shops GeoJSON API Route', () => {
     expect(response.status).toBe(200)
     expect(data.features).toHaveLength(1)
     expect(response.headers.get('Cache-Control')).toContain('s-maxage=300')
+  })
+
+  // This one filter is what keeps permanently closed shops off the map, out of
+  // search, out of nearby, and out of the passport's denominator — every one of
+  // those surfaces derives from this response.
+  test('excludes permanently closed shops', async () => {
+    mockOrder.mockResolvedValueOnce({ data: [], error: null })
+
+    await GET()
+
+    expect(mockEq).toHaveBeenCalledWith('permanently_closed', false)
   })
 
   test('a DB error returns an uncacheable 500, not a cacheable empty map', async () => {

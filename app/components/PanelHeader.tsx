@@ -4,13 +4,14 @@ import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { XCircleIcon } from '@heroicons/react/24/solid'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelHeader(props: IProps) {
-  const { name, neighborhood, photo, company, verified } = props.shop.properties
+  const { name, neighborhood, photo, company, verified, permanentlyClosed } = props.shop.properties
   const plausible = useAnalytics()
   const router = useRouter()
 
@@ -51,6 +52,12 @@ export default function PanelHeader(props: IProps) {
             {isVerified && <VerifiedBadge className="mt-0.5" />}
           </h1>
           <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
+          {permanentlyClosed && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+              <XCircleIcon className="size-4 shrink-0" />
+              Permanently closed
+            </p>
+          )}
         </div>
       </div>
     </div>

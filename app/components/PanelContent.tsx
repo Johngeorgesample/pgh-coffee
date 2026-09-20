@@ -15,13 +15,17 @@ interface IProps {
 }
 
 export default function PanelContent(props: IProps) {
-  const { address, photos, amenities, roaster, uuid, name, verified } = props.shop.properties
+  const { address, photos, amenities, roaster, uuid, name, verified, permanentlyClosed } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
 
   return (
     <div className="bg-[#FAF9F7] mb-8">
-      <QuickActionsBar shop={props.shop} />
+      {/* A closed shop has nothing to act on: no directions worth giving, no hours
+          to trust, no owner to claim it, and favouriting or checking in to it is
+          meaningless. Location, photos and nearby shops still help whoever landed
+          here from an old link. */}
+      {!permanentlyClosed && <QuickActionsBar shop={props.shop} />}
 
       {description && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
@@ -35,24 +39,28 @@ export default function PanelContent(props: IProps) {
         </div>
       )}
 
-      <ShopHours shop={props.shop} />
+      {!permanentlyClosed && <ShopHours shop={props.shop} />}
 
       {photos && <PhotoGrid photos={photos} />}
 
       {amenities && amenities?.length > 0 && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
-          <ShopAmenities amenities={amenities ?? []} shopId={props.shop.properties.uuid} />
+          <ShopAmenities amenities={amenities ?? []} shopId={uuid} canReport={!permanentlyClosed} />
         </div>
       )}
 
-      <ShopNews shop={props.shop} />
-      <ShopEvents shop={props.shop} />
+      {!permanentlyClosed && (
+        <>
+          <ShopNews shop={props.shop} />
+          <ShopEvents shop={props.shop} />
+        </>
+      )}
 
       <div className="px-4 sm:px-6 py-5 border-b border-stone-200">
         <ShopLocation address={address} coordinates={coordinates} />
       </div>
 
-      {!verified && (
+      {!verified && !permanentlyClosed && (
         <div className="px-4 sm:px-6 py-5 border-b border-stone-200 flex items-center justify-between gap-3">
           <p className="text-sm text-gray-500">Work at {name}?</p>
           <ClaimButton href={`/claim?shop=${uuid}`} label="Claim this shop" />

@@ -78,7 +78,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const supabase = getClient()
   const [profile, { data: shops, error: shopsError }] = await Promise.all([
     getPublicProfile(id),
-    supabase.from('shops').select('neighborhood'),
+    supabase.from('shops').select('neighborhood').eq('permanently_closed', false),
   ])
 
   // Fail loudly rather than render "69 of 0": social crawlers cache the image,

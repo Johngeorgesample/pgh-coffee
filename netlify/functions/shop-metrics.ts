@@ -11,6 +11,7 @@ export default async function handler() {
   const { data, error } = await supabase
     .from('shops')
     .select('neighborhood')
+    .eq('permanently_closed', false)
 
   if (error || !data) return
 

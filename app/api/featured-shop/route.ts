@@ -58,7 +58,12 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
 export async function GET() {
   const supabase = getClient()
 
-  const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
+  // Filtering the candidate pool is enough: the winner is looked up by a uuid
+  // that came out of this list, so a closed shop can never be picked.
+  const { data: uuids, error: uuidErr } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('permanently_closed', false)
 
   if (uuidErr || !uuids?.length) {
     return NextResponse.json({ error: 'No shops found' }, { status: 500 })

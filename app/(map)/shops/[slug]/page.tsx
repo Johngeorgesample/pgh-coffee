@@ -22,7 +22,11 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
+      {/* No CafeOrCoffeeShop markup for a closed shop: telling search engines a
+          dead business is open for coffee is worse than telling them nothing. */}
+      {!shop.permanently_closed && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
+      )}
       {/* PanelHeader renders its own <h1> with the shop name, but only after
           client-side data fetching completes, so the server-rendered HTML
           has none. */}

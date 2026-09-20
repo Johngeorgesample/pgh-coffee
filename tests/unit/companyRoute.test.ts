@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 // The route makes three distinct queries:
 //   companies: select().eq().single()        -> terminal single
-//   shops:     select().eq()                 -> terminal eq (awaited)
+//   shops:     select().eq().eq()            -> terminal eq (awaited)
 //   roaster:   select().eq().maybeSingle()   -> terminal maybeSingle
 const mockCompanySingle = vi.fn()
 const mockShopsEq = vi.fn()
@@ -23,7 +23,8 @@ vi.mock('@supabase/supabase-js', () => ({
             if (table === 'roaster') {
               return { maybeSingle: mockRoasterMaybeSingle }
             }
-            return mockShopsEq(...args)
+            // shops: .eq('company_id', …).eq('permanently_closed', false)
+            return { eq: (...closed: unknown[]) => mockShopsEq(...args, ...closed) }
           },
         }
       },
