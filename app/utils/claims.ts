@@ -22,7 +22,7 @@ export interface ClaimTarget {
 async function companyTarget(id: string, name: string, logo?: string | null): Promise<ClaimTarget> {
   const supabase = getClient()
   const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
-    supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id),
+    supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id).eq('permanently_closed', false),
     supabase.from('roaster').select('id').eq('company_id', id).limit(1),
   ])
   // Throw rather than silently show misleading coverage (0 locations / no roaster)
