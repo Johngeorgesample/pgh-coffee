@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentDoor, openDoorCount, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
+import { adventHref, currentDoor, openDoorCount, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
 import { ADVENT_LINEUP, ADVENT_YEAR, findAdventDay, otherDaysFor } from '@/data/advent'
 
 // The lineup is authored by hand, so a typo here would silently 404 a printed
@@ -80,5 +80,16 @@ describe('currentDoor', () => {
   it('is nothing once the season is over, when every door is open', () => {
     expect(currentDoor(new Date(`${ADVENT_YEAR + 1}-02-14T12:00:00Z`))).toBe(0)
     expect(currentDoor(new Date(`${ADVENT_YEAR}-11-30T12:00:00Z`))).toBe(0)
+  })
+})
+
+describe('adventHref', () => {
+  it('carries preview across navigation so an opened door stays open', () => {
+    expect(adventHref('/advent/1', '1')).toBe('/advent/1?preview=1')
+  })
+
+  it('leaves real visitors on a clean url', () => {
+    expect(adventHref('/advent/1', undefined)).toBe('/advent/1')
+    expect(adventHref('/advent/1', '')).toBe('/advent/1')
   })
 })

@@ -7,7 +7,7 @@ import { Footer } from '@/app/components/about'
 import BrewGuide from '@/app/components/advent/BrewGuide'
 import BrewVideo from '@/app/components/advent/BrewVideo'
 import { AdventDay, ADVENT_DAYS, findAdventDay, otherDaysFor } from '@/data/advent'
-import { formatDoorDate, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
+import { adventHref, formatDoorDate, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
 import { DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 
@@ -50,7 +50,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 }
 
-const ScanStrip = ({ day }: { day: number }) => (
+const ScanStrip = ({ day, preview }: { day: number; preview?: string }) => (
   <div className="border-b border-yellow-300 bg-yellow-100">
     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3">
       <p className="flex items-center gap-2.5 text-sm text-yellow-900">
@@ -60,7 +60,10 @@ const ScanStrip = ({ day }: { day: number }) => (
           Advent Calendar.
         </span>
       </p>
-      <Link href="/advent" className="flex shrink-0 items-center gap-1 text-sm font-semibold text-yellow-700 hover:underline">
+      <Link
+        href={adventHref('/advent', preview)}
+        className="flex shrink-0 items-center gap-1 text-sm font-semibold text-yellow-700 hover:underline"
+      >
         All {ADVENT_DAYS} days
         <ChevronRight className="size-4" />
       </Link>
@@ -76,9 +79,9 @@ const Spec = ({ label, value }: { label: string; value?: string }) =>
     </div>
   ) : null
 
-const SealedDay = ({ entry }: { entry: AdventDay }) => (
+const SealedDay = ({ entry, preview }: { entry: AdventDay; preview?: string }) => (
   <div>
-    <ScanStrip day={entry.day} />
+    <ScanStrip day={entry.day} preview={preview} />
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
       <LockIcon className="mx-auto mb-6 size-8 text-stone-300" aria-hidden />
       <p className="font-serif text-6xl leading-none text-stone-300">{String(entry.day).padStart(2, '0')}</p>
@@ -90,7 +93,7 @@ const SealedDay = ({ entry }: { entry: AdventDay }) => (
         who roasted it.
       </p>
       <Link
-        href="/advent"
+        href={adventHref('/advent', preview)}
         className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-gray-950 px-5 py-3 font-semibold text-yellow-300 transition-colors hover:bg-neutral-800"
       >
         See which doors are open
@@ -105,7 +108,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
   const { preview } = await searchParams
 
-  if (entry.day > resolveOpenCount(preview)) return <SealedDay entry={entry} />
+  if (entry.day > resolveOpenCount(preview)) return <SealedDay entry={entry} preview={preview} />
 
   const roaster = await getRoasterBySlug(entry.roasterSlug)
   const siblings = otherDaysFor(entry)
@@ -114,7 +117,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
 
   return (
     <div>
-      <ScanStrip day={entry.day} />
+      <ScanStrip day={entry.day} preview={preview} />
 
       <header className="relative h-80 bg-gradient-to-br from-stone-700 to-stone-900 sm:h-96">
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
@@ -215,7 +218,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
             {siblings.map(sibling => (
               <li key={sibling.day}>
                 <Link
-                  href={`/advent/${sibling.day}`}
+                  href={adventHref(`/advent/${sibling.day}`, preview)}
                   className="flex overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="flex w-14 shrink-0 flex-col items-center justify-center bg-yellow-300">
@@ -237,7 +240,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
         <div className="grid gap-4 sm:grid-cols-2">
           {previous ? (
             <Link
-              href={`/advent/${previous}`}
+              href={adventHref(`/advent/${previous}`, preview)}
               className="flex items-center gap-3.5 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
             >
               <ChevronLeft className="size-5 shrink-0 text-stone-900" />
@@ -251,7 +254,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
           )}
           {next && (
             <Link
-              href={`/advent/${next}`}
+              href={adventHref(`/advent/${next}`, preview)}
               className="flex items-center justify-end gap-3.5 rounded-xl border border-stone-200 bg-white p-5 text-right shadow-sm transition-shadow hover:shadow-md"
             >
               <div>

@@ -52,3 +52,8 @@ export const currentDoor = (now = new Date()) => {
   const { year, month } = pittsburghDate(now)
   return year === ADVENT_YEAR && month === 12 ? openDoorCount(now) : 0
 }
+
+// Preview has to survive navigation: without it, clicking an unlocked door in
+// preview mode lands on a page that recomputes the date and shows up sealed.
+export const adventHref = (path: string, preview?: string) =>
+  preview ? `${path}?preview=${encodeURIComponent(preview)}` : path

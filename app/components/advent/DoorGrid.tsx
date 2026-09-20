@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { LockIcon } from 'lucide-react'
 import { ADVENT_LINEUP } from '@/data/advent'
-import { formatDoorDate } from '@/app/utils/advent'
+import { adventHref, formatDoorDate } from '@/app/utils/advent'
 
 const pad = (day: number) => String(day).padStart(2, '0')
 
@@ -19,11 +19,11 @@ const ShutDoor = ({ day, isToday }: { day: number; isToday: boolean }) => (
   </div>
 )
 
-const OpenDoor = ({ day }: { day: number }) => {
+const OpenDoor = ({ day, preview }: { day: number; preview?: string }) => {
   const entry = ADVENT_LINEUP[day - 1]
   return (
     <Link
-      href={`/advent/${day}`}
+      href={adventHref(`/advent/${day}`, preview)}
       className="group flex h-32 flex-col rounded-xl border border-stone-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md sm:h-48 sm:p-4"
     >
       <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Day {pad(day)}</span>
@@ -37,12 +37,20 @@ const OpenDoor = ({ day }: { day: number }) => {
   )
 }
 
-export default function DoorGrid({ openCount, today }: { openCount: number; today: number }) {
+export default function DoorGrid({
+  openCount,
+  today,
+  preview,
+}: {
+  openCount: number
+  today: number
+  preview?: string
+}) {
   return (
     <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
       {ADVENT_LINEUP.map(({ day }) =>
         day <= openCount ? (
-          <OpenDoor key={day} day={day} />
+          <OpenDoor key={day} day={day} preview={preview} />
         ) : (
           <ShutDoor key={day} day={day} isToday={day === today} />
         )
