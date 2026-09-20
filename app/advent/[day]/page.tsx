@@ -2,13 +2,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
-import { ChevronLeft, ChevronRight, Flame, LockIcon, MapPin, QrCode } from 'lucide-react'
+import { ChevronRight, Flame, LockIcon, MapPin, QrCode } from 'lucide-react'
 import { Footer } from '@/app/components/about'
 import BrewGuide from '@/app/components/advent/BrewGuide'
 import BrewVideo from '@/app/components/advent/BrewVideo'
-import { AdventDay, ADVENT_DAYS, findAdventDay, otherDaysFor } from '@/data/advent'
+import { AdventDay, ADVENT_DAYS, findAdventDay } from '@/data/advent'
 import { adventHref, formatDoorDate, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
-import { DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 
 // The door a reader may open depends on today's date in Pittsburgh.
@@ -111,9 +110,6 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
   if (entry.day > resolveOpenCount(preview)) return <SealedDay entry={entry} preview={preview} />
 
   const roaster = await getRoasterBySlug(entry.roasterSlug)
-  const siblings = otherDaysFor(entry)
-  const previous = entry.day > 1 ? entry.day - 1 : null
-  const next = entry.day < ADVENT_DAYS ? entry.day + 1 : null
 
   return (
     <div>
@@ -208,84 +204,6 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
           </div>
         </section>
       )}
-
-      {siblings.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 pt-12">
-          <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">
-            More from {entry.roasterName}
-          </h2>
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {siblings.map(sibling => (
-              <li key={sibling.day}>
-                <Link
-                  href={adventHref(`/advent/${sibling.day}`, preview)}
-                  className="flex overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
-                >
-                  <div className="flex w-14 shrink-0 flex-col items-center justify-center bg-yellow-300">
-                    <span className="text-[10px] font-bold leading-none text-stone-600">DEC</span>
-                    <span className="font-serif text-2xl leading-tight text-stone-900">{sibling.day}</span>
-                  </div>
-                  <div className="flex-1 p-4">
-                    <p className="font-bold leading-tight text-slate-900">{sibling.coffee}</p>
-                    <p className="mt-1 text-sm text-slate-500">{sibling.notes.join(', ')}</p>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section className="mx-auto max-w-7xl px-6 pt-12">
-        <div className="grid gap-4 sm:grid-cols-2">
-          {previous ? (
-            <Link
-              href={adventHref(`/advent/${previous}`, preview)}
-              className="flex items-center gap-3.5 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
-            >
-              <ChevronLeft className="size-5 shrink-0 text-stone-900" />
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-stone-500">Previous</p>
-                <p className="font-semibold text-slate-900">Day {previous}</p>
-              </div>
-            </Link>
-          ) : (
-            <div />
-          )}
-          {next && (
-            <Link
-              href={adventHref(`/advent/${next}`, preview)}
-              className="flex items-center justify-end gap-3.5 rounded-xl border border-stone-200 bg-white p-5 text-right shadow-sm transition-shadow hover:shadow-md"
-            >
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-stone-500">Next</p>
-                <p className="font-semibold text-slate-900">Day {next}</p>
-              </div>
-              <ChevronRight className="size-5 shrink-0 text-stone-900" />
-            </Link>
-          )}
-        </div>
-      </section>
-
-      <section className="px-6 pt-14">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-2xl bg-gray-950 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h2 className="mb-2 font-serif text-2xl tracking-tight text-white md:text-3xl">
-              Want the other {ADVENT_DAYS - 1}?
-            </h2>
-            <p className="text-white/70">Calendars are sold by Dynamic Coffee Roasters.</p>
-          </div>
-          <a
-            href={DYNAMIC_SHOP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 self-start rounded-2xl bg-yellow-300 px-5 py-3 font-semibold text-gray-950 transition-colors hover:bg-yellow-400 lg:self-auto"
-          >
-            Get a calendar
-            <ArrowUpRightIcon className="size-4" />
-          </a>
-        </div>
-      </section>
 
       <Footer />
     </div>

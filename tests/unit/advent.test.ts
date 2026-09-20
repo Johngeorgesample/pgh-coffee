@@ -1,17 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { adventHref, currentDoor, openDoorCount, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
-import { ADVENT_LINEUP, ADVENT_YEAR, findAdventDay, otherDaysFor } from '@/data/advent'
+import { ADVENT_LINEUP, ADVENT_YEAR } from '@/data/advent'
 
 // The lineup is authored by hand, so a typo here would silently 404 a printed
 // QR code or break the roaster link.
 describe('lineup', () => {
   it('covers days 1..24 exactly once', () => {
     expect(ADVENT_LINEUP.map(e => e.day)).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
-  })
-
-  it('pairs a roaster on two days with each other', () => {
-    const dayOne = findAdventDay(1)!
-    expect(otherDaysFor(dayOne).map(e => e.day)).toEqual([24])
   })
 })
 

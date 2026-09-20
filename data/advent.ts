@@ -123,8 +123,3 @@ export const ADVENT_LINEUP: AdventDay[] = [
 ]
 
 export const findAdventDay = (day: number) => ADVENT_LINEUP.find(entry => entry.day === day)
-
-// Other days the same roaster holds — Dynamic takes both bookends, and any
-// roaster may end up with more than one.
-export const otherDaysFor = (entry: AdventDay) =>
-  ADVENT_LINEUP.filter(other => other.roasterSlug === entry.roasterSlug && other.day !== entry.day)
