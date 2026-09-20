@@ -76,8 +76,7 @@ export default async function AdventCalendar({
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">The calendar</h2>
-        <p className="mb-7 mt-2.5 font-serif text-3xl tracking-tight text-slate-900 md:text-4xl">Open today&rsquo;s door.</p>
+        <h2 className="mb-7 text-xs font-semibold uppercase tracking-wider text-stone-500">The calendar</h2>
         <DoorGrid openCount={openCount} today={preview ? 0 : currentDoor()} preview={preview} />
       </section>
 
