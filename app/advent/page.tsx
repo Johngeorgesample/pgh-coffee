@@ -44,11 +44,11 @@ export default async function AdventCalendar({
               Twenty-four days of Pittsburgh coffee.
             </h1>
             <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">
-              A different local roaster behind every door, curated by{' '}
+              Curated by{' '}
               <Link href={DYNAMIC_ROASTER_PATH} className="underline decoration-white/40 underline-offset-4 transition-colors hover:text-yellow-300 hover:decoration-yellow-300">
                 Dynamic Coffee Roasters
               </Link>
-              . Open a day to read where the coffee came from, who grew it, and how to brew it.
+              .
             </p>
             <a
               href={DYNAMIC_SHOP_URL}
