@@ -10,12 +10,6 @@
 
 export const ADVENT_DAYS = 24
 
-export interface BrewMethod {
-  label: string
-  rows: { label: string; value: string }[]
-  note?: string
-}
-
 export interface AdventDay {
   day: number
   roasterSlug: string
@@ -31,41 +25,7 @@ export interface AdventDay {
   blurb?: string
   // YouTube id for the roaster's brew video. Absent until the video is recorded.
   videoId?: string
-  brew?: BrewMethod[]
 }
-
-const DYNAMIC_BREW: BrewMethod[] = [
-  {
-    label: 'Filter',
-    rows: [
-      { label: 'Dose', value: '22 g' },
-      { label: 'Water', value: '360 g' },
-      { label: 'Grind', value: 'Medium-fine' },
-      { label: 'Time', value: '2:45' },
-    ],
-    note: 'Bloom with 60 g for 40 seconds, then pour in two even stages. Water at 96°C.',
-  },
-  {
-    label: 'Espresso',
-    rows: [
-      { label: 'Dose', value: '18 g' },
-      { label: 'Yield', value: '40 g' },
-      { label: 'Grind', value: 'Fine' },
-      { label: 'Time', value: '28 s' },
-    ],
-    note: 'Pulls sweet and forgiving at 93°C. Go longer for filter-style clarity in a cup.',
-  },
-  {
-    label: 'Cold brew',
-    rows: [
-      { label: 'Dose', value: '80 g' },
-      { label: 'Water', value: '1000 g' },
-      { label: 'Grind', value: 'Coarse' },
-      { label: 'Time', value: '16 hrs' },
-    ],
-    note: 'Steep at room temperature, then chill. Dilute 2:1 with water or milk over ice.',
-  },
-]
 
 export const ADVENT_LINEUP: AdventDay[] = [
   {
@@ -82,7 +42,6 @@ export const ADVENT_LINEUP: AdventDay[] = [
     roast: 'Medium',
     blurb:
       'Lorem ipsum dolor sit amet consectetur adipiscing elit. Et tempor cumque voluptate eiusmod blanditiis pariatur ex culpa quod est autem. In esse facilis repellendus dolor incididunt voluptas fugiat adipiscing mollit laborum deserunt. Expedita et dolor vero blanditiis nisi aliquip qui eos maxime qui incididunt aliqua.',
-    brew: DYNAMIC_BREW,
   },
   {
     day: 2,
@@ -362,7 +321,6 @@ export const ADVENT_LINEUP: AdventDay[] = [
     roast: 'Medium-dark',
     blurb:
       'Dynamic closes the calendar the way it opened it: with a grower they buy from directly. Jorge Ventura dries this lot whole-cherry, which pushes it darker and sweeter than the Catuaí behind door one — a deliberate Christmas Eve coffee.',
-    brew: DYNAMIC_BREW,
   },
 ]
 

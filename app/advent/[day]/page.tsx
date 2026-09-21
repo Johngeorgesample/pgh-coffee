@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
 import { ChevronRight, Flame, MapPin, QrCode } from 'lucide-react'
 import { Footer } from '@/app/components/about'
-import BrewGuide from '@/app/components/advent/BrewGuide'
 import BrewVideo from '@/app/components/advent/BrewVideo'
+import TastingJournal from '@/app/components/advent/TastingJournal'
 import { ADVENT_DAYS, findAdventDay } from '@/data/advent'
 import { parseDayParam } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
@@ -101,23 +101,22 @@ export default async function AdventDayPage({ params }: Props) {
       <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
 
       <section className="mx-auto max-w-7xl px-6 pt-12">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-start">
-          <div>
-            <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">In the cup</h2>
-            <ul className="mb-5 flex flex-wrap gap-2">
-              {entry.notes.map(note => (
-                <li
-                  key={note}
-                  className="inline-flex rounded-full bg-yellow-100 px-3.5 py-1.5 text-sm font-medium text-yellow-700"
-                >
-                  {note}
-                </li>
-              ))}
-            </ul>
-            {entry.blurb && <p className="leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>}
-          </div>
-          {entry.brew && <BrewGuide methods={entry.brew} />}
-        </div>
+        <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">In the cup</h2>
+        <ul className="mb-5 flex flex-wrap gap-2">
+          {entry.notes.map(note => (
+            <li
+              key={note}
+              className="inline-flex rounded-full bg-yellow-100 px-3.5 py-1.5 text-sm font-medium text-yellow-700"
+            >
+              {note}
+            </li>
+          ))}
+        </ul>
+        {entry.blurb && <p className="max-w-4xl leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>}
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pt-12">
+        <TastingJournal day={entry.day} notes={entry.notes} />
       </section>
 
       {roaster && (
