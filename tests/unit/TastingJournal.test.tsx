@@ -1,10 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import TastingJournal from '@/app/components/advent/TastingJournal'
-
-vi.mock('@/hooks', () => ({
-  useCopyToClipboard: () => ({ showToast: false, copyCurrentUrl: vi.fn(), closeToast: vi.fn() }),
-}))
 
 const renderJournal = () => render(<TastingJournal day={1} notes={['Red apple', 'Cocoa']} />)
 

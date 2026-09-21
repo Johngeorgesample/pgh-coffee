@@ -20,7 +20,6 @@ export interface AdventDay {
   origin?: string
   varietal?: string
   process?: string
-  altitude?: string
   roast?: string
   blurb?: string
   // YouTube id for the roaster's brew video. Absent until the video is recorded.
@@ -38,7 +37,6 @@ export const ADVENT_LINEUP: AdventDay[] = [
     origin: 'Marcala, Honduras',
     varietal: 'Catuaí',
     process: 'Washed',
-    altitude: '1,500 masl',
     roast: 'Medium',
     blurb:
       'Commodo et at placeat deserunt id nam sint omnis ullamco. Laborum sit quibusdam occaecat qui quos placeat facere lorem eligendi. Duis nihil assumenda aliquip atque ut velit sit dolor sit nam dignissimos ipsum eveniet sint soluta.',
@@ -361,7 +359,6 @@ export const ADVENT_LINEUP: AdventDay[] = [
     origin: 'Marcala, Honduras',
     varietal: 'Bourbon',
     process: 'Natural',
-    altitude: '1,600 masl',
     roast: 'Medium-dark',
     blurb:
       'Laboris minim nostrud minim tempore soluta tempor optio maxime enim repellendus. Nihil facere ipsum officia anim necessitatibus nihil expedita labore sit accusamus minim laborum. Soluta reprehenderit at eiusmod soluta placeat commodo officiis dolores ad soluta esse voluptate do dignissimos nam. Libero amet laboris velit eu minus sed voluptate incididunt ea tempore corrupti assumenda enim.',

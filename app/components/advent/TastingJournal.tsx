@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Check, Share2, Star } from 'lucide-react'
+import { Check, Star } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
-import { useCopyToClipboard } from '@/hooks'
-import CopyLinkToast from '@/app/components/CopyLinkToast'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
@@ -67,7 +65,6 @@ const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => v
 
 export default function TastingJournal({ day, notes }: { day: number; notes: string[] }) {
   const { user } = useAuth()
-  const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const [entry, setEntry] = useState(EMPTY)
   const [draft, setDraft] = useState<string | null>(null)
 
@@ -94,17 +91,13 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
 
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Label>My tasting journal</Label>
-          <p className="-mt-2 text-slate-600">Personal brew log &amp; tasting companion</p>
-        </div>
-        {entry.logged && (
+      {entry.logged && (
+        <div className="mb-5 flex justify-end">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-yellow-800">
             <Check className="size-3.5" /> Logged today
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-stone-50 p-5">
         <div>
@@ -173,7 +166,7 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
         className="mb-6 w-full rounded-xl border border-gray-200 bg-stone-50 p-4 text-slate-900 placeholder:text-stone-400 focus:border-yellow-300 focus:outline-none"
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div>
         {user ? (
           <button
             type="button"
@@ -190,17 +183,7 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
             Save tasting note
           </Link>
         )}
-        <button
-          type="button"
-          onClick={copyCurrentUrl}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-gray-200 px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-gray-100"
-        >
-          <Share2 className="size-4" />
-          Share cup
-        </button>
       </div>
-
-      <CopyLinkToast isOpen={showToast} onClose={closeToast} />
     </div>
   )
 }

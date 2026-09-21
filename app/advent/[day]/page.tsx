@@ -86,19 +86,16 @@ export default async function AdventDayPage({ params }: Props) {
         </div>
       </header>
 
-      {(entry.producer || entry.origin || entry.varietal || entry.process || entry.altitude) && (
+      {(entry.producer || entry.origin || entry.varietal || entry.process) && (
         <section className="relative z-10 mx-auto max-w-7xl px-6 pt-10 lg:pt-0 lg:-translate-y-1/2">
-          <div className="grid gap-6 rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-5">
+          <div className="grid justify-items-center gap-6 rounded-xl border border-stone-200 bg-white p-6 text-center shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
             <Spec label="Producer" value={entry.producer} />
             <Spec label="Origin" value={entry.origin} />
             <Spec label="Varietal" value={entry.varietal} />
             <Spec label="Process" value={entry.process} />
-            <Spec label="Altitude" value={entry.altitude} />
           </div>
         </section>
       )}
-
-      <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
 
       <section className="mx-auto max-w-7xl px-6 pt-12">
         <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">In the cup</h2>
@@ -115,12 +112,15 @@ export default async function AdventDayPage({ params }: Props) {
         {entry.blurb && <p className="max-w-4xl leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>}
       </section>
 
+      <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
+
       <section className="mx-auto max-w-7xl px-6 pt-12">
+        <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">My tasting journal</h2>
         <TastingJournal day={entry.day} notes={entry.notes} />
       </section>
 
       {roaster && (
-        <section className="mx-auto max-w-7xl px-6 pt-12">
+        <section className="mx-auto mb-4 max-w-7xl px-6 pt-12">
           <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">About the roaster</h2>
           <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
             <div className="mb-3.5 flex flex-col items-start gap-2">
