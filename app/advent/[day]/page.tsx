@@ -115,10 +115,10 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
     <div>
       <ScanStrip day={entry.day} preview={preview} />
 
-      <header className="relative h-80 bg-gradient-to-br from-stone-700 to-stone-900 sm:h-96">
+      <header className="relative h-64 bg-gradient-to-br from-stone-700 to-stone-900 sm:h-80">
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
-          <div className="mx-auto max-w-7xl px-6 pb-10">
+          <div className="mx-auto max-w-7xl px-6 pb-10 lg:pb-28">
             <span className="mb-4 inline-flex items-center rounded-full bg-yellow-300 px-2.5 py-1 text-xs font-semibold text-gray-950">
               Day {String(entry.day).padStart(2, '0')} &middot; {formatDoorDate(entry.day)}
             </span>
@@ -134,7 +134,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
       </header>
 
       {(entry.producer || entry.origin || entry.varietal || entry.process || entry.altitude) && (
-        <section className="mx-auto max-w-7xl px-6 pt-10">
+        <section className="relative z-10 mx-auto max-w-7xl px-6 pt-10 lg:pt-0 lg:-translate-y-1/2">
           <div className="grid gap-6 rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-5">
             <Spec label="Producer" value={entry.producer} />
             <Spec label="Origin" value={entry.origin} />
