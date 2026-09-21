@@ -66,7 +66,7 @@ const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => v
 )
 
 export default function TastingJournal({ day, notes }: { day: number; notes: string[] }) {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const [entry, setEntry] = useState(EMPTY)
   const [draft, setDraft] = useState<string | null>(null)
@@ -99,17 +99,10 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
           <Label>My tasting journal</Label>
           <p className="-mt-2 text-slate-600">Personal brew log &amp; tasting companion</p>
         </div>
-        {entry.logged ? (
+        {entry.logged && (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-yellow-800">
             <Check className="size-3.5" /> Logged today
           </span>
-        ) : (
-          !loading &&
-          !user && (
-            <span className="rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-yellow-800">
-              Free with an account
-            </span>
-          )
         )}
       </div>
 
@@ -190,17 +183,12 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
-          <div>
-            <Link
-              href={`/sign-in?mode=signup&next=/advent/${day}`}
-              className="inline-flex min-h-11 items-center rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
-            >
-              Save tasting note
-            </Link>
-            <p className="mt-2 text-sm text-stone-500">
-              Free pgh.coffee account — keep every cup you taste, all 24 days.
-            </p>
-          </div>
+          <Link
+            href={`/sign-in?mode=signup&next=/advent/${day}`}
+            className="inline-flex min-h-11 items-center rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+          >
+            Save tasting note
+          </Link>
         )}
         <button
           type="button"
