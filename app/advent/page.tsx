@@ -3,12 +3,8 @@ import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
 import { Footer } from '@/app/components/about'
 import DoorGrid from '@/app/components/advent/DoorGrid'
 import { ADVENT_LINEUP } from '@/data/advent'
-import { currentDoor, resolveOpenCount } from '@/app/utils/advent'
 import Link from 'next/link'
 import { DYNAMIC_ROASTER_PATH, DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
-
-// Doors open at midnight in Pittsburgh, so the page can't be baked at build time.
-export const dynamic = 'force-dynamic'
 
 const description = `Twenty-four days of Pittsburgh coffee: a different local roaster behind every door, curated by Dynamic Coffee Roasters. Open each day to read where the coffee came from and how to brew it.`
 
@@ -26,13 +22,7 @@ const roasterNames = Array.from(new Set(ADVENT_LINEUP.map(entry => entry.roaster
   a.localeCompare(b)
 )
 
-export default async function AdventCalendar({
-  searchParams,
-}: {
-  searchParams: Promise<{ preview?: string }>
-}) {
-  const { preview } = await searchParams
-  const openCount = resolveOpenCount(preview)
+export default function AdventCalendar() {
 
   return (
     <div>
@@ -81,7 +71,7 @@ export default async function AdventCalendar({
 
       <section className="mx-auto max-w-7xl px-6 py-16">
         <h2 className="mb-7 text-xs font-semibold uppercase tracking-wider text-stone-500">The calendar</h2>
-        <DoorGrid openCount={openCount} today={preview ? 0 : currentDoor()} preview={preview} />
+        <DoorGrid />
       </section>
 
       <Footer />

@@ -2,21 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
-import { ChevronRight, Flame, LockIcon, MapPin, QrCode } from 'lucide-react'
+import { ChevronRight, Flame, MapPin, QrCode } from 'lucide-react'
 import { Footer } from '@/app/components/about'
 import BrewGuide from '@/app/components/advent/BrewGuide'
 import BrewVideo from '@/app/components/advent/BrewVideo'
-import { AdventDay, ADVENT_DAYS, findAdventDay } from '@/data/advent'
-import { adventHref, formatDoorDate, parseDayParam, resolveOpenCount } from '@/app/utils/advent'
+import { ADVENT_DAYS, findAdventDay } from '@/data/advent'
+import { parseDayParam } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 
-// The door a reader may open depends on today's date in Pittsburgh.
-export const dynamic = 'force-dynamic'
-
-type Props = {
-  params: Promise<{ day: string }>
-  searchParams: Promise<{ preview?: string }>
-}
+type Props = { params: Promise<{ day: string }> }
 
 const resolveDay = async (params: Props['params']) => {
   const day = parseDayParam((await params).day)
@@ -25,21 +19,8 @@ const resolveDay = async (params: Props['params']) => {
   return entry
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await resolveDay(params)
-  const { preview } = await searchParams
-  const sealed = entry.day > resolveOpenCount(preview)
-
-  // A sealed page still answers 200 so a scanned QR never looks broken, but it
-  // has nothing worth indexing and would give the surprise away in search.
-  if (sealed) {
-    return {
-      title: `Day ${entry.day} | Coffee Advent Calendar | pgh.coffee`,
-      description: `Day ${entry.day} of the Pittsburgh coffee advent calendar opens ${formatDoorDate(entry.day)}.`,
-      robots: { index: false },
-    }
-  }
-
   const title = `${entry.coffee} — ${entry.roasterName} | Day ${entry.day}`
   const description = `Day ${entry.day} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}. ${entry.notes.join(', ')}.`
   return {
@@ -49,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 }
 
-const ScanStrip = ({ day, preview }: { day: number; preview?: string }) => (
+const ScanStrip = ({ day }: { day: number }) => (
   <div className="border-b border-yellow-300 bg-yellow-100">
     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3">
       <p className="flex items-center gap-2.5 text-sm text-yellow-900">
@@ -60,7 +41,7 @@ const ScanStrip = ({ day, preview }: { day: number; preview?: string }) => (
         </span>
       </p>
       <Link
-        href={adventHref('/advent', preview)}
+        href="/advent"
         className="flex shrink-0 items-center gap-1 text-sm font-semibold text-yellow-700 hover:underline"
       >
         All {ADVENT_DAYS} days
@@ -78,49 +59,21 @@ const Spec = ({ label, value }: { label: string; value?: string }) =>
     </div>
   ) : null
 
-const SealedDay = ({ entry, preview }: { entry: AdventDay; preview?: string }) => (
-  <div>
-    <ScanStrip day={entry.day} preview={preview} />
-    <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <LockIcon className="mx-auto mb-6 size-8 text-stone-300" aria-hidden />
-      <p className="font-serif text-6xl leading-none text-stone-300">{String(entry.day).padStart(2, '0')}</p>
-      <h1 className="mt-6 font-serif text-3xl tracking-tight text-slate-900 md:text-4xl">
-        This door opens {formatDoorDate(entry.day)}.
-      </h1>
-      <p className="mx-auto mt-4 max-w-md leading-relaxed text-slate-600">
-        Come back then and you&rsquo;ll find the roaster, the farm the coffee came from, and a brew guide from the people
-        who roasted it.
-      </p>
-      <Link
-        href={adventHref('/advent', preview)}
-        className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-gray-950 px-5 py-3 font-semibold text-yellow-300 transition-colors hover:bg-neutral-800"
-      >
-        See which doors are open
-        <ChevronRight className="size-4" />
-      </Link>
-    </div>
-    <Footer />
-  </div>
-)
-
-export default async function AdventDayPage({ params, searchParams }: Props) {
+export default async function AdventDayPage({ params }: Props) {
   const entry = await resolveDay(params)
-  const { preview } = await searchParams
-
-  if (entry.day > resolveOpenCount(preview)) return <SealedDay entry={entry} preview={preview} />
 
   const roaster = await getRoasterBySlug(entry.roasterSlug)
 
   return (
     <div>
-      <ScanStrip day={entry.day} preview={preview} />
+      <ScanStrip day={entry.day} />
 
       <header className="relative h-64 bg-gradient-to-br from-stone-700 to-stone-900 sm:h-80">
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
           <div className="mx-auto max-w-7xl px-6 pb-10 lg:pb-28">
             <span className="mb-4 inline-flex items-center rounded-full bg-yellow-300 px-2.5 py-1 text-xs font-semibold text-gray-950">
-              Day {String(entry.day).padStart(2, '0')} &middot; {formatDoorDate(entry.day)}
+              Day {String(entry.day).padStart(2, '0')}
             </span>
             <h1 className="font-serif text-4xl leading-tight tracking-tight text-white text-pretty md:text-5xl">
               {entry.coffee}
