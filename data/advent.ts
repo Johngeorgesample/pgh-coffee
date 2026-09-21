@@ -80,7 +80,7 @@ export const ADVENT_LINEUP: AdventDay[] = [
     process: 'Washed',
     altitude: '1,500 masl',
     blurb:
-      'Don Fabio Caballero farms at altitude above Marcala, in La Paz. Dynamic has bought from him directly for several seasons, which is why this lot opens the calendar rather than sitting somewhere in the middle of it. Fully washed and dried on raised beds, it lands sweet and unfussy — the kind of coffee that behaves whether you weigh anything or not.',
+      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Et tempor cumque voluptate eiusmod blanditiis pariatur ex culpa quod est autem. In esse facilis repellendus dolor incididunt voluptas fugiat adipiscing mollit laborum deserunt. Expedita et dolor vero blanditiis nisi aliquip qui eos maxime qui incididunt aliqua.',
     brew: DYNAMIC_BREW,
   },
   { day: 2, roasterSlug: 'commonplace', roasterName: 'Commonplace Coffee', coffee: 'Kirinyaga AA', notes: ['Blackcurrant', 'Grapefruit', 'Cane sugar'] },
