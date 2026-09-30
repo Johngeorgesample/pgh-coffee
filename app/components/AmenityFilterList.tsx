@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Plus } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
 
@@ -44,14 +44,27 @@ export const AmenityFilterList = () => {
 
   return (
     <div className="flex flex-wrap gap-2 mt-3">
-      {(isExpanded ? amenities : amenities.slice(0, 6)).map(amenity => (
-        <AmenityChip
-          key={amenity}
-          amenity={amenity}
-          active={activeAmenityFilters.includes(amenity)}
-          onClick={() => handleAmenityClick(amenity)}
-        />
-      ))}
+      {(isExpanded ? amenities : amenities.slice(0, 6)).map((amenity, index) => {
+        const isNewlyRevealed = isExpanded && index >= 6
+
+        return (
+          <span
+            key={amenity}
+            className={isNewlyRevealed
+              ? 'animate-amenity-chip-enter delay-[var(--stagger-delay)] motion-reduce:animate-amenity-chip-fade motion-reduce:delay-0'
+              : undefined}
+            style={isNewlyRevealed
+              ? { '--stagger-delay': `${(index - 6) * 25}ms` } as CSSProperties
+              : undefined}
+          >
+            <AmenityChip
+              amenity={amenity}
+              active={activeAmenityFilters.includes(amenity)}
+              onClick={() => handleAmenityClick(amenity)}
+            />
+          </span>
+        )
+      })}
       {!isExpanded && (
         <button
           type="button"
