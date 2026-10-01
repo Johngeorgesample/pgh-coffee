@@ -38,6 +38,10 @@ export default function AdventCalendar() {
               <Link href={DYNAMIC_ROASTER_PATH} className="underline decoration-white/40 underline-offset-4 transition-colors hover:text-yellow-300 hover:decoration-yellow-300">
                 Dynamic Coffee Roasters
               </Link>
+              {" "}and{" "}
+              <Link href="https://www.origincoffee.club/" target="_blank" className="underline decoration-white/40 underline-offset-4 transition-colors hover:text-yellow-300 hover:decoration-yellow-300">
+              Origin Coffee Club
+              </Link>
               .
             </p>
             <a
