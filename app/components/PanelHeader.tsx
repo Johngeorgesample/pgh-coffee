@@ -38,7 +38,7 @@ export default function PanelHeader(props: IProps) {
                 router.push(`/companies/${company.slug}`)
               }}
               className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm
-                           hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full 
+                           hover:bg-white/25 active:bg-white/30 transition ease-out active:scale-95 px-3 py-1.5 rounded-full 
                            text-xs text-white/90 mb-3 cursor-pointer border-none"
             >
               <BuildingStorefrontIcon className="w-3.5 h-3.5" />

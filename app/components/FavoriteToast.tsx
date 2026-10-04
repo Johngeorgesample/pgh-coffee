@@ -42,7 +42,7 @@ export default function FavoriteToast({ isOpen, onClose, shopName }: FavoriteToa
                 <Link
                   href="/account/favorites"
                   onClick={onClose}
-                  className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 whitespace-nowrap"
+                  className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 active:text-yellow-200 whitespace-nowrap"
                 >
                   View favorites
                 </Link>

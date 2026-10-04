@@ -33,7 +33,7 @@ export default function NearbyShopRow(props: IProps) {
       onKeyDown={handleKeyPress}
       tabIndex={0}
       role="button"
-      className="group flex items-center gap-3 py-3 border-b border-stone-200 cursor-pointer"
+      className="group flex items-center gap-3 py-3 border-b border-stone-200 cursor-pointer active:bg-stone-100"
     >
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1 font-medium text-gray-900 group-hover:text-amber-700 transition-colors">
