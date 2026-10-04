@@ -32,7 +32,7 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
           <Sheet.Content className="z-50 bg-white rounded-t-2xl">
             <Sheet.Handle className="block mx-auto focus:outline-none focus:ring-0 mt-3 mb-2 w-10 h-1 rounded-full bg-gray-300" />
 
-            <div className="px-6 pb-6 pt-2">
+            <div className="px-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-2">
               {/* Navigation Links */}
               <nav className="flex flex-col">
                 <Link
