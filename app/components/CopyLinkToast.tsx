@@ -23,7 +23,7 @@ export default function CopyLinkToast({ isOpen, onClose }: CopyLinkToastProps) {
     <Transition show={isOpen}>
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 pointer-events-none">
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 pointer-events-auto">
+          <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 pointer-events-auto">
             <TransitionChild
               enter="transition ease-out duration-300"
               enterFrom="opacity-0 translate-y-4"

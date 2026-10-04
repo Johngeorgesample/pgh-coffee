@@ -50,7 +50,7 @@ export default function Nav() {
 
       <button
         type="button"
-        className="sm:hidden p-2 -mr-2"
+        className="sm:hidden p-2 -mr-2 rounded-lg active:bg-black/5"
         onClick={() => setDrawerOpen(true)}
         aria-label="Open menu"
       >

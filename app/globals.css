@@ -3,6 +3,11 @@
 
 @config '../tailwind.config.ts';
 
+html {
+  /* iOS/Android paint a gray box over tapped elements, which fights our own :active feedback */
+  -webkit-tap-highlight-color: transparent;
+}
+
 @theme {
   --animate-stamp: stamp 350ms ease-out 150ms backwards;
   --animate-pop: pop 300ms ease-out;
