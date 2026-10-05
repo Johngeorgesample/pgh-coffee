@@ -4,6 +4,7 @@ import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon } f
 import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
+import CompanySkeleton from '@/app/components/CompanySkeleton'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimButton from '@/app/components/ClaimButton'
 import { useState, useEffect } from 'react'
@@ -29,27 +30,39 @@ const groupByNeighborhood = (features: TShop[]): [string, TShop[]][] => {
   )
 }
 
+async function fetchCompany(slug: string, signal: AbortSignal) {
+  const res = await fetch(`/api/companies/${slug}`, { signal })
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json() as Promise<TCompany>
+}
+
 export const Company = ({ slug }: { slug: string }) => {
   const setOverrideShops = useShopsStore(s => s.setOverrideShops)
   const setSearchValue = useShopsStore(s => s.setSearchValue)
   const plausible = useAnalytics()
   const router = useRouter()
   const [company, setCompany] = useState<TCompany | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'failed'>('loading')
 
   useEffect(() => {
     setCompany(null)
-    setLoading(true)
-    const fetchCompany = async () => {
-      try {
-        const response = await fetch(`/api/companies/${slug}`)
-        const data = await response.json()
+    setStatus('loading')
+
+    const controller = new AbortController()
+    fetchCompany(slug, controller.signal)
+      .then(data => {
+        if (controller.signal.aborted) return
         setCompany(data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCompany()
+        setStatus('ready')
+      })
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        console.error('Error fetching company:', err)
+        setStatus('failed')
+      })
+
+    return () => controller.abort()
   }, [slug])
 
   useEffect(() => {
@@ -68,28 +81,8 @@ export const Company = ({ slug }: { slug: string }) => {
     setSearchValue(neighborhood)
   }
 
-  if (loading) {
-    return (
-      <div className="flex h-full flex-col overflow-y-auto animate-pulse">
-        <div className="h-56 sm:h-64 bg-gray-200 shrink-0" />
-        <div className="px-6 lg:px-4 py-6 flex flex-col">
-          <div className="flex gap-2 mb-4">
-            <div className="h-8 w-24 bg-gray-200 rounded-full" />
-            <div className="h-8 w-24 bg-gray-200 rounded-full" />
-          </div>
-          <div className="space-y-2 mb-6">
-            <div className="h-4 bg-gray-200 rounded w-full" />
-            <div className="h-4 bg-gray-200 rounded w-3/4" />
-          </div>
-          <div className="space-y-3">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-28 bg-gray-200 rounded" />
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
+  if (status === 'loading') return <CompanySkeleton />
+  if (status === 'failed') return <p>Couldn&apos;t load this company. Try again in a moment.</p>
   if (!company) return <p>Company not found</p>
 
   const { features } = formatDataToGeoJSON(company.shops || [])
