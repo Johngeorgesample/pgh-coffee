@@ -19,6 +19,7 @@ export default function SubmitForm() {
   const [successDialogIsOpen, setSuccessDialogIsOpen] = useState(false)
   const [neighborhoodValue, setNeighborhoodValue] = useState('')
   const [query, setQuery] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const submitForm = useRef<HTMLFormElement>(null)
 
@@ -30,6 +31,7 @@ export default function SubmitForm() {
   async function handleForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsSubmitting(true)
+    setError(null)
     const formData = new FormData(event.currentTarget)
 
     const data: IShopSubmission = {
@@ -49,8 +51,8 @@ export default function SubmitForm() {
       })
 
       if (!response.ok) {
-        const errorResponse = await response.json()
-        console.error('Error:', errorResponse.error)
+        const errorResponse = await response.json().catch(() => ({}))
+        setError(errorResponse.error ?? 'Something went wrong. Please try again.')
         setIsSubmitting(false)
       } else {
         getFaro()?.api.pushEvent('shop_submitted', { name: data.name })
@@ -60,8 +62,8 @@ export default function SubmitForm() {
         setQuery('')
         setIsSubmitting(false)
       }
-    } catch (error) {
-      console.error('Unexpected error:', error)
+    } catch {
+      setError('Something went wrong. Please try again.')
       setIsSubmitting(false)
     }
   }
@@ -157,6 +159,12 @@ export default function SubmitForm() {
               are not included to maintain the focus on local independent businesses.
             </p>
           </div>
+
+          {error && (
+            <p role="alert" className="text-sm text-red-600">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
