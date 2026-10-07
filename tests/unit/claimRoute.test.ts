@@ -3,6 +3,19 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 const mockEntityValidation = vi.fn()
 const mockInsertResult = vi.fn()
 
+// Drop every field the select string didn't ask for (including inside embeds like
+// `company:company_id(is_verified)`), so a test fails if the route stops selecting
+// a column it relies on instead of reading it off a hand-built row.
+function project(row: Record<string, unknown> | null, columns: string): Record<string, unknown> | null {
+  if (!row) return row
+  const out: Record<string, unknown> = {}
+  for (const part of columns.split(/,(?![^(]*\))/)) {
+    const [, key, inner] = part.trim().match(/^(\w+)(?::\w+)?(?:\((.*)\))?$/)!
+    if (key in row) out[key] = inner && row[key] ? project(row[key] as Record<string, unknown>, inner) : row[key]
+  }
+  return out
+}
+
 // The route validates the target against its entity table (shops/companies/roaster)
 // and inserts into `claims`. Any non-claims table stands in for the validation lookup.
 vi.mock('@supabase/supabase-js', () => ({
@@ -11,7 +24,16 @@ vi.mock('@supabase/supabase-js', () => ({
       if (table === 'claims') {
         return { insert: mockInsertResult }
       }
-      return { select: () => ({ eq: () => ({ single: mockEntityValidation }) }) }
+      return {
+        select: (columns: string) => ({
+          eq: () => ({
+            single: async () => {
+              const result = await mockEntityValidation()
+              return { ...result, data: project(result?.data ?? null, columns) }
+            },
+          }),
+        }),
+      }
     },
   }),
 }))
@@ -181,6 +203,15 @@ describe('Claim API Route - POST', () => {
     })
 
     const response = await post(validClaim)
+
+    expect(response.status).toBe(409)
+    expect(mockInsertResult).not.toHaveBeenCalled()
+  })
+
+  test('rejects a claim on a company that is already verified', async () => {
+    mockEntityValidation.mockResolvedValueOnce({ data: { id: COMPANY_ID, is_verified: true }, error: null })
+
+    const response = await post({ ...validClaim, claim_type: 'company', target_id: COMPANY_ID })
 
     expect(response.status).toBe(409)
     expect(mockInsertResult).not.toHaveBeenCalled()
