@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { RoasterDetails } from '@/app/components/RoasterDetails'
 
-// Stable identity, like the real useCallback-wrapped hook — a fresh function per
-// render would re-fire the fetch effect.
 vi.mock('@/hooks', () => {
   const plausible = vi.fn()
   return { useAnalytics: () => plausible }
@@ -52,8 +50,6 @@ describe('RoasterDetails claim CTA', () => {
     expect(claimCTA()).not.toBeInTheDocument()
   })
 
-  // A roaster's claim resolves to its company, so a verified company means the
-  // claim is already done — offering it again sends the owner nowhere useful.
   it('hides the claim when the owning company is verified', async () => {
     await renderRoaster(
       roaster({

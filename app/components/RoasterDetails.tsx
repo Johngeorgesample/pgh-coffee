@@ -79,8 +79,6 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
 
   if (!roaster) return <p className="px-6 lg:px-4 mt-24 lg:mt-16">Roaster not found</p>
 
-  // A roaster owned by a company is claimed through that company, so a verified
-  // company already covers it — same rule PanelHeader applies to shops.
   const isVerified = Boolean(roaster.is_verified || roaster.company?.is_verified)
 
   return (
