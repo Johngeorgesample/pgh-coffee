@@ -29,7 +29,7 @@ const toFeature = (shop: DbShop): TShop => ({
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
     // A verified company vouches for every shop it owns.
-    verified: shop.is_verified || shop.company?.is_verified || undefined,
+    verified: Boolean(shop.is_verified || shop.company?.is_verified),
     permanentlyClosed: shop.permanently_closed ?? undefined,
   },
   geometry: {

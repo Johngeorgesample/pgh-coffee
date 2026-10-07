@@ -44,7 +44,7 @@ describe('formatDBShopAsFeature verified', () => {
   })
 
   test('is not verified when neither the shop nor its company is', () => {
-    expect(formatDBShopAsFeature(baseShop).properties.verified).toBeFalsy()
+    expect(formatDBShopAsFeature(baseShop).properties.verified).toBe(false)
   })
 })
 
