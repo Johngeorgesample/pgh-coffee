@@ -52,6 +52,14 @@ describe('Events API Route - GET', () => {
     expect(mockEq).not.toHaveBeenCalledWith('roaster_id', expect.anything())
   })
 
+  test('marks roasters verified via their owning company', async () => {
+    const roaster = { name: 'Commonplace', is_verified: false, company: { is_verified: true } }
+    mockResult.mockReturnValueOnce({ data: [{ id: 'event-1', roaster }], error: null })
+
+    const [event] = await (await GET(new Request('http://localhost:3000/api/events'))).json()
+    expect(event.roaster.is_verified).toBe(true)
+  })
+
   test('filters by shop_id when provided', async () => {
     mockResult.mockReturnValueOnce({ data: [], error: null })
 
