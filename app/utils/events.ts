@@ -6,8 +6,8 @@ const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster
 export type EventRow = { roaster?: { is_verified?: boolean; company?: { is_verified?: boolean } | null } | null }
 
 // A roaster inherits verification from its owning company, matching /roasters/<slug>.
-export const withRoasterVerification = (event: EventRow) =>
-  event.roaster?.company?.is_verified ? { ...event, roaster: { ...event.roaster, is_verified: true } } : event
+export const withRoasterVerification = <T extends EventRow>(event: T) =>
+  event.roaster?.company?.is_verified ? ({ ...event, roaster: { ...event.roaster, is_verified: true } } as T) : event
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
   getClient().from('events').select(select).eq('is_hidden', false)
