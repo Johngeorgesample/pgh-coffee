@@ -37,6 +37,17 @@ describe('formatDBShopAsFeature roaster mapping', () => {
   })
 })
 
+describe('formatDBShopAsFeature verified', () => {
+  test('is verified when only the owning company is verified', () => {
+    const feature = formatDBShopAsFeature({ ...baseShop, company: { ...baseShop.company!, is_verified: true } })
+    expect(feature.properties.verified).toBe(true)
+  })
+
+  test('is not verified when neither the shop nor its company is', () => {
+    expect(formatDBShopAsFeature(baseShop).properties.verified).toBeFalsy()
+  })
+})
+
 describe('getSynonyms', () => {
   test('returns synonyms for "&"', () => {
     const result = getSynonyms('&')

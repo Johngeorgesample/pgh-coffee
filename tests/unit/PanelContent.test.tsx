@@ -134,18 +134,4 @@ describe('PanelContent', () => {
 
     expect(screen.queryByRole('link', { name: /Claim this shop/ })).toBeNull()
   })
-
-  it('hides the claim button when the owning company is verified', () => {
-    const shop: TShop = {
-      ...mockShop,
-      properties: {
-        ...mockShop.properties,
-        verified: false,
-        company: { id: 'company-1', slug: 'test-co', name: 'Test Co', is_verified: true } as TShop['properties']['company'],
-      },
-    }
-    render(<PanelContent {...defaultProps} shop={shop} />)
-
-    expect(screen.queryByRole('link', { name: /Claim this shop/ })).toBeNull()
-  })
 })

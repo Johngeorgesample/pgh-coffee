@@ -35,11 +35,6 @@ describe('NearbyShopRow verified badge', () => {
     expect(screen.getByText('Verified')).toBeTruthy()
   })
 
-  test('shows badge when the owning company is verified', () => {
-    render(<NearbyShopRow shop={makeShop({ company: { is_verified: true } as TShop['properties']['company'] })} />)
-    expect(screen.getByText('Verified')).toBeTruthy()
-  })
-
   test('no badge for an unverified shop', () => {
     render(<NearbyShopRow shop={makeShop()} />)
     expect(screen.queryByText('Verified')).toBeNull()

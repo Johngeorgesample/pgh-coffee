@@ -15,8 +15,6 @@ export default function PanelHeader(props: IProps) {
   const plausible = useAnalytics()
   const router = useRouter()
 
-  const isVerified = verified || company?.is_verified
-
   const hasPhoto = !!photo
 
   return (
@@ -49,7 +47,7 @@ export default function PanelHeader(props: IProps) {
 
           <h1 className="flex items-center gap-1.5 text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">
             {name}
-            {isVerified && <VerifiedBadge className="mt-0.5" />}
+            {verified && <VerifiedBadge className="mt-0.5" />}
           </h1>
           <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
           {permanentlyClosed && (
