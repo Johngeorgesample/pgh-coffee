@@ -60,6 +60,7 @@ describe('RoasterDetails claim CTA', () => {
     )
 
     expect(claimCTA()).not.toBeInTheDocument()
+    expect(screen.getByText('Verified')).toBeInTheDocument()
   })
 
   it('shows not found instead of a claim when the roaster lookup fails', async () => {
