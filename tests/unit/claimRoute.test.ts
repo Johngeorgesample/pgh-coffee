@@ -186,6 +186,19 @@ describe('Claim API Route - POST', () => {
     expect(mockInsertResult).not.toHaveBeenCalled()
   })
 
+  test('files a claim on a verified shop under an unverified company against the company', async () => {
+    mockEntityValidation.mockResolvedValueOnce({
+      data: { uuid: SHOP_ID, is_verified: true, company_id: COMPANY_ID, company: { is_verified: false } },
+      error: null,
+    })
+    mockInsertResult.mockResolvedValueOnce({ data: null, error: null })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(201)
+    expect(mockInsertResult.mock.calls[0][0][0].company_id).toBe(COMPANY_ID)
+  })
+
   test('returns 500 when the claim insert fails', async () => {
     mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID }, error: null })
     mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'insert failed' } })

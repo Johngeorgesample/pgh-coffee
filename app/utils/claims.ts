@@ -13,7 +13,7 @@ export interface ClaimTarget {
   // Company-only: how much the claim covers, for the scope copy.
   locationCount?: number
   hasRoaster?: boolean
-  // Already verified directly or via its owning company — nothing left to claim.
+  // The claimed entity itself is verified — nothing left to claim.
   verified: boolean
 }
 
@@ -49,11 +49,10 @@ export async function resolveClaimTarget(params: {
   if (params.roaster) {
     const roaster = await getRoasterBySlug(params.roaster)
     if (!roaster) return null
-    const verified = Boolean(roaster.is_verified || roaster.company?.is_verified)
     if (roaster.company_id && roaster.company) {
-      return companyTarget(roaster.company.id, roaster.company.name, roaster.company.logo, verified)
+      return companyTarget(roaster.company.id, roaster.company.name, roaster.company.logo, Boolean(roaster.company.is_verified))
     }
-    return { type: 'roaster', id: roaster.id, name: roaster.name, photo: roaster.logo ?? undefined, verified }
+    return { type: 'roaster', id: roaster.id, name: roaster.name, photo: roaster.logo ?? undefined, verified: Boolean(roaster.is_verified) }
   }
 
   if (params.shop) {
@@ -63,9 +62,8 @@ export async function resolveClaimTarget(params: {
     if (!/^[0-9a-f]{8}$/i.test(prefix)) return null
     const shop = await getShopByUuidPrefix(prefix)
     if (!shop) return null
-    const verified = Boolean(shop.is_verified || shop.company?.is_verified)
-    if (shop.company) return companyTarget(shop.company.id, shop.company.name, shop.company.logo, verified)
-    return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined, verified }
+    if (shop.company) return companyTarget(shop.company.id, shop.company.name, shop.company.logo, Boolean(shop.company.is_verified))
+    return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined, verified: Boolean(shop.is_verified) }
   }
 
   return null

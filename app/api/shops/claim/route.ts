@@ -58,16 +58,21 @@ export async function POST(request: Request) {
   }
 
   // The /claim page hides the form for verified listings, but old links and direct
-  // calls still reach here, so this is the check that actually counts.
-  const { is_verified, company } = entity as { is_verified?: boolean; company?: { is_verified?: boolean } | null }
-  if (is_verified || company?.is_verified) {
+  // calls still reach here, so this is the check that actually counts. A
+  // company-owned listing's claim is filed against the company, so only the
+  // company's verification blocks it.
+  const { is_verified, company_id: ownerCompanyId, company } = entity as {
+    is_verified?: boolean
+    company_id?: string | null
+    company?: { is_verified?: boolean } | null
+  }
+  if (ownerCompanyId ? company?.is_verified : is_verified) {
     return NextResponse.json({ error: 'Listing is already verified' }, { status: 409 })
   }
 
   // Resolve up the ownership tree: a company-owned shop/roaster is persisted against
   // company_id, so a direct API call can't record a leaf claim the page would have
   // rolled up. Only a company-less shop/roaster stays a leaf claim.
-  const ownerCompanyId = (entity as { company_id?: string | null }).company_id
   let persistedType = claim_type as keyof typeof TARGETS
   let persistedColumn: string = target.fkColumn
   let persistedId: string = target_id

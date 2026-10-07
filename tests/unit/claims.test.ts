@@ -141,6 +141,17 @@ describe('resolveClaimTarget', () => {
     expect(await resolveClaimTarget({ roaster: 'in-house' })).toMatchObject({ verified: true })
   })
 
+  test('does not mark a verified shop under an unverified company as verified', async () => {
+    mockShop.mockResolvedValueOnce({
+      uuid: UUID,
+      name: 'Commonplace',
+      is_verified: true,
+      company: { id: 'company-1', name: 'Commonplace Coffee', is_verified: false },
+    } as any)
+
+    expect(await resolveClaimTarget({ shop: UUID })).toMatchObject({ type: 'company', verified: false })
+  })
+
   test('resolves a company slug to a company target with coverage counts', async () => {
     mockCompany.mockResolvedValueOnce({ id: 'company-1', name: 'Commonplace Coffee' } as any)
     shopCountResult = { count: 3, error: null }
