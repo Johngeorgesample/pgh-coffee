@@ -38,7 +38,9 @@ export async function POST(request: Request) {
   }
 
   const supabase = getClient()
-  const selectColumns = claim_type === 'company' ? target.idColumn : `${target.idColumn}, company_id`
+  const selectColumns = claim_type === 'company'
+    ? `${target.idColumn}, is_verified`
+    : `${target.idColumn}, is_verified, company_id, company:company_id(is_verified)`
   const { data: entity, error: entityError } = await supabase
     .from(target.table)
     .select(selectColumns)
@@ -53,6 +55,13 @@ export async function POST(request: Request) {
 
   if (!entity) {
     return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
+  }
+
+  // The /claim page hides the form for verified listings, but old links and direct
+  // calls still reach here, so this is the check that actually counts.
+  const { is_verified, company } = entity as { is_verified?: boolean; company?: { is_verified?: boolean } | null }
+  if (is_verified || company?.is_verified) {
+    return NextResponse.json({ error: 'Listing is already verified' }, { status: 409 })
   }
 
   // Resolve up the ownership tree: a company-owned shop/roaster is persisted against

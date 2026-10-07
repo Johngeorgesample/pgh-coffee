@@ -64,7 +64,13 @@ export default async function ClaimAListing({ searchParams }: TProps) {
       </header>
 
       {/* @TODO should never be null */}
-      {target ? (
+      {target?.verified ? (
+        <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
+          <p className="text-lg text-slate-600">
+            <span className="font-semibold">{target.name}</span> is already verified.
+          </p>
+        </section>
+      ) : target ? (
         <>
           <ClaimPreview name={target.name} subtitle={target.subtitle} photo={target.photo} />
           <ClaimForm target={target} />

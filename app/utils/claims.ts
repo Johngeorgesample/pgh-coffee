@@ -13,13 +13,15 @@ export interface ClaimTarget {
   // Company-only: how much the claim covers, for the scope copy.
   locationCount?: number
   hasRoaster?: boolean
+  // Already verified directly or via its owning company — nothing left to claim.
+  verified: boolean
 }
 
 // A company owns its shops and its roaster, and one person owns the company, so a
 // claim always targets the company when one exists. Count what it covers off
 // company_id only — a shop's roaster_id is "serves this coffee", not ownership.
 // @TODO why are we making DB calls here?
-async function companyTarget(id: string, name: string, logo?: string | null): Promise<ClaimTarget> {
+async function companyTarget(id: string, name: string, logo: string | null | undefined, verified: boolean): Promise<ClaimTarget> {
   const supabase = getClient()
   const [{ count, error: countError }, { data: roasters, error: roasterError }] = await Promise.all([
     supabase.from('shops').select('uuid', { count: 'exact', head: true }).eq('company_id', id).eq('permanently_closed', false),
@@ -29,7 +31,7 @@ async function companyTarget(id: string, name: string, logo?: string | null): Pr
   // if a query fails — mirrors getShopByUuidPrefix, which throws on query failure.
   if (countError) throw new Error(`Failed to count company shops: ${countError.message}`)
   if (roasterError) throw new Error(`Failed to look up company roaster: ${roasterError.message}`)
-  return { type: 'company', id, name, photo: logo ?? undefined, locationCount: count ?? 0, hasRoaster: (roasters?.length ?? 0) > 0 }
+  return { type: 'company', id, name, photo: logo ?? undefined, locationCount: count ?? 0, hasRoaster: (roasters?.length ?? 0) > 0, verified }
 }
 
 // Resolve a `/claim` entry (shop uuid, company slug, or roaster slug) to the entity
@@ -41,16 +43,17 @@ export async function resolveClaimTarget(params: {
 }): Promise<ClaimTarget | null> {
   if (params.company) {
     const company = await getCompanyBySlug(params.company)
-    return company ? companyTarget(company.id, company.name, company.logo) : null
+    return company ? companyTarget(company.id, company.name, company.logo, Boolean(company.is_verified)) : null
   }
 
   if (params.roaster) {
     const roaster = await getRoasterBySlug(params.roaster)
     if (!roaster) return null
+    const verified = Boolean(roaster.is_verified || roaster.company?.is_verified)
     if (roaster.company_id && roaster.company) {
-      return companyTarget(roaster.company.id, roaster.company.name, roaster.company.logo)
+      return companyTarget(roaster.company.id, roaster.company.name, roaster.company.logo, verified)
     }
-    return { type: 'roaster', id: roaster.id, name: roaster.name, photo: roaster.logo ?? undefined }
+    return { type: 'roaster', id: roaster.id, name: roaster.name, photo: roaster.logo ?? undefined, verified }
   }
 
   if (params.shop) {
@@ -60,8 +63,9 @@ export async function resolveClaimTarget(params: {
     if (!/^[0-9a-f]{8}$/i.test(prefix)) return null
     const shop = await getShopByUuidPrefix(prefix)
     if (!shop) return null
-    if (shop.company) return companyTarget(shop.company.id, shop.company.name, shop.company.logo)
-    return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined }
+    const verified = Boolean(shop.is_verified || shop.company?.is_verified)
+    if (shop.company) return companyTarget(shop.company.id, shop.company.name, shop.company.logo, verified)
+    return { type: 'shop', id: shop.uuid, name: shop.name, subtitle: shop.neighborhood, photo: shop.photo ?? undefined, verified }
   }
 
   return null

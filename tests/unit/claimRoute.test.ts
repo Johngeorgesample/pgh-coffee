@@ -165,6 +165,27 @@ describe('Claim API Route - POST', () => {
     expect(inserted.roaster_id).toBeUndefined()
   })
 
+  test('rejects a claim on a listing that is already verified', async () => {
+    mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID, is_verified: true }, error: null })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(409)
+    expect(mockInsertResult).not.toHaveBeenCalled()
+  })
+
+  test('rejects a claim on a shop whose owning company is already verified', async () => {
+    mockEntityValidation.mockResolvedValueOnce({
+      data: { uuid: SHOP_ID, company_id: COMPANY_ID, company: { is_verified: true } },
+      error: null,
+    })
+
+    const response = await post(validClaim)
+
+    expect(response.status).toBe(409)
+    expect(mockInsertResult).not.toHaveBeenCalled()
+  })
+
   test('returns 500 when the claim insert fails', async () => {
     mockEntityValidation.mockResolvedValueOnce({ data: { uuid: SHOP_ID }, error: null })
     mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'insert failed' } })

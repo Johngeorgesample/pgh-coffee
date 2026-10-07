@@ -73,6 +73,7 @@ describe('resolveClaimTarget', () => {
       name: 'Commonplace',
       subtitle: 'Squirrel Hill',
       photo: 'photo.jpg',
+      verified: false,
     })
   })
 
@@ -91,6 +92,7 @@ describe('resolveClaimTarget', () => {
       name: 'Commonplace Coffee',
       locationCount: 4,
       hasRoaster: true,
+      verified: false,
     })
   })
 
@@ -111,6 +113,7 @@ describe('resolveClaimTarget', () => {
       type: 'roaster',
       id: 'roaster-1',
       name: 'Allegheny Coffee',
+      verified: false,
     })
   })
 
@@ -127,6 +130,17 @@ describe('resolveClaimTarget', () => {
     expect(result).toMatchObject({ type: 'company', id: 'company-1', name: 'Commonplace Coffee' })
   })
 
+  test('marks a roaster under a verified company as verified', async () => {
+    mockRoaster.mockResolvedValueOnce({
+      id: 'roaster-1',
+      name: 'In-House Roaster',
+      company_id: 'company-1',
+      company: { id: 'company-1', name: 'Commonplace Coffee', is_verified: true },
+    } as any)
+
+    expect(await resolveClaimTarget({ roaster: 'in-house' })).toMatchObject({ verified: true })
+  })
+
   test('resolves a company slug to a company target with coverage counts', async () => {
     mockCompany.mockResolvedValueOnce({ id: 'company-1', name: 'Commonplace Coffee' } as any)
     shopCountResult = { count: 3, error: null }
@@ -138,6 +152,7 @@ describe('resolveClaimTarget', () => {
       name: 'Commonplace Coffee',
       locationCount: 3,
       hasRoaster: true,
+      verified: false,
     })
   })
 
