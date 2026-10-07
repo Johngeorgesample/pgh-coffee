@@ -56,7 +56,7 @@ describe('Event By Id API Route - GET', () => {
   })
 
   test('excludes hidden events', async () => {
-    mockSingleResult.mockResolvedValueOnce({ data: null, error: null })
+    mockSingleResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
 
     await GET(new Request('http://localhost:3000/api/events/event-1') as never, {
       params: Promise.resolve({ eventId: 'event-1' }),

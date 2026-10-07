@@ -12,7 +12,7 @@ const getEvent = async (eventId: string) => {
     return null
   }
 
-  return data && withRoasterVerification(data as EventRow)
+  return withRoasterVerification(data as EventRow)
 }
 
 export async function GET(req: NextRequest, props: { params: Promise<{ eventId: string }> }) {
