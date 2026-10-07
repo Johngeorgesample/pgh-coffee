@@ -30,7 +30,7 @@ const entryFrom = (params: Awaited<TProps['searchParams']>) => ({
 export async function generateMetadata({ searchParams }: TProps): Promise<Metadata> {
   const entry = entryFrom(await searchParams)
   const target = entry.shop || entry.company || entry.roaster ? await resolveClaimTarget(entry) : null
-  if (!target) return {}
+  if (!target || target.verified) return {}
 
   const title = `Claim ${target.name} · pgh.coffee`
   const description = 'Verify your listing to get a verified badge and a head start managing it when self-serve editing launches.'
@@ -45,10 +45,22 @@ export async function generateMetadata({ searchParams }: TProps): Promise<Metada
   }
 }
 
+const AlreadyVerified = ({ name }: { name: string }) => (
+  <div>
+    <header className="max-w-7xl mx-auto px-6 py-16">
+      <h1 className="max-w-2xl mx-auto text-center text-5xl md:text-7xl font-bold leading-tight">
+        {name} is already verified.
+      </h1>
+    </header>
+    <Footer />
+  </div>
+)
+
 export default async function ClaimAListing({ searchParams }: TProps) {
   const entry = entryFrom(await searchParams)
   const hasEntry = Boolean(entry.shop || entry.company || entry.roaster)
   const target = hasEntry ? await resolveClaimTarget(entry) : null
+  if (target?.verified) return <AlreadyVerified name={target.name} />
 
   return (
     <div>
@@ -64,13 +76,7 @@ export default async function ClaimAListing({ searchParams }: TProps) {
       </header>
 
       {/* @TODO should never be null */}
-      {target?.verified ? (
-        <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
-          <p className="text-lg text-slate-600">
-            <span className="font-semibold">{target.name}</span> is already verified.
-          </p>
-        </section>
-      ) : target ? (
+      {target ? (
         <>
           <ClaimPreview name={target.name} subtitle={target.subtitle} photo={target.photo} />
           <ClaimForm target={target} />
