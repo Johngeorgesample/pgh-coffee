@@ -18,13 +18,13 @@ const baseEvent: EventCardData = {
 }
 
 describe('EventDetails verified badges', () => {
-  test('shows badge for verified roaster and company-verified shop', () => {
+  test('shows badge for verified roaster and shop', () => {
     render(
       <EventDetails
         event={{
           ...baseEvent,
           roaster: { name: "It's Still Coffee", slug: 'its-still-coffee', is_verified: true },
-          shop: { name: 'De Fer', neighborhood: 'Downtown', uuid: 'u1', company: { is_verified: true } },
+          shop: { name: 'De Fer', neighborhood: 'Downtown', uuid: 'u1', is_verified: true },
         }}
       />,
     )

@@ -3,11 +3,16 @@ import { getClient } from '@/lib/supabase/server-client'
 
 const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*, company:company_id(is_verified))'
 
-export type EventRow = { roaster?: { is_verified?: boolean; company?: { is_verified?: boolean } | null } | null }
+type Verifiable = { is_verified?: boolean; company?: { is_verified?: boolean } | null }
 
-// Verification can be granted to a whole company, so a roaster inherits it from its owner.
-export const withRoasterVerification = <T extends EventRow>(event: T) =>
-  event.roaster?.company?.is_verified ? ({ ...event, roaster: { ...event.roaster, is_verified: true } } as T) : event
+export type EventRow = { shop?: Verifiable | null; roaster?: Verifiable | null }
+
+const inherit = <T extends Verifiable>(entity: T) =>
+  entity.company?.is_verified ? { ...entity, is_verified: true } : entity
+
+// Verification can be granted to a whole company, so a shop or roaster inherits it from its owner.
+export const withInheritedVerification = <T extends EventRow>(event: T) =>
+  ({ ...event, shop: event.shop && inherit(event.shop), roaster: event.roaster && inherit(event.roaster) }) as T
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
   getClient().from('events').select(select).eq('is_hidden', false)
@@ -30,5 +35,5 @@ export const getEventByIdPrefix = async (prefix: string) => {
     return null
   }
 
-  return data?.[0] ? withRoasterVerification(data[0] as EventRow) : null
+  return data?.[0] ? withInheritedVerification(data[0] as EventRow) : null
 }
