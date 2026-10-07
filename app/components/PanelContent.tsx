@@ -18,8 +18,6 @@ export default function PanelContent(props: IProps) {
   const { address, photos, amenities, roaster, uuid, name, verified, company, permanentlyClosed } = props.shop.properties
   const description = props.shop.properties.description?.trim()
   const coordinates = props.shop.geometry?.coordinates
-  // A shop owned by a company is claimed through that company, so a verified
-  // company already covers it — same rule PanelHeader applies to the badge.
   const isVerified = Boolean(verified || company?.is_verified)
 
   return (

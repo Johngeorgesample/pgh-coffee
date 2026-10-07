@@ -135,8 +135,6 @@ describe('PanelContent', () => {
     expect(screen.queryByRole('link', { name: /Claim this shop/ })).toBeNull()
   })
 
-  // A shop's claim resolves to its company, so a verified company means the claim
-  // is already done — offering it again sends the owner nowhere useful.
   it('hides the claim button when the owning company is verified', () => {
     const shop: TShop = {
       ...mockShop,
