@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { visibleEvents } from '@/app/utils/events'
+import { visibleEvents, withRoasterVerification, type EventRow } from '@/app/utils/events'
 
 const fetchEvents = async (shopID?: string, roasterID?: string) => {
   let query = visibleEvents()
@@ -21,7 +21,7 @@ const fetchEvents = async (shopID?: string, roasterID?: string) => {
     return null
   }
 
-  return data
+  return (data as EventRow[]).map(withRoasterVerification)
 }
 
 // API Route Handler

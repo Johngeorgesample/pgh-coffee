@@ -46,6 +46,14 @@ describe('Event by-slug API Route', () => {
     expect((await response.json()).title).toBe('Latte Throwdown')
   })
 
+  test('marks the roaster verified when its owning company is verified', async () => {
+    const roaster = { name: 'Commonplace', is_verified: false, company: { is_verified: true } }
+    mockLimit.mockResolvedValueOnce({ data: [{ ...event, roaster }], error: null })
+
+    const response = await callWith('latte-throwdown-12345678')
+    expect((await response.json()).roaster.is_verified).toBe(true)
+  })
+
   test('returns 404 without querying when the slug has no id suffix', async () => {
     const response = await callWith('not-a-real-slug')
     expect(response.status).toBe(404)

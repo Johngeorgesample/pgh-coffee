@@ -1,7 +1,13 @@
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
 
-const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)'
+const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*, company:company_id(*))'
+
+export type EventRow = { roaster?: { is_verified?: boolean; company?: { is_verified?: boolean } | null } | null }
+
+// A roaster inherits verification from its owning company, matching /roasters/<slug>.
+export const withRoasterVerification = (event: EventRow) =>
+  event.roaster?.company?.is_verified ? { ...event, roaster: { ...event.roaster, is_verified: true } } : event
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
   getClient().from('events').select(select).eq('is_hidden', false)
@@ -24,5 +30,5 @@ export const getEventByIdPrefix = async (prefix: string) => {
     return null
   }
 
-  return data?.[0] ?? null
+  return data?.[0] ? withRoasterVerification(data[0] as EventRow) : null
 }
