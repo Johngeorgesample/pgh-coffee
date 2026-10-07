@@ -180,6 +180,13 @@ describe('resolveClaimTarget', () => {
     expect(await resolveClaimTarget({ company: 'nope' })).toBeNull()
   })
 
+  test('skips the coverage queries for a verified company', async () => {
+    mockCompany.mockResolvedValueOnce({ id: 'company-1', name: 'Commonplace Coffee', is_verified: true } as any)
+    shopCountResult = { count: null, error: { message: 'boom' } }
+
+    expect(await resolveClaimTarget({ company: 'commonplace' })).toMatchObject({ verified: true })
+  })
+
   test('throws rather than reporting misleading coverage when a count query fails', async () => {
     mockCompany.mockResolvedValueOnce({ id: 'company-1', name: 'Commonplace Coffee' } as any)
     shopCountResult = { count: null, error: { message: 'boom' } }
