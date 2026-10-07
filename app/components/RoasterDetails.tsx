@@ -40,6 +40,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
     const fetchRoaster = async () => {
       try {
         const response = await fetch(`/api/roasters/${slug}`)
+        if (!response.ok) return
         const data = await response.json()
         setRoaster(data)
         plausible('RoasterView', {

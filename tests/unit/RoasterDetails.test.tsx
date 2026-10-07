@@ -61,4 +61,15 @@ describe('RoasterDetails claim CTA', () => {
 
     expect(claimCTA()).not.toBeInTheDocument()
   })
+
+  it('shows not found instead of a claim when the roaster lookup fails', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.resolve({ message: 'Roaster not found' }),
+    } as Response)
+    render(<RoasterDetails slug="missing-roaster" />)
+
+    expect(await screen.findByText('Roaster not found')).toBeInTheDocument()
+    expect(claimCTA()).not.toBeInTheDocument()
+  })
 })
