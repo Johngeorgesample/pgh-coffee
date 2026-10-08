@@ -25,7 +25,7 @@ export default function ShopSearch() {
             <p className="mt-1 text-sm">
               Try a different name or neighborhood, or{' '}
               <Link href="/submit-a-shop" className="underline">
-                tell us about a shop we&rsquo;re missing
+                tell me about a shop Itell us about a shop we&rsquo;re missingrsquo;m missing
               </Link>
               .
             </p>
