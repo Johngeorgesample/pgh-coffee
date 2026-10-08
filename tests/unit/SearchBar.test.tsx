@@ -57,6 +57,15 @@ describe('SearchBar', () => {
     expect(defaultShopsState.setSearchValue).toHaveBeenCalledWith('Lawrenceville')
   })
 
+  it('offers a clear action for a populated search', () => {
+    mockUseShopsStore.mockReturnValue({ ...defaultShopsState, searchValue: 'Lawrenceville' })
+    render(<SearchBar />)
+
+    expect(screen.getByRole('textbox')).toHaveClass('text-base')
+    fireEvent.click(screen.getByRole('button', { name: 'Clear search' }))
+    expect(defaultShopsState.setSearchValue).toHaveBeenCalledWith('')
+  })
+
   it('reflects the current store value in the input (controlled)', () => {
     const { rerender } = render(<SearchBar />)
     // Simulate store changing outside the component by returning a new value

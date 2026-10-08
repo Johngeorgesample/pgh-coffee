@@ -19,5 +19,5 @@ export const getRoasterBySlug = async (slug: string) => {
     return null
   }
 
-  return data
+  return { ...data, is_verified: data.is_verified || data.company?.is_verified }
 }
