@@ -151,7 +151,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                 >
                   <div className="flex items-center gap-1 text-slate-900 font-bold text-[15px]">
                     {event.shop.name}
-                    {(event.shop.is_verified || event.shop.company?.is_verified) && <VerifiedBadge />}
+                    {event.shop.is_verified && <VerifiedBadge />}
                   </div>
                   <div className="text-sm text-gray-500 mt-0.5">
                     {event.shop.neighborhood}

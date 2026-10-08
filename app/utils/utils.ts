@@ -1,4 +1,5 @@
 import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
+import { withCompanyVerification } from '@/app/utils/verification'
 
 export const SHOP_WITH_ROASTER_SELECT = '*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)'
 
@@ -28,7 +29,7 @@ const toFeature = (shop: DbShop): TShop => ({
     amenities: shop.amenities ?? undefined,
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
-    verified: Boolean(shop.is_verified || shop.company?.is_verified),
+    verified: Boolean(withCompanyVerification(shop).is_verified),
     permanentlyClosed: shop.permanently_closed ?? undefined,
   },
   geometry: {
