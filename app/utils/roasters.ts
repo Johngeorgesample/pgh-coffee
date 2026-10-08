@@ -19,6 +19,5 @@ export const getRoasterBySlug = async (slug: string) => {
     return null
   }
 
-  // A verified company vouches for the roaster it owns.
   return { ...data, is_verified: data.is_verified || data.company?.is_verified }
 }
