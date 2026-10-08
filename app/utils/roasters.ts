@@ -1,5 +1,6 @@
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { withCompanyVerification } from '@/app/utils/verification'
 
 /**
  * Resolves a roaster from a `/roasters/{slug}` identifier. Roasters carry their
@@ -19,5 +20,5 @@ export const getRoasterBySlug = async (slug: string) => {
     return null
   }
 
-  return { ...data, is_verified: data.is_verified || data.company?.is_verified }
+  return withCompanyVerification(data)
 }

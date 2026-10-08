@@ -1,18 +1,19 @@
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { withCompanyVerification } from '@/app/utils/verification'
 
 const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(is_verified)), roaster:roaster_id(*, company:company_id(is_verified))'
 
-type Verifiable = { is_verified?: boolean; company?: { is_verified?: boolean } | null }
+type Verifiable = Parameters<typeof withCompanyVerification>[0]
 
 export type EventRow = { shop?: Verifiable | null; roaster?: Verifiable | null }
 
-const inherit = <T extends Verifiable>(entity: T) =>
-  entity.company?.is_verified ? { ...entity, is_verified: true } : entity
-
-// Verification can be granted to a whole company, so a shop or roaster inherits it from its owner.
 export const withInheritedVerification = <T extends EventRow>(event: T) =>
-  ({ ...event, shop: event.shop && inherit(event.shop), roaster: event.roaster && inherit(event.roaster) }) as T
+  ({
+    ...event,
+    shop: event.shop && withCompanyVerification(event.shop),
+    roaster: event.roaster && withCompanyVerification(event.roaster),
+  }) as T
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
   getClient().from('events').select(select).eq('is_hidden', false)
