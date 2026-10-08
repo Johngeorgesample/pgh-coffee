@@ -9,7 +9,7 @@ export const getGoogleMapsUrl = (coordinates: { latitude: number; longitude: num
 
 export const getMobileMapsUrl = (coordinates: [number, number], userAgent: string) => {
   const [lng, lat] = coordinates
-  if (/iPhone|iPad|iPod/i.test(userAgent)) return `https://maps.apple.com/?daddr=${lat},${lng}`
+  if (/iPhone|iPad|iPod/i.test(userAgent)) return `https://www.google.com/maps/dir/?api=1&destination=${lat}%2C${lng}`
   // geo: asks Android to open a capable maps app; it does not require Google Maps.
   if (/Android/i.test(userAgent)) return `geo:0,0?q=${lat},${lng}`
   return null
