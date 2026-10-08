@@ -57,6 +57,16 @@ describe('Roaster API Route - GET', () => {
     expect(data).toEqual({ ...roaster, shops })
   })
 
+  test('marks the roaster verified when its owning company is verified', async () => {
+    const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster', is_verified: false, company: { is_verified: true } }
+    mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: [], error: null })
+
+    const data = await (await call('test-roaster')).json()
+
+    expect(data.is_verified).toBe(true)
+  })
+
   test('fetches the roaster join for each shop so the roaster card can render', async () => {
     const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster' }
     mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })

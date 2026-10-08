@@ -28,7 +28,7 @@ const toFeature = (shop: DbShop): TShop => ({
     amenities: shop.amenities ?? undefined,
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
-    verified: shop.is_verified ?? undefined,
+    verified: Boolean(shop.is_verified || shop.company?.is_verified),
     permanentlyClosed: shop.permanently_closed ?? undefined,
   },
   geometry: {
