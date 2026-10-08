@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
 
-const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*, company:company_id(is_verified))'
+const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(is_verified)), roaster:roaster_id(*, company:company_id(is_verified))'
 
 type Verifiable = { is_verified?: boolean; company?: { is_verified?: boolean } | null }
 

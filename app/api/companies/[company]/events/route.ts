@@ -4,7 +4,7 @@ import { getCompanyBySlug } from '@/app/utils/companies'
 import { visibleEvents, withInheritedVerification, type EventRow } from '@/app/utils/events'
 
 const getCompanyEvents = async (companyId: string) => {
-  const { data, error } = await visibleEvents('*, shop:shops!inner(*, company:company_id(*))')
+  const { data, error } = await visibleEvents('*, shop:shops!inner(*, company:company_id(is_verified))')
     .eq('shops.company_id', companyId)
 
   if (error) {
