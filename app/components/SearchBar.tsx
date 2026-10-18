@@ -18,11 +18,11 @@ export default function SearchBar() {
         </button>
       )}
       <input
-        aria-label="Search for a shop or neighborhood"
+        aria-label="Search shops, roasters, or neighborhoods"
         className="h-[24px] min-w-0 flex-1 text-base bg-transparent border-none focus:outline-none focus:ring-0"
         value={searchValue}
         onChange={e => setSearchValue(e.target.value)}
-        placeholder="Search for a shop or neighborhood"
+        placeholder="Search shops, roasters, or neighborhoods"
       />
       {searchValue && (
         <button type="button" aria-label="Clear search" className="flex size-10 shrink-0 items-center justify-center" onClick={() => setSearchValue('')}>

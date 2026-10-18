@@ -45,13 +45,13 @@ describe('SearchBar', () => {
   it('renders search input with placeholder text', () => {
     render(<SearchBar />)
     expect(
-      screen.getByPlaceholderText('Search for a shop or neighborhood')
+      screen.getByPlaceholderText('Search shops, roasters, or neighborhoods')
     ).toBeInTheDocument()
   })
 
   it('updates the store when the user types (drives filtering upstream)', () => {
     render(<SearchBar />)
-    const input = screen.getByPlaceholderText('Search for a shop or neighborhood')
+    const input = screen.getByPlaceholderText('Search shops, roasters, or neighborhoods')
 
     fireEvent.change(input, { target: { value: 'Lawrenceville' } })
     expect(defaultShopsState.setSearchValue).toHaveBeenCalledWith('Lawrenceville')
@@ -76,7 +76,7 @@ describe('SearchBar', () => {
     rerender(<SearchBar />)
 
     expect(
-      screen.getByPlaceholderText('Search for a shop or neighborhood')
+      screen.getByPlaceholderText('Search shops, roasters, or neighborhoods')
     ).toHaveValue('Ineffable Cà Phê')
   })
 
