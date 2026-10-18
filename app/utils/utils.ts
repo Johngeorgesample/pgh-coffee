@@ -79,7 +79,8 @@ const baseSynonymMap: Record<string, string[]> = {
   'café': ['cafe', 'caffe'],
   'coffee': ['cofee'],
   'ghost': ['trace'],
-  'boredom': ['heatcheck']
+  'boredom': ['heatcheck'],
+  '19': ['nineteen']
 }
 
 /**
