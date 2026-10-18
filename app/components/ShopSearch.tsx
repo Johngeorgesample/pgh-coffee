@@ -4,7 +4,8 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopList from '@/app/components/ShopList'
-import EntitySearchResults, { useMatchedEntities } from '@/app/components/EntitySearchResults'
+import EntitySearchResults from '@/app/components/EntitySearchResults'
+import { useMatchedEntities } from '@/hooks/useMatchedEntities'
 
 const AmenityFilterList = dynamic(() => import('./AmenityFilterList').then(m => ({ default: m.AmenityFilterList })), {
   ssr: false,

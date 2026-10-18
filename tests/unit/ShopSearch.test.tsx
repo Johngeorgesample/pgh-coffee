@@ -10,10 +10,8 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
   useDisplayedShops: () => ({ features: mockState.features }),
 }))
 vi.mock('@/app/components/ShopList', () => ({ default: () => null }))
-vi.mock('@/app/components/EntitySearchResults', () => ({
-  default: () => null,
-  useMatchedEntities: () => mockState.entities,
-}))
+vi.mock('@/app/components/EntitySearchResults', () => ({ default: () => null }))
+vi.mock('@/hooks/useMatchedEntities', () => ({ useMatchedEntities: () => mockState.entities }))
 vi.mock('next/dynamic', () => ({ default: () => () => null }))
 
 describe('ShopSearch', () => {
