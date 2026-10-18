@@ -7,14 +7,16 @@ import { getFaro } from '@/lib/faro'
 interface AuthFormProps {
   onSuccess: () => void
   idPrefix?: string
+  next?: string
+  initialMode?: 'signin' | 'signup'
 }
 
-export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
+export default function AuthForm({ onSuccess, idPrefix = '', next = '/', initialMode = 'signin' }: AuthFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const [mode, setMode] = useState(initialMode)
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,7 +66,7 @@ export default function AuthForm({ onSuccess, idPrefix = '' }: AuthFormProps) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     })
     if (error) setError(error.message)
