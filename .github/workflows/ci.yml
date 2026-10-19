@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Each check reports on its own, so a lint failure doesn't hide test results.
+      fail-fast: false
+      matrix:
+        include:
+          - name: Lint
+            run: npm run lint
+          - name: Typecheck
+            run: npm run typecheck
+          - name: Build
+            run: npm run build
+          - name: Test
+            run: npx vitest run
+
+    env:
+      # Placeholder, non-functional values. Several API route modules build a
+      # Supabase client at import time; `next build` evaluates them during
+      # page-data collection and `createClient` throws if the URL is missing.
+      # The build never connects (all routes are request-time dynamic), so
+      # fake values suffice. Do NOT use a real key here.
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_ANON_KEY: placeholder-anon-key
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: ${{ matrix.name }}
+      run: ${{ matrix.run }}

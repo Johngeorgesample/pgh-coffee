@@ -121,7 +121,6 @@ Criteria stated on the submission form (`app/components/submit/SubmitForm.tsx`) 
 ## Build & verification gotchas
 
 - **`npm run lint` may fail with `sh: oxlint: command not found`.** `oxlint` is in `devDependencies` but can be missing from a `node_modules` installed before the ESLint→oxlint swap (a3967b8). Run `npm install` first.
-- **`npm run typecheck` currently reports one pre-existing error** in `tests/unit/useNewsRouteSync.test.tsx` (TS2461). Don't assume your change caused it — check `git status` first.
 
 - **Don't `npm run build` while `npm run dev` is running.** The build overwrites `.next` under the dev server, which then 500s on every route. The app is fine; only the dev process is poisoned. Stop dev first, or `rm -rf .next` and restart it.
 - **The first build after `rm -rf .next` can die** with `PageNotFoundError: Cannot find module for page: /_document`. Re-running the identical command succeeds. The partial `.nft.json` files it leaves behind are misleading if you're inspecting them.
