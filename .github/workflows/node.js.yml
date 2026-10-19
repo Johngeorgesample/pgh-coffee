@@ -11,22 +11,20 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version-file: .nvmrc
         cache: 'npm'
     - name: Install dependencies
-      run: npm install
+      run: npm ci
     - name: Lint
       run: npm run lint
-    - name: Build (typecheck + compile)
+    - name: Typecheck
+      run: npm run typecheck
+    - name: Build
       run: npm run build
       env:
         # Placeholder, non-functional values. Several API route modules build a
@@ -37,4 +35,4 @@ jobs:
         SUPABASE_URL: https://placeholder.supabase.co
         SUPABASE_ANON_KEY: placeholder-anon-key
     - name: Test
-      run: npm test
+      run: npx vitest run
