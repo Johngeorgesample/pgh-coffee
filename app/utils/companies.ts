@@ -27,7 +27,11 @@ export const getCompanyBySlug = async (slug: string) => {
 export const getCompanyForSeo = cache(getCompanyBySlug)
 
 export const getCompanyShopPhotos = async (companyId: string) => {
-  const { data, error } = await getClient().from('shops').select('photo').eq('company_id', companyId)
+  const { data, error } = await getClient()
+    .from('shops')
+    .select('photo')
+    .eq('company_id', companyId)
+    .eq('permanently_closed', false)
 
   if (error) {
     logger.error('Error fetching company shop photos', { error: error.message })
