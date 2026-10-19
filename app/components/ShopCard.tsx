@@ -61,7 +61,7 @@ export default function ShopCard(props: IProps) {
     <li
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
-      className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
+      className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer transition-transform ease-out active:scale-[0.98] motion-reduce:active:scale-100`}
       onClick={handleClick}
       onKeyDown={handleKeyPress}
       tabIndex={0}
