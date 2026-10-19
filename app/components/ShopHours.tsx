@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ClockIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
-import { HoursRow, formatTime, isOpenNow, pittsburghNow } from '@/app/utils/hours'
+import { HoursRow, formatTime, formatUpdatedDate, isOpenNow, pittsburghNow } from '@/app/utils/hours'
 import ShopHoursSkeleton from './ShopHoursSkeleton'
 
 interface IProps {
@@ -27,6 +27,7 @@ const formatDayRanges = (rows: HoursRow[]): string =>
 
 export default function ShopHours({ shop }: IProps) {
   const [rows, setRows] = useState<HoursRow[] | null>(null)
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
   const shopId = shop.properties.uuid
 
   // Snapshot Pittsburgh time per shop. ShopHours re-renders (not remounts) when
@@ -38,6 +39,7 @@ export default function ShopHours({ shop }: IProps) {
     // hours/badge) while the new shop's fetch is in flight — ShopHours
     // reconciles across shop selections rather than remounting.
     setRows(null)
+    setUpdatedAt(null)
     if (!shopId) {
       setRows([])
       return
@@ -47,8 +49,10 @@ export default function ShopHours({ shop }: IProps) {
       try {
         const res = await fetch(`/api/shops/hours/${shopId}`)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data: HoursRow[] = await res.json()
-        if (!cancelled) setRows(data)
+        const data: { hours: HoursRow[]; updatedAt: string | null } = await res.json()
+        if (cancelled) return
+        setRows(data.hours)
+        setUpdatedAt(data.updatedAt)
       } catch {
         if (!cancelled) setRows([])
       }
@@ -107,7 +111,9 @@ export default function ShopHours({ shop }: IProps) {
         })}
       </ul>
 
-      <p className="mt-3 text-xs text-gray-400">Hours powered by Google</p>
+      <p className="mt-3 text-xs text-gray-400">
+        Hours powered by Google{updatedAt && ` · Updated ${formatUpdatedDate(updatedAt)}`}
+      </p>
     </section>
   )
 }
