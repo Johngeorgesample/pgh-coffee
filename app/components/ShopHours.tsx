@@ -80,7 +80,7 @@ export default function ShopHours({ shop }: IProps) {
   const open = isOpenNow(rows, now)
 
   return (
-    <section className="border-b border-stone-200 px-4 py-5 sm:px-6">
+    <section className="border-b border-stone-200 px-4 py-5 sm:px-6 animate-amenity-chip-fade">
       <div className="mb-2 flex items-center justify-between">
         <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">Hours</p>
         <span
