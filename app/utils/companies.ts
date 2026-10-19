@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
 
@@ -20,4 +21,22 @@ export const getCompanyBySlug = async (slug: string) => {
   }
 
   return data
+}
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getCompanyForSeo = cache(getCompanyBySlug)
+
+export const getCompanyShopPhotos = async (companyId: string) => {
+  const { data, error } = await getClient()
+    .from('shops')
+    .select('photo')
+    .eq('company_id', companyId)
+    .eq('permanently_closed', false)
+
+  if (error) {
+    logger.error('Error fetching company shop photos', { error: error.message })
+    return []
+  }
+
+  return data.map((shop) => shop.photo as string | null)
 }

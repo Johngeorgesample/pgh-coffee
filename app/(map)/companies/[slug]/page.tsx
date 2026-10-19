@@ -1,15 +1,21 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getCompanyBySlug } from '@/app/utils/companies'
+import { getCompanyForSeo } from '@/app/utils/companies'
+import { buildEntryMetadata } from '@/app/utils/seo'
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
-export default async function CompanyPage({ params }: Props) {
-  const { slug } = await params
-  const company = await getCompanyBySlug(slug)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const company = await getCompanyForSeo((await params).slug)
+  if (!company) return {}
 
-  if (!company) notFound()
+  return buildEntryMetadata({ name: company.name, description: company.description?.trim() || undefined, path: `/companies/${company.slug}` })
+}
+
+export default async function CompanyPage({ params }: Props) {
+  if (!(await getCompanyForSeo((await params).slug))) notFound()
 
   return null
 }

@@ -129,6 +129,17 @@ export function buildShopMetadata(shop: DbShop): Metadata {
   }
 }
 
+/** Metadata for a titled detail page (news, roasters, companies) whose OG image comes from its own route. */
+export function buildEntryMetadata({ name, description, path }: { name: string; description?: string; path: string }): Metadata {
+  const title = `${name} | ${SITE_NAME}`
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { siteName: SITE_NAME, title, description, type: 'website', url: path },
+  }
+}
+
 /**
  * Builds CafeOrCoffeeShop JSON-LD from real shop data only. Fields without
  * reliable source data (telephone, opening hours, price range — none of
