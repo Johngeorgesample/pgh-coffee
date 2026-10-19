@@ -12,6 +12,7 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/u/[id]/opengraph-image': ['./public/logo_with_no_text_transparent*.png'],
     '/shops/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
+    '/news/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
   },
   // @datadog/pprof is a native addon and can't be bundled
   serverExternalPackages: ['@pyroscope/nodejs', '@datadog/pprof'],
