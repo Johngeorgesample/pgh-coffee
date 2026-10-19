@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
 
@@ -21,3 +22,6 @@ export const getRoasterBySlug = async (slug: string) => {
 
   return { ...data, is_verified: data.is_verified || data.company?.is_verified }
 }
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getRoasterForSeo = cache(getRoasterBySlug)
