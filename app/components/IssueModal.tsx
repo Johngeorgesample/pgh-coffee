@@ -34,7 +34,7 @@ export default function IssueModal({ isOpen, onClose, onSuccess, shop }: Props) 
             </svg>
           </button>
           <DialogTitle className="text-lg font-semibold text-stone-900 mb-2">Report an issue</DialogTitle>
-          <p className="text-sm text-stone-600 mb-4">Tell us what&apos;s out of date and we&apos;ll take a look.</p>
+          <p className="text-sm text-stone-600 mb-4">Tell us what&apos;s out of date and I&apos;ll take a look.</p>
           <IssueForm shop={shop} onSuccess={onSuccess} />
         </DialogPanel>
       </div>
