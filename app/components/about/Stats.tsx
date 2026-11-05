@@ -12,7 +12,7 @@ export default function Stats() {
 
           <div>
             <div className="text-6xl md:text-7xl font-black text-black mb-4 tracking-tighter">
-              150+
+              170+
             </div>
             <p className="text-slate-500 font-medium uppercase tracking-widest text-sm">Local Coffee Shops</p>
           </div>
