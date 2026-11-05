@@ -1,0 +1,212 @@
+[
+  {
+    "day": 1,
+    "roasterSlug": "dynamic-coffee-roasters",
+    "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 2,
+    "roasterSlug": "commonplace",
+    "roasterName": "Commonplace Coffee",
+    "coffee": "Ratnagiri Estate",
+    "notes": [
+      "Blueberry",
+      "Purple grape",
+      "Almond",
+      "Cantaloupe"
+    ],
+    "origin": "Chikmagalur, Karnataka, India",
+    "producer": "Ashok & Divya Patre",
+    "process": "Thermal shock natural"
+  },
+  {
+    "day": 3,
+    "roasterSlug": "redhawk-coffee-roasters",
+    "roasterName": "Redhawk Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 4,
+    "roasterSlug": "19-coffee",
+    "roasterName": "19 Coffee",
+    "coffee": "Ethiopia Gera",
+    "notes": [
+      "Strawberry",
+      "Pineapple",
+      "Peach",
+      "Blueberry"
+    ],
+    "origin": "Djimma, Ethiopia",
+    "producer": "Gera Estate",
+    "process": "Anaerobic",
+    "roast": "Light-medium"
+  },
+  {
+    "day": 5,
+    "roasterSlug": "de-fer-coffee-and-tea",
+    "roasterName": "De Fer Coffee & Tea",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 6,
+    "roasterSlug": "the-boredom-set",
+    "roasterName": "The Boredom Set",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 7,
+    "roasterSlug": "aspen-coffee-co",
+    "roasterName": "Aspen Coffee Co.",
+    "coffee": "Kerehaklu Estate – Blossom Culture",
+    "notes": [
+      "Chocolate",
+      "Lavender",
+      "Lime",
+      "Sweet spice"
+    ],
+    "producer": "Pranoy Thipaiah",
+    "origin": "Chikmagalur, Karnataka, India",
+    "process": "Culture-inoculated washed",
+    "blurb": "At Kerehaklu Estate, producer Pranoy Thipaiah isolates and cultivates native microbial cultures from the farm’s environment. These cultures are introduced during a 36-hour submerged fermentation, guiding the process while preserving the estate’s character. The result is a coffee with layered sweetness, floral complexity, and bright acidity."
+  },
+  {
+    "day": 8,
+    "roasterSlug": "burning-oaks-coffee-company",
+    "roasterName": "Burning Oaks Coffee Company",
+    "coffee": "Uganda Light Roast",
+    "notes": [
+      "Raspberry",
+      "Plum",
+      "Brown sugar",
+      "Clementine",
+      "Black tea"
+    ],
+    "producer": "Smallholders via Kyagalanyi Coffee",
+    "origin": "Rwenzori Mountains, Uganda",
+    "process": "Natural",
+    "roast": "Light"
+  },
+  {
+    "day": 9,
+    "roasterSlug": "its-still-coffee",
+    "roasterName": "It's Still Coffee",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 10,
+    "roasterSlug": "ghost-coffee-collab",
+    "roasterName": "Ghost Coffee Collab",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 11,
+    "roasterSlug": "espresso-a-mano",
+    "roasterName": "Espresso a Mano",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 12,
+    "roasterSlug": "la-prima-espresso",
+    "roasterName": "La Prima Espresso",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 13,
+    "roasterSlug": "mechanic-coffee",
+    "roasterName": "Mechanic Coffee",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 14,
+    "roasterSlug": "compass-point-coffee",
+    "roasterName": "Compass Point Coffee",
+    "coffee": "To be announced",
+    "notes": [
+      "Chocolate",
+      "Malt",
+      "Burnt sugar"
+    ],
+    "origin": "Haiti",
+    "roast": "Full City+"
+  },
+  {
+    "day": 15,
+    "roasterSlug": "standing-wave-coffee",
+    "roasterName": "Standing Wave Coffee",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 16,
+    "roasterSlug": "press-house-coffee",
+    "roasterName": "Press House Coffee",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 17,
+    "roasterSlug": "nicholas-coffee-and-tea",
+    "roasterName": "Nicholas Coffee & Tea Co.",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 18,
+    "roasterSlug": "prestogeorge",
+    "roasterName": "Prestogeorge Coffee & Tea",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 19,
+    "roasterSlug": "steel-cup-coffee-roasters",
+    "roasterName": "Steel Cup Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 20,
+    "roasterSlug": "rockin-cat",
+    "roasterName": "Rockin' Cat",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 21,
+    "roasterSlug": "reginalds-coffee",
+    "roasterName": "Reginald's Coffee",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 22,
+    "roasterSlug": "the-coffee-tree-roasters",
+    "roasterName": "The Coffee Tree Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 23,
+    "roasterSlug": "macizo",
+    "roasterName": "Macizo",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 24,
+    "roasterSlug": "dynamic-coffee-roasters",
+    "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  }
+]

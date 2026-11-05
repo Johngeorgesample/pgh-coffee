@@ -22,7 +22,7 @@ const resolveDay = async (params: Props['params']) => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await resolveDay(params)
   const title = `${entry.coffee} — ${entry.roasterName} | Day ${entry.day}`
-  const description = `Day ${entry.day} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}. ${entry.notes.join(', ')}.`
+  const description = `Day ${entry.day} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}.${entry.notes.length ? ` ${entry.notes.join(', ')}.` : ''}`
   return {
     title: `${title} | pgh.coffee`,
     description,
@@ -51,13 +51,14 @@ const ScanStrip = ({ day }: { day: number }) => (
   </div>
 )
 
-const Spec = ({ label, value }: { label: string; value?: string }) =>
-  value ? (
-    <div>
-      <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-stone-500">{label}</p>
-      <p className="font-semibold leading-snug text-slate-900">{value}</p>
-    </div>
-  ) : null
+// ponytail: always shows the label while the lineup is incomplete; restore the
+// value guard once every entry has full specs.
+const Spec = ({ label, value }: { label: string; value?: string }) => (
+  <div>
+    <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-stone-500">{label}</p>
+    <p className="font-semibold leading-snug text-slate-900">{value ?? '—'}</p>
+  </div>
+)
 
 export default async function AdventDayPage({ params }: Props) {
   const entry = await resolveDay(params)
@@ -86,16 +87,14 @@ export default async function AdventDayPage({ params }: Props) {
         </div>
       </header>
 
-      {(entry.producer || entry.origin || entry.varietal || entry.process) && (
-        <section className="relative z-10 mx-auto max-w-7xl px-6 pt-10 lg:pt-0 lg:-translate-y-1/2">
-          <div className="grid justify-items-center gap-6 rounded-xl border border-stone-200 bg-white p-6 text-center shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
-            <Spec label="Producer" value={entry.producer} />
-            <Spec label="Origin" value={entry.origin} />
-            <Spec label="Varietal" value={entry.varietal} />
-            <Spec label="Process" value={entry.process} />
-          </div>
-        </section>
-      )}
+      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-10 lg:pt-0 lg:-translate-y-1/2">
+        <div className="grid justify-items-center gap-6 rounded-xl border border-stone-200 bg-white p-6 text-center shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
+          <Spec label="Producer" value={entry.producer} />
+          <Spec label="Origin" value={entry.origin} />
+          <Spec label="Varietal" value={entry.varietal} />
+          <Spec label="Process" value={entry.process} />
+        </div>
+      </section>
 
       <section className="mx-auto max-w-7xl px-6 pt-12">
         <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">In the cup</h2>
