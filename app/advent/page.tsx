@@ -6,7 +6,7 @@ import { ADVENT_LINEUP } from '@/data/advent'
 import Link from 'next/link'
 import { DYNAMIC_ROASTER_PATH, DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
 
-const description = `Twenty-four days of Pittsburgh coffee: a different local roaster behind every door, curated by Dynamic Coffee Roasters. Open each day to read where the coffee came from and how to brew it.`
+const description = `Twenty-five days of Pittsburgh coffee: a different local roaster behind every door, curated by Dynamic Coffee Roasters. Open each day to read where the coffee came from and how to brew it.`
 
 export const metadata: Metadata = {
   title: 'Coffee Advent Calendar | pgh.coffee',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
 }
 
-const roasterNames = Array.from(new Set(ADVENT_LINEUP.map(entry => entry.roasterName))).sort((a, b) =>
+const roasterNames = Array.from(new Set(ADVENT_LINEUP.filter(entry => entry.roasterSlug).map(entry => entry.roasterName))).sort((a, b) =>
   a.localeCompare(b)
 )
 
@@ -31,7 +31,7 @@ export default function AdventCalendar() {
         <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center lg:py-20">
           <div>
             <h1 className="mb-5 font-serif text-5xl leading-[1.05] tracking-tight text-white text-pretty md:text-6xl lg:text-7xl">
-              Twenty-four days of Pittsburgh coffee.
+              Twenty-five days of Pittsburgh coffee.
             </h1>
             <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">
               Curated by{' '}

@@ -4,18 +4,18 @@ import lineup from './advent.json'
 // roaster's coffee per day, with the reading for each day hosted here.
 //
 // The lineup lives in advent.json. Only list coffee details a roaster has sent us;
-// anything unconfirmed stays "To be announced". Days 11, 13 and 16-21 still hold
-// placeholder roasters. `roasterSlug` should match a row in the `roaster` table,
+// anything unconfirmed stays "To be announced". `roasterSlug` should match a row in the `roaster` table,
 // or the day page drops its roaster section.
 //
-// Only `day`, `roasterSlug`, `roasterName`, `coffee` and `notes` are required;
+// Only `day`, `roasterName`, `coffee` and `notes` are required;
 // everything else renders when present, so entries can be filled in over time.
 
-export const ADVENT_DAYS = 24
+export const ADVENT_DAYS = 25
 
 export interface AdventDay {
   day: number
-  roasterSlug: string
+  // Absent until the day's roaster is confirmed.
+  roasterSlug?: string
   roasterName: string
   coffee: string
   notes: string[]

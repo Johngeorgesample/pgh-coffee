@@ -63,7 +63,7 @@ const Spec = ({ label, value }: { label: string; value?: string }) => (
 export default async function AdventDayPage({ params }: Props) {
   const entry = await resolveDay(params)
 
-  const roaster = await getRoasterBySlug(entry.roasterSlug)
+  const roaster = entry.roasterSlug ? await getRoasterBySlug(entry.roasterSlug) : null
 
   return (
     <div>

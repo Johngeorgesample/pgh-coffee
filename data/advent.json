@@ -107,8 +107,7 @@
   },
   {
     "day": 11,
-    "roasterSlug": "espresso-a-mano",
-    "roasterName": "Espresso a Mano",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
@@ -121,8 +120,7 @@
   },
   {
     "day": 13,
-    "roasterSlug": "mechanic-coffee",
-    "roasterName": "Mechanic Coffee",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
@@ -143,48 +141,50 @@
     "day": 15,
     "roasterSlug": "standing-wave-coffee",
     "roasterName": "Standing Wave Coffee",
-    "coffee": "To be announced",
-    "notes": []
+    "coffee": "Double Hydraulics",
+    "notes": [
+      "Caramel",
+      "Chocolate",
+      "Nutty"
+    ],
+    "origin": "Colombia & Brazil",
+    "process": "Natural washed",
+    "roast": "Medium-dark",
+    "blurb": "A continental combination of two South American coffee producing powerhouses. This dynamically designed espresso blend is bold and bright. Light enough to be sweet and yet dark enough for a thick crema for that perfect double shot! The name comes from Double Hydraulics, a Class III+ rapid famous for surfing on the Lower Youghiogheny."
   },
   {
     "day": 16,
-    "roasterSlug": "press-house-coffee",
-    "roasterName": "Press House Coffee",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
   {
     "day": 17,
-    "roasterSlug": "nicholas-coffee-and-tea",
-    "roasterName": "Nicholas Coffee & Tea Co.",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
   {
     "day": 18,
-    "roasterSlug": "prestogeorge",
-    "roasterName": "Prestogeorge Coffee & Tea",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
   {
     "day": 19,
-    "roasterSlug": "steel-cup-coffee-roasters",
-    "roasterName": "Steel Cup Coffee Roasters",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
   {
     "day": 20,
-    "roasterSlug": "rockin-cat",
-    "roasterName": "Rockin' Cat",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
   {
     "day": 21,
-    "roasterSlug": "reginalds-coffee",
-    "roasterName": "Reginald's Coffee",
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   },
@@ -206,6 +206,12 @@
     "day": 24,
     "roasterSlug": "dynamic-coffee-roasters",
     "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": []
+  },
+  {
+    "day": 25,
+    "roasterName": "To be announced",
     "coffee": "To be announced",
     "notes": []
   }
