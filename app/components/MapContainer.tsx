@@ -160,7 +160,11 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onLoad={updateBounds}
+        onLoad={(e) => {
+          updateBounds(e)
+          // The ref is still null when the first pan effect runs on a direct shop URL
+          panToCurrentShop()
+        }}
         onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
         interactiveLayerIds={[layerId]}

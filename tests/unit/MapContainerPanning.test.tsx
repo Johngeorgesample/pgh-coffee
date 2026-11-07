@@ -6,11 +6,14 @@ import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import { useShopSelection, useShopsInView } from '@/hooks'
 
 const flyTo = vi.fn()
+let mapReady = true
+let mapProps: any
 
 vi.mock('react-map-gl', () => ({
-  default: forwardRef(({ children }: any, ref: any) => {
-    useImperativeHandle(ref, () => ({ flyTo, getZoom: () => 12, getMap: () => null }))
-    return <div>{children}</div>
+  default: forwardRef((props: any, ref: any) => {
+    mapProps = props
+    useImperativeHandle(ref, () => (mapReady ? { flyTo, getZoom: () => 12, getMap: () => null } : null))
+    return <div>{props.children}</div>
   }),
   Source: ({ children }: any) => <div>{children}</div>,
   Layer: () => null,
@@ -29,6 +32,7 @@ vi.mock('@/hooks', () => ({
 describe('MapContainer panning', () => {
   beforeEach(() => {
     flyTo.mockClear()
+    mapReady = true
     vi.mocked(useDisplayedShops).mockReturnValue({ type: 'FeatureCollection', features: [] } as any)
     vi.mocked(useShopsStore).mockReturnValue(undefined as any)
     vi.mocked(useShopSelection).mockReturnValue({ handleShopSelect: vi.fn() } as any)
@@ -58,5 +62,17 @@ describe('MapContainer panning', () => {
     rerender(<MapContainer currentShopCoordinates={[-79.92, 40.46]} />)
 
     expect(flyTo).toHaveBeenCalledWith(expect.objectContaining({ center: [-79.92, 40.46] }))
+  })
+
+  it('pans once the map loads when it was not ready on mount', () => {
+    mapReady = false
+    const { rerender } = render(<MapContainer currentShopCoordinates={[-79.99, 40.44]} />)
+    expect(flyTo).not.toHaveBeenCalled()
+
+    mapReady = true
+    rerender(<MapContainer currentShopCoordinates={[-79.99, 40.44]} />)
+    mapProps.onLoad({ target: { getBounds: () => null } })
+
+    expect(flyTo).toHaveBeenCalledWith(expect.objectContaining({ center: [-79.99, 40.44] }))
   })
 })
