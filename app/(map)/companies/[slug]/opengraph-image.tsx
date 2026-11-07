@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { getCompanyForSeo, getCompanyShopPhotos } from '@/app/utils/companies'
 import { OG_IMAGE_SIZE, OG_CONTENT_TYPE } from '@/app/utils/ogTheme'
 import { OgPhotoCard } from '@/app/utils/ogPhotoCard'
@@ -21,6 +22,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         subtitle={photos.length ? `Coffee company · ${locationCount(photos.length)}` : 'Coffee company'}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts },
   )
 }

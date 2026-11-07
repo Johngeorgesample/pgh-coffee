@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { getShopForSeo } from '@/app/utils/seo'
 import { OG_IMAGE_SIZE, OG_CONTENT_TYPE } from '@/app/utils/ogTheme'
 import { OgPhotoCard } from '@/app/utils/ogPhotoCard'
@@ -18,6 +19,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         subtitle={shop?.address ?? "Pittsburgh's independent coffee map"}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts },
   )
 }

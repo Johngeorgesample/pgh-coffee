@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { OG_COLORS, OG_IMAGE_SIZE, OG_CONTENT_TYPE, getOgLogoSrc } from '@/app/utils/ogTheme'
 
 export const size = OG_IMAGE_SIZE
@@ -46,6 +47,6 @@ export default function Image() {
         </div>
       </div>
     ),
-    size,
+    { ...size, fonts: ogFonts },
   )
 }
