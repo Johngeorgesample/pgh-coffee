@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
-import { formatDBShopAsFeature } from '@/app/utils/utils'
+import { formatDBShopAsFeature, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { DbShop } from '@/types/shop-types'
+import { getClient } from '@/lib/supabase/server-client'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
 export const revalidate = 0
@@ -56,9 +56,12 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
 }
 
 export async function GET() {
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!)
+  const supabase = getClient()
 
-  const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
+  const { data: uuids, error: uuidErr } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('permanently_closed', false)
 
   if (uuidErr || !uuids?.length) {
     return NextResponse.json({ error: 'No shops found' }, { status: 500 })
@@ -74,7 +77,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .eq('uuid', winnerUuid)
 
   if (error || !data?.[0]) {
@@ -85,15 +88,9 @@ export async function GET() {
   const shop: DbShop = {
     ...row,
     company: Array.isArray(row.company) ? row.company[0] ?? null : row.company,
+    roasterRef: Array.isArray(row.roasterRef) ? row.roasterRef[0] ?? null : row.roasterRef,
   }
-  const base = formatDBShopAsFeature(shop)
-  const feature = {
-    ...base,
-    properties: {
-      ...base.properties,
-      roaster: shop.roaster ?? '',
-    },
-  }
+  const feature = formatDBShopAsFeature(shop)
 
   const ttl = secondsUntilNextMidnightTz() // cache until next ET midnight
 

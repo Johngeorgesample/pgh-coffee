@@ -2,16 +2,19 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
+import { NewsItem } from '@/types/news-types'
+import { buildShopSlug } from '@/app/utils/shopSlug'
+import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
+export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
 
 type PanelEntry = {
   mode: PanelMode
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,
@@ -25,7 +28,13 @@ function hasProps<K extends string>(
   )
 }
 
-function getURLParamForEntry(entry: PanelEntry): { key: string; value: string } | null {
+export function getPanelNewsItem(content: ReactNode) {
+  return hasProps(content, 'news') ? (content.props.news as Pick<NewsItem, 'id' | 'title'>) : undefined
+}
+
+type URLTarget = { type: 'path'; value: string } | { type: 'query'; key: string; value: string }
+
+function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
   const { mode, content } = entry
 
   switch (mode) {
@@ -33,53 +42,83 @@ function getURLParamForEntry(entry: PanelEntry): { key: string; value: string } 
       if (hasProps(content, 'shop')) {
         const shop = content.props.shop as TShop
         if (shop?.properties?.name) {
-          return { key: 'shop', value: `${shop.properties.name}_${shop.properties.neighborhood}` }
+          return { type: 'path', value: `/shops/${buildShopSlug(shop.properties)}` }
         }
       }
       return null
     case 'company':
       if (hasProps(content, 'slug') && content.props.slug) {
-        return { key: 'company', value: content.props.slug as string }
+        return { type: 'path', value: `/companies/${content.props.slug as string}` }
       }
       return null
     case 'roaster':
       if (hasProps(content, 'slug') && content.props.slug) {
-        return { key: 'roaster', value: content.props.slug as string }
+        return { type: 'path', value: `/roasters/${content.props.slug as string}` }
       }
       return null
-    case 'news':
-      if (hasProps(content, 'id') && content.props.id) {
-        return { key: 'news', value: content.props.id as string }
+    case 'news': {
+      const news = getPanelNewsItem(content)
+      if (news?.id && news?.title) {
+        return { type: 'path', value: `/news/${buildContentSlug({ id: news.id, title: news.title })}` }
       }
-      return { key: 'news', value: '' }
+      return { type: 'query', key: 'news', value: '' }
+    }
     case 'event':
       if (hasProps(content, 'event')) {
-        const event = content.props.event as { id: string }
+        const event = content.props.event as { id: string; title: string }
         if (event?.id) {
-          return { key: 'event', value: event.id }
+          return { type: 'path', value: `/events/${buildContentSlug(event)}` }
         }
       }
       return null
     case 'events':
-      return { key: 'events', value: '' }
+      return { type: 'query', key: 'events', value: '' }
     default:
       return null
   }
 }
 
-function updateURL(param: { key: string; value: string } | null) {
+// Real Next.js navigation, registered by HomeClient. The store uses it when
+// panel history returns to a shop entry (a /shops/[slug] route) so the App
+// Router's useParams()/usePathname() stay in sync — replaceState changes the
+// address bar but does not notify the router. Query panels live on `/` and read
+// window.location directly, so they keep using replaceState below.
+let panelNavigate: ((href: string) => void) | null = null
+
+export function setPanelNavigate(fn: ((href: string) => void) | null) {
+  panelNavigate = fn
+}
+
+function updateURL(param: URLTarget | null) {
   const url = new URL(window.location.href)
   URL_PARAMS.forEach(p => url.searchParams.delete(p))
-  if (param) {
+
+  if (param?.type === 'path') {
+    url.pathname = param.value
+  } else if (param?.type === 'query') {
+    url.pathname = '/'
     url.searchParams.set(param.key, param.value)
+  } else {
+    url.pathname = '/'
   }
-  window.history.replaceState({}, '', url.toString())
+
+  // A pathname change must go through the App Router — replaceState updates the
+  // address bar but doesn't notify the router, leaving usePathname()/useParams()
+  // stale (e.g. backing out of a /shops/[slug] route). Same-pathname query
+  // updates stay on replaceState; the query panels read window.location directly.
+  if (panelNavigate && url.pathname !== window.location.pathname) {
+    panelNavigate(url.pathname + url.search)
+  } else {
+    window.history.replaceState({}, '', url.toString())
+  }
 }
 
 interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
   history: PanelEntry[]
+  /** 404s render inside the map layout, so app/not-found.tsx hides the map and panel. */
+  hidden: boolean
 
   // setters
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
@@ -91,16 +130,21 @@ interface PanelState {
 
   /** Clears the navigation history. Pass { keepCurrent: true } to keep the current panel as the only entry. */
   clearHistory: (opts?: { keepCurrent?: boolean }) => void
+
+  setHidden: (hidden: boolean) => void
 }
 
 const usePanelStore = create<PanelState>()(
   devtools(
-    (set, get) => ({
+    set => ({
       panelMode: 'explore',
       panelContent: null,
       history: [],
+      hidden: false,
 
-      setPanelContent: (content, mode, opts) =>
+      setHidden: hidden => set({ hidden }),
+
+      setPanelContent: (content, mode) =>
         set(state => {
           const next: PanelEntry = { mode, content }
 
@@ -122,8 +166,16 @@ const usePanelStore = create<PanelState>()(
 
           const history = state.history.slice(0, -1)
           const top = history[history.length - 1]
+          const target = getURLParamForEntry(top)
 
-          updateURL(getURLParamForEntry(top))
+          // Returning to a shop entry: pre-sync currentShop so the route change
+          // updateURL triggers is short-circuited by useShopRouteSync instead of
+          // refetching (and re-pushing a panel entry).
+          if (target?.type === 'path' && hasProps(top.content, 'shop')) {
+            useCoffeeShopsStore.getState().setCurrentShop(top.content.props.shop as TShop)
+          }
+
+          updateURL(target)
 
           return { history, panelMode: top.mode, panelContent: top.content }
         }),

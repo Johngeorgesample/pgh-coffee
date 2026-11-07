@@ -16,7 +16,14 @@ export const Events = () => {
     fetchEvents().then(setEvents)
   }, [])
 
-  const upcomingEvents = events.filter(e => !e.event_date || !isPast(e.event_date))
+  const upcomingEvents = events
+    .filter(e => !e.event_date || !isPast(e.event_date))
+    // Soonest first; undated events sort to the end
+    .sort((a, b) => {
+      if (!a.event_date) return 1
+      if (!b.event_date) return -1
+      return a.event_date.localeCompare(b.event_date)
+    })
   const pastEvents = events.filter(e => e.event_date && isPast(e.event_date))
 
   return (

@@ -14,7 +14,8 @@ interface MapContainerProps {
 
 export default function MapContainer({ currentShopCoordinates }: MapContainerProps) {
   const displayedShops = useDisplayedShops()
-  const { hoveredShop, currentShop } = useShopsStore()
+  const hoveredShop = useShopsStore(s => s.hoveredShop)
+  const currentShop = useShopsStore(s => s.currentShop)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -52,22 +53,25 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const { shopsInView, updateBounds } = useShopsInView(displayedShops.features, showAllPopups)
 
+  // Depend on the coordinates themselves, not the array: callers build a fresh
+  // literal every render, which otherwise re-ran the 1s flyTo on unrelated state
+  // changes (typing in search) and yanked the map back off wherever it was.
+  const [currentLongitude, currentLatitude] = currentShopCoordinates ?? []
+
   const panToCurrentShop = () => {
-    if (currentShopCoordinates?.every(element => Boolean(element))) {
-      if (mapRef.current) {
-        mapRef.current.flyTo({
-          center: [currentShopCoordinates[0], currentShopCoordinates[1]],
-          zoom: mapRef.current.getZoom(),
-          bearing: 0,
-          pitch: 0,
-          duration: 1000,
-          essential: true,
-        })
-      }
-    }
+    if (!currentLongitude || !currentLatitude || !mapRef.current) return
+
+    mapRef.current.flyTo({
+      center: [currentLongitude, currentLatitude],
+      zoom: mapRef.current.getZoom(),
+      bearing: 0,
+      pitch: 0,
+      duration: 1000,
+      essential: true,
+    })
   }
 
-  useEffect(panToCurrentShop, [currentShopCoordinates])
+  useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
@@ -156,7 +160,11 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onLoad={updateBounds}
+        onLoad={(e) => {
+          updateBounds(e)
+          // The ref is still null when the first pan effect runs on a direct shop URL
+          panToCurrentShop()
+        }}
         onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
         interactiveLayerIds={[layerId]}

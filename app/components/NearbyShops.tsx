@@ -1,11 +1,15 @@
 import { useCallback, useMemo, useState, useEffect } from 'react'
-import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
-import { TUnits } from '@/types/unit-types'
+import {
+  DEFAULT_UNITS,
+  DISTANCE_UNITS,
+  DISTANCE_UNITS_STORAGE_KEY,
+  parseUnits,
+  TUnits,
+} from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import haversineDistance from 'haversine-distance'
-import { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
-import ShopList from '@/app/components/ShopList'
+import NearbyShopList from '@/app/components/NearbyShopList'
 
 interface IProps {
   shop: TShop
@@ -24,12 +28,11 @@ interface ISortedShopsResults {
 const MILES_CONVERSION_FACTOR = 0.000621371
 
 export default function NearbyShops({ shop }: IProps) {
-  const plausible = useAnalytics()
-  const { allShops } = useShopsStore()
+  const allShops = useShopsStore(s => s.allShops)
 
-  const [units, setUnits] = useState<TUnits>('miles')
+  const [units, setUnits] = useState<TUnits>(DEFAULT_UNITS)
   useEffect(() => {
-    setUnits(localStorage.getItem('distanceUnits') as TUnits)
+    setUnits(parseUnits(localStorage.getItem(DISTANCE_UNITS_STORAGE_KEY)))
   }, [])
 
   const calculateDistance = useCallback(
@@ -72,9 +75,9 @@ export default function NearbyShops({ shop }: IProps) {
 
   return (
     <section className="relative mt-3 flex-1 px-4 sm:px-6">
-      <p className="mb-2 text-gray-700">Nearby shops</p>
-      <ShopList
-        coffeeShops={sortedShopsWithDistances.shops}
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Nearby shops</p>
+      <NearbyShopList
+        shops={sortedShopsWithDistances.shops}
         distances={sortedShopsWithDistances.distances}
         units={units}
       />

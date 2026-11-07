@@ -1,29 +1,35 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAnalytics } from '@/hooks'
+import { useRouter, usePathname } from 'next/navigation'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
 import MapContainerLazy from './MapContainerLazy'
 import { ExploreContent } from './ExploreContent'
-import { useURLShopSync, useURLEventSync, useURLNewsSync, useMediaQuery } from '@/hooks'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import usePanelStore from '@/stores/panelStore'
+import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
-import { useURLCompanySync } from '@/hooks/useURLCompanySync'
-import { useURLRoasterSync } from '@/hooks/useURLRoasterSync'
+import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
-  const plausible = useAnalytics()
-  const { allShops, fetchCoffeeShops, currentShop, setCurrentShop, searchValue, setSearchValue, clearAmenityFilters } =
-    useShopsStore()
-  const { panelContent, clearHistory, panelMode, setPanelContent } = usePanelStore()
+  const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
+  const currentShop = useShopsStore(s => s.currentShop)
+  const setCurrentShop = useShopsStore(s => s.setCurrentShop)
+  const searchValue = useShopsStore(s => s.searchValue)
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
+  const clearAmenityFilters = useShopsStore(s => s.clearAmenityFilters)
+  const panelContent = usePanelStore(s => s.panelContent)
+  const clearHistory = usePanelStore(s => s.clearHistory)
+  const panelMode = usePanelStore(s => s.panelMode)
+  const hidden = usePanelStore(s => s.hidden)
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
   const [presented, setPresented] = useState(true)
   const router = useRouter()
+  const pathname = usePathname()
 
   const removeSearchParam = () => {
     const url = new URL(window.location.href)
@@ -35,6 +41,11 @@ export default function HomeClient() {
     params.delete('event')
     params.delete('events')
     url.search = params.toString()
+    // Closing the panel always returns to the bare map, so drop any detail path
+    // (/shops/, /events/, /news/).
+    if (pathname !== '/') {
+      url.pathname = '/'
+    }
     router.replace(url.toString())
   }
 
@@ -52,11 +63,12 @@ export default function HomeClient() {
     }
   }
 
-  useURLShopSync()
-  useURLCompanySync()
-  useURLRoasterSync()
-  useURLNewsSync()
-  useURLEventSync()
+  useShopRouteSync()
+  useCompanyRouteSync()
+  useRoasterRouteSync()
+  useNewsRouteSync()
+  useEventRouteSync()
+  useURLNeighborhoodSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -68,15 +80,23 @@ export default function HomeClient() {
     fetchCoffeeShops()
   }, [fetchCoffeeShops])
 
+  // Let panelStore drive real route navigation when panel history returns to a
+  // shop entry, so the address bar and App Router params stay in sync.
+  useEffect(() => {
+    setPanelNavigate(href => router.push(href))
+    return () => setPanelNavigate(null)
+  }, [router])
+
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
-      const hasContentParam = ['shop', 'company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
-      if (!hasContentParam) {
+      const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
+      const onDetailPath = ['/shops/', '/events/', '/news/', '/roasters/', '/companies/'].some(p => pathname.startsWith(p))
+      if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
       }
     }
-  }, [panelContent, panelMode, setPanelContent])
+  }, [panelContent, panelMode, pathname, setPanelContent])
 
   useEffect(() => {
     if (!largeViewport && currentShop && Object.keys(currentShop).length > 0) {
@@ -110,6 +130,9 @@ export default function HomeClient() {
       document.title = 'PGH Coffee'
     }
   }, [currentShop])
+
+  // A 404 renders inside this layout, so the map and panel step aside for it.
+  if (hidden) return null
 
   return (
     <div className="relative w-full h-full">

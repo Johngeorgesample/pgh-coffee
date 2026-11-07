@@ -57,6 +57,9 @@ export default function JoinTheCommunity() {
           >
             Follow on Instagram
           </a>
+          <Link href="/stickers" className="block text-center text-sm font-bold text-slate-600 underline underline-offset-4 hover:text-yellow-600">
+            Or grab a free sticker
+          </Link>
         </div>
       </div>
     </section>

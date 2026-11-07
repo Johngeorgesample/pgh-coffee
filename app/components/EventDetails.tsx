@@ -2,11 +2,14 @@
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Calendar, CalendarPlus, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useCopyToClipboard, useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
+import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildGoogleCalendarUrl, downloadICS } from '@/app/utils/calendar'
 import { EventCardData } from './EventCard'
 import CopyLinkToast from './CopyLinkToast'
+import VerifiedBadge from './VerifiedBadge'
 
 type TagKey = 'opening' | 'closure' | 'coming soon' | 'throwdown' | 'event' | 'seasonal' | 'menu'
 
@@ -44,6 +47,7 @@ interface EventDetailsProps {
 
 export const EventDetails = ({ event }: EventDetailsProps) => {
   const plausible = useAnalytics()
+  const router = useRouter()
   const { showToast, copyCurrentUrl, closeToast } = useCopyToClipboard()
   const eventIsPast = event.event_date ? isPast(event.event_date) : false
 
@@ -58,8 +62,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    const shopParam = `${event.shop.name}_${event.shop.neighborhood}`
-    window.location.href = `?shop=${encodeURIComponent(shopParam)}`
+    router.push(`/shops/${buildShopSlug(event.shop)}`)
   }
 
   const handleRoasterClick = () => {
@@ -73,7 +76,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       },
     })
 
-    window.location.href = `?roaster=${encodeURIComponent(event.roaster.slug)}`
+    router.push(`/roasters/${encodeURIComponent(event.roaster.slug)}`)
   }
 
   const handleExternalLink = () => {
@@ -105,20 +108,31 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
   }
 
   return (
-    <div className={`flex mt-24 lg:mt-16 h-full flex-col ${eventIsPast ? 'opacity-60' : ''}`}>
+    <div className={`flex flex-col ${event.image_url ? 'h-full' : 'mt-24 h-[calc(100%-6rem)] lg:mt-16 lg:h-[calc(100%-4rem)]'} ${eventIsPast ? 'opacity-60' : ''}`}>
       {/* Scrollable Content */}
-      <div className="flex-grow overflow-y-auto pb-56">
-        {/* Title Section with yellow accent bar */}
-        <div className="flex">
-          <div className="p-6 flex-1">
-            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 mb-3 leading-tight">
+      <div className="flex-grow overflow-y-auto pb-6">
+        {event.image_url ? (
+          <div className="relative h-56 sm:h-64">
+            <img
+              src={event.image_url}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+            <h1 className="absolute bottom-0 left-0 right-0 p-6 font-display text-[28px] font-bold tracking-tight text-white leading-tight">
               {event.title}
             </h1>
           </div>
-        </div>
+        ) : (
+          <div className="p-6 pb-0">
+            <h1 className="font-display text-[28px] font-bold tracking-tight text-slate-900 leading-tight">
+              {event.title}
+            </h1>
+          </div>
+        )}
 
         {/* Details Section */}
-        <div className="px-6 space-y-6">
+        <div className="px-6 pt-6 space-y-6">
           {/* Date and Time row */}
           {event.event_date && (
             <div className="flex gap-6">
@@ -153,8 +167,9 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   onClick={handleShopClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
-                  <div className="text-slate-900 font-bold text-[15px]">
+                  <div className="flex items-center gap-1 text-slate-900 font-bold text-[15px]">
                     {event.shop.name}
+                    {event.shop.is_verified && <VerifiedBadge />}
                   </div>
                   <div className="text-sm text-gray-500 mt-0.5">
                     {event.shop.neighborhood}
@@ -181,8 +196,9 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   onClick={handleRoasterClick}
                   className="text-left hover:opacity-80 transition-opacity"
                 >
-                  <div className="text-slate-900 font-bold text-[15px]">
+                  <div className="flex items-center gap-1 text-slate-900 font-bold text-[15px]">
                     {event.roaster.name}
+                    {event.roaster.is_verified && <VerifiedBadge />}
                   </div>
                 </button>
               </div>
@@ -212,8 +228,8 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         </div>
       </div>
 
-      {/* Fixed Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-neutral-50 border-t border-gray-100">
+      {/* Bottom Section — a flex sibling, not an overlay, so no stacking order to lose */}
+      <div className="shrink-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
           {event.event_date && !eventIsPast && (
             <Menu as="div" className="relative">

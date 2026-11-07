@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { Checkbox, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { amenityMap } from '@/lib/amenities'
+import { getFaro } from '@/lib/faro'
 
 interface Props {
   isOpen: boolean
@@ -40,6 +41,7 @@ export default function AmenityReportModal({ isOpen, onClose, onSuccess, ameniti
                 body: JSON.stringify({ shop_id: shopId, amenities: selected }),
               })
               if (!res.ok) throw new Error('Failed to submit')
+              getFaro()?.api.pushEvent('amenities_reported', { shop_id: shopId })
               onSuccess()
               onClose()
             } catch (err) {

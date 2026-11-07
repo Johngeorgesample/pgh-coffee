@@ -1,28 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-const getCompany = async (slug: string) => {
-  const { data, error } = await supabase
-    .from('companies')
-    .select('*')
-    .eq('slug', slug)
-    .single()
-
-  if (error) {
-    logger.error('Error fetching company', { error: error.message })
-    return null
-  }
-
-  return data
-}
+import { getCompanyBySlug } from '@/app/utils/companies'
+import { getClient } from '@/lib/supabase/server-client'
 
 const getCompanyNews = async (companyId: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('updates')
     .select('*, shop:shops!inner(*, company:company_id(*))')
     .eq('shops.company_id', companyId)
@@ -39,7 +21,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
   const params = await props.params
   const { company } = params
 
-  const companyData = await getCompany(company)
+  const companyData = await getCompanyBySlug(company)
 
   if (!companyData) {
     return NextResponse.json({ message: 'Company not found' }, { status: 404 })

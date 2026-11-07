@@ -19,7 +19,7 @@ export default function SearchFAB({ handleClick }: IProps) {
     <button
       type="button"
       aria-label="Search shops"
-      className="absolute bottom-[15%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full size-16 flex justify-center items-center z-10"
+      className="absolute bottom-[15%] right-[5%] bg-yellow-300 hover:bg-yellow-400 rounded-full size-16 flex justify-center items-center z-10 transition ease-out motion-safe:active:scale-95"
       onClick={handleFABClick}
     >
       <MagnifyingGlassIcon className="size-8" />

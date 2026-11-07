@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { describe, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import ShopCard, { roundDistance, generateDistanceText } from '@/app/components/ShopCard'
 import type { TShop } from '@/types/shop-types'
@@ -74,7 +74,6 @@ describe('ShopCard', () => {
   })
 
   it('renders distance when distance and units are provided', () => {
-    // @ts-expect-error
     render(<ShopCard {...defaultProps} distance="1.23456" units="Miles" />)
 
     expect(screen.getByText('1.23 miles away')).toBeTruthy()
@@ -87,7 +86,6 @@ describe('ShopCard', () => {
     rerender(<ShopCard {...defaultProps} distance="1.23" />)
     expect(screen.queryByText(/away/)).toBeNull()
 
-    // @ts-expect-error
     rerender(<ShopCard {...defaultProps} units="Miles" />)
     expect(screen.queryByText(/away/)).toBeNull()
   })
@@ -112,6 +110,17 @@ describe('ShopCard', () => {
     const keyEvent = { key: 'Enter' }
     fireEvent.keyDown(screen.getByRole('button'), keyEvent)
     expect(handleShopSelectMock).toHaveBeenCalledWith(mockShop)
+  })
+
+  it('shows verified badge for a verified shop', () => {
+    const shop = { ...mockShop, properties: { ...mockShop.properties, verified: true } }
+    render(<ShopCard {...defaultProps} shop={shop} />)
+    expect(screen.getByText('Verified')).toBeTruthy()
+  })
+
+  it('shows no verified badge for an unverified shop', () => {
+    render(<ShopCard {...defaultProps} />)
+    expect(screen.queryByText('Verified')).toBeNull()
   })
 
   it('has correct accessibility attributes', () => {

@@ -1,22 +1,19 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { formatDataToGeoJSON } from '../../../utils/utils'
+import { formatDataToGeoJSON, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { withMetrics } from '@/lib/withMetrics'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
+import { getClient } from '@/lib/supabase/server-client'
 
 const fetchShops = async () => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select(SHOP_WITH_ROASTER_SELECT)
+    .eq('permanently_closed', false)
     .order('name', { ascending: true })
   if (error) {
     logger.error('Error fetching shops', { error: error.message })
-    return []
+    return null
   }
   return data
 }
@@ -24,11 +21,14 @@ const fetchShops = async () => {
 
 export const GET = withMetrics('shops/geojson', async () => {
   const shops = await fetchShops()
-  const geojson = formatDataToGeoJSON(shops)
 
+  // A DB failure must return an uncacheable error, not a 200 empty map that the
+  // CDN would pin for the full TTL — turning a transient outage into "no shops"
+  // for every user.
   if (!shops) {
-    return NextResponse.json({ error: 'Error creating GeoJSON' }, { status: 500 })
+    return NextResponse.json({ error: 'Error fetching shops' }, { status: 500 })
   }
 
-  return NextResponse.json(geojson)
+  const geojson = formatDataToGeoJSON(shops)
+  return NextResponse.json(geojson, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 })

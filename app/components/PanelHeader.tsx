@@ -1,20 +1,19 @@
 'use client'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
-import PhotoDialog from './PhotoDialog'
+import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
-import usePanelStore from '@/stores/panelStore'
-import { Company } from '@/app/components/Company'
+import { XCircleIcon } from '@heroicons/react/24/solid'
 
 interface IProps {
   shop: TShop
 }
 
 export default function PanelHeader(props: IProps) {
-  const { name, neighborhood, photo, company } = props.shop.properties
+  const { name, neighborhood, photo, company, verified, permanentlyClosed } = props.shop.properties
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
+  const router = useRouter()
 
   const hasPhoto = !!photo
 
@@ -34,10 +33,10 @@ export default function PanelHeader(props: IProps) {
                 plausible('ViewAllLocationsClick', {
                   props: { company: company.slug },
                 })
-                setPanelContent(<Company slug={company.slug} />, 'company')
+                router.push(`/companies/${company.slug}`)
               }}
               className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm
-                           hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full 
+                           hover:bg-white/25 active:bg-white/30 transition ease-out active:scale-95 px-3 py-1.5 rounded-full 
                            text-xs text-white/90 mb-3 cursor-pointer border-none"
             >
               <BuildingStorefrontIcon className="w-3.5 h-3.5" />
@@ -46,8 +45,17 @@ export default function PanelHeader(props: IProps) {
             </button>
           )}
 
-          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">{name}</h1>
+          <h1 className="flex items-center gap-1.5 text-2xl sm:text-3xl font-serif font-normal tracking-tight leading-tight">
+            {name}
+            {verified && <VerifiedBadge className="mt-0.5" />}
+          </h1>
           <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
+          {permanentlyClosed && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+              <XCircleIcon className="size-4 shrink-0" />
+              Permanently closed
+            </p>
+          )}
         </div>
       </div>
     </div>

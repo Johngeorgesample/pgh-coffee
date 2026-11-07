@@ -1,10 +1,12 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import { useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
 import { RoasterRef } from '@/types/shop-types'
 import usePanelStore from '@/stores/panelStore'
+import { buildContentSlug } from '@/app/utils/slug'
 import { EventDetails } from './EventDetails'
 
 const formatDateParts = (dateStr: string) => {
@@ -34,6 +36,7 @@ export type EventCardData = {
   title: string
   description?: string | null
   url?: string | null
+  image_url?: string | null
   tags?: string[] | null
   post_date?: string
   postDate?: string
@@ -41,8 +44,10 @@ export type EventCardData = {
   shop?: {
     name: string
     neighborhood: string
+    uuid: string
+    is_verified?: boolean
   }
-  roaster?: Pick<RoasterRef, 'name' | 'slug'>
+  roaster?: Pick<RoasterRef, 'name' | 'slug'> & { is_verified?: boolean }
 }
 
 interface EventCardProps {
@@ -55,7 +60,8 @@ export const EventCard = ({
   hideShopInfo = false,
 }: EventCardProps) => {
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
+  const router = useRouter()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
   const eventIsPast = entry.event_date ? isPast(entry.event_date) : false
 
   const handleCardClick = () => {
@@ -70,15 +76,7 @@ export const EventCard = ({
       },
     })
 
-    // Update URL
-    const url = new URL(window.location.href)
-    url.searchParams.set('event', entry.id)
-    url.searchParams.delete('shop')
-    url.searchParams.delete('company')
-    url.searchParams.delete('roaster')
-    window.history.pushState(null, '', url.toString())
-
-    // Open event details panel
+    router.push(`/events/${buildContentSlug(entry)}`)
     setPanelContent(<EventDetails event={entry} />, 'event')
   }
 

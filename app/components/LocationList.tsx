@@ -8,6 +8,7 @@ interface IProps {
   filter?: string
   units?: TUnits
   hideShopNames?: boolean
+  showAddresses?: boolean
 }
 
 export default function LocationList(props: IProps) {
@@ -30,6 +31,7 @@ export default function LocationList(props: IProps) {
               key={shop.properties.name + shop.properties.address}
               distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
               hideShopName={props.hideShopNames}
+              showAddress={props.showAddresses}
               shop={shop}
               units={props.units}
             />

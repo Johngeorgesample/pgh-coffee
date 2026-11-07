@@ -44,9 +44,20 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual(mockEvents)
+    // This endpoint's body varies by the shop_id/roaster_id query string, which
+    // the CDN does not include in its cache key, so it must not be shared-cached.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
     expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
     expect(mockEq).not.toHaveBeenCalledWith('shop_id', expect.anything())
     expect(mockEq).not.toHaveBeenCalledWith('roaster_id', expect.anything())
+  })
+
+  test('marks roasters verified via their owning company', async () => {
+    const roaster = { name: 'Commonplace', is_verified: false, company: { is_verified: true } }
+    mockResult.mockReturnValueOnce({ data: [{ id: 'event-1', roaster }], error: null })
+
+    const [event] = await (await GET(new Request('http://localhost:3000/api/events'))).json()
+    expect(event.roaster.is_verified).toBe(true)
   })
 
   test('filters by shop_id when provided', async () => {
@@ -78,5 +89,7 @@ describe('Events API Route - GET', () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error fetching events')
+    // A database error must not be pinned in the shared CDN cache.
+    expect(response.headers.get('Cache-Control') ?? '').not.toContain('s-maxage=')
   })
 })

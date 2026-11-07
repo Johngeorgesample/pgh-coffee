@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAnalytics } from '@/hooks'
 import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
@@ -29,8 +29,12 @@ const EventCardSkeleton = () => (
 
 export const EventsCTA = () => {
   const plausible = useAnalytics()
-  const { setPanelContent } = usePanelStore()
-  const { events, eventsError, eventsLoading, fetchEvents } = useExploreStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
+  const events = useExploreStore(s => s.events)
+  const eventsError = useExploreStore(s => s.eventsError)
+  const eventsLoading = useExploreStore(s => s.eventsLoading)
+  const fetchEvents = useExploreStore(s => s.fetchEvents)
+  const [fadeIn] = useState(eventsLoading)
 
   useEffect(() => {
     fetchEvents()
@@ -74,7 +78,7 @@ export const EventsCTA = () => {
         </button>
       </div>
 
-      <div className="mt-3 space-y-3">
+      <div className={`mt-3 space-y-3 ${fadeIn && !eventsLoading ? 'animate-amenity-chip-fade' : ''}`}>
         {eventsLoading ? (
           <>
             <EventCardSkeleton />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ShopCard from '../ShopCard'
 import useExploreStore from '@/stores/exploreStore'
 
@@ -23,7 +23,11 @@ const FeaturedShopSkeleton = () => (
 )
 
 export default function FeaturedShop() {
-  const { featuredShop, featuredShopError, featuredShopLoading, fetchFeaturedShop } = useExploreStore()
+  const featuredShop = useExploreStore(s => s.featuredShop)
+  const featuredShopError = useExploreStore(s => s.featuredShopError)
+  const featuredShopLoading = useExploreStore(s => s.featuredShopLoading)
+  const fetchFeaturedShop = useExploreStore(s => s.fetchFeaturedShop)
+  const [fadeIn] = useState(featuredShopLoading)
 
   useEffect(() => {
     fetchFeaturedShop()
@@ -34,7 +38,7 @@ export default function FeaturedShop() {
   if (!featuredShop) return null
 
   return (
-    <div className="sm:col-span-2">
+    <div className={`sm:col-span-2 ${fadeIn ? 'animate-amenity-chip-fade' : ''}`}>
       <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-stone-500">Featured shop</h3>
       <div className="list-none mt-3">
         <ShopCard featured shop={featuredShop} />

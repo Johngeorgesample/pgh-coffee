@@ -1,18 +1,20 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 const mockSingleResult = vi.fn()
+const mockEq = vi.fn()
 
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          single: mockSingleResult,
-        }),
-      }),
-    }),
-  }),
-}))
+vi.mock('@supabase/supabase-js', () => {
+  const builder: Record<string, unknown> = {
+    select: vi.fn(() => builder),
+    eq: (...args: unknown[]) => {
+      mockEq(...args)
+      return builder
+    },
+    single: () => mockSingleResult(),
+  }
+
+  return { createClient: () => ({ from: () => builder }) }
+})
 
 describe('Event By Id API Route - GET', () => {
   let GET: typeof import('@/app/api/events/[eventId]/route').GET
@@ -40,6 +42,16 @@ describe('Event By Id API Route - GET', () => {
     expect(data).toEqual(mockEvent)
   })
 
+  test('marks the roaster verified via its owning company', async () => {
+    const roaster = { name: 'Commonplace', is_verified: false, company: { is_verified: true } }
+    mockSingleResult.mockResolvedValueOnce({ data: { id: 'event-1', roaster }, error: null })
+
+    const response = await GET(new Request('http://localhost:3000/api/events/event-1') as never, {
+      params: Promise.resolve({ eventId: 'event-1' }),
+    })
+    expect((await response.json()).roaster.is_verified).toBe(true)
+  })
+
   test('returns 404 when the event is not found', async () => {
     mockSingleResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
 
@@ -51,5 +63,15 @@ describe('Event By Id API Route - GET', () => {
 
     expect(response.status).toBe(404)
     expect(data.error).toBe('Event not found')
+  })
+
+  test('excludes hidden events', async () => {
+    mockSingleResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows found' } })
+
+    await GET(new Request('http://localhost:3000/api/events/event-1') as never, {
+      params: Promise.resolve({ eventId: 'event-1' }),
+    })
+
+    expect(mockEq).toHaveBeenCalledWith('is_hidden', false)
   })
 })

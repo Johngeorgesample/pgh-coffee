@@ -20,7 +20,7 @@ export async function GET() {
     .select(`
       id,
       created_at,
-      shop:shops (*)
+      shop:shops (*, company:company_id (*))
     `)
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })

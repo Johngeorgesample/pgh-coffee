@@ -7,6 +7,17 @@ const nextConfig = {
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
   },
+  // Static OG routes read these at build time, but /u/[id] renders on demand and
+  // file tracing doesn't follow readFileSync(process.cwd()) into the bundle.
+  outputFileTracingIncludes: {
+    '/u/[id]/opengraph-image': ['./public/logo_with_no_text_transparent*.png'],
+    '/shops/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
+    '/news/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
+    '/roasters/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
+    '/companies/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png'],
+  },
+  // @datadog/pprof is a native addon and can't be bundled
+  serverExternalPackages: ['@pyroscope/nodejs', '@datadog/pprof'],
 }
 
 module.exports = withBundleAnalyzer(nextConfig)

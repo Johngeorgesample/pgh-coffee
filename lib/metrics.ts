@@ -1,4 +1,5 @@
 import { compress } from 'snappyjs'
+import type { ClaimType } from '@/types/claim-types'
 
 const MIMIR_URL = process.env.MIMIR_URL
 const MIMIR_USER = process.env.MIMIR_USER
@@ -82,11 +83,14 @@ function gauge(metricName: string, value: number, labels: Record<string, string>
 export const metrics = {
   shopSubmitted:              () => increment('shop_submitted_total'),
   shopReportSubmitted:        () => increment('shop_report_submitted_total'),
+  claimSubmitted:             (claimType: ClaimType) => increment('claim_submitted_total', { claim_type: claimType }),
   shopAmenityReportSubmitted: () => increment('amenity_report_submitted_total'),
-  shopNotFound:               (name: string) => increment('shop_not_found_total', { name }),
+  shopNotFound:               (reason: 'invalid_slug' | 'no_match') => increment('shop_not_found_total', { reason }),
   shopViewed:                 (name: string, neighborhood: string) => increment('shop_view_total', { name, neighborhood }),
   favoriteAdded:              (neighborhood: string) => increment('favorite_added_total', { neighborhood }),
   favoriteRemoved:            () => increment('favorite_removed_total'),
+  visitAdded:                 (neighborhood: string) => increment('visit_added_total', { neighborhood }),
+  visitRemoved:               () => increment('visit_removed_total'),
   authSignIn:                 () => increment('auth_signin_total'),
   authSignUp:                 () => increment('auth_signup_total'),
   authSignOut:                () => increment('auth_signout_total'),

@@ -32,13 +32,13 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
           <Sheet.Content className="z-50 bg-white rounded-t-2xl">
             <Sheet.Handle className="block mx-auto focus:outline-none focus:ring-0 mt-3 mb-2 w-10 h-1 rounded-full bg-gray-300" />
 
-            <div className="px-6 pb-6 pt-2">
+            <div className="px-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-2">
               {/* Navigation Links */}
               <nav className="flex flex-col">
                 <Link
                   href="/about"
                   onClick={handleLinkClick}
-                  className="flex items-center py-4 border-b border-gray-100"
+                  className="flex items-center py-4 border-b border-gray-100 active:bg-gray-50"
                 >
                   <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
                     <Info className="size-5 text-gray-600" />
@@ -52,7 +52,7 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                     <Link
                       href="/account"
                       onClick={handleLinkClick}
-                      className="flex items-center py-4 border-b border-gray-100"
+                      className="flex items-center py-4 border-b border-gray-100 active:bg-gray-50"
                     >
                       <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
                         <User className="size-5 text-gray-600" />
@@ -64,7 +64,7 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
                     <Link
                       href="/sign-in"
                       onClick={handleLinkClick}
-                      className="flex items-center py-4 border-b border-gray-100"
+                      className="flex items-center py-4 border-b border-gray-100 active:bg-gray-50"
                     >
                       <span className="flex items-center justify-center size-10 rounded-full bg-gray-100">
                         <User className="size-5 text-gray-600" />
@@ -80,7 +80,7 @@ export default function MobileNavDrawer({ presented, onPresentedChange }: IProps
               <Link
                 href="/submit-a-shop"
                 onClick={handleLinkClick}
-                className="flex items-center justify-center gap-2 mt-6 py-4 bg-yellow-300 rounded-xl font-medium text-black hover:bg-yellow-400 transition-colors"
+                className="flex items-center justify-center gap-2 mt-6 py-4 bg-yellow-300 rounded-xl font-medium text-black hover:bg-yellow-400 active:bg-yellow-400 transition ease-out active:scale-[0.98]"
               >
                 <Plus className="size-5" />
                 Submit a shop

@@ -3,6 +3,7 @@
 import { useAuth } from '@/app/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import { User } from 'lucide-react'
+import AccountDetailsSkeleton from './components/AccountDetailsSkeleton'
 
 export default function AccountDetails() {
   const { user, loading, signOut } = useAuth()
@@ -16,11 +17,7 @@ export default function AccountDetails() {
   }
 
   if (loading) {
-    return (
-      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    )
+    return <AccountDetailsSkeleton />
   }
 
   if (!user) {

@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, vi } from 'vitest'
 import PanelContent from '@/app/components/PanelContent'
-import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
+import { getGoogleMapsUrl, getMobileMapsUrl } from '@/app/components/DirectionsButton'
 import type { TShop } from '@/types/shop-types'
 
 // Mock next-plausible
@@ -39,6 +39,18 @@ describe('getGoogleMapsUrl', () => {
   })
 })
 
+describe('getMobileMapsUrl', () => {
+  const coordinates: [number, number] = [-79.925, 40.4363]
+
+  it.each([
+    ['iPhone', 'https://www.google.com/maps/dir/?api=1&destination=40.4363%2C-79.925'],
+    ['Android', 'geo:0,0?q=40.4363,-79.925'],
+    ['Windows', null],
+  ])('uses the appropriate maps link for %s', (userAgent, expected) => {
+    expect(getMobileMapsUrl(coordinates, userAgent)).toBe(expected)
+  })
+})
+
 describe('PanelContent', () => {
   const mockShop: TShop = {
     type: 'shop',
@@ -72,7 +84,53 @@ describe('PanelContent', () => {
     render(<PanelContent {...defaultProps} />)
 
     expect(screen.getByText('Directions')).toBeTruthy()
-    expect(screen.getByText('Website')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Website' })).toBeTruthy()
+  })
+
+  it('opens the Android maps link from both mobile map links', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Android')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const links = [screen.getByRole('link', { name: 'Directions' }), screen.getByRole('link', { name: /456 Murray Ave/ })]
+      for (const link of links) {
+        link.addEventListener('click', (event) => event.preventDefault())
+        fireEvent.click(link)
+        expect(link).toHaveAttribute('href', 'geo:0,0?q=40.4363,-79.925')
+        expect(link).toHaveAttribute('target', '_self')
+      }
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('uses Google Maps directions on iOS', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('iPhone')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const links = [screen.getByRole('link', { name: 'Directions' }), screen.getByRole('link', { name: /456 Murray Ave/ })]
+      for (const link of links) {
+        link.addEventListener('click', (event) => event.preventDefault())
+        fireEvent.click(link)
+        expect(link).toHaveAttribute('href', 'https://www.google.com/maps/dir/?api=1&destination=40.4363%2C-79.925')
+        expect(link).toHaveAttribute('target', '_self')
+      }
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('keeps the Google Maps href on desktop', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Windows')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const link = screen.getByRole('link', { name: 'Directions' })
+      link.addEventListener('click', (event) => event.preventDefault())
+      fireEvent.click(link)
+      expect(link).toHaveAttribute('href', 'https://www.google.com/maps?q=40.4363,-79.925')
+      expect(link).toHaveAttribute('target', '_blank')
+    } finally {
+      vi.restoreAllMocks()
+    }
   })
 
   it('renders the shop address', () => {
@@ -85,7 +143,53 @@ describe('PanelContent', () => {
   it('renders website link when provided', () => {
     render(<PanelContent {...defaultProps} />)
 
-    const websiteLink = screen.getByText('Website').closest('a')
+    const websiteLink = screen.getByRole('link', { name: 'Website' })
     expect(websiteLink).toHaveAttribute('href', mockShop.properties.website)
+  })
+
+  // The description intro block is the only <p> with this class combination.
+  const descriptionSelector = 'p.text-sm.text-gray-600.leading-relaxed'
+
+  it('renders the description block (trimmed) when description is a non-empty string', () => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, description: '  A cozy neighborhood cafe.  ' },
+    }
+    const { container } = render(<PanelContent {...defaultProps} shop={shop} />)
+
+    const paragraph = container.querySelector(descriptionSelector)
+    expect(paragraph).toBeInTheDocument()
+    expect(paragraph).toHaveTextContent('A cozy neighborhood cafe.')
+  })
+
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['empty string', ''],
+    ['whitespace only', '   '],
+  ])('does not render the description block for %s', (_label, description) => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, description },
+    }
+    const { container } = render(<PanelContent {...defaultProps} shop={shop} />)
+
+    expect(container.querySelector(descriptionSelector)).toBeNull()
+  })
+
+  it('renders the claim button when the shop is not verified', () => {
+    render(<PanelContent {...defaultProps} />)
+
+    expect(screen.getByRole('link', { name: /Claim this shop/ })).toBeInTheDocument()
+  })
+
+  it('hides the claim button when the shop is verified', () => {
+    const shop: TShop = {
+      ...mockShop,
+      properties: { ...mockShop.properties, verified: true },
+    }
+    render(<PanelContent {...defaultProps} shop={shop} />)
+
+    expect(screen.queryByRole('link', { name: /Claim this shop/ })).toBeNull()
   })
 })

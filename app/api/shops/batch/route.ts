@@ -1,17 +1,12 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { formatDataToGeoJSON } from '../../../utils/utils'
+import { formatDataToGeoJSON, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 const fetchShopsByIds = async (ids: string[]) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('shops')
-    .select('*, company:company_id(*)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .in('uuid', ids)
     .order('name', { ascending: true })
 
@@ -37,7 +32,7 @@ export async function GET(request: Request) {
   const ids = idsParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
 
   if (ids.length === 0) {
-    return NextResponse.json([])
+    return NextResponse.json(formatDataToGeoJSON([]))
   }
 
   const shops = await fetchShopsByIds(ids)
@@ -49,6 +44,9 @@ export async function GET(request: Request) {
     )
   }
 
+  // No shared-CDN cache: this response varies by the `ids` query string, but the
+  // CDN keys its cache on the path alone, so a cached copy would be served for
+  // different id sets, returning the wrong shops.
   const geojson = formatDataToGeoJSON(shops)
   return NextResponse.json(geojson)
 }

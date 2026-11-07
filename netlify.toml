@@ -1,3 +1,8 @@
+[build]
+  # Skip all git-push builds; deploys happen only via build hook (curl).
+  # Build hooks bypass this ignore command per Netlify docs.
+  ignore = "exit 0"
+
 [[redirects]]
   from = "/js/script.js"
   to = "https://plausible.io/js/script.js"

@@ -1,8 +1,10 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import { formatDBShopAsFeature } from '../utils/utils'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useShopSelection, useAnalytics } from '@/hooks'
 import usePanelStore from '@/stores/panelStore'
+import { buildContentSlug } from '@/app/utils/slug'
 import { NewsDetails } from './NewsDetails'
 import { NewsItem, getTagStyle } from '@/types/news-types'
 import { TagBadge } from './TagBadge'
@@ -16,7 +18,8 @@ type NewsCardProps = {
 
 export const NewsCard = ({ item }: NewsCardProps) => {
   const { handleShopSelect } = useShopSelection()
-  const { setPanelContent } = usePanelStore()
+  const setPanelContent = usePanelStore(s => s.setPanelContent)
+  const router = useRouter()
   const plausible = useAnalytics()
   const primaryTag = item.tags?.[0] ?? 'news'
   const styles = getTagStyle(primaryTag)
@@ -27,7 +30,8 @@ export const NewsCard = ({ item }: NewsCardProps) => {
       plausible('NewsCardClick', {
         props: { newsId: item.id, newsTitle: item.title },
       })
-      setPanelContent(<NewsDetails id={item.id} />, 'news')
+      router.push(`/news/${buildContentSlug({ id: item.id, title: item.title })}`)
+      setPanelContent(<NewsDetails news={item} />, 'news')
     }
   }
 
@@ -39,8 +43,13 @@ export const NewsCard = ({ item }: NewsCardProps) => {
   }
 
   return (
-    <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex flex-col transition-all hover:shadow-md">
-      <div className={`p-5 border-l-[2px] ${styles.border}`}>
+    <article className="bg-white border border-gray-100 shadow-sm rounded-lg overflow-hidden flex transition-all hover:shadow-md">
+      {item.image_url && (
+        <button type="button" onClick={handleCardClick} className="hidden sm:block shrink-0 cursor-pointer">
+          <img src={item.image_url} alt={item.title} className="w-28 h-full object-cover" />
+        </button>
+      )}
+      <div className={`p-5 flex-1 min-w-0 border-l-[2px] ${styles.border}`}>
         <div className="mb-2">
           <TagBadge tag={primaryTag} variant="compact" />
         </div>

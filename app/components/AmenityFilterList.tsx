@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Plus } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
 
@@ -30,7 +30,8 @@ const amenities = [
 export const AmenityFilterList = () => {
   const plausible = useAnalytics()
   const [isExpanded, setIsExpanded] = useState(false)
-  const { activeAmenityFilters, toggleAmenityFilter } = useShopsStore()
+  const activeAmenityFilters = useShopsStore(s => s.activeAmenityFilters)
+  const toggleAmenityFilter = useShopsStore(s => s.toggleAmenityFilter)
 
   const handleAmenityClick = (amenity: string) => {
     toggleAmenityFilter(amenity)
@@ -43,18 +44,31 @@ export const AmenityFilterList = () => {
 
   return (
     <div className="flex flex-wrap gap-2 mt-3">
-      {(isExpanded ? amenities : amenities.slice(0, 6)).map(amenity => (
-        <AmenityChip
-          key={amenity}
-          amenity={amenity}
-          active={activeAmenityFilters.includes(amenity)}
-          onClick={() => handleAmenityClick(amenity)}
-        />
-      ))}
+      {(isExpanded ? amenities : amenities.slice(0, 6)).map((amenity, index) => {
+        const isNewlyRevealed = isExpanded && index >= 6
+
+        return (
+          <span
+            key={amenity}
+            className={isNewlyRevealed
+              ? 'animate-amenity-chip-enter delay-[var(--stagger-delay)] motion-reduce:animate-amenity-chip-fade motion-reduce:delay-0'
+              : undefined}
+            style={isNewlyRevealed
+              ? { '--stagger-delay': `${(index - 6) * 25}ms` } as CSSProperties
+              : undefined}
+          >
+            <AmenityChip
+              amenity={amenity}
+              active={activeAmenityFilters.includes(amenity)}
+              onClick={() => handleAmenityClick(amenity)}
+            />
+          </span>
+        )
+      })}
       {!isExpanded && (
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-200"
+          className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-200 transition ease-out active:scale-95"
           onClick={() => setIsExpanded(true)}
         >
           <Plus className="size-5" />

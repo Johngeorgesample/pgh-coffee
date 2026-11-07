@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom'
 
+process.env.SUPABASE_URL ??= 'https://example.supabase.co'
+process.env.SUPABASE_ANON_KEY ??= 'test-anon-key'
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation(query => ({

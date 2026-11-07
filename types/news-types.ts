@@ -16,6 +16,7 @@ export type NewsItem = {
   title: string
   description?: string | null
   url?: string | null
+  image_url?: string | null
   tags?: string[] | null
   post_date?: string | null
   event_date?: string | null

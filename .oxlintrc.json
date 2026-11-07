@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "nextjs", "jsx-a11y", "typescript", "unicorn", "oxc"],
+  "overrides": [
+    {
+      "files": ["tests/**"],
+      "rules": {
+        "nextjs/no-assign-module-variable": "off",
+        "unicorn/no-thenable": "off"
+      }
+    }
+  ]
+}

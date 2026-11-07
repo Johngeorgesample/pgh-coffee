@@ -1,17 +1,9 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { visibleEvents, withInheritedVerification, type EventRow } from '@/app/utils/events'
 
 const fetchEvents = async (shopID?: string, roasterID?: string) => {
-  let query = supabase
-    .from('events')
-    .select('*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)')
-    .eq('is_hidden', false)
+  let query = visibleEvents()
     .order('event_date', { ascending: false })
 
   if (shopID) {
@@ -29,7 +21,7 @@ const fetchEvents = async (shopID?: string, roasterID?: string) => {
     return null
   }
 
-  return data
+  return (data as EventRow[]).map(withInheritedVerification)
 }
 
 // API Route Handler
@@ -44,5 +36,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Error fetching events' }, { status: 500 })
   }
 
+  // No shared-CDN cache: this response varies by the shop_id/roaster_id query
+  // string, but the CDN keys its cache on the path alone, so a cached copy
+  // would be served across different filters (every shop showing every event).
   return NextResponse.json(events)
 }
