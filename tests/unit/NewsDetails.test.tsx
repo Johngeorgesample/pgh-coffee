@@ -24,17 +24,13 @@ const newsWithRoaster = {
 describe('NewsDetails roaster link', () => {
   beforeEach(() => {
     pushMock.mockClear()
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => newsWithRoaster,
-    }) as unknown as typeof fetch
   })
 
-  test('clicking the roaster navigates to its /roasters/{slug} page', async () => {
-    render(<NewsDetails id="news-1" />)
+  test('clicking the roaster navigates to its /roasters/{slug} page', () => {
+    render(<NewsDetails news={newsWithRoaster} />)
 
-    // Wait for the fetched news (and its roaster) to render.
-    const roasterButton = await screen.findByRole('button', { name: /Commonplace Coffee/ })
+    // The full news object (with its roaster) is now passed in directly, no fetch to await.
+    const roasterButton = screen.getByRole('button', { name: /Commonplace Coffee/ })
     fireEvent.click(roasterButton)
 
     // The /roasters/{slug} route is what useRoasterRouteSync listens for; the

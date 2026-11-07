@@ -1,4 +1,7 @@
 import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
+import { withCompanyVerification } from '@/app/utils/verification'
+
+export const SHOP_WITH_ROASTER_SELECT = '*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)'
 
 // The roaster a shop serves (joined via roaster_id), flagged in-house when it
 // belongs to the same company as the shop. Shared by every shop→feature path so
@@ -26,7 +29,8 @@ const toFeature = (shop: DbShop): TShop => ({
     amenities: shop.amenities ?? undefined,
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
-    verified: shop.is_verified ?? undefined,
+    verified: Boolean(withCompanyVerification(shop).is_verified),
+    permanentlyClosed: shop.permanently_closed ?? undefined,
   },
   geometry: {
     type: 'Point',
@@ -76,6 +80,8 @@ const baseSynonymMap: Record<string, string[]> = {
   'café': ['cafe', 'caffe'],
   'coffee': ['cofee'],
   'ghost': ['trace'],
+  'boredom': ['heatcheck'],
+  '19': ['nineteen']
 }
 
 /**

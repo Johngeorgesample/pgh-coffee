@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAnalytics, useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -14,8 +14,6 @@ import SearchFAB from './SearchFAB'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
-  const plausible = useAnalytics()
-  const allShops = useShopsStore(s => s.allShops)
   const fetchCoffeeShops = useShopsStore(s => s.fetchCoffeeShops)
   const currentShop = useShopsStore(s => s.currentShop)
   const setCurrentShop = useShopsStore(s => s.setCurrentShop)
@@ -25,6 +23,7 @@ export default function HomeClient() {
   const panelContent = usePanelStore(s => s.panelContent)
   const clearHistory = usePanelStore(s => s.clearHistory)
   const panelMode = usePanelStore(s => s.panelMode)
+  const hidden = usePanelStore(s => s.hidden)
   const setPanelContent = usePanelStore(s => s.setPanelContent)
 
   const largeViewport = useMediaQuery('(min-width: 1024px)')
@@ -131,6 +130,9 @@ export default function HomeClient() {
       document.title = 'PGH Coffee'
     }
   }, [currentShop])
+
+  // A 404 renders inside this layout, so the map and panel step aside for it.
+  if (hidden) return null
 
   return (
     <div className="relative w-full h-full">

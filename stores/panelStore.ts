@@ -2,11 +2,12 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ReactNode, isValidElement, ReactElement } from 'react'
 import { TShop } from '@/types/shop-types'
+import { NewsItem } from '@/types/news-types'
 import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
+export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
 
 type PanelEntry = {
   mode: PanelMode
@@ -25,6 +26,10 @@ function hasProps<K extends string>(
     content.props !== null &&
     key in content.props
   )
+}
+
+export function getPanelNewsItem(content: ReactNode) {
+  return hasProps(content, 'news') ? (content.props.news as Pick<NewsItem, 'id' | 'title'>) : undefined
 }
 
 type URLTarget = { type: 'path'; value: string } | { type: 'query'; key: string; value: string }
@@ -51,13 +56,13 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
         return { type: 'path', value: `/roasters/${content.props.slug as string}` }
       }
       return null
-    case 'news':
-      if (hasProps(content, 'id') && content.props.id && hasProps(content, 'title') && content.props.title) {
-        const id = content.props.id as string
-        const title = content.props.title as string
-        return { type: 'path', value: `/news/${buildContentSlug({ id, title })}` }
+    case 'news': {
+      const news = getPanelNewsItem(content)
+      if (news?.id && news?.title) {
+        return { type: 'path', value: `/news/${buildContentSlug({ id: news.id, title: news.title })}` }
       }
       return { type: 'query', key: 'news', value: '' }
+    }
     case 'event':
       if (hasProps(content, 'event')) {
         const event = content.props.event as { id: string; title: string }
@@ -112,6 +117,8 @@ interface PanelState {
   panelMode: PanelMode | null
   panelContent: ReactNode | null
   history: PanelEntry[]
+  /** 404s render inside the map layout, so app/not-found.tsx hides the map and panel. */
+  hidden: boolean
 
   // setters
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
@@ -123,16 +130,21 @@ interface PanelState {
 
   /** Clears the navigation history. Pass { keepCurrent: true } to keep the current panel as the only entry. */
   clearHistory: (opts?: { keepCurrent?: boolean }) => void
+
+  setHidden: (hidden: boolean) => void
 }
 
 const usePanelStore = create<PanelState>()(
   devtools(
-    (set, get) => ({
+    set => ({
       panelMode: 'explore',
       panelContent: null,
       history: [],
+      hidden: false,
 
-      setPanelContent: (content, mode, opts) =>
+      setHidden: hidden => set({ hidden }),
+
+      setPanelContent: (content, mode) =>
         set(state => {
           const next: PanelEntry = { mode, content }
 

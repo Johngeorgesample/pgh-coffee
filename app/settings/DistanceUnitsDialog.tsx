@@ -2,18 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 
 interface IProps {
-  currentUnit: string
+  currentUnit: TUnits
   handleClose: () => void
   isOpen: boolean
-  onUnitChange: (newUnit: string) => void
+  onUnitChange: (newUnit: TUnits) => void
 }
 
-export const DISTANCE_UNITS = { Meters: 'Meters', Miles: 'Miles' }
-
 export default function DistanceUnitsDialog(props: IProps) {
-  const [selected, setSelected] = useState(props.currentUnit)
+  const [selected, setSelected] = useState<TUnits>(props.currentUnit)
 
   useEffect(() => {
     if (props.isOpen) {
@@ -24,10 +23,6 @@ export default function DistanceUnitsDialog(props: IProps) {
   const handleSave = () => {
     props.onUnitChange(selected)
     props.handleClose()
-  }
-
-  const handleUnitChange = (unit: string) => {
-    setSelected(unit)
   }
 
   return (
@@ -64,7 +59,7 @@ export default function DistanceUnitsDialog(props: IProps) {
                       name="distance-unit"
                       type="radio"
                       className="h-4 w-4 border-gray-300 text-yellow-300 focus:ring-yellow-300"
-                      onChange={() => handleUnitChange(unit)}
+                      onChange={() => setSelected(unit)}
                     />
                     <label htmlFor={unit} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                       {unit}

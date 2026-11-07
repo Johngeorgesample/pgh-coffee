@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAnalytics } from '@/hooks'
 import { ChevronRight } from 'lucide-react';
 import usePanelStore from '@/stores/panelStore'
@@ -29,6 +29,7 @@ export const NewsCTA = () => {
   const newsError = useExploreStore(s => s.newsError)
   const newsLoading = useExploreStore(s => s.newsLoading)
   const fetchNews = useExploreStore(s => s.fetchNews)
+  const [fadeIn] = useState(newsLoading)
 
   useEffect(() => {
     fetchNews()
@@ -71,7 +72,7 @@ export const NewsCTA = () => {
         </button>
       </div>
 
-      <div className="mt-3 space-y-3">
+      <div className={`mt-3 space-y-3 ${fadeIn && !newsLoading ? 'animate-amenity-chip-fade' : ''}`}>
         {newsLoading ? (
           <>
             <NewsCardSkeleton />

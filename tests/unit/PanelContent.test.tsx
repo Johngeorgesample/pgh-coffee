@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, vi } from 'vitest'
 import PanelContent from '@/app/components/PanelContent'
-import { getGoogleMapsUrl } from '@/app/components/DirectionsButton'
+import { getGoogleMapsUrl, getMobileMapsUrl } from '@/app/components/DirectionsButton'
 import type { TShop } from '@/types/shop-types'
 
 // Mock next-plausible
@@ -39,6 +39,18 @@ describe('getGoogleMapsUrl', () => {
   })
 })
 
+describe('getMobileMapsUrl', () => {
+  const coordinates: [number, number] = [-79.925, 40.4363]
+
+  it.each([
+    ['iPhone', 'https://www.google.com/maps/dir/?api=1&destination=40.4363%2C-79.925'],
+    ['Android', 'geo:0,0?q=40.4363,-79.925'],
+    ['Windows', null],
+  ])('uses the appropriate maps link for %s', (userAgent, expected) => {
+    expect(getMobileMapsUrl(coordinates, userAgent)).toBe(expected)
+  })
+})
+
 describe('PanelContent', () => {
   const mockShop: TShop = {
     type: 'shop',
@@ -73,6 +85,52 @@ describe('PanelContent', () => {
 
     expect(screen.getByText('Directions')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Website' })).toBeTruthy()
+  })
+
+  it('opens the Android maps link from both mobile map links', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Android')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const links = [screen.getByRole('link', { name: 'Directions' }), screen.getByRole('link', { name: /456 Murray Ave/ })]
+      for (const link of links) {
+        link.addEventListener('click', (event) => event.preventDefault())
+        fireEvent.click(link)
+        expect(link).toHaveAttribute('href', 'geo:0,0?q=40.4363,-79.925')
+        expect(link).toHaveAttribute('target', '_self')
+      }
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('uses Google Maps directions on iOS', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('iPhone')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const links = [screen.getByRole('link', { name: 'Directions' }), screen.getByRole('link', { name: /456 Murray Ave/ })]
+      for (const link of links) {
+        link.addEventListener('click', (event) => event.preventDefault())
+        fireEvent.click(link)
+        expect(link).toHaveAttribute('href', 'https://www.google.com/maps/dir/?api=1&destination=40.4363%2C-79.925')
+        expect(link).toHaveAttribute('target', '_self')
+      }
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('keeps the Google Maps href on desktop', () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Windows')
+    try {
+      render(<PanelContent {...defaultProps} />)
+      const link = screen.getByRole('link', { name: 'Directions' })
+      link.addEventListener('click', (event) => event.preventDefault())
+      fireEvent.click(link)
+      expect(link).toHaveAttribute('href', 'https://www.google.com/maps?q=40.4363,-79.925')
+      expect(link).toHaveAttribute('target', '_blank')
+    } finally {
+      vi.restoreAllMocks()
+    }
   })
 
   it('renders the shop address', () => {

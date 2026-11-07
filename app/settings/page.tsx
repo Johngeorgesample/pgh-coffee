@@ -1,31 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TUnits } from '@/types/unit-types'
-import DistanceUnitsDialog, { DISTANCE_UNITS } from '@/app/settings/DistanceUnitsDialog'
+import { DEFAULT_UNITS, DISTANCE_UNITS_STORAGE_KEY, parseUnits, TUnits } from '@/types/unit-types'
+import DistanceUnitsDialog from '@/app/settings/DistanceUnitsDialog'
 
 export default function Settings() {
   const [distanceUnitsDialogIsOpen, setDistanceUnitsDialogIsOpen] = useState(false)
-  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>('miles')
+  const [unitFromLocalStorage, setUnitFromLocalStorage] = useState<TUnits>(DEFAULT_UNITS)
   const [isLoading, setIsLoading] = useState(true)
-  const DEFAULT_UNIT = DISTANCE_UNITS.Miles
-  const DISTANCE_PREFERENCE_KEY = 'distanceUnits'
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setUnitFromLocalStorage(window.localStorage.getItem(DISTANCE_PREFERENCE_KEY) as TUnits)
-      if (!window.localStorage.getItem(DISTANCE_PREFERENCE_KEY)) {
-        window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, DEFAULT_UNIT)
-      }
-      setIsLoading(false)
-    }
-  // eslint-disable-next-line
+    if (typeof window === 'undefined') return
+    setUnitFromLocalStorage(parseUnits(window.localStorage.getItem(DISTANCE_UNITS_STORAGE_KEY)))
+    setIsLoading(false)
   }, [])
 
-  const handleUnitChange = (newUnit: string) => {
+  const handleUnitChange = (newUnit: TUnits) => {
     try {
-      window.localStorage.setItem(DISTANCE_PREFERENCE_KEY, newUnit)
-      setUnitFromLocalStorage(newUnit as TUnits)
+      window.localStorage.setItem(DISTANCE_UNITS_STORAGE_KEY, newUnit)
+      setUnitFromLocalStorage(newUnit)
     } catch (error) {
       console.error('Failed to save unit preference:', error)
     }
@@ -65,7 +58,7 @@ export default function Settings() {
       </div>
 
       <DistanceUnitsDialog
-        currentUnit={unitFromLocalStorage || DEFAULT_UNIT}
+        currentUnit={unitFromLocalStorage}
         isOpen={distanceUnitsDialogIsOpen}
         handleClose={() => setDistanceUnitsDialogIsOpen(false)}
         onUnitChange={handleUnitChange}

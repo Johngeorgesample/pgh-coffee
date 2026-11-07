@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { getImageData, getShopCandidates, buildShopContext, validateShopUUID, callAnthropicVision, getRoasterID, supabase } from '@/lib/capture'
+import { getImageData, getShopCandidates, buildShopContext, validateShopUUID, callAnthropicVision, getRoasterID } from '@/lib/capture'
+import { getClient } from '@/lib/supabase/server-client'
 
 interface ExtractedUpdate {
   shop_name: string
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
 
   const shop = validateShopUUID(shopCandidates, extracted.shop_uuid)
   const roasterId = shop ? await getRoasterID(shop.uuid) : null
+  const supabase = getClient()
 
   const { error: insertError } = await supabase
     .from('updates')

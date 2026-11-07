@@ -7,7 +7,6 @@ import { doesShopMatchFilter } from '@/app/utils/utils'
 interface CoffeeShopsState {
   allShops: TFeatureCollection
   fetchCoffeeShops: () => Promise<void>
-  setAllShops: (data: TShop[]) => void
   currentShop: TShop
   setCurrentShop: (data: TShop) => void
   hoveredShop: TShop | null
@@ -32,20 +31,6 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         type: 'FeatureCollection',
         features: [],
       },
-
-      setAllShops: (data: TShop[] | { type: string; features: TShop[] }) =>
-        set(prev => {
-          const isGeoJSON = typeof data === 'object' && 'type' in data && 'features' in data
-
-          return {
-            allShops: isGeoJSON
-              ? (data as TFeatureCollection)
-              : {
-                  ...prev.allShops,
-                  features: data as TShop[],
-                },
-          }
-        }),
 
       fetchCoffeeShops: async () => {
         const { allShops } = useCoffeeShopsStore.getState()

@@ -5,19 +5,26 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 // so `order` returns an object that is both awaitable and exposes `eq`.
 const mockOrderResult = vi.fn()
 const mockEqResult = vi.fn()
+const mockClosedEq = vi.fn()
+const mockSelect = vi.fn((_select: string) => ({
+  // `order` is awaited directly when no filter is applied, and also exposes
+  // `.eq` for the filtered path. Make it both thenable and chainable.
+  eq: (...args: unknown[]) => {
+    mockClosedEq(...args)
+    return {
+      order: () => ({
+        eq: mockEqResult,
+        then: (...a: unknown[]) =>
+          (mockOrderResult() as Promise<unknown>).then(...(a as [never, never])),
+      }),
+    }
+  },
+}))
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: () => ({
-      select: () => ({
-        // `order` is awaited directly when no filter is applied, and also exposes
-        // `.eq` for the filtered path. Make it both thenable and chainable.
-        order: () => ({
-          eq: mockEqResult,
-          then: (...args: unknown[]) =>
-            (mockOrderResult() as Promise<unknown>).then(...(args as [never, never])),
-        }),
-      }),
+      select: mockSelect,
     }),
   }),
 }))
@@ -42,6 +49,14 @@ describe('Shops API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual(shops)
+  })
+
+  test('queries the roaster join', async () => {
+    mockOrderResult.mockResolvedValueOnce({ data: [], error: null })
+
+    await GET(new Request('http://localhost/api/shops'))
+
+    expect(mockSelect.mock.calls[0][0]).toContain('roasterRef:roaster_id')
   })
 
   test('applies neighborhood filter when query param is present', async () => {

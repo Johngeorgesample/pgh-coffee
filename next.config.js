@@ -13,7 +13,12 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/u/[id]/opengraph-image': ['./public/logo_with_no_text_transparent*.png', './public/Inter-*.ttf'],
     '/shops/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
+    '/news/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
+    '/roasters/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
+    '/companies/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
   },
+  // @datadog/pprof is a native addon and can't be bundled
+  serverExternalPackages: ['@pyroscope/nodejs', '@datadog/pprof'],
 }
 
 module.exports = withBundleAnalyzer(nextConfig)

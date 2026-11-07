@@ -1,11 +1,9 @@
-import { createClient } from '@supabase/supabase-js'
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
+import { getClient } from '@/lib/supabase/server-client'
+import { extractUuidPrefix } from '@/app/utils/slug'
 
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
+export const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
 
 /**
  * Resolves a news update from a `/news/{slug}` identifier's id prefix. The `id`
@@ -15,7 +13,7 @@ const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_
  * falls within its own prefix range.
  */
 export const getUpdateByIdPrefix = async (prefix: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('updates')
     .select(UPDATE_SELECT)
     .gte('id', `${prefix}-0000-0000-0000-000000000000`)
@@ -29,3 +27,9 @@ export const getUpdateByIdPrefix = async (prefix: string) => {
 
   return data?.[0] ?? null
 }
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getUpdateForSeo = cache(async (slug: string) => {
+  const prefix = extractUuidPrefix(slug)
+  return prefix ? getUpdateByIdPrefix(prefix) : null
+})

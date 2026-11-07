@@ -1,16 +1,11 @@
 import { cache } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import type { Visit } from '@/app/utils/visitStats'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
+import { getClient } from '@/lib/supabase/server-client'
 
 // Anonymous client: queries run as the `anon` Postgres role, so RLS only ever
 // returns public profiles and their visits. This is what guarantees the public
 // path can never read private data or any auth.users field (email, etc.).
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export interface PublicProfile {
@@ -24,6 +19,7 @@ export const getPublicProfile = cache(async (id: string): Promise<PublicProfile 
   // it to Postgres raises a uuid-syntax error we'd log at error level. Skip it.
   if (!UUID_RE.test(id)) return null
 
+  const supabase = getClient()
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('user_id, display_name, avatar_url')

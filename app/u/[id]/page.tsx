@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { User } from 'lucide-react'
 import VisitStats from '@/app/account/components/VisitStats'
 import { getPublicProfile } from '@/app/utils/profiles'
+import { openVisits } from '@/app/utils/visitStats'
 import Passport from './Passport'
 import ProfileViewTracker from './ProfileViewTracker'
 
@@ -16,8 +17,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return { title: 'Profile not found' }
 
   const name = profile.displayName || 'Coffee lover'
-  const shopCount = profile.visits.length
-  const neighborhoodCount = new Set(profile.visits.map((v) => v.shop?.neighborhood).filter(Boolean)).size
+  const counted = openVisits(profile.visits)
+  const shopCount = counted.length
+  const neighborhoodCount = new Set(counted.map((v) => v.shop?.neighborhood).filter(Boolean)).size
   const title = `${name} · pgh.coffee`
   const description =
     `${name} has visited ${shopCount} independent Pittsburgh coffee ${shopCount === 1 ? 'shop' : 'shops'}` +
