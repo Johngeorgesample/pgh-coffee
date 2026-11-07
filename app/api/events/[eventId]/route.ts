@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { visibleEvents } from '@/app/utils/events'
+import { visibleEvents, withInheritedVerification, type EventRow } from '@/app/utils/events'
 
 const getEvent = async (eventId: string) => {
   const { data, error } = await visibleEvents()
@@ -12,7 +12,7 @@ const getEvent = async (eventId: string) => {
     return null
   }
 
-  return data
+  return withInheritedVerification(data as EventRow)
 }
 
 export async function GET(req: NextRequest, props: { params: Promise<{ eventId: string }> }) {
