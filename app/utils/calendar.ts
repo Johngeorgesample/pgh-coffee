@@ -49,7 +49,7 @@ const escapeICS = (value: string) =>
     .replace(/\\/g, '\\\\')
     .replace(/;/g, '\\;')
     .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n')
+    .replace(/\r\n|\r|\n/g, '\\n')
 
 /**
  * Builds the contents of an .ics file for an all-day event.
