@@ -3,7 +3,7 @@
 import { MapPinIcon } from '@heroicons/react/24/outline'
 import VerifiedBadge from './VerifiedBadge'
 import { TShop } from '@/types/shop-types'
-import { TUnits } from '@/types/unit-types'
+import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useShopSelection, useAnalytics } from '@/hooks'
 
@@ -21,12 +21,10 @@ interface IProps {
   onClick?: () => void
 }
 
-export const roundDistance = ({ units, distance }: { units: string; distance: number }) => {
-  if (units === 'Miles') return Math.round(distance * 100) / 100
-  if (units === 'Meters') return Math.round(distance)
-}
+export const roundDistance = ({ units, distance }: { units: TUnits; distance: number }) =>
+  units === DISTANCE_UNITS.Miles ? Math.round(distance * 100) / 100 : Math.round(distance)
 
-export const generateDistanceText = ({ units, distance }: { units: string; distance: string }) => {
+export const generateDistanceText = ({ units, distance }: { units: TUnits; distance: string }) => {
   const parsedDistance = parseFloat(distance)
   return `${roundDistance({ units, distance: parsedDistance })} ${units.toLowerCase()} away`
 }
@@ -63,7 +61,7 @@ export default function ShopCard(props: IProps) {
     <li
       onMouseEnter={() => setHoveredShop(props.shop)}
       onMouseLeave={() => setHoveredShop(null)}
-      className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer`}
+      className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer transition-transform ease-out active:scale-[0.98] motion-reduce:active:scale-100`}
       onClick={handleClick}
       onKeyDown={handleKeyPress}
       tabIndex={0}
@@ -84,7 +82,12 @@ export default function ShopCard(props: IProps) {
         {!props.hideShopName && (
           <p className="font-medium text-white text-2xl text-left flex items-center gap-1.5">
             <span className="truncate">{props.shop.properties.name}</span>
-            {(props.shop.properties.verified || props.shop.properties.company?.is_verified) && <VerifiedBadge />}
+            {props.shop.properties.verified && <VerifiedBadge />}
+            {props.shop.properties.permanentlyClosed && (
+              <span className="shrink-0 rounded-full bg-red-600/90 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+                Closed
+              </span>
+            )}
           </p>
         )}
         <div className="flex justify-between mt-1">

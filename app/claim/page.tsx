@@ -34,12 +34,14 @@ export async function generateMetadata({ searchParams }: TProps): Promise<Metada
 
   const title = `Claim ${target.name} · pgh.coffee`
   const description = 'Verify your listing to get a verified badge and a head start managing it when self-serve editing launches.'
-  const images = target.photo ? [target.photo] : undefined
+  // Fall back to the site-default OG image: this openGraph object replaces the
+  // layout's wholesale, so without an explicit image a photo-less target
+  // (e.g. a roaster with no logo) would emit no og:image at all.
+  const images = target.photo ? [target.photo] : ['/opengraph-image']
   return {
     title,
     description,
-    openGraph: { title, description, images },
-    twitter: { card: 'summary_large_image', title, description, images },
+    openGraph: { siteName: 'pgh.coffee', title, description, images },
   }
 }
 

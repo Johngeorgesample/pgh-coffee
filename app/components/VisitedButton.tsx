@@ -21,6 +21,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [justAdded, setJustAdded] = useState(false)
 
   useEffect(() => {
     const checkVisitedStatus = async () => {
@@ -74,6 +75,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
         })
         if (!wasAlreadyVisited) {
           setShowToast(true)
+          setJustAdded(true)
         }
       }
     } catch (error) {
@@ -91,9 +93,12 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
         aria-label={isVisited ? 'Visited' : 'Mark as visited'}
         aria-pressed={isVisited}
         title={isVisited ? 'Visited' : 'Mark as visited'}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition ease-out active:scale-95 disabled:opacity-50"
       >
-        <Stamp className={`size-[18px] transition-colors ${isVisited ? 'fill-green-500 text-white' : ''}`} />
+        <Stamp
+          onAnimationEnd={() => setJustAdded(false)}
+          className={`size-[18px] transition-colors ${isVisited ? 'fill-green-500 text-white' : ''} ${justAdded ? 'animate-pop motion-reduce:animate-none' : ''}`}
+        />
       </button>
 
       <VisitedToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: '/about' },
   openGraph: {
+    siteName: 'pgh.coffee',
     title: 'About | pgh.coffee',
     description,
     url: '/about',

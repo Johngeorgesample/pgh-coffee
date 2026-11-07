@@ -7,6 +7,8 @@ import ShopList from '@/app/components/ShopList'
 import { areaPath, groupShopsIntoAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { slugify } from '@/app/utils/shopSlug'
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import EntitySearchResults from '@/app/components/EntitySearchResults'
+import { useMatchedEntities } from '@/hooks/useMatchedEntities'
 
 const AmenityFilterList = dynamic(() => import('./AmenityFilterList').then(m => ({ default: m.AmenityFilterList })), {
   ssr: false,
@@ -26,11 +28,15 @@ export default function ShopSearch() {
   const searchValue = useShopsStore(s => s.searchValue)
   const allShops = useShopsStore(s => s.allShops)
   const areaLinks = matchingAreaLinks(searchValue, allShops.features)
+  const isSearching = searchValue.length > 0
+  const entities = useMatchedEntities(searchValue)
+  const entityCount = isSearching ? entities.roasters.length + entities.companies.length : 0
+  const shopCount = displayedShops.features.length
 
   return (
     <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
       <div className="mt-12">
-        <AmenityFilterList />
+        {!isSearching && <AmenityFilterList />}
         {areaLinks.map(({ area, shops }) => (
           <Link
             key={area}
@@ -44,7 +50,23 @@ export default function ShopSearch() {
             </span>
           </Link>
         ))}
+        {entityCount > 0 && <EntitySearchResults {...entities} />}
+        {entityCount > 0 && shopCount > 0 && (
+          <h2 className="mt-6 text-[11px] font-semibold uppercase tracking-wider text-gray-500">Shops</h2>
+        )}
         <ShopList coffeeShops={displayedShops.features} />
+        {isSearching && shopCount === 0 && entityCount === 0 && (
+          <div className="mt-6 text-center text-gray-500">
+            <p className="font-medium text-gray-700">Nothing matches &ldquo;{searchValue}&rdquo;</p>
+            <p className="mt-1 text-sm">
+              Try a different shop, roaster, or neighborhood, or{' '}
+              <Link href="/submit-a-shop" className="underline">
+                tell me about a shop I&rsquo;m missing
+              </Link>
+              .
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

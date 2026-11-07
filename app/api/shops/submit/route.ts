@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 export async function POST(request: Request) {
   const { name, address, neighborhood, website } = await request.json()
@@ -14,7 +10,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('moderation')
     .insert([{ name, address, neighborhood, website }])
 

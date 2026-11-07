@@ -33,7 +33,6 @@ describe.skip('PanelHeader', () => {
   })
 
   it('renders shop photo in a dialog when clicked', () => {
-    const plausibleMock = usePlausible()
     render(<PanelHeader shop={mockShop} />)
 
     const panelHeader = screen.getByTestId('header')

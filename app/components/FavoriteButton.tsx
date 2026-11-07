@@ -21,6 +21,7 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
   const [isLoading, setIsLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [justAdded, setJustAdded] = useState(false)
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
@@ -74,6 +75,7 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
         })
         if (!wasAlreadyFavorited) {
           setShowToast(true)
+          setJustAdded(true)
         }
       }
     } catch (error) {
@@ -91,9 +93,12 @@ export default function FavoriteButton({ shopUUID, shopName }: FavoriteButtonPro
         aria-label={isFavorited ? 'Favorited' : 'Favorite'}
         aria-pressed={isFavorited}
         title={isFavorited ? 'Favorited' : 'Favorite'}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition ease-out active:scale-95 disabled:opacity-50"
       >
-        <Heart className={`size-[18px] transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+        <Heart
+          onAnimationEnd={() => setJustAdded(false)}
+          className={`size-[18px] transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : ''} ${justAdded ? 'animate-pop motion-reduce:animate-none' : ''}`}
+        />
       </button>
 
       <FavoriteToast isOpen={showToast} onClose={() => setShowToast(false)} shopName={shopName} />

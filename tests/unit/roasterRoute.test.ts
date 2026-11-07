@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
 // The route makes two distinct queries:
 //   roaster: select().eq().single()  -> terminal single (via getRoasterBySlug)
-//   shops:   select().eq()           -> terminal eq (awaited)
+//   shops:   select().eq().eq()      -> terminal eq (awaited)
 const mockRoasterSingle = vi.fn()
 const mockShopsEq = vi.fn()
 // Records the select() string used for the shops query, so a test can assert
@@ -19,7 +19,7 @@ vi.mock('@supabase/supabase-js', () => ({
             if (table === 'roaster') {
               return { single: mockRoasterSingle }
             }
-            return mockShopsEq(...args)
+            return { eq: (...closed: unknown[]) => mockShopsEq(...args, ...closed) }
           },
         }
       },
@@ -55,6 +55,16 @@ describe('Roaster API Route - GET', () => {
 
     expect(response.status).toBe(200)
     expect(data).toEqual({ ...roaster, shops })
+  })
+
+  test('marks the roaster verified when its owning company is verified', async () => {
+    const roaster = { id: 'r1', name: 'Test Roaster', slug: 'test-roaster', is_verified: false, company: { is_verified: true } }
+    mockRoasterSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockShopsEq.mockResolvedValueOnce({ data: [], error: null })
+
+    const data = await (await call('test-roaster')).json()
+
+    expect(data.is_verified).toBe(true)
   })
 
   test('fetches the roaster join for each shop so the roaster card can render', async () => {

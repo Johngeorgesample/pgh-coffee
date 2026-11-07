@@ -1,5 +1,4 @@
 import { cache } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import type { Metadata } from 'next'
 import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSite, WithContext } from 'schema-dts'
 import { DbShop } from '@/types/shop-types'
@@ -7,12 +6,11 @@ import { logger } from '@/lib/logger'
 import { buildShopSlug, extractUuidPrefix, slugify } from '@/app/utils/shopSlug'
 import { areaPath, groupShopsIntoAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { getShopByUuidPrefix } from '@/app/utils/shops'
+import { getClient } from '@/lib/supabase/server-client'
 
 export const SITE_URL = 'https://pgh.coffee'
 export const SITE_NAME = 'pgh.coffee'
 
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 
 /** The shop fields needed to build a `/shops/{slug}` identifier. */
 export type ShopSlugInput = { name: string; neighborhood: string; uuid: string }
@@ -60,10 +58,6 @@ export function jsonLdToString(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
-function getSupabase() {
-  return createClient(supabaseUrl, supabaseAnonKey)
-}
-
 /**
  * Resolves the shop for a `/shops/{slug}` page from its uuid prefix, or null if
  * the slug has no prefix / matches nothing. Wrapped in React's cache() so
@@ -92,12 +86,13 @@ export interface ShopListEntry {
  * `/shops/{slug}` URL (the uuid suffix keeps same-name locations distinct).
  */
 export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
-  const supabase = getSupabase()
+  const supabase = getClient()
   const { data, error } = await supabase
     .from('shops')
     .select(
       'name, neighborhood, uuid, address, description, photo, latitude, longitude, is_verified, company:company_id(is_verified)'
     )
+    .eq('permanently_closed', false)
     .order('name', { ascending: true })
 
   if (error || !data) {
@@ -117,36 +112,46 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
  * Builds OG/Twitter metadata for a shop page from real shop data. Now that shops
  * live at a real `/shops/{slug}` path, canonical/og:url are expressed through the
  * metadata API (resolved against metadataBase in the root layout).
- * Image/photo fields are only set when present; otherwise the root layout's
- * site-default image is inherited via Next's metadata merging.
+ * No images here: the sibling opengraph-image.tsx supplies og:image for every
+ * shop, photo-less ones included, so the card is always branded rather than a
+ * bare storefront photo cropped to whatever the crawler decides.
  */
 export function buildShopMetadata(shop: DbShop): Metadata {
-  const title = `${shop.name} | ${shop.neighborhood} | pgh.coffee`
-  const description =
-    shop.description?.trim() ||
-    `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
+  const title = shop.permanently_closed
+    ? `${shop.name} (permanently closed) | ${shop.neighborhood} | pgh.coffee`
+    : `${shop.name} | ${shop.neighborhood} | pgh.coffee`
+  const description = shop.permanently_closed
+    ? `${shop.name} in ${shop.neighborhood}, Pittsburgh has permanently closed.`
+    : shop.description?.trim() ||
+      `${shop.name} is an independent coffee shop in ${shop.neighborhood}, Pittsburgh — ${shop.address}.`
   const path = buildShopPath(shop)
 
-  const metadata: Metadata = {
+  return {
     title,
     description,
+    ...(shop.permanently_closed && { robots: { index: false, follow: true } }),
     alternates: { canonical: path },
     openGraph: {
+      siteName: SITE_NAME,
       title,
       description,
       type: 'website',
       url: path,
     },
-    twitter: shop.photo
-      ? { card: 'summary_large_image', title, description, images: [shop.photo] }
-      : { title, description },
+    // No twitter object: the layout's { card: 'summary_large_image' } is
+    // inherited and X falls back to these og:* tags for title/description/image.
   }
+}
 
-  if (shop.photo) {
-    metadata.openGraph!.images = [{ url: shop.photo }]
+/** Metadata for a titled detail page (news, roasters, companies) whose OG image comes from its own route. */
+export function buildEntryMetadata({ name, description, path }: { name: string; description?: string; path: string }): Metadata {
+  const title = `${name} | ${SITE_NAME}`
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { siteName: SITE_NAME, title, description, type: 'website', url: path },
   }
-
-  return metadata
 }
 
 /**

@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getCompanyBySlug } from '@/app/utils/companies'
-
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
+import { getClient } from '@/lib/supabase/server-client'
 
 const getCompanyShops = async (companyId: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .eq('company_id', companyId)
+    .eq('permanently_closed', false)
 
   if (error) {
     logger.error('Error fetching company shops', { error: error.message })
@@ -24,7 +21,7 @@ const getCompanyShops = async (companyId: string) => {
 }
 
 const getCompanyRoaster = async (companyId: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('roaster')
     .select('name, slug')
     .eq('company_id', companyId)

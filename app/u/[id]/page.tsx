@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { User } from 'lucide-react'
 import VisitStats from '@/app/account/components/VisitStats'
 import { getPublicProfile } from '@/app/utils/profiles'
+import { openVisits } from '@/app/utils/visitStats'
 import Passport from './Passport'
 import ProfileViewTracker from './ProfileViewTracker'
 
@@ -16,9 +17,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return { title: 'Profile not found' }
 
   const name = profile.displayName || 'Coffee lover'
+  const counted = openVisits(profile.visits)
+  const shopCount = counted.length
+  const neighborhoodCount = new Set(counted.map((v) => v.shop?.neighborhood).filter(Boolean)).size
+  const title = `${name} · pgh.coffee`
+  const description =
+    `${name} has visited ${shopCount} independent Pittsburgh coffee ${shopCount === 1 ? 'shop' : 'shops'}` +
+    ` across ${neighborhoodCount} ${neighborhoodCount === 1 ? 'neighborhood' : 'neighborhoods'}.` +
+    ' Track your own coffee passport on pgh.coffee.'
+
+  // No twitter object: the layout's { card: 'summary_large_image' } is inherited
+  // and X falls back to og:* tags plus this route's opengraph-image.tsx.
   return {
-    title: `${name} · pgh.coffee`,
-    description: `${name} has visited ${profile.visits.length} Pittsburgh coffee shops.`,
+    title,
+    description,
+    openGraph: { siteName: 'pgh.coffee', title, description },
   }
 }
 

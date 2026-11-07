@@ -16,7 +16,7 @@ export default function AmenityChip({ amenity, active, onClick }: AmenityChipPro
     active
       ? 'bg-stone-700 text-white'
       : `bg-stone-100 text-stone-700 ${onClick ? 'hover:bg-stone-200' : ''}`
-  } ${onClick ? 'cursor-pointer' : ''}`
+  } ${onClick ? 'cursor-pointer transition ease-out active:scale-95' : ''}`
 
   const content = (
     <>

@@ -1,19 +1,16 @@
-import { createClient } from '@supabase/supabase-js'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
+import { getClient } from '@/lib/supabase/server-client'
 
 export const getShopByUuidPrefix = async (prefix: string): Promise<DbShop | null> => {
   // The `uuid` column is a Postgres `uuid` type, which has no LIKE operator, so
   // we can't prefix-match it as text. The 8-char prefix is exactly the first
   // group of the uuid, so a range bounded by the all-zero and all-f completions
   // matches every uuid sharing that prefix while still using the uuid index.
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('shops')
-    .select('*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)')
+    .select(SHOP_WITH_ROASTER_SELECT)
     .gte('uuid', `${prefix}-0000-0000-0000-000000000000`)
     .lte('uuid', `${prefix}-ffff-ffff-ffff-ffffffffffff`)
     .limit(1)
