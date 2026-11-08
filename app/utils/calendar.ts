@@ -94,7 +94,7 @@ export const downloadICS = (event: EventCardData): void => {
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `${event.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.ics`
+  link.download = `${event.title.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()}.ics`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
