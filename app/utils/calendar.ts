@@ -16,8 +16,12 @@ const nextDay = (ymd: string) => {
   return date.toISOString().slice(0, 10).replace(/-/g, '')
 }
 
+// ponytail: only catches "123 Main St, Town, PA 15213"-shaped addresses; a geocoder if formats get messier
+const STREET_ADDRESS = /\b\d+[A-Za-z]?(?: [A-Z][A-Za-z.]*)+, [A-Z][A-Za-z ]+, PA \d{5}/
+
 const buildLocation = (event: EventCardData) =>
-  event.shop ? `${event.shop.name}, ${event.shop.neighborhood}, Pittsburgh, PA` : ''
+  event.description?.match(STREET_ADDRESS)?.[0] ??
+  (event.shop ? `${event.shop.name}, ${event.shop.neighborhood}, Pittsburgh, PA` : event.roaster?.name ?? '')
 
 const buildDescription = (event: EventCardData) =>
   [event.description, event.url].filter(Boolean).join('\n\n')
