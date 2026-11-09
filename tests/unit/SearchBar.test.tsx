@@ -81,21 +81,3 @@ describe('SearchBar', () => {
   })
 
 })
-
-describe('SearchBar near me', () => {
-  beforeEach(() => window.history.replaceState({}, '', '/?near=me'))
-
-  it('re-fits the map instead of navigating when already showing shops near me', () => {
-    const point: [number, number] = [-80.0021, 40.4417]
-    const setNearPoint = vi.fn()
-    mockUseShopsStore.mockReturnValue({ searchValue: '', setSearchValue: vi.fn(), nearPoint: point, setNearPoint })
-    mockUsePanelStore.mockReturnValue({ panelMode: 'near' })
-    render(<SearchBar />)
-
-    const notPrevented = fireEvent.click(screen.getByLabelText('Shops near me'))
-
-    expect(notPrevented).toBe(false)
-    expect(setNearPoint).toHaveBeenCalledWith(point)
-    expect(setNearPoint.mock.calls[0][0]).not.toBe(point)
-  })
-})

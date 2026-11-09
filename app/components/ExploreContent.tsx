@@ -5,6 +5,7 @@ import { TShop } from '@/types/shop-types'
 import FeaturedShop from './Explore/FeaturedShop'
 import { EventsCTA } from './Explore/EventsCTA'
 import { NewsCTA } from './Explore/NewsCTA'
+import { NearMeCTA } from './Explore/NearMeCTA'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { AmenityFilterList } from './AmenityFilterList'
 
@@ -31,6 +32,9 @@ export const ExploreContent = () => {
         </div>
         <div>
           <EventsCTA />
+        </div>
+        <div>
+          <NearMeCTA />
         </div>
         <div>
           <FeaturedShop />
