@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildICS } from '@/app/utils/calendar'
+import { buildGoogleCalendarUrl, buildICS } from '@/app/utils/calendar'
 
 describe('buildICS', () => {
   it('leaves no bare carriage returns inside a multi-line description', () => {
@@ -46,5 +46,32 @@ describe('buildICS line folding', () => {
 
     const unfolded = ics.replace(/\r\n /g, '').split('\r\n')
     expect(unfolded).toContain(`DESCRIPTION:${description}`)
+  })
+})
+
+describe('buildGoogleCalendarUrl', () => {
+  it('builds an all-day entry that ends the next day, across a year boundary', () => {
+    const url = new URL(buildGoogleCalendarUrl({
+      id: 'abc',
+      title: 'New Year Cupping & Brunch',
+      event_date: '2026-12-31',
+      description: 'Bring a mug.',
+      url: 'https://example.com/cupping',
+      shop: { name: 'La Prima', neighborhood: 'Strip District', uuid: 'u' },
+    }))
+    const params = Object.fromEntries(url.searchParams)
+
+    expect(url.origin + url.pathname).toBe('https://calendar.google.com/calendar/render')
+    expect(params).toEqual({
+      action: 'TEMPLATE',
+      text: 'New Year Cupping & Brunch',
+      dates: '20261231/20270101',
+      details: 'Bring a mug.\n\nhttps://example.com/cupping',
+      location: 'La Prima, Strip District, Pittsburgh, PA',
+    })
+  })
+
+  it('returns nothing for an event without a date', () => {
+    expect(buildGoogleCalendarUrl({ id: 'abc', title: 'TBD' })).toBe('')
   })
 })
