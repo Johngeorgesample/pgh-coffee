@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest'
-import { getSynonyms, normalizeSearchText, doesShopMatchFilter, formatDBShopAsFeature } from '@/app/utils/utils'
-import { DbShop } from '@/types/shop-types'
+import { getSynonyms, normalizeSearchText, doesShopMatchFilter, formatDBShopAsFeature, getFeatureBounds } from '@/app/utils/utils'
+import { DbShop, TShop } from '@/types/shop-types'
 
 const baseShop = {
   name: 'Test Shop',
@@ -188,5 +188,12 @@ describe('doesShopMatchFilter', () => {
 
   test('is case-insensitive', () => {
     expect(doesShopMatchFilter('Coffee & Tea Shop', 'Downtown', 'DOWNTOWN')).toBe(true)
+  })
+})
+
+describe('getFeatureBounds', () => {
+  test('returns the southwest and northeast corners enclosing every shop', () => {
+    const at = (lng: number, lat: number) => ({ geometry: { coordinates: [lng, lat] } }) as TShop
+    expect(getFeatureBounds([at(-80.0, 40.5), at(-79.9, 40.4), at(-79.95, 40.45)])).toEqual([-80.0, 40.4, -79.9, 40.5])
   })
 })
