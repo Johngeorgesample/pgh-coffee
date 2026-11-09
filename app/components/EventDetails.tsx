@@ -231,32 +231,6 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
       {/* Bottom Section — a flex sibling, not an overlay, so no stacking order to lose */}
       <div className="shrink-0 p-6 bg-neutral-50 border-t border-gray-100">
         <div className="flex flex-col gap-4">
-          {event.event_date && !eventIsPast && (
-            <Menu as="div" className="relative">
-              <MenuButton className="w-full bg-white text-slate-900 font-bold py-3.5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200 flex items-center justify-center gap-2">
-                <CalendarPlus className="w-5 h-5" />
-                Add to Calendar
-              </MenuButton>
-              <MenuItems className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden focus:outline-none z-10">
-                <MenuItem>
-                  <button
-                    onClick={() => handleAddToCalendar('google')}
-                    className="w-full text-left px-5 py-3.5 text-slate-900 font-medium hover:bg-stone-50 data-[focus]:bg-stone-50 transition-colors"
-                  >
-                    Google Calendar
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={() => handleAddToCalendar('ics')}
-                    className="w-full text-left px-5 py-3.5 text-slate-900 font-medium hover:bg-stone-50 data-[focus]:bg-stone-50 transition-colors border-t border-stone-100"
-                  >
-                    Apple / Outlook (.ics)
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
-          )}
           <div className="flex gap-2">
             {event.url && (
               <a
@@ -269,6 +243,34 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                 View Event Website
                 <SquareArrowOutUpRight className="w-5 h-5" />
               </a>
+            )}
+            {event.event_date && !eventIsPast && (
+              <Menu as="div" className="relative">
+                <MenuButton
+                  aria-label="Add to calendar"
+                  className="bg-white text-slate-900 font-bold py-4 px-5 rounded-full shadow-sm hover:shadow-md hover:bg-stone-50 active:scale-[0.98] transition-all border border-stone-200"
+                >
+                  <CalendarPlus className="w-5 h-5" />
+                </MenuButton>
+                <MenuItems className="absolute bottom-full right-0 w-60 mb-2 bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden focus:outline-none z-10">
+                  <MenuItem>
+                    <button
+                      onClick={() => handleAddToCalendar('google')}
+                      className="w-full text-left px-5 py-3.5 text-slate-900 font-medium hover:bg-stone-50 data-[focus]:bg-stone-50 transition-colors"
+                    >
+                      Google Calendar
+                    </button>
+                  </MenuItem>
+                  <MenuItem>
+                    <button
+                      onClick={() => handleAddToCalendar('ics')}
+                      className="w-full text-left px-5 py-3.5 text-slate-900 font-medium hover:bg-stone-50 data-[focus]:bg-stone-50 transition-colors border-t border-stone-100"
+                    >
+                      Apple / Outlook (.ics)
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
             )}
             <button
               onClick={copyCurrentUrl}
