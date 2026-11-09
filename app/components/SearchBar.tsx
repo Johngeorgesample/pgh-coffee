@@ -11,6 +11,14 @@ export default function SearchBar() {
   const searchValue = useShopsStore(s => s.searchValue)
   const setSearchValue = useShopsStore(s => s.setSearchValue)
   const panelMode = usePanelStore(s => s.panelMode)
+  const nearPoint = useShopsStore(s => s.nearPoint)
+  const setNearPoint = useShopsStore(s => s.setNearPoint)
+
+  const refitWhenAlreadyNearMe = (event: React.MouseEvent) => {
+    if (!nearPoint || new URLSearchParams(window.location.search).get('near') !== NEAR_ME) return
+    event.preventDefault()
+    setNearPoint([...nearPoint])
+  }
 
   return (
     <div className="flex absolute shadow-md items-center px-2 bg-white top-8 lg:top-3 z-10 h-10 w-[90%] left-1/2 -translate-x-1/2 rounded-xl">
@@ -40,6 +48,7 @@ export default function SearchBar() {
           href={`/?near=${NEAR_ME}`}
           aria-label="Shops near me"
           title="Shops near me"
+          onClick={refitWhenAlreadyNearMe}
           className="flex size-10 shrink-0 items-center justify-center text-gray-700 hover:text-amber-700"
         >
           <LocateFixed className="size-5" />
