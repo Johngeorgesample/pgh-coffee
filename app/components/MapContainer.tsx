@@ -75,8 +75,6 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
 
-  // Company/roaster pages show every location; frame them all instead of
-  // leaving the user to zoom out hunting for the rest.
   const fitToOverrideShops = () => {
     if (!overrideShops?.features.length || !mapRef.current) return
     mapRef.current.fitBounds([...getFeatureBounds(overrideShops.features)], { padding: 80, maxZoom: 15, duration: 1000 })
