@@ -7,7 +7,6 @@ import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopList from '@/app/components/ShopList'
 import EntitySearchResults from '@/app/components/EntitySearchResults'
 import { useMatchedEntities } from '@/hooks/useMatchedEntities'
-import { NEAR_ME } from '@/hooks/useNearRouteSync'
 
 const AmenityFilterList = dynamic(() => import('./AmenityFilterList').then(m => ({ default: m.AmenityFilterList })), {
   ssr: false,
@@ -21,20 +20,21 @@ export default function ShopSearch() {
   const entityCount = isSearching ? entities.roasters.length + entities.companies.length : 0
   const shopCount = displayedShops.features.length
   const setSearchValue = useShopsStore(s => s.setSearchValue)
-  const nearQuery = isSearching ? searchValue : NEAR_ME
 
   return (
     <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
       <div className="mt-12">
         {!isSearching && <AmenityFilterList />}
-        <Link
-          href={`/?near=${encodeURIComponent(nearQuery)}`}
-          onClick={() => setSearchValue('')}
-          className="mb-2 flex w-full items-center gap-2 border-b border-stone-200 py-3 text-left text-gray-900 hover:text-amber-700"
-        >
-          <MapPinIcon className="size-4 shrink-0" />
-          <span className="truncate">{isSearching ? <>Shops near &ldquo;{searchValue}&rdquo;</> : 'Shops near me'}</span>
-        </Link>
+        {isSearching && (
+          <Link
+            href={`/?near=${encodeURIComponent(searchValue)}`}
+            onClick={() => setSearchValue('')}
+            className="mb-2 flex w-full items-center gap-2 border-b border-stone-200 py-3 text-left text-gray-900 hover:text-amber-700"
+          >
+            <MapPinIcon className="size-4 shrink-0" />
+            <span className="truncate">Shops near &ldquo;{searchValue}&rdquo;</span>
+          </Link>
+        )}
         {entityCount > 0 && <EntitySearchResults {...entities} />}
         {entityCount > 0 && shopCount > 0 && (
           <h2 className="mt-6 text-[11px] font-semibold uppercase tracking-wider text-gray-500">Shops</h2>
