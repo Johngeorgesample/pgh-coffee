@@ -47,7 +47,21 @@ export const buildGoogleCalendarUrl = (event: EventCardData): string => {
   return `https://calendar.google.com/calendar/render?${params.toString()}`
 }
 
-// Per RFC 5545, long lines fold and certain characters in text values must be escaped.
+const encoder = new TextEncoder()
+
+// RFC 5545 caps lines at 75 bytes; each continuation line starts with a space that counts toward it.
+// Iterating by code point keeps multi-byte characters like "–" from being split.
+const foldLine = (line: string) => {
+  const chunks = ['']
+  for (const char of line) {
+    const limit = chunks.length === 1 ? 75 : 74
+    if (encoder.encode(chunks[chunks.length - 1] + char).length > limit) chunks.push('')
+    chunks[chunks.length - 1] += char
+  }
+  return chunks.join('\r\n ')
+}
+
+// RFC 5545 requires these characters to be escaped in TEXT values.
 const escapeICS = (value: string) =>
   value
     .replace(/\\/g, '\\\\')
@@ -84,7 +98,7 @@ export const buildICS = (event: EventCardData): string => {
 
   lines.push('END:VEVENT', 'END:VCALENDAR')
 
-  return lines.join('\r\n')
+  return lines.map(foldLine).join('\r\n')
 }
 
 /**

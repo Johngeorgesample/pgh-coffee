@@ -35,3 +35,16 @@ describe('buildICS location', () => {
     expect(locationOf(buildICS({ ...event, roaster }))).toBe('LOCATION:19 Coffee')
   })
 })
+
+describe('buildICS line folding', () => {
+  it('keeps every line within 75 bytes and unfolds back to the original', () => {
+    const description = 'Moka pot tasting 10am–12pm. '.repeat(20).trim()
+    const ics = buildICS({ id: 'abc', title: 'Cupping', event_date: '2026-11-21', description })
+
+    const lines = ics.split('\r\n')
+    expect(Math.max(...lines.map(line => new TextEncoder().encode(line).length))).toBeLessThanOrEqual(75)
+
+    const unfolded = ics.replace(/\r\n /g, '').split('\r\n')
+    expect(unfolded).toContain(`DESCRIPTION:${description}`)
+  })
+})
