@@ -7,6 +7,7 @@ import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
+import { getFeatureBounds } from '@/app/utils/utils'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -16,6 +17,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const displayedShops = useDisplayedShops()
   const hoveredShop = useShopsStore(s => s.hoveredShop)
   const currentShop = useShopsStore(s => s.currentShop)
+  const overrideShops = useShopsStore(s => s.overrideShops)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -72,6 +74,15 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   }
 
   useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
+
+  // Company/roaster pages show every location; frame them all instead of
+  // leaving the user to zoom out hunting for the rest.
+  const fitToOverrideShops = () => {
+    if (!overrideShops?.features.length || !mapRef.current) return
+    mapRef.current.fitBounds([...getFeatureBounds(overrideShops.features)], { padding: 80, maxZoom: 15, duration: 1000 })
+  }
+
+  useEffect(fitToOverrideShops, [overrideShops])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
@@ -164,6 +175,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
           updateBounds(e)
           // The ref is still null when the first pan effect runs on a direct shop URL
           panToCurrentShop()
+          fitToOverrideShops()
         }}
         onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
