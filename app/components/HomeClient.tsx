@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useMediaQuery } from '@/hooks'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useNearRouteSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -40,6 +40,7 @@ export default function HomeClient() {
     params.delete('news')
     params.delete('event')
     params.delete('events')
+    params.delete('near')
     url.search = params.toString()
     // Closing the panel always returns to the bare map, so drop any detail path
     // (/shops/, /events/, /news/).
@@ -69,6 +70,7 @@ export default function HomeClient() {
   useNewsRouteSync()
   useEventRouteSync()
   useURLNeighborhoodSync()
+  useNearRouteSync()
 
   useEffect(() => {
     if (!searchValue) return
@@ -90,7 +92,7 @@ export default function HomeClient() {
   useEffect(() => {
     if (!panelContent && panelMode === 'explore') {
       const params = new URLSearchParams(window.location.search)
-      const hasContentParam = ['company', 'roaster', 'news', 'event', 'events'].some(p => params.has(p))
+      const hasContentParam = ['company', 'roaster', 'news', 'event', 'events', 'near'].some(p => params.has(p))
       const onDetailPath = ['/shops/', '/events/', '/news/', '/roasters/', '/companies/'].some(p => pathname.startsWith(p))
       if (!hasContentParam && !onDetailPath) {
         setPanelContent(<ExploreContent />, 'explore')
@@ -111,7 +113,8 @@ export default function HomeClient() {
         panelMode === 'roaster' ||
         panelMode === 'event' ||
         panelMode === 'news' ||
-        panelMode === 'events')
+        panelMode === 'events' ||
+        panelMode === 'near')
     ) {
       setPresented(true)
     }

@@ -7,14 +7,14 @@ import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
+export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event' | 'near'
 
 type PanelEntry = {
   mode: PanelMode
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood', 'near'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,
@@ -73,6 +73,8 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
       return null
     case 'events':
       return { type: 'query', key: 'events', value: '' }
+    case 'near':
+      return hasProps(content, 'query') ? { type: 'query', key: 'near', value: content.props.query as string } : null
     default:
       return null
   }

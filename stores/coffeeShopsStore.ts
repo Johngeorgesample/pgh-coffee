@@ -22,6 +22,9 @@ interface CoffeeShopsState {
   // Override for Company/Roaster pages that show a subset of shops
   overrideShops: TFeatureCollection | null
   setOverrideShops: (shops: TFeatureCollection | null) => void
+
+  nearPoint: [number, number] | null
+  setNearPoint: (point: [number, number] | null) => void
 }
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
@@ -67,6 +70,9 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 
       overrideShops: null,
       setOverrideShops: shops => set({ overrideShops: shops }),
+
+      nearPoint: null,
+      setNearPoint: nearPoint => set({ nearPoint }),
     }),
     { name: 'ShopsStore' },
   ),
