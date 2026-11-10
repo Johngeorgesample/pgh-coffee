@@ -89,7 +89,7 @@ export const metrics = {
   shopViewed:                 (name: string, neighborhood: string) => increment('shop_view_total', { name, neighborhood }),
   favoriteAdded:              (neighborhood: string) => increment('favorite_added_total', { neighborhood }),
   favoriteRemoved:            () => increment('favorite_removed_total'),
-  visitAdded:                 (neighborhood: string) => increment('visit_added_total', { neighborhood }),
+  visitAdded:                 (neighborhood: string, count = 1) => push('visit_added_total', count, { neighborhood }),
   visitRemoved:               () => increment('visit_removed_total'),
   authSignIn:                 () => increment('auth_signin_total'),
   authSignUp:                 () => increment('auth_signup_total'),

@@ -17,13 +17,22 @@ async function findKnownShops(supabase: Supabase, shopUUIDs: unknown) {
   return data ?? []
 }
 
+function countByNeighborhood(visits: { shop_id: string }[], shops: { uuid: string; neighborhood: string }[]) {
+  const neighborhoods = new Map(shops.map((shop) => [shop.uuid, shop.neighborhood]))
+  const counts = new Map<string, number>()
+  visits.forEach(({ shop_id }) => {
+    const neighborhood = neighborhoods.get(shop_id) ?? ''
+    counts.set(neighborhood, (counts.get(neighborhood) ?? 0) + 1)
+  })
+  return counts
+}
+
 function recordVisitsAdded(
   visits: { shop_id: string }[],
   shops: { uuid: string; neighborhood: string }[],
   userID: string,
 ) {
-  const neighborhoods = new Map(shops.map((shop) => [shop.uuid, shop.neighborhood]))
-  visits.forEach((visit) => metrics.visitAdded(neighborhoods.get(visit.shop_id) ?? ''))
+  countByNeighborhood(visits, shops).forEach((count, neighborhood) => metrics.visitAdded(neighborhood, count))
   logger.info('Added visits', { count: String(visits.length), userID })
 }
 
