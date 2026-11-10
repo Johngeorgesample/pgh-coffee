@@ -75,3 +75,23 @@ describe('buildGoogleCalendarUrl', () => {
     expect(buildGoogleCalendarUrl({ id: 'abc', title: 'TBD' })).toBe('')
   })
 })
+
+describe('timed events', () => {
+  const event = { id: 'abc', title: 'Moka Pot Party', event_date: '2026-11-21', start_time: '10:00:00', end_time: '12:00:00' }
+  const datesOf = (e: Parameters<typeof buildGoogleCalendarUrl>[0]) => new URL(buildGoogleCalendarUrl(e)).searchParams.get('dates')
+
+  it('converts Pittsburgh local time to UTC across standard and daylight time', () => {
+    expect(datesOf(event)).toBe('20261121T150000Z/20261121T170000Z')
+    expect(datesOf({ ...event, event_date: '2026-07-04' })).toBe('20260704T140000Z/20260704T160000Z')
+  })
+
+  it('defaults to one hour when there is no end time', () => {
+    expect(datesOf({ ...event, end_time: null })).toBe('20261121T150000Z/20261121T160000Z')
+  })
+
+  it('writes timed DTSTART/DTEND to the .ics', () => {
+    const lines = buildICS(event).split('\r\n')
+    expect(lines).toContain('DTSTART:20261121T150000Z')
+    expect(lines).toContain('DTEND:20261121T170000Z')
+  })
+})

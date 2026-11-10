@@ -44,3 +44,20 @@ describe('EventDetails verified badges', () => {
     expect(screen.queryByText('Verified')).toBeNull()
   })
 })
+
+describe('EventDetails time', () => {
+  test('renders the start time in 12-hour format', () => {
+    render(<EventDetails event={{ ...baseEvent, event_date: '2020-11-21', start_time: '18:30:00' }} />)
+    expect(screen.getByText('6:30 PM')).toBeInTheDocument()
+  })
+
+  test('renders a range when there is an end time', () => {
+    render(<EventDetails event={{ ...baseEvent, event_date: '2020-11-21', start_time: '10:00:00', end_time: '12:00:00' }} />)
+    expect(screen.getByText('10:00 AM – 12:00 PM')).toBeInTheDocument()
+  })
+
+  test('omits the time block when there is no time', () => {
+    render(<EventDetails event={{ ...baseEvent, event_date: '2020-11-21' }} />)
+    expect(screen.queryByText('Time')).toBeNull()
+  })
+})

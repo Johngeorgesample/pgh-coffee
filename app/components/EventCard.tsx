@@ -41,6 +41,8 @@ export type EventCardData = {
   post_date?: string
   postDate?: string
   event_date?: string | null
+  start_time?: string | null
+  end_time?: string | null
   shop?: {
     name: string
     neighborhood: string

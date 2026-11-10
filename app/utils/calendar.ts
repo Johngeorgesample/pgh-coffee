@@ -3,9 +3,8 @@ import { EventCardData } from '@/app/components/EventCard'
 /**
  * Calendar export helpers for events.
  *
- * Events only carry a date (no time), so they are treated as all-day events.
- * All-day calendar entries use an exclusive end date, so DTEND / the Google
- * `dates` end value is the day after the event.
+ * Events with a start_time export as timed entries in UTC; without one they
+ * are all-day entries, which use an exclusive end date (the day after).
  */
 
 const toCalDate = (ymd: string) => ymd.replace(/-/g, '')
@@ -15,6 +14,28 @@ const nextDay = (ymd: string) => {
   const date = new Date(Date.UTC(y, m - 1, d + 1))
   return date.toISOString().slice(0, 10).replace(/-/g, '')
 }
+
+const toUTCStamp = (date: Date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+
+const easternOffset = (ymd: string) =>
+  new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', timeZoneName: 'longOffset' })
+    .formatToParts(new Date(`${ymd}T12:00:00Z`))
+    .find(part => part.type === 'timeZoneName')!.value.slice(3)
+
+const easternToDate = (ymd: string, time: string) => new Date(`${ymd}T${time.slice(0, 5)}:00${easternOffset(ymd)}`)
+
+const ONE_HOUR = 60 * 60 * 1000
+
+const timedSpan = (ymd: string, startTime: string, endTime?: string | null) => {
+  const start = easternToDate(ymd, startTime)
+  const end = endTime ? easternToDate(ymd, endTime) : new Date(start.getTime() + ONE_HOUR)
+  return { start: toUTCStamp(start), end: toUTCStamp(end) }
+}
+
+const eventSpan = (ymd: string, event: EventCardData) =>
+  event.start_time
+    ? { ...timedSpan(ymd, event.start_time, event.end_time), allDay: false }
+    : { start: toCalDate(ymd), end: nextDay(ymd), allDay: true }
 
 // ponytail: only catches "123 Main St, Town, PA 15213"-shaped addresses; a geocoder if formats get messier
 const STREET_ADDRESS = /\b\d+[A-Za-z]?(?: [A-Z][A-Za-z.]*)+, [A-Z][A-Za-z ]+, PA \d{5}/
@@ -27,15 +48,16 @@ const buildDescription = (event: EventCardData) =>
   [event.description, event.url].filter(Boolean).join('\n\n')
 
 /**
- * Builds a Google Calendar "create event" URL for an all-day event.
+ * Builds a Google Calendar "create event" URL.
  */
 export const buildGoogleCalendarUrl = (event: EventCardData): string => {
   if (!event.event_date) return ''
 
+  const span = eventSpan(event.event_date, event)
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: event.title,
-    dates: `${toCalDate(event.event_date)}/${nextDay(event.event_date)}`,
+    dates: `${span.start}/${span.end}`,
   })
 
   const details = buildDescription(event)
@@ -70,12 +92,14 @@ const escapeICS = (value: string) =>
     .replace(/\r\n|\r|\n/g, '\\n')
 
 /**
- * Builds the contents of an .ics file for an all-day event.
+ * Builds the contents of an .ics file.
  */
 export const buildICS = (event: EventCardData): string => {
   if (!event.event_date) return ''
 
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+  const stamp = toUTCStamp(new Date())
+  const span = eventSpan(event.event_date, event)
+  const dateParam = span.allDay ? ';VALUE=DATE' : ''
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -83,8 +107,8 @@ export const buildICS = (event: EventCardData): string => {
     'BEGIN:VEVENT',
     `UID:${event.id}@pgh.coffee`,
     `DTSTAMP:${stamp}`,
-    `DTSTART;VALUE=DATE:${toCalDate(event.event_date)}`,
-    `DTEND;VALUE=DATE:${nextDay(event.event_date)}`,
+    `DTSTART${dateParam}:${span.start}`,
+    `DTEND${dateParam}:${span.end}`,
     `SUMMARY:${escapeICS(event.title)}`,
   ]
 
