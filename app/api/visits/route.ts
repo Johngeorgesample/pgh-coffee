@@ -11,10 +11,9 @@ async function findKnownShops(supabase: Supabase, shopUUIDs: unknown) {
   const candidates = Array.isArray(shopUUIDs)
     ? shopUUIDs.filter((uuid) => typeof uuid === 'string' && UUID_RE.test(uuid))
     : []
-  if (candidates.length === 0) return []
+  if (candidates.length === 0) return { data: [], error: null }
 
-  const { data } = await supabase.from('shops').select('uuid, neighborhood').in('uuid', candidates)
-  return data ?? []
+  return supabase.from('shops').select('uuid, neighborhood').in('uuid', candidates)
 }
 
 function countByNeighborhood(visits: { shop_id: string }[], shops: { uuid: string; neighborhood: string }[]) {
@@ -37,9 +36,17 @@ function recordVisitsAdded(
 }
 
 async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown) {
-  const shops = await findKnownShops(supabase, shopUUIDs)
+  const { data: shops, error: shopsError } = await findKnownShops(supabase, shopUUIDs)
 
-  if (shops.length === 0) {
+  if (shopsError) {
+    logger.error('Error looking up shops for visits', { error: shopsError.message })
+    return NextResponse.json(
+      { error: 'Error adding visits' },
+      { status: 500 }
+    )
+  }
+
+  if (!shops?.length) {
     return NextResponse.json(
       { error: 'shopUUIDs must include at least one known shop' },
       { status: 400 }
