@@ -38,6 +38,8 @@ async function saveVisits(shopUUIDs: string[]) {
     body: JSON.stringify({ shopUUIDs }),
   })
   if (!res.ok) throw new Error(`Failed to save visits: ${res.status}`)
+  const saved: unknown[] = await res.json()
+  return saved.length
 }
 
 const SAVE_FAILED = "Couldn't save your visits. Please try again."
@@ -67,8 +69,8 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Pro
 
   const saveAndRefresh = async () => {
     try {
-      await saveVisits(Array.from(selected))
-      plausible('PassportBackfill', { props: { count: selected.size } })
+      const count = await saveVisits(Array.from(selected))
+      plausible('PassportBackfill', { props: { count } })
     } catch (err) {
       console.error('Failed to save visits:', err)
       return SAVE_FAILED
