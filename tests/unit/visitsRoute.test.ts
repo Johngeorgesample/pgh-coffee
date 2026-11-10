@@ -10,6 +10,12 @@ const mockShopsResult = vi.fn()
 const mockUpsert = vi.fn()
 const mockUpsertResult = vi.fn()
 
+const mockVisitAdded = vi.fn()
+
+vi.mock('@/lib/metrics', () => ({
+  metrics: { visitAdded: mockVisitAdded, visitRemoved: vi.fn() },
+}))
+
 // Mock the server Supabase client
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve({
@@ -175,20 +181,52 @@ describe('Visits API Route - POST (Bulk Add Visits)', () => {
     mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } } })
   })
 
-  test('saves only the shops that exist', async () => {
+  const otherUUID = '33333333-3333-4333-8333-333333333333'
+
+  const knownShops = [
+    { uuid: knownUUID, neighborhood: 'Bloomfield' },
+    { uuid: otherUUID, neighborhood: 'Lawrenceville' },
+  ]
+
+  test('saves each known shop once, ignoring unknown, duplicate, and non-string entries', async () => {
+    mockShopsResult.mockResolvedValueOnce({ data: knownShops, error: null })
+    mockUpsertResult.mockResolvedValueOnce({ data: [], error: null })
+
+    await POST(bulkRequest([knownUUID, knownUUID, unknownUUID, 42, null]))
+
+    expect(mockUpsert.mock.calls[0][0]).toEqual([{ user_id: 'user-123', shop_id: knownUUID }])
+  })
+
+  test('records one visit metric per neighborhood with its count', async () => {
+    const thirdUUID = '44444444-4444-4444-8444-444444444444'
     mockShopsResult.mockResolvedValueOnce({
-      data: [{ uuid: knownUUID, neighborhood: 'Bloomfield' }],
+      data: [...knownShops, { uuid: thirdUUID, neighborhood: 'Bloomfield' }],
       error: null,
     })
     mockUpsertResult.mockResolvedValueOnce({
-      data: [{ id: 'visit-1', user_id: 'user-123', shop_id: knownUUID }],
+      data: [{ shop_id: knownUUID }, { shop_id: otherUUID }, { shop_id: thirdUUID }],
       error: null,
     })
 
-    const response = await POST(bulkRequest([knownUUID, unknownUUID]))
+    await POST(bulkRequest([knownUUID, otherUUID, thirdUUID]))
 
-    expect(response.status).toBe(201)
-    expect(mockUpsert.mock.calls[0][0]).toEqual([{ user_id: 'user-123', shop_id: knownUUID }])
+    expect(mockVisitAdded.mock.calls).toEqual([['Bloomfield', 2], ['Lawrenceville', 1]])
+  })
+
+  test('returns 500 when the shops lookup fails', async () => {
+    mockShopsResult.mockResolvedValueOnce({ data: null, error: { message: 'timeout' } })
+
+    const response = await POST(bulkRequest([knownUUID]))
+
+    expect(response.status).toBe(500)
+    expect(mockUpsert).not.toHaveBeenCalled()
+  })
+
+  test('rejects an oversized request before querying shops', async () => {
+    const response = await POST(bulkRequest(Array(1001).fill(knownUUID)))
+
+    expect(response.status).toBe(400)
+    expect(mockShopsResult).not.toHaveBeenCalled()
   })
 
   test('returns 400 when shopUUIDs is empty', async () => {
