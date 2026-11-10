@@ -4,8 +4,6 @@ import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 const mockGetUser = vi.fn()
 
 // Mock results for different query chains
-const mockShopValidationResult = vi.fn()
-const mockInsertResult = vi.fn()
 const mockSelectVisitsResult = vi.fn()
 const mockDeleteResult = vi.fn()
 const mockShopsResult = vi.fn()
@@ -20,23 +18,12 @@ vi.mock('@/lib/supabase/server', () => ({
     },
     from: (table: string) => {
       if (table === 'shops') {
-        // Chain: select().eq().single()
         return {
-          select: () => Object.assign(Promise.resolve(mockShopsResult()), {
-            eq: () => ({
-              single: mockShopValidationResult,
-            }),
-          }),
+          select: mockShopsResult,
         }
       }
       if (table === 'user_visits') {
         return {
-          // Chain: insert().select().single()
-          insert: () => ({
-            select: () => ({
-              single: mockInsertResult,
-            }),
-          }),
           upsert: (...args: unknown[]) => {
             mockUpsert(...args)
             return { select: mockUpsertResult }
@@ -73,7 +60,6 @@ describe('Visits API Route - POST (Add Visit)', () => {
   })
 
   test('successfully marks a shop as visited', async () => {
-    const mockUser = { id: 'user-123' }
     const mockVisit = {
       id: 'visit-123',
       user_id: 'user-123',
@@ -81,9 +67,9 @@ describe('Visits API Route - POST (Add Visit)', () => {
       created_at: '2024-01-01T00:00:00Z',
     }
 
-    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
-    mockShopValidationResult.mockResolvedValueOnce({ data: { uuid: 'shop-uuid-456', name: 'Shop', neighborhood: 'Bloomfield' }, error: null })
-    mockInsertResult.mockResolvedValueOnce({ data: mockVisit, error: null })
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } } })
+    mockShopsResult.mockResolvedValueOnce({ data: [{ uuid: 'shop-uuid-456', neighborhood: 'Bloomfield' }], error: null })
+    mockUpsertResult.mockResolvedValueOnce({ data: [mockVisit], error: null })
 
     const request = new Request('http://localhost:3000/api/visits', {
       method: 'POST',
@@ -95,7 +81,7 @@ describe('Visits API Route - POST (Add Visit)', () => {
     const data = await response.json()
 
     expect(response.status).toBe(201)
-    expect(data).toEqual(mockVisit)
+    expect(data).toEqual([mockVisit])
   })
 
   test('returns 401 when user is not authenticated', async () => {
@@ -131,10 +117,9 @@ describe('Visits API Route - POST (Add Visit)', () => {
     expect(data.error).toBe('shopUUID is required')
   })
 
-  test('returns 404 when the shop does not exist', async () => {
-    const mockUser = { id: 'user-123' }
-    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
-    mockShopValidationResult.mockResolvedValueOnce({ data: null, error: { message: 'No rows' } })
+  test('returns 400 when the shop does not exist', async () => {
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } } })
+    mockShopsResult.mockResolvedValueOnce({ data: [{ uuid: 'shop-uuid-456', neighborhood: 'Bloomfield' }], error: null })
 
     const request = new Request('http://localhost:3000/api/visits', {
       method: 'POST',
@@ -143,17 +128,15 @@ describe('Visits API Route - POST (Add Visit)', () => {
     })
 
     const response = await POST(request)
-    const data = await response.json()
 
-    expect(response.status).toBe(404)
-    expect(data.error).toBe('Shop not found')
+    expect(response.status).toBe(400)
+    expect(mockUpsert).not.toHaveBeenCalled()
   })
 
   test('returns 500 on database error', async () => {
-    const mockUser = { id: 'user-123' }
-    mockGetUser.mockResolvedValueOnce({ data: { user: mockUser } })
-    mockShopValidationResult.mockResolvedValueOnce({ data: { uuid: 'shop-uuid-456', name: 'Shop', neighborhood: 'Bloomfield' }, error: null })
-    mockInsertResult.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } } })
+    mockShopsResult.mockResolvedValueOnce({ data: [{ uuid: 'shop-uuid-456', neighborhood: 'Bloomfield' }], error: null })
+    mockUpsertResult.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
     const request = new Request('http://localhost:3000/api/visits', {
       method: 'POST',
@@ -165,7 +148,7 @@ describe('Visits API Route - POST (Add Visit)', () => {
     const data = await response.json()
 
     expect(response.status).toBe(500)
-    expect(data.error).toBe('Error adding visit')
+    expect(data.error).toBe('Error adding visits')
   })
 })
 
