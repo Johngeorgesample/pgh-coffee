@@ -141,7 +141,7 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
         <div className="px-6 pt-6 space-y-6">
           {/* Date and Time row */}
           {event.event_date && (
-            <div className="flex gap-6">
+            <div className="flex flex-col gap-6">
               {/* Date */}
               <div className="flex items-start gap-3">
                 <div className="bg-yellow-100 p-2.5 rounded-lg">
