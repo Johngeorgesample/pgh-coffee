@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Stamp } from 'lucide-react'
 import { useAnalytics } from '@/hooks/useAnalytics'
+import useShopsStore from '@/stores/coffeeShopsStore'
 import type { TFeatureCollection } from '@/types/shop-types'
 
 interface ChecklistShop {
@@ -25,12 +26,6 @@ const toggled = (selected: Set<string>, uuid: string) => {
   return next
 }
 
-async function fetchShops() {
-  const res = await fetch('/api/shops/geojson')
-  if (!res.ok) throw new Error(`Failed to fetch shops: ${res.status}`)
-  return toChecklistShops(await res.json())
-}
-
 async function saveVisits(shopUUIDs: string[]) {
   const res = await fetch('/api/visits', {
     method: 'POST',
@@ -47,7 +42,9 @@ const REFRESH_FAILED = 'Your visits were saved. Refresh the page to see your pas
 
 export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Promise<void>; onSkip: () => void }) {
   const plausible = useAnalytics()
-  const [shops, setShops] = useState<ChecklistShop[]>([])
+  const allShops = useShopsStore((state) => state.allShops)
+  const fetchCoffeeShops = useShopsStore((state) => state.fetchCoffeeShops)
+  const shops = useMemo(() => toChecklistShops(allShops), [allShops])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [query, setQuery] = useState('')
@@ -56,14 +53,11 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Pro
   const [saveNotice, setSaveNotice] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchShops()
-      .then(setShops)
-      .catch((err) => {
-        console.error('Failed to fetch shops:', err)
-        setLoadError(true)
-      })
-      .finally(() => setLoading(false))
-  }, [])
+    fetchCoffeeShops().then(() => {
+      setLoadError(useShopsStore.getState().allShops.features.length === 0)
+      setLoading(false)
+    })
+  }, [fetchCoffeeShops])
 
   const visibleShops = shops.filter((shop) => matchesQuery(shop, query))
 
