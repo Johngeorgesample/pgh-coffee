@@ -20,6 +20,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const currentShop = useShopsStore(s => s.currentShop)
   const overrideShops = useShopsStore(s => s.overrideShops)
   const nearPoint = useShopsStore(s => s.nearPoint)
+  const allShops = useShopsStore(s => s.allShops)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -86,7 +87,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const fitToNearPoint = () => {
     if (!nearPoint || !mapRef.current) return
-    const closest = nearestShops(displayedShops.features, nearPoint).map(n => n.shop)
+    const closest = nearestShops(allShops?.features ?? [], nearPoint).map(n => n.shop)
     const [west, south, east, north] = getFeatureBounds(closest)
     const [lng, lat] = nearPoint
     mapRef.current.fitBounds(
@@ -95,7 +96,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     )
   }
 
-  useEffect(fitToNearPoint, [nearPoint])
+  useEffect(fitToNearPoint, [nearPoint, allShops])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
