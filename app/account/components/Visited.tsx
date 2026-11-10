@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Stamp, MapPin } from 'lucide-react'
 import ShopCard from '@/app/components/ShopCard'
+import VisitChecklist from './VisitChecklist'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import type { DbShop } from '@/types/shop-types'
 
@@ -17,10 +18,11 @@ export default function Visited() {
   const [visits, setVisits] = useState<Visit[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [skipped, setSkipped] = useState(false)
 
   const hasVisits = visits && visits.length > 0
 
-  useEffect(() => {
+  const loadVisits = useCallback(() => {
     fetch('/api/visits')
       .then((res) => {
         if (!res.ok) {
@@ -38,6 +40,8 @@ export default function Visited() {
         setLoading(false)
       })
   }, [])
+
+  useEffect(loadVisits, [loadVisits])
 
   if (loading) return <div>Loading...</div>
 
@@ -69,6 +73,8 @@ export default function Visited() {
             ))}
           </ul>
         </div>
+      ) : !skipped ? (
+        <VisitChecklist onSaved={loadVisits} onSkip={() => setSkipped(true)} />
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
