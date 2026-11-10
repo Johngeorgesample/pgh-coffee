@@ -6,6 +6,7 @@ import { metrics } from '@/lib/metrics'
 const MAX_SHOP_UUIDS = 1000
 
 type Supabase = Awaited<ReturnType<typeof createClient>>
+type KnownShop = { uuid: string; neighborhood: string }
 
 async function findKnownShops(supabase: Supabase, shopUUIDs: unknown[]) {
   const requested = new Set(shopUUIDs)
@@ -16,7 +17,7 @@ async function findKnownShops(supabase: Supabase, shopUUIDs: unknown[]) {
 const isShopUUIDList = (value: unknown): value is unknown[] =>
   Array.isArray(value) && value.length <= MAX_SHOP_UUIDS
 
-function countByNeighborhood(visits: { shop_id: string }[], shops: { uuid: string; neighborhood: string }[]) {
+function countByNeighborhood(visits: { shop_id: string }[], shops: KnownShop[]) {
   const neighborhoods = new Map(shops.map((shop) => [shop.uuid, shop.neighborhood]))
   const counts = new Map<string, number>()
   visits.forEach(({ shop_id }) => {
@@ -28,39 +29,22 @@ function countByNeighborhood(visits: { shop_id: string }[], shops: { uuid: strin
 
 function recordVisitsAdded(
   visits: { shop_id: string }[],
-  shops: { uuid: string; neighborhood: string }[],
+  shops: KnownShop[],
   userID: string,
 ) {
   countByNeighborhood(visits, shops).forEach((count, neighborhood) => metrics.visitAdded(neighborhood, count))
   logger.info('Added visits', { count: String(visits.length), userID })
 }
 
-async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown) {
-  if (!isShopUUIDList(shopUUIDs)) {
-    return NextResponse.json(
-      { error: `shopUUIDs must be an array of at most ${MAX_SHOP_UUIDS} shop UUIDs` },
-      { status: 400 }
-    )
-  }
+const badRequest = (error: string) => NextResponse.json({ error }, { status: 400 })
 
-  const { data: shops, error: shopsError } = await findKnownShops(supabase, shopUUIDs)
+function addVisitsFailed(message: string, error: { message: string }) {
+  logger.error(message, { error: error.message })
+  return NextResponse.json({ error: 'Error adding visits' }, { status: 500 })
+}
 
-  if (shopsError) {
-    logger.error('Error looking up shops for visits', { error: shopsError.message })
-    return NextResponse.json(
-      { error: 'Error adding visits' },
-      { status: 500 }
-    )
-  }
-
-  if (!shops?.length) {
-    return NextResponse.json(
-      { error: 'shopUUIDs must include at least one known shop' },
-      { status: 400 }
-    )
-  }
-
-  const { data, error } = await supabase
+const insertVisits = (supabase: Supabase, userID: string, shops: KnownShop[]) =>
+  supabase
     .from('user_visits')
     .upsert(
       shops.map((shop) => ({ user_id: userID, shop_id: shop.uuid })),
@@ -68,16 +52,19 @@ async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown)
     )
     .select()
 
-  if (error) {
-    logger.error('Error adding visits', { error: error.message })
-    return NextResponse.json(
-      { error: 'Error adding visits' },
-      { status: 500 }
-    )
-  }
-
+async function saveVisits(supabase: Supabase, userID: string, shops: KnownShop[]) {
+  const { data, error } = await insertVisits(supabase, userID, shops)
+  if (error) return addVisitsFailed('Error adding visits', error)
   recordVisitsAdded(data, shops, userID)
   return NextResponse.json(data, { status: 201 })
+}
+
+async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown) {
+  if (!isShopUUIDList(shopUUIDs)) return badRequest(`shopUUIDs must be an array of at most ${MAX_SHOP_UUIDS} shop UUIDs`)
+  const { data: shops, error } = await findKnownShops(supabase, shopUUIDs)
+  if (error) return addVisitsFailed('Error looking up shops for visits', error)
+  if (!shops?.length) return badRequest('shopUUIDs must include at least one known shop')
+  return saveVisits(supabase, userID, shops)
 }
 
 export async function GET() {
