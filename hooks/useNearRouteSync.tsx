@@ -3,10 +3,8 @@ import { useSearchParams } from 'next/navigation'
 import usePanelStore from '@/stores/panelStore'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import NearShops from '@/app/components/NearShops'
-import { geocode, currentPosition } from '@/app/utils/geocode'
+import { geocode } from '@/app/utils/geocode'
 import { clearOwnPanel } from './clearOwnPanel'
-
-export const NEAR_ME = 'me'
 
 type TNearProps = ComponentProps<typeof NearShops>
 
@@ -14,11 +12,6 @@ const panelNearProps = (content: ReactNode, query: string) =>
   isValidElement<TNearProps>(content) && content.type === NearShops && content.props.query === query
     ? content.props
     : null
-
-async function resolveNear(query: string, signal: AbortSignal) {
-  if (query === NEAR_ME) return { coordinates: await currentPosition(), label: 'you' }
-  return geocode(query, signal)
-}
 
 function showNear(props: TNearProps) {
   usePanelStore.getState().setPanelContent(<NearShops {...props} />, 'near')
@@ -46,7 +39,7 @@ export const useNearRouteSync = () => {
     const show = (props: Omit<TNearProps, 'query'>) => {
       if (!controller.signal.aborted) showNear({ query: near, ...props })
     }
-    resolveNear(near, controller.signal)
+    geocode(near, controller.signal)
       .then(place =>
         show(
           place
@@ -57,7 +50,7 @@ export const useNearRouteSync = () => {
       .catch(err => {
         if (err.name === 'AbortError') return
         console.error(err)
-        show({ label: near === NEAR_ME ? "Couldn't get your location." : `Couldn't look up “${near}”.`, point: null })
+        show({ label: `Couldn't look up “${near}”.`, point: null })
       })
     return () => controller.abort()
   }, [near])

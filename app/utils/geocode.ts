@@ -15,12 +15,3 @@ export async function geocode(query: string, signal?: AbortSignal) {
   if (!feature) return null
   return { coordinates: feature.geometry.coordinates as [number, number], label: feature.properties.name as string }
 }
-
-export const currentPosition = () =>
-  new Promise<[number, number]>((resolve, reject) =>
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => resolve([coords.longitude, coords.latitude]),
-      reject,
-      { timeout: 10000 },
-    ),
-  )
