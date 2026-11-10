@@ -3,6 +3,60 @@ import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+type Supabase = Awaited<ReturnType<typeof createClient>>
+
+async function findKnownShops(supabase: Supabase, shopUUIDs: unknown) {
+  const candidates = Array.isArray(shopUUIDs)
+    ? shopUUIDs.filter((uuid) => typeof uuid === 'string' && UUID_RE.test(uuid))
+    : []
+  if (candidates.length === 0) return []
+
+  const { data } = await supabase.from('shops').select('uuid, neighborhood').in('uuid', candidates)
+  return data ?? []
+}
+
+function recordVisitsAdded(
+  visits: { shop_id: string }[],
+  shops: { uuid: string; neighborhood: string }[],
+  userID: string,
+) {
+  const neighborhoods = new Map(shops.map((shop) => [shop.uuid, shop.neighborhood]))
+  visits.forEach((visit) => metrics.visitAdded(neighborhoods.get(visit.shop_id) ?? ''))
+  logger.info('Added visits', { count: String(visits.length), userID })
+}
+
+async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown) {
+  const shops = await findKnownShops(supabase, shopUUIDs)
+
+  if (shops.length === 0) {
+    return NextResponse.json(
+      { error: 'shopUUIDs must include at least one known shop' },
+      { status: 400 }
+    )
+  }
+
+  const { data, error } = await supabase
+    .from('user_visits')
+    .upsert(
+      shops.map((shop) => ({ user_id: userID, shop_id: shop.uuid })),
+      { onConflict: 'user_id,shop_id', ignoreDuplicates: true }
+    )
+    .select()
+
+  if (error) {
+    logger.error('Error adding visits', { error: error.message })
+    return NextResponse.json(
+      { error: 'Error adding visits' },
+      { status: 500 }
+    )
+  }
+
+  recordVisitsAdded(data, shops, userID)
+  return NextResponse.json(data, { status: 201 })
+}
+
 export async function GET() {
   const supabase = await createClient()
 
@@ -48,7 +102,9 @@ export async function POST(request: Request) {
     )
   }
 
-  const { shopUUID } = await request.json()
+  const { shopUUID, shopUUIDs } = await request.json()
+
+  if (shopUUIDs !== undefined) return addVisits(supabase, user.id, shopUUIDs)
 
   if (!shopUUID) {
     return NextResponse.json(

@@ -8,6 +8,9 @@ const mockShopValidationResult = vi.fn()
 const mockInsertResult = vi.fn()
 const mockSelectVisitsResult = vi.fn()
 const mockDeleteResult = vi.fn()
+const mockShopsInResult = vi.fn()
+const mockUpsert = vi.fn()
+const mockUpsertResult = vi.fn()
 
 // Mock the server Supabase client
 vi.mock('@/lib/supabase/server', () => ({
@@ -23,6 +26,7 @@ vi.mock('@/lib/supabase/server', () => ({
             eq: () => ({
               single: mockShopValidationResult,
             }),
+            in: mockShopsInResult,
           }),
         }
       }
@@ -34,6 +38,10 @@ vi.mock('@/lib/supabase/server', () => ({
               single: mockInsertResult,
             }),
           }),
+          upsert: (...args: unknown[]) => {
+            mockUpsert(...args)
+            return { select: mockUpsertResult }
+          },
           // Chain: select().eq().order()
           select: () => ({
             eq: () => ({
@@ -159,6 +167,53 @@ describe('Visits API Route - POST (Add Visit)', () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe('Error adding visit')
+  })
+})
+
+describe('Visits API Route - POST (Bulk Add Visits)', () => {
+  let POST: typeof import('@/app/api/visits/route').POST
+
+  const knownUUID = '11111111-1111-4111-8111-111111111111'
+  const unknownUUID = '22222222-2222-4222-8222-222222222222'
+
+  const bulkRequest = (shopUUIDs: unknown) =>
+    new Request('http://localhost:3000/api/visits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopUUIDs }),
+    })
+
+  beforeAll(async () => {
+    const module = await import('@/app/api/visits/route')
+    POST = module.POST
+  })
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } } })
+  })
+
+  test('saves only the shops that exist', async () => {
+    mockShopsInResult.mockResolvedValueOnce({
+      data: [{ uuid: knownUUID, neighborhood: 'Bloomfield' }],
+      error: null,
+    })
+    mockUpsertResult.mockResolvedValueOnce({
+      data: [{ id: 'visit-1', user_id: 'user-123', shop_id: knownUUID }],
+      error: null,
+    })
+
+    const response = await POST(bulkRequest([knownUUID, unknownUUID]))
+
+    expect(response.status).toBe(201)
+    expect(mockUpsert.mock.calls[0][0]).toEqual([{ user_id: 'user-123', shop_id: knownUUID }])
+  })
+
+  test('returns 400 when shopUUIDs is empty', async () => {
+    const response = await POST(bulkRequest([]))
+
+    expect(response.status).toBe(400)
+    expect(mockUpsert).not.toHaveBeenCalled()
   })
 })
 
