@@ -40,7 +40,10 @@ async function saveVisits(shopUUIDs: string[]) {
   if (!res.ok) throw new Error(`Failed to save visits: ${res.status}`)
 }
 
-export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => void; onSkip: () => void }) {
+const SAVE_FAILED = "Couldn't save your visits. Please try again."
+const REFRESH_FAILED = 'Your visits were saved. Refresh the page to see your passport.'
+
+export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Promise<void>; onSkip: () => void }) {
   const plausible = useAnalytics()
   const [shops, setShops] = useState<ChecklistShop[]>([])
   const [loading, setLoading] = useState(true)
@@ -48,7 +51,7 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => voi
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState(false)
+  const [saveNotice, setSaveNotice] = useState<string | null>(null)
 
   useEffect(() => {
     fetchShops()
@@ -62,16 +65,29 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => voi
 
   const visibleShops = shops.filter((shop) => matchesQuery(shop, query))
 
-  const handleSave = async () => {
-    setSaving(true)
-    setSaveError(false)
+  const saveAndRefresh = async () => {
     try {
       await saveVisits(Array.from(selected))
       plausible('PassportBackfill', { props: { count: selected.size } })
-      onSaved()
     } catch (err) {
       console.error('Failed to save visits:', err)
-      setSaveError(true)
+      return SAVE_FAILED
+    }
+    return onSaved().then(
+      () => null,
+      (err) => {
+        console.error('Failed to refresh visits:', err)
+        return REFRESH_FAILED
+      },
+    )
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    setSaveNotice(null)
+    const notice = await saveAndRefresh()
+    if (notice) {
+      setSaveNotice(notice)
       setSaving(false)
     }
   }
@@ -140,9 +156,9 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => voi
         <button type="button" onClick={handleSkip} className="text-sm font-medium text-gray-500 hover:text-gray-700">
           Skip
         </button>
-        {saveError && (
+        {saveNotice && (
           <p role="alert" className="text-sm text-red-600">
-            Couldn&apos;t save your visits. Please try again.
+            {saveNotice}
           </p>
         )}
       </div>

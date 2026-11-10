@@ -22,26 +22,21 @@ export default function Visited() {
 
   const hasVisits = visits && visits.length > 0
 
-  const loadVisits = useCallback(() => {
-    fetch('/api/visits')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch visits: ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((data) => {
-        setVisits(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
+  const fetchVisits = useCallback(async () => {
+    const res = await fetch('/api/visits')
+    if (!res.ok) throw new Error(`Failed to fetch visits: ${res.status}`)
+    const data = await res.json()
+    setVisits(Array.isArray(data) ? data : [])
+  }, [])
+
+  useEffect(() => {
+    fetchVisits()
       .catch((err) => {
         console.error('Failed to fetch visits:', err)
         setError(true)
-        setLoading(false)
       })
-  }, [])
-
-  useEffect(loadVisits, [loadVisits])
+      .finally(() => setLoading(false))
+  }, [fetchVisits])
 
   if (loading) return <div>Loading...</div>
 
@@ -74,7 +69,7 @@ export default function Visited() {
           </ul>
         </div>
       ) : !skipped ? (
-        <VisitChecklist onSaved={loadVisits} onSkip={() => setSkipped(true)} />
+        <VisitChecklist onSaved={fetchVisits} onSkip={() => setSkipped(true)} />
       ) : (
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center">
