@@ -9,6 +9,8 @@ interface ExtractedEvent {
   title: string
   description: string
   event_date: string | null
+  start_time: string | null
+  end_time: string | null
   external_url: string | null
   type: string
 }
@@ -22,6 +24,8 @@ function buildPrompt(shopContext: string): string {
   "title": "concise event title (e.g. Latte Art Class, Decaf Tasting, Holiday Pop-Up)",
   "description": "post body text, cleaned up and readable. Replace any first-person language (we, I, our, my) with the shop's name",
   "event_date": "YYYY-MM-DD if a date is mentioned. If no year is shown, assume ${year}. Null if no date is mentioned.",
+  "start_time": "HH:MM in 24-hour time if a start time is mentioned, otherwise null",
+  "end_time": "HH:MM in 24-hour time if an end time is mentioned, otherwise null",
   "external_url": "any ticket or registration link visible in the post, otherwise null",
   "type": "pick the single most relevant from: class, community event, event, market, pop-up, special event, talk / lecture, tasting, throwdown, workshop"
 }${shopContext}`
@@ -69,6 +73,8 @@ export async function POST(request: Request) {
       type: extracted.type,
       post_date: new Date().toISOString().split('T')[0],
       event_date: extracted.event_date,
+      start_time: extracted.start_time,
+      end_time: extracted.end_time,
       shop_id: shop?.uuid ?? null,
       roaster_id: roasterId,
     }])

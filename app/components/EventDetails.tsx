@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Calendar, CalendarPlus, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
+import { Calendar, CalendarPlus, Clock, SquareArrowOutUpRight, MapPin, Share2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCopyToClipboard, useAnalytics } from '@/hooks'
 import { isPast } from '@/app/utils/utils'
@@ -40,6 +40,12 @@ const formatEventDate = (dateStr: string) => {
     year: 'numeric',
   })
 }
+
+const formatTime = (timeStr: string) =>
+  new Date(`1970-01-01T${timeStr}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+
+const formatEventTime = (start: string, end?: string | null) =>
+  end ? `${formatTime(start)} – ${formatTime(end)}` : formatTime(start)
 
 interface EventDetailsProps {
   event: EventCardData
@@ -150,6 +156,21 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                   </span>
                 </div>
               </div>
+              {event.start_time && (
+                <div className="flex items-start gap-3">
+                  <div className="bg-yellow-100 p-2.5 rounded-lg">
+                    <Clock className="w-4 h-4 text-yellow-500" />
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-semibold text-yellow-500 uppercase tracking-wider mb-1">
+                      Time
+                    </span>
+                    <span className="text-slate-900 font-medium text-[15px]">
+                      {formatEventTime(event.start_time, event.end_time)}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
