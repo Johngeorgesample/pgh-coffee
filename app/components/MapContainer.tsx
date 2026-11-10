@@ -8,6 +8,7 @@ import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
 import { getFeatureBounds } from '@/app/utils/utils'
+import { nearestShops } from '@/app/utils/shopsByDistance'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -18,6 +19,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const hoveredShop = useShopsStore(s => s.hoveredShop)
   const currentShop = useShopsStore(s => s.currentShop)
   const overrideShops = useShopsStore(s => s.overrideShops)
+  const nearPoint = useShopsStore(s => s.nearPoint)
+  const allShops = useShopsStore(s => s.allShops)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -81,6 +84,19 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   }
 
   useEffect(fitToOverrideShops, [overrideShops])
+
+  const fitToNearPoint = () => {
+    if (!nearPoint || !mapRef.current) return
+    const closest = nearestShops(allShops?.features ?? [], nearPoint).map(n => n.shop)
+    const [west, south, east, north] = getFeatureBounds(closest)
+    const [lng, lat] = nearPoint
+    mapRef.current.fitBounds(
+      [Math.min(west, lng), Math.min(south, lat), Math.max(east, lng), Math.max(north, lat)],
+      { padding: 80, maxZoom: 15, duration: 1000 },
+    )
+  }
+
+  useEffect(fitToNearPoint, [nearPoint, allShops])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
@@ -174,6 +190,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
           // The ref is still null when the first pan effect runs on a direct shop URL
           panToCurrentShop()
           fitToOverrideShops()
+          fitToNearPoint()
         }}
         onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
@@ -226,6 +243,15 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
           />
         </Source>
 
+        {nearPoint && (
+          <Source id="near-point" type="geojson" data={{ type: 'Point', coordinates: nearPoint }}>
+            <Layer
+              id="near-point"
+              type="circle"
+              paint={{ 'circle-color': '#3B82F6', 'circle-radius': 8, 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 }}
+            />
+          </Source>
+        )}
 
         {showAllPopups &&
           shopsInView

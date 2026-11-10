@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { MapPinIcon } from '@heroicons/react/24/outline'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopList from '@/app/components/ShopList'
 import EntitySearchResults from '@/app/components/EntitySearchResults'
@@ -18,11 +19,22 @@ export default function ShopSearch() {
   const entities = useMatchedEntities(searchValue)
   const entityCount = isSearching ? entities.roasters.length + entities.companies.length : 0
   const shopCount = displayedShops.features.length
+  const setSearchValue = useShopsStore(s => s.setSearchValue)
 
   return (
     <div className="flex h-full flex-col overflow-y-auto px-4 sm:px-6">
       <div className="mt-12">
         {!isSearching && <AmenityFilterList />}
+        {isSearching && (
+          <Link
+            href={`/?near=${encodeURIComponent(searchValue)}`}
+            onClick={() => setSearchValue('')}
+            className="mb-2 flex w-full items-center gap-2 border-b border-stone-200 py-3 text-left text-gray-900 hover:text-amber-700"
+          >
+            <MapPinIcon className="size-4 shrink-0" />
+            <span className="truncate">Shops near &ldquo;{searchValue}&rdquo;</span>
+          </Link>
+        )}
         {entityCount > 0 && <EntitySearchResults {...entities} />}
         {entityCount > 0 && shopCount > 0 && (
           <h2 className="mt-6 text-[11px] font-semibold uppercase tracking-wider text-gray-500">Shops</h2>
