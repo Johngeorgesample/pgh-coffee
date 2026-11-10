@@ -3,18 +3,18 @@ import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const MAX_SHOP_UUIDS = 1000
 
 type Supabase = Awaited<ReturnType<typeof createClient>>
 
-async function findKnownShops(supabase: Supabase, shopUUIDs: unknown) {
-  const candidates = Array.isArray(shopUUIDs)
-    ? shopUUIDs.filter((uuid) => typeof uuid === 'string' && UUID_RE.test(uuid))
-    : []
-  if (candidates.length === 0) return { data: [], error: null }
-
-  return supabase.from('shops').select('uuid, neighborhood').in('uuid', candidates)
+async function findKnownShops(supabase: Supabase, shopUUIDs: unknown[]) {
+  const requested = new Set(shopUUIDs)
+  const { data, error } = await supabase.from('shops').select('uuid, neighborhood')
+  return { data: data?.filter((shop) => requested.has(shop.uuid)), error }
 }
+
+const isShopUUIDList = (value: unknown): value is unknown[] =>
+  Array.isArray(value) && value.length <= MAX_SHOP_UUIDS
 
 function countByNeighborhood(visits: { shop_id: string }[], shops: { uuid: string; neighborhood: string }[]) {
   const neighborhoods = new Map(shops.map((shop) => [shop.uuid, shop.neighborhood]))
@@ -36,6 +36,13 @@ function recordVisitsAdded(
 }
 
 async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown) {
+  if (!isShopUUIDList(shopUUIDs)) {
+    return NextResponse.json(
+      { error: `shopUUIDs must be an array of at most ${MAX_SHOP_UUIDS} shop UUIDs` },
+      { status: 400 }
+    )
+  }
+
   const { data: shops, error: shopsError } = await findKnownShops(supabase, shopUUIDs)
 
   if (shopsError) {

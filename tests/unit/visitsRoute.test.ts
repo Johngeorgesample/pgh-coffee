@@ -8,7 +8,7 @@ const mockShopValidationResult = vi.fn()
 const mockInsertResult = vi.fn()
 const mockSelectVisitsResult = vi.fn()
 const mockDeleteResult = vi.fn()
-const mockShopsInResult = vi.fn()
+const mockShopsResult = vi.fn()
 const mockUpsert = vi.fn()
 const mockUpsertResult = vi.fn()
 
@@ -22,11 +22,10 @@ vi.mock('@/lib/supabase/server', () => ({
       if (table === 'shops') {
         // Chain: select().eq().single()
         return {
-          select: () => ({
+          select: () => Object.assign(Promise.resolve(mockShopsResult()), {
             eq: () => ({
               single: mockShopValidationResult,
             }),
-            in: mockShopsInResult,
           }),
         }
       }
@@ -194,7 +193,7 @@ describe('Visits API Route - POST (Bulk Add Visits)', () => {
   })
 
   test('saves only the shops that exist', async () => {
-    mockShopsInResult.mockResolvedValueOnce({
+    mockShopsResult.mockResolvedValueOnce({
       data: [{ uuid: knownUUID, neighborhood: 'Bloomfield' }],
       error: null,
     })
@@ -210,6 +209,8 @@ describe('Visits API Route - POST (Bulk Add Visits)', () => {
   })
 
   test('returns 400 when shopUUIDs is empty', async () => {
+    mockShopsResult.mockResolvedValueOnce({ data: [{ uuid: knownUUID, neighborhood: 'Bloomfield' }], error: null })
+
     const response = await POST(bulkRequest([]))
 
     expect(response.status).toBe(400)
