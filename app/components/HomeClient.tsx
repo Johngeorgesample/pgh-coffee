@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useNearRouteSync, useMediaQuery } from '@/hooks'
+import { useShopRouteSync, useEventRouteSync, useNewsRouteSync, useRoasterRouteSync, useCompanyRouteSync, useNearRouteSync, useVisitsSync, useMediaQuery } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import Panel from '@/app/components/Panel'
 import ShopSearch from './ShopSearch'
@@ -71,6 +71,7 @@ export default function HomeClient() {
   useEventRouteSync()
   useURLNeighborhoodSync()
   useNearRouteSync()
+  useVisitsSync()
 
   useEffect(() => {
     if (!searchValue) return
