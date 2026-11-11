@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Stamp } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
 import VisitedToast from './VisitedToast'
 import { useAuth } from './AuthProvider'
+import useShopsStore from '@/stores/coffeeShopsStore'
 
 const LoginPromptModal = dynamic(() => import('./LoginPromptModal'), { ssr: false })
 
@@ -17,38 +18,15 @@ interface VisitedButtonProps {
 export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps) {
   const { user, loading: authLoading } = useAuth()
   const plausible = useAnalytics()
-  const [isVisited, setIsVisited] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
+  const setVisited = useShopsStore(s => s.setVisited)
+  const [isSaving, setIsSaving] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [justAdded, setJustAdded] = useState(false)
 
-  useEffect(() => {
-    const checkVisitedStatus = async () => {
-      if (!user) {
-        setIsVisited(false)
-        setIsLoading(false)
-        return
-      }
-
-      try {
-        const response = await fetch('/api/visits')
-        if (response.ok) {
-          const visits = await response.json()
-          const visited = visits.some((visit: { shop: { uuid: string } }) => visit.shop?.uuid === shopUUID)
-          setIsVisited(visited)
-        }
-      } catch (error) {
-        console.error('Error checking visited status:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    if (!authLoading) {
-      checkVisitedStatus()
-    }
-  }, [shopUUID, user, authLoading])
+  const isVisited = !!visitedUUIDs?.has(shopUUID)
+  const isLoading = isSaving || authLoading || (!!user && visitedUUIDs === null)
 
   const handleToggle = async () => {
     if (!user) {
@@ -56,7 +34,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
       return
     }
 
-    setIsLoading(true)
+    setIsSaving(true)
     const wasAlreadyVisited = isVisited
 
     try {
@@ -69,7 +47,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
 
       if (response.ok) {
         const newState = !isVisited
-        setIsVisited(newState)
+        setVisited(shopUUID, newState)
         plausible('visited', {
           props: { shopName, shopUUID, status: newState },
         })
@@ -81,7 +59,7 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
     } catch (error) {
       console.error('Error toggling visited:', error)
     } finally {
-      setIsLoading(false)
+      setIsSaving(false)
     }
   }
 
