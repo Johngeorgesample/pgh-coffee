@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
@@ -198,11 +198,22 @@ export function useDisplayedShops(): TFeatureCollection {
 export function useIsClosed() {
   const openNow = useCoffeeShopsStore(s => s.openNow)
   const shopHours = useCoffeeShopsStore(s => s.shopHours)
+  const minute = useMinuteTick(openNow)
 
   return useMemo(() => {
     const now = pittsburghNow()
     return (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
-  }, [openNow, shopHours])
+  }, [openNow, shopHours, minute])
+}
+
+function useMinuteTick(enabled: boolean) {
+  const [tick, setTick] = useState(0)
+  useEffect(() => {
+    if (!enabled) return
+    const id = setInterval(() => setTick(t => t + 1), 60_000)
+    return () => clearInterval(id)
+  }, [enabled])
+  return tick
 }
 
 export default useCoffeeShopsStore
