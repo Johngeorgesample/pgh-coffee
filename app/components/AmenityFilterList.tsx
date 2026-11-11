@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, type CSSProperties } from 'react'
-import { Clock, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
 
 import useShopsStore from '@/stores/coffeeShopsStore'
@@ -32,8 +32,6 @@ export const AmenityFilterList = () => {
   const [isExpanded, setIsExpanded] = useState(false)
   const activeAmenityFilters = useShopsStore(s => s.activeAmenityFilters)
   const toggleAmenityFilter = useShopsStore(s => s.toggleAmenityFilter)
-  const openNow = useShopsStore(s => s.openNow)
-  const setOpenNow = useShopsStore(s => s.setOpenNow)
 
   const handleAmenityClick = (amenity: string) => {
     toggleAmenityFilter(amenity)
@@ -44,24 +42,8 @@ export const AmenityFilterList = () => {
     })
   }
 
-  const handleOpenNowClick = () => {
-    setOpenNow(!openNow)
-    plausible('filterByAmenity', { props: { amenity: 'open_now' } })
-  }
-
   return (
     <div className="flex flex-wrap gap-2 mt-3">
-      <button
-        type="button"
-        aria-pressed={openNow}
-        onClick={handleOpenNowClick}
-        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium cursor-pointer transition ease-out active:scale-95 ${
-          openNow ? 'bg-stone-700 text-white' : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-        }`}
-      >
-        <Clock size={14} strokeWidth={2} />
-        Open now
-      </button>
       {(isExpanded ? amenities : amenities.slice(0, 6)).map((amenity, index) => {
         const isNewlyRevealed = isExpanded && index >= 6
 

@@ -7,7 +7,7 @@ import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore, { useDisplayedShops, useIsClosed } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
-import PassportToggle from './PassportToggle'
+import MapChips from './MapChips'
 import { getFeatureBounds } from '@/app/utils/utils'
 import { nearestShops } from '@/app/utils/shopsByDistance'
 
@@ -189,7 +189,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   return (
     <div data-testid="map-container" className="relative w-full lg:w-2/3 overflow-hidden">
-      <PassportToggle />
+      <MapChips />
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}

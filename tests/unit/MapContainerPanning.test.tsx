@@ -28,6 +28,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
 vi.mock('@/hooks', () => ({
   useShopSelection: vi.fn(),
   useShopsInView: vi.fn(),
+  useAnalytics: () => vi.fn(),
 }))
 
 describe('MapContainer panning', () => {
