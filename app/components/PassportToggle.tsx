@@ -21,9 +21,16 @@ export default function PassportToggle() {
     >
       <Stamp className={`size-4 transition-colors ${passportMode ? 'fill-green-500 text-white' : 'text-stone-500'}`} />
       Passport
-      <span className="tabular-nums text-stone-500">
-        {visitedCount}/{totalCount}
-      </span>
+      {passportMode ? (
+        <span className="inline-flex items-center gap-1.5 tabular-nums text-stone-500">
+          <span aria-hidden="true" className="size-2 rounded-full bg-yellow-300 ring-1 ring-yellow-500" />
+          {visitedCount} of {totalCount} visited
+        </span>
+      ) : (
+        <span className="tabular-nums text-stone-500">
+          {visitedCount}/{totalCount}
+        </span>
+      )}
     </button>
   )
 }
