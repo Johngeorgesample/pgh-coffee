@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Map, { Layer, Source } from 'react-map-gl'
 import type { TFeatureCollection } from '@/types/shop-types'
 import { openVisits, type Visit } from '@/app/utils/visitStats'
@@ -8,13 +8,7 @@ import { openVisits, type Visit } from '@/app/utils/visitStats'
 const YELLOW = '#FDE047'
 const MUTED = '#78716C'
 
-function useAllShops() {
-  const [shops, setShops] = useState<TFeatureCollection | null>(null)
-  useEffect(() => {
-    fetch('/api/shops/geojson').then((r) => r.json()).then(setShops)
-  }, [])
-  return shops
-}
+type Padding = number | { top: number; bottom: number; left: number; right: number }
 
 function visitedShops(visits: Visit[]) {
   return openVisits(visits).filter((v) => v.shop?.longitude && v.shop?.latitude)
@@ -36,49 +30,56 @@ function markVisited(allShops: TFeatureCollection, visitedUUIDs: Set<string>) {
   }
 }
 
-export default function PassportMinimap({ visits }: { visits: Visit[] }) {
-  const allShops = useAllShops()
+export default function PassportMinimap({
+  visits,
+  allShops,
+  className,
+  padding = 40,
+}: {
+  visits: Visit[]
+  allShops: TFeatureCollection
+  className: string
+  padding?: Padding
+}) {
   const visited = useMemo(() => visitedShops(visits), [visits])
   const data = useMemo(
-    () => allShops && markVisited(allShops, new Set(visited.map((v) => v.shop.uuid))),
+    () => markVisited(allShops, new Set(visited.map((v) => v.shop.uuid))),
     [allShops, visited],
   )
 
   if (visited.length === 0) return null
 
   return (
-    <div className="h-72 rounded-2xl overflow-hidden shadow-lg">
+    <div className={`overflow-hidden ${className}`}>
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         mapStyle="mapbox://styles/mapbox/dark-v11"
-        initialViewState={{ bounds: boundsOf(visited), fitBoundsOptions: { padding: 40, maxZoom: 14 } }}
+        initialViewState={{ bounds: boundsOf(visited), fitBoundsOptions: { padding, maxZoom: 14 } }}
         scrollZoom={false}
         dragRotate={false}
         attributionControl={false}
       >
-        {data && (
-          <Source id="passport" type="geojson" data={data}>
-            <Layer
-              id="glow"
-              type="circle"
-              paint={{
-                'circle-color': YELLOW,
-                'circle-blur': 1,
-                'circle-radius': 14,
-                'circle-opacity': ['case', ['get', 'visited'], 0.3, 0],
-              }}
-            />
-            <Layer
-              id="dot"
-              type="circle"
-              paint={{
-                'circle-color': ['case', ['get', 'visited'], YELLOW, MUTED],
-                'circle-opacity': ['case', ['get', 'visited'], 1, 0.45],
-                'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 3, 12, 6, 16, 10],
-              }}
-            />
-          </Source>
-        )}
+        <Source id="passport" type="geojson" data={data}>
+          <Layer
+            id="glow"
+            type="circle"
+            paint={{
+              'circle-color': YELLOW,
+              'circle-blur': 1,
+              'circle-radius': 14,
+              'circle-opacity': ['case', ['get', 'visited'], 0.3, 0],
+            }}
+          />
+          <Layer
+            id="dot"
+            type="circle"
+            paint={{
+              'circle-color': ['case', ['get', 'visited'], YELLOW, MUTED],
+              'circle-opacity': ['case', ['get', 'visited'], 1, 0.45],
+              'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 3, 12, 6, 16, 10],
+            }}
+          />
+        </Source>
       </Map>
     </div>
   )
