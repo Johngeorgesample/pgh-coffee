@@ -5,9 +5,9 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
-import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
+import useShopsStore, { useDisplayedShops, useIsClosed } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
-import PassportToggle from './PassportToggle'
+import MapChips from './MapChips'
 import { getFeatureBounds } from '@/app/utils/utils'
 import { nearestShops } from '@/app/utils/shopsByDistance'
 
@@ -24,6 +24,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const allShops = useShopsStore(s => s.allShops)
   const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
   const passportMode = useShopsStore(s => s.passportMode)
+  const isClosed = useIsClosed()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -117,12 +118,12 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             ...shop.properties,
             hovered: hoveredUUID === shop.properties.uuid,
             visited,
-            muted: passportMode && !visited,
+            muted: (passportMode && !visited) || isClosed(shop.properties.uuid),
           },
         }
       }),
     }
-  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs])
+  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs, isClosed])
 
   const handleMouseMove = useCallback(
     (event: MapLayerMouseEvent) => {
@@ -188,7 +189,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   return (
     <div data-testid="map-container" className="relative w-full lg:w-2/3 overflow-hidden">
-      <PassportToggle />
+      <MapChips />
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}

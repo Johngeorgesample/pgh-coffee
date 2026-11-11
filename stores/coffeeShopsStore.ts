@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
 import { doesShopMatchFilter } from '@/app/utils/utils'
+import { isOpenNow, pittsburghNow, type HoursRow } from '@/app/utils/hours'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
@@ -32,6 +33,11 @@ interface CoffeeShopsState {
   setVisited: (uuid: string, visited: boolean) => void
   passportMode: boolean
   setPassportMode: (on: boolean) => void
+
+  shopHours: Record<string, HoursRow[]> | null
+  fetchShopHours: () => Promise<void>
+  openNow: boolean
+  setOpenNow: (on: boolean) => void
 }
 
 let visitsRequest: Promise<void> | null = null
@@ -110,6 +116,23 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         }),
       passportMode: false,
       setPassportMode: passportMode => set({ passportMode }),
+
+      shopHours: null,
+      fetchShopHours: async () => {
+        if (useCoffeeShopsStore.getState().shopHours) return
+        try {
+          const response = await fetch('/api/shops/hours')
+          if (!response.ok) throw new Error(`Failed to fetch shop hours: ${response.status}`)
+          set({ shopHours: await response.json() })
+        } catch (error) {
+          console.error('Error fetching shop hours:', error)
+        }
+      },
+      openNow: false,
+      setOpenNow: openNow => {
+        set({ openNow })
+        if (openNow) useCoffeeShopsStore.getState().fetchShopHours()
+      },
     }),
     { name: 'ShopsStore' },
   ),
@@ -170,6 +193,27 @@ export function useDisplayedShops(): TFeatureCollection {
     currentShop?.properties?.name,
     overrideShops,
   ])
+}
+
+export function useIsClosed() {
+  const openNow = useCoffeeShopsStore(s => s.openNow)
+  const shopHours = useCoffeeShopsStore(s => s.shopHours)
+  const minute = useMinuteTick(openNow)
+
+  return useMemo(() => {
+    const now = pittsburghNow()
+    return (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
+  }, [openNow, shopHours, minute])
+}
+
+function useMinuteTick(enabled: boolean) {
+  const [tick, setTick] = useState(0)
+  useEffect(() => {
+    if (!enabled) return
+    const id = setInterval(() => setTick(t => t + 1), 60_000)
+    return () => clearInterval(id)
+  }, [enabled])
+  return tick
 }
 
 export default useCoffeeShopsStore
