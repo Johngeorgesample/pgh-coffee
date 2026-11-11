@@ -5,12 +5,11 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
-import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
+import useShopsStore, { useDisplayedShops, useIsClosed } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
 import PassportToggle from './PassportToggle'
 import { getFeatureBounds } from '@/app/utils/utils'
 import { nearestShops } from '@/app/utils/shopsByDistance'
-import { isOpenNow, pittsburghNow } from '@/app/utils/hours'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -25,8 +24,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const allShops = useShopsStore(s => s.allShops)
   const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
   const passportMode = useShopsStore(s => s.passportMode)
-  const openNow = useShopsStore(s => s.openNow)
-  const shopHours = useShopsStore(s => s.shopHours)
+  const isClosed = useIsClosed()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -109,8 +107,6 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
-    const now = pittsburghNow()
-    const isClosed = (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
 
     return {
       ...displayedShops,
@@ -127,7 +123,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         }
       }),
     }
-  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs, openNow, shopHours])
+  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs, isClosed])
 
   const handleMouseMove = useCallback(
     (event: MapLayerMouseEvent) => {

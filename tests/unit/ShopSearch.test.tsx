@@ -8,6 +8,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
   default: (selector: (s: unknown) => unknown) => selector(mockState),
   useDisplayedShops: () => ({ features: mockState.features }),
+  useIsClosed: () => () => false,
 }))
 vi.mock('@/app/components/ShopList', () => ({ default: () => null }))
 vi.mock('@/app/components/EntitySearchResults', () => ({ default: () => null }))

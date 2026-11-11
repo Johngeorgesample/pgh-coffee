@@ -22,6 +22,7 @@ vi.mock('react-map-gl', () => ({
 vi.mock('@/stores/coffeeShopsStore', () => ({
   default: vi.fn(),
   useDisplayedShops: vi.fn(),
+  useIsClosed: () => () => false,
 }))
 
 vi.mock('@/hooks', () => ({

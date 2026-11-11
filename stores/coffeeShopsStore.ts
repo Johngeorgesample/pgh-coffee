@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
 import { doesShopMatchFilter } from '@/app/utils/utils'
-import type { HoursRow } from '@/app/utils/hours'
+import { isOpenNow, pittsburghNow, type HoursRow } from '@/app/utils/hours'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
@@ -193,6 +193,16 @@ export function useDisplayedShops(): TFeatureCollection {
     currentShop?.properties?.name,
     overrideShops,
   ])
+}
+
+export function useIsClosed() {
+  const openNow = useCoffeeShopsStore(s => s.openNow)
+  const shopHours = useCoffeeShopsStore(s => s.shopHours)
+
+  return useMemo(() => {
+    const now = pittsburghNow()
+    return (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
+  }, [openNow, shopHours])
 }
 
 export default useCoffeeShopsStore
