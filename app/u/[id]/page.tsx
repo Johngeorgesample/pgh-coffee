@@ -4,9 +4,8 @@ import { User } from 'lucide-react'
 import VisitStats from '@/app/account/components/VisitStats'
 import { getPublicProfile } from '@/app/utils/profiles'
 import { openVisits } from '@/app/utils/visitStats'
-import { Suspense } from 'react'
 import Passport from './Passport'
-import PassportMinimapPrototype from './PassportMinimapPrototype'
+import PassportMinimap from './PassportMinimap'
 import ProfileViewTracker from './ProfileViewTracker'
 
 type Props = {
@@ -68,9 +67,7 @@ export default async function PublicProfilePage({ params }: Props) {
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-gray-900">Passport</h2>
-          <Suspense>
-            <PassportMinimapPrototype visits={profile.visits} profileId={id} />
-          </Suspense>
+          <PassportMinimap visits={profile.visits} />
           <Passport visits={profile.visits} />
         </section>
       </div>
