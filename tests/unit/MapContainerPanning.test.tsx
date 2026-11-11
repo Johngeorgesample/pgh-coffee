@@ -25,6 +25,8 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
   useIsClosed: () => () => false,
 }))
 
+vi.mock('@/app/components/MapChips', () => ({ default: () => null }))
+
 vi.mock('@/hooks', () => ({
   useShopSelection: vi.fn(),
   useShopsInView: vi.fn(),
