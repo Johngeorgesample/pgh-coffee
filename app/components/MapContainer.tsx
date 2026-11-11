@@ -10,6 +10,7 @@ import ShopPopup from './ShopPopup'
 import PassportToggle from './PassportToggle'
 import { getFeatureBounds } from '@/app/utils/utils'
 import { nearestShops } from '@/app/utils/shopsByDistance'
+import { isOpenNow, pittsburghNow } from '@/app/utils/hours'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -24,6 +25,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const allShops = useShopsStore(s => s.allShops)
   const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
   const passportMode = useShopsStore(s => s.passportMode)
+  const openNow = useShopsStore(s => s.openNow)
+  const shopHours = useShopsStore(s => s.shopHours)
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -106,6 +109,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
+    const now = pittsburghNow()
+    const isClosed = (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
 
     return {
       ...displayedShops,
@@ -117,12 +122,12 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
             ...shop.properties,
             hovered: hoveredUUID === shop.properties.uuid,
             visited,
-            muted: passportMode && !visited,
+            muted: (passportMode && !visited) || isClosed(shop.properties.uuid),
           },
         }
       }),
     }
-  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs])
+  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs, openNow, shopHours])
 
   const handleMouseMove = useCallback(
     (event: MapLayerMouseEvent) => {
