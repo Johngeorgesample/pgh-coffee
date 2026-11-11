@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Stamp, MapPin } from 'lucide-react'
+import EmptyCard from './EmptyCard'
 import ShopCard from '@/app/components/ShopCard'
 import VisitChecklist from './VisitChecklist'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
@@ -42,15 +43,7 @@ export default function Visited() {
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Stamp className="h-12 w-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Couldn&apos;t load your passport</h3>
-          <p className="text-gray-500 max-w-sm">
-            Something went wrong while loading your visited shops. Please try refreshing the page.
-          </p>
-        </div>
-      </div>
+      <EmptyCard icon={Stamp} title="Couldn't load your passport" body="Something went wrong while loading your visited shops. Please try refreshing the page." />
     )
   }
 
@@ -71,22 +64,15 @@ export default function Visited() {
       ) : !skipped ? (
         <VisitChecklist onSaved={fetchVisits} onSkip={() => setSkipped(true)} />
       ) : (
-        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Stamp className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No visits yet</h3>
-            <p className="text-gray-500 max-w-sm">
-              Mark the shops you&apos;ve been to and watch your passport fill up.
-            </p>
-            <Link
-              href="/"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
-            >
-              <MapPin className="h-4 w-4" />
-              Explore shops
-            </Link>
-          </div>
-        </div>
+        <EmptyCard icon={Stamp} title="No visits yet" body="Mark the shops you've been to and watch your passport fill up.">
+          <Link
+            href="/"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
+          >
+            <MapPin className="h-4 w-4" />
+            Explore shops
+          </Link>
+        </EmptyCard>
       )}
     </div>
   )

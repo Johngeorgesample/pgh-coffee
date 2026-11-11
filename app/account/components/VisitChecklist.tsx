@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronRight, Stamp } from 'lucide-react'
+import EmptyCard from './EmptyCard'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import type { TFeatureCollection, TShop } from '@/types/shop-types'
@@ -125,15 +126,11 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Pro
 
   if (status === 'error') {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Stamp className="h-12 w-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Couldn&apos;t load the shop list</h3>
-          <p className="text-gray-500 max-w-sm">
-            Something went wrong while loading shops. Please try refreshing the page.
-          </p>
-        </div>
-      </div>
+      <EmptyCard
+        icon={Stamp}
+        title="Couldn't load the shop list"
+        body="Something went wrong while loading shops. Please try refreshing the page."
+      />
     )
   }
 
