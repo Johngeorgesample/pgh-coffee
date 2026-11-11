@@ -35,6 +35,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     CIRCLE_PAINT: {
       SELECTED_COLOR: '#fff',
       DEFAULT_COLOR: '#FDE047',
+      MUTED_COLOR: '#78716C',
+      MUTED_OPACITY: 0.45,
       ZOOM_LEVELS: [
         { zoom: 8, radius: 4 },
         { zoom: 12, radius: 8 },
@@ -231,7 +233,19 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
                 '#FDE047', // or another hover color if you choose
                 ['boolean', ['get', 'selected'], false],
                 MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
+                ['boolean', ['get', 'muted'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.MUTED_COLOR,
                 MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
+              ],
+              'circle-opacity': [
+                'case',
+                ['boolean', ['get', 'hovered'], false],
+                1,
+                ['boolean', ['get', 'selected'], false],
+                1,
+                ['boolean', ['get', 'muted'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.MUTED_OPACITY,
+                1,
               ],
               'circle-radius': [
                 'interpolate',
