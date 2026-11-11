@@ -42,6 +42,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         }
         try {
           const response = await fetch('/api/shops/geojson')
+          if (!response.ok) throw new Error(`Failed to fetch shops: ${response.status}`)
           const data: TFeatureCollection = await response.json()
           set({ allShops: data })
         } catch (error) {

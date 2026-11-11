@@ -23,7 +23,7 @@ export default function ShopListPreview({
   title: string
   endpoint: string
   viewAllHref: string
-  emptyText: string
+  emptyText: React.ReactNode
 }) {
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
