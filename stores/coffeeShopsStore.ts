@@ -34,6 +34,8 @@ interface CoffeeShopsState {
   setPassportMode: (on: boolean) => void
 }
 
+let visitsRequest: Promise<void> | null = null
+
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
     set => ({
@@ -83,15 +85,20 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
       setNearPoint: nearPoint => set({ nearPoint }),
 
       visitedUUIDs: null,
-      fetchVisits: async () => {
-        try {
-          const response = await fetch('/api/visits')
-          if (!response.ok) throw new Error(`Failed to fetch visits: ${response.status}`)
-          const visits: { shop: { uuid: string } | null }[] = await response.json()
-          set({ visitedUUIDs: new Set(visits.flatMap(visit => visit.shop?.uuid ?? [])) })
-        } catch (error) {
-          console.error('Error fetching visits:', error)
-        }
+      fetchVisits: () => {
+        visitsRequest ??= (async () => {
+          try {
+            const response = await fetch('/api/visits')
+            if (!response.ok) throw new Error(`Failed to fetch visits: ${response.status}`)
+            const visits: { shop: { uuid: string } | null }[] = await response.json()
+            set({ visitedUUIDs: new Set(visits.flatMap(visit => visit.shop?.uuid ?? [])) })
+          } catch (error) {
+            console.error('Error fetching visits:', error)
+          } finally {
+            visitsRequest = null
+          }
+        })()
+        return visitsRequest
       },
       clearVisits: () => set({ visitedUUIDs: null, passportMode: false }),
       setVisited: (uuid, visited) =>

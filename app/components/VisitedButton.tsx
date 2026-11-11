@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Stamp } from 'lucide-react'
 import { useAnalytics } from '@/hooks'
@@ -20,13 +20,20 @@ export default function VisitedButton({ shopUUID, shopName }: VisitedButtonProps
   const plausible = useAnalytics()
   const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
   const setVisited = useShopsStore(s => s.setVisited)
+  const fetchVisits = useShopsStore(s => s.fetchVisits)
   const [isSaving, setIsSaving] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [justAdded, setJustAdded] = useState(false)
 
+  const needsVisits = !!user && visitedUUIDs === null
+
+  useEffect(() => {
+    if (needsVisits) fetchVisits()
+  }, [needsVisits, shopUUID, fetchVisits])
+
   const isVisited = !!visitedUUIDs?.has(shopUUID)
-  const isLoading = isSaving || authLoading || (!!user && visitedUUIDs === null)
+  const isLoading = isSaving || authLoading || needsVisits
 
   const handleToggle = async () => {
     if (!user) {
