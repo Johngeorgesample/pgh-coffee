@@ -4,18 +4,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { ChevronRight, Stamp } from 'lucide-react'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import type { TFeatureCollection } from '@/types/shop-types'
+import type { TFeatureCollection, TShop } from '@/types/shop-types'
 
-interface ChecklistShop {
-  uuid: string
-  name: string
-  neighborhood: string
-}
+type ChecklistShop = TShop['properties']
 
 const groupByNeighborhood = (geojson: TFeatureCollection) => {
   const groups = new Map<string, ChecklistShop[]>()
   geojson.features
-    .map(({ properties: { uuid, name, neighborhood } }) => ({ uuid, name, neighborhood }))
+    .map((feature) => feature.properties)
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach((shop) => groups.set(shop.neighborhood, [...(groups.get(shop.neighborhood) ?? []), shop]))
   return Array.from(groups.entries()).sort(([a, as], [b, bs]) => bs.length - as.length || a.localeCompare(b))
@@ -38,21 +34,18 @@ function NeighborhoodGroup({
   selected: Set<string>
   onSelect: (uuids: string[], on: boolean) => void
 }) {
-  const [open, setOpen] = useState(false)
   const uuids = shops.map((shop) => shop.uuid)
   const count = uuids.filter((uuid) => selected.has(uuid)).length
 
   return (
     <li>
-      <div className="flex items-center gap-3 py-3">
-        <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex flex-1 items-center gap-2 text-left">
-          <ChevronRight className={`h-4 w-4 text-gray-400 ${open ? 'rotate-90' : ''}`} />
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center gap-2 py-3 [&::-webkit-details-marker]:hidden">
+          <ChevronRight className="h-4 w-4 text-gray-400 group-open:rotate-90" />
           <span className="font-semibold text-gray-900">{name}</span>
           <span className="text-sm text-gray-500">{shops.length} shops</span>
-        </button>
-        {count > 0 && <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-700">{count} ✓</span>}
-      </div>
-      {open && (
+          {count > 0 && <span className="ml-auto rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-700">{count} ✓</span>}
+        </summary>
         <div className="pb-3 pl-6">
           <button
             type="button"
@@ -73,7 +66,7 @@ function NeighborhoodGroup({
             </label>
           ))}
         </div>
-      )}
+      </details>
     </li>
   )
 }
@@ -97,44 +90,30 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Pro
   const allShops = useShopsStore((state) => state.allShops)
   const fetchCoffeeShops = useShopsStore((state) => state.fetchCoffeeShops)
   const groups = useMemo(() => groupByNeighborhood(allShops), [allShops])
-  const [loading, setLoading] = useState(true)
-  const [loadError, setLoadError] = useState(false)
+  const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
   const [saveNotice, setSaveNotice] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchCoffeeShops().then(() => {
-      setLoadError(useShopsStore.getState().allShops.features.length === 0)
-      setLoading(false)
-    })
+    fetchCoffeeShops().then(() => setStatus(useShopsStore.getState().allShops.features.length ? 'ready' : 'error'))
   }, [fetchCoffeeShops])
 
-  const saveAndRefresh = async () => {
-    try {
-      const count = await saveVisits(Array.from(selected))
-      plausible('PassportBackfill', { props: { count } })
-    } catch (err) {
-      console.error('Failed to save visits:', err)
-      return SAVE_FAILED
-    }
-    return onSaved().then(
-      () => null,
-      (err) => {
-        console.error('Failed to refresh visits:', err)
-        return REFRESH_FAILED
-      },
-    )
+  const fail = (notice: string, err: unknown) => {
+    console.error(notice, err)
+    setSaveNotice(notice)
+    setSaving(false)
   }
 
   const handleSave = async () => {
     setSaving(true)
     setSaveNotice(null)
-    const notice = await saveAndRefresh()
-    if (notice) {
-      setSaveNotice(notice)
-      setSaving(false)
+    try {
+      plausible('PassportBackfill', { props: { count: await saveVisits(Array.from(selected)) } })
+    } catch (err) {
+      return fail(SAVE_FAILED, err)
     }
+    await onSaved().catch((err) => fail(REFRESH_FAILED, err))
   }
 
   const handleSkip = () => {
@@ -142,9 +121,9 @@ export default function VisitChecklist({ onSaved, onSkip }: { onSaved: () => Pro
     onSkip()
   }
 
-  if (loading) return <div>Loading...</div>
+  if (status === 'loading') return <div>Loading...</div>
 
-  if (loadError) {
+  if (status === 'error') {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
         <div className="flex flex-col items-center justify-center py-12 text-center">
