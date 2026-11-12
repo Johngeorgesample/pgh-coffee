@@ -10,10 +10,12 @@
 // submission, so it tolerates a multi-minute CDN TTL.
 export const SHOP_DATA_TTL = 300
 
+export const SHOP_DATA_STALE = 86400
+
 // News and events are more time-sensitive; keep the CDN window short.
 export const TIME_SENSITIVE_TTL = 60
 
-export function publicCacheHeaders(sMaxAge: number, staleWhileRevalidate = sMaxAge): Record<string, string> {
+export function publicCacheHeaders(sMaxAge: number, staleWhileRevalidate = SHOP_DATA_STALE): Record<string, string> {
   return {
     'Cache-Control': `public, max-age=0, s-maxage=${sMaxAge}, stale-while-revalidate=${staleWhileRevalidate}`,
   }
