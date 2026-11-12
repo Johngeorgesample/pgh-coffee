@@ -3,6 +3,8 @@ import { render, screen } from '@testing-library/react'
 import ShopList from '@/app/components/ShopList'
 import type { TShop } from '@/types/shop-types'
 
+vi.mock('next/navigation', () => ({ useRouter: () => ({ prefetch: vi.fn() }) }))
+
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: vi.fn() }),
   useAnalytics: () => vi.fn(),

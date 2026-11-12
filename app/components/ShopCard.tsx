@@ -1,11 +1,13 @@
 'use client'
 
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 import VerifiedBadge from './VerifiedBadge'
 import { TShop } from '@/types/shop-types'
 import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useShopSelection, useAnalytics } from '@/hooks'
+import { buildShopSlug } from '@/app/utils/shopSlug'
 
 interface IProps {
   distance?: string
@@ -34,6 +36,8 @@ export default function ShopCard(props: IProps) {
   const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
   const setHoveredShop = useShopsStore(s => s.setHoveredShop)
+  const router = useRouter()
+  const prefetchShop = () => router.prefetch(`/shops/${buildShopSlug(props.shop.properties)}`)
 
   const handleClick = () => {
     if (props.onClick) {
@@ -60,7 +64,12 @@ export default function ShopCard(props: IProps) {
 
   return (
     <li
-      onMouseEnter={() => setHoveredShop(props.shop)}
+      onMouseEnter={() => {
+        setHoveredShop(props.shop)
+        prefetchShop()
+      }}
+      onFocus={prefetchShop}
+      onTouchStart={prefetchShop}
       onMouseLeave={() => setHoveredShop(null)}
       className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer transition-transform ease-out active:scale-[0.98] motion-reduce:active:scale-100`}
       onClick={handleClick}

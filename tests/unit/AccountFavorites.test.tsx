@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import Favorites from '@/app/account/components/Favorites'
 
+vi.mock('next/navigation', () => ({ useRouter: () => ({ prefetch: vi.fn() }) }))
+
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: vi.fn() }),
   useAnalytics: () => vi.fn(),
