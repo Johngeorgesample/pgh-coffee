@@ -1,39 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
-import { getCompanyBySlug } from '@/app/utils/companies'
-import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
-import { getClient } from '@/lib/supabase/server-client'
-
-const getCompanyShops = async (companyId: string) => {
-  const { data, error } = await getClient()
-    .from('shops')
-    .select(SHOP_WITH_ROASTER_SELECT)
-    .eq('company_id', companyId)
-    .eq('permanently_closed', false)
-
-  if (error) {
-    logger.error('Error fetching company shops', { error: error.message })
-    return null
-  }
-
-  return data
-}
-
-const getCompanyRoaster = async (companyId: string) => {
-  const { data, error } = await getClient()
-    .from('roaster')
-    .select('name, slug')
-    .eq('company_id', companyId)
-    .maybeSingle()
-
-  if (error) {
-    logger.error('Error fetching company roaster', { error: error.message })
-    return null
-  }
-
-  return data
-}
+import { getCompanyBySlug, getCompanyShops, getCompanyRoaster } from '@/app/utils/companies'
 
 export async function GET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
   const params = await props.params

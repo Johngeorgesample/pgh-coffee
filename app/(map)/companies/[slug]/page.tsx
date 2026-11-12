@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getCompanyForSeo } from '@/app/utils/companies'
+import { getCompanyForSeo, getCompanyShops, getCompanyRoaster } from '@/app/utils/companies'
+import PanelSeed from '@/app/components/PanelSeed'
 import { buildEntryMetadata } from '@/app/utils/seo'
 
 type Props = {
@@ -15,7 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CompanyPage({ params }: Props) {
-  if (!(await getCompanyForSeo((await params).slug))) notFound()
+  const { slug } = await params
+  const company = await getCompanyForSeo(slug)
+  if (!company) notFound()
 
-  return null
+  const [shops, roaster] = await Promise.all([getCompanyShops(company.id), getCompanyRoaster(company.id)])
+  return shops && <PanelSeed seedKey={`company:${slug}`} data={{ ...company, shops, roaster }} />
 }

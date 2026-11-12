@@ -1,6 +1,7 @@
 import { cache } from 'react'
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 /**
  * Resolves a company from a `/companies/{slug}` identifier. Companies carry their
@@ -39,4 +40,34 @@ export const getCompanyShopPhotos = async (companyId: string) => {
   }
 
   return data.map((shop) => shop.photo as string | null)
+}
+
+export const getCompanyShops = async (companyId: string) => {
+  const { data, error } = await getClient()
+    .from('shops')
+    .select(SHOP_WITH_ROASTER_SELECT)
+    .eq('company_id', companyId)
+    .eq('permanently_closed', false)
+
+  if (error) {
+    logger.error('Error fetching company shops', { error: error.message })
+    return null
+  }
+
+  return data
+}
+
+export const getCompanyRoaster = async (companyId: string) => {
+  const { data, error } = await getClient()
+    .from('roaster')
+    .select('name, slug')
+    .eq('company_id', companyId)
+    .maybeSingle()
+
+  if (error) {
+    logger.error('Error fetching company roaster', { error: error.message })
+    return null
+  }
+
+  return data
 }

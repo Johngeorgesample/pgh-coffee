@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getRoasterForSeo } from '@/app/utils/roasters'
+import { getRoasterForSeo, getRoasterShops } from '@/app/utils/roasters'
+import PanelSeed from '@/app/components/PanelSeed'
 import { buildEntryMetadata } from '@/app/utils/seo'
 
 type Props = {
@@ -15,7 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function RoasterPage({ params }: Props) {
-  if (!(await getRoasterForSeo((await params).slug))) notFound()
+  const { slug } = await params
+  const roaster = await getRoasterForSeo(slug)
+  if (!roaster) notFound()
 
-  return null
+  const shops = await getRoasterShops(roaster.id)
+  return shops && <PanelSeed seedKey={`roaster:${slug}`} data={{ ...roaster, shops }} />
 }

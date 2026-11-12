@@ -6,7 +6,8 @@ import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimButton from '@/app/components/ClaimButton'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useSeededFetch } from '@/hooks/useSeededFetch'
 import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useAnalytics } from '@/hooks'
@@ -34,23 +35,7 @@ export const Company = ({ slug }: { slug: string }) => {
   const setSearchValue = useShopsStore(s => s.setSearchValue)
   const plausible = useAnalytics()
   const router = useRouter()
-  const [company, setCompany] = useState<TCompany | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setCompany(null)
-    setLoading(true)
-    const fetchCompany = async () => {
-      try {
-        const response = await fetch(`/api/companies/${slug}`)
-        const data = await response.json()
-        setCompany(data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCompany()
-  }, [slug])
+  const { data: company, loading } = useSeededFetch<TCompany>(`company:${slug}`, `/api/companies/${slug}`)
 
   useEffect(() => {
     if (company?.shops) {
