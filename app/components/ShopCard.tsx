@@ -8,6 +8,7 @@ import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useShopSelection, useAnalytics } from '@/hooks'
 import { buildShopSlug } from '@/app/utils/shopSlug'
+import { prefetchShopExtras } from '@/app/utils/shopExtras'
 
 interface IProps {
   distance?: string
@@ -37,7 +38,10 @@ export default function ShopCard(props: IProps) {
   const { handleShopSelect } = useShopSelection()
   const setHoveredShop = useShopsStore(s => s.setHoveredShop)
   const router = useRouter()
-  const prefetchShop = () => router.prefetch(`/shops/${buildShopSlug(props.shop.properties)}`)
+  const prefetchShop = () => {
+    router.prefetch(`/shops/${buildShopSlug(props.shop.properties)}`)
+    prefetchShopExtras(props.shop.properties.uuid)
+  }
 
   const handleClick = () => {
     if (props.onClick) {
