@@ -1,31 +1,22 @@
 import { describe, test, expect, vi, beforeEach, beforeAll } from 'vitest'
 
-// The route makes three distinct queries:
-//   companies: select().eq().single()        -> terminal single
-//   shops:     select().eq().eq()            -> terminal eq (awaited)
-//   roaster:   select().eq().maybeSingle()   -> terminal maybeSingle
-const mockCompanySingle = vi.fn()
-const mockShopsEq = vi.fn()
-const mockRoasterMaybeSingle = vi.fn()
-// Records the column string each table's select() was called with.
-const selectArgs: Record<string, string> = {}
+const mockMaybeSingle = vi.fn()
+let selected: string | undefined
+const filters: unknown[][] = []
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
-    from: (table: string) => ({
+    from: () => ({
       select: (columns: string) => {
-        selectArgs[table] = columns
-        return {
+        selected = columns
+        const chain = {
           eq: (...args: unknown[]) => {
-            if (table === 'companies') {
-              return { single: mockCompanySingle }
-            }
-            if (table === 'roaster') {
-              return { maybeSingle: mockRoasterMaybeSingle }
-            }
-            return { eq: (...closed: unknown[]) => mockShopsEq(...args, ...closed) }
+            filters.push(args)
+            return chain
           },
+          maybeSingle: mockMaybeSingle,
         }
+        return chain
       },
     }),
   }),
@@ -40,6 +31,8 @@ describe('Company API Route - GET', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    selected = undefined
+    filters.length = 0
   })
 
   const call = (slug: string) =>
@@ -47,51 +40,48 @@ describe('Company API Route - GET', () => {
       params: Promise.resolve({ company: slug }),
     })
 
-  test('returns the company with its shops and roaster when found', async () => {
-    const company = { id: 'c1', name: 'Test Co', slug: 'test-co' }
-    const shops = [{ name: 'Shop A' }]
+  test('returns the company with its shops and its roaster as a single object', async () => {
+    const company = { id: 'c1', name: 'Test Co', slug: 'test-co', shops: [{ name: 'Shop A' }] }
     const roaster = { name: 'Test Roasters', slug: 'test-roasters' }
-    mockCompanySingle.mockResolvedValueOnce({ data: company, error: null })
-    mockShopsEq.mockResolvedValueOnce({ data: shops, error: null })
-    mockRoasterMaybeSingle.mockResolvedValueOnce({ data: roaster, error: null })
+    mockMaybeSingle.mockResolvedValueOnce({ data: { ...company, roaster: [roaster] }, error: null })
 
     const response = await call('test-co')
-    const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data).toEqual({ ...company, shops, roaster })
+    expect(await response.json()).toEqual({ ...company, roaster })
   })
 
-  test('fetches the roasterRef join so shops carry roaster info for the roasts section', async () => {
-    const company = { id: 'c1', name: 'Test Co', slug: 'test-co' }
-    mockCompanySingle.mockResolvedValueOnce({ data: company, error: null })
-    mockShopsEq.mockResolvedValueOnce({ data: [{ name: 'Shop A' }], error: null })
-    mockRoasterMaybeSingle.mockResolvedValueOnce({ data: null, error: null })
+  test('returns a null roaster when the company has none', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'c1', shops: [], roaster: [] }, error: null })
+
+    const data = await (await call('test-co')).json()
+
+    expect(data.roaster).toBeNull()
+  })
+
+  test('embeds open shops with the roasterRef join for the roasts section', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'c1', shops: [], roaster: [] }, error: null })
 
     await call('test-co')
 
-    expect(selectArgs.shops).toContain('roasterRef:roaster_id(name, slug, company_id)')
+    expect(selected).toContain('roasterRef:roaster_id(name, slug, company_id)')
+    expect(filters).toContainEqual(['shops.permanently_closed', false])
   })
 
   test('returns 404 when the company is not found', async () => {
-    mockCompanySingle.mockResolvedValueOnce({ data: null, error: { message: 'No rows' } })
+    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null })
 
     const response = await call('missing')
-    const data = await response.json()
 
     expect(response.status).toBe(404)
-    expect(data.message).toBe('Company not found')
+    expect((await response.json()).message).toBe('Company not found')
   })
 
-  test('returns 500 when the shops query errors', async () => {
-    const company = { id: 'c1', name: 'Test Co', slug: 'test-co' }
-    mockCompanySingle.mockResolvedValueOnce({ data: company, error: null })
-    mockShopsEq.mockResolvedValueOnce({ data: null, error: { message: 'boom' } })
+  test('returns 500, not 404, when the query errors', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: { message: 'boom' } })
 
     const response = await call('test-co')
-    const data = await response.json()
 
     expect(response.status).toBe(500)
-    expect(data.error).toBe('Error fetching company shops')
   })
 })
