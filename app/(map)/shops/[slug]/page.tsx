@@ -41,9 +41,11 @@ export default async function ShopPage({ params }: Props) {
       <h1 className="sr-only">{shop.name}</h1>
       {/* Crawlable (no-JS) internal link to the neighborhood landing page;
           the visible equivalent lives in the client-rendered PanelHeader. */}
-      <Link className="sr-only" tabIndex={-1} href={areaPath(area)}>
-        Coffee shops in {area}
-      </Link>
+      {!shop.permanently_closed && (
+        <Link className="sr-only" tabIndex={-1} href={areaPath(area)}>
+          Coffee shops in {area}
+        </Link>
+      )}
       {/* Seed the client store with the shop the server already fetched so
           useShopRouteSync short-circuits instead of re-fetching over the API. */}
       <ShopSeed shop={formatDBShopAsFeature(shop)} />

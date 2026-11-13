@@ -55,13 +55,17 @@ export default function PanelHeader(props: IProps) {
             {verified && <VerifiedBadge className="mt-0.5" />}
           </h1>
           <p className="text-base text-white/80 mt-0.5">
-            <Link
-              href={areaPath(area)}
-              onClick={e => e.stopPropagation()}
-              className="underline underline-offset-2 hover:text-white"
-            >
-              {neighborhood}
-            </Link>
+            {permanentlyClosed ? (
+              neighborhood
+            ) : (
+              <Link
+                href={areaPath(area)}
+                onClick={e => e.stopPropagation()}
+                className="underline underline-offset-2 hover:text-white"
+              >
+                {neighborhood}
+              </Link>
+            )}
           </p>
           {permanentlyClosed && (
             <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
