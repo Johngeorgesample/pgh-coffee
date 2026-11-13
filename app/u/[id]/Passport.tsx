@@ -47,6 +47,11 @@ function PassportTile({ visit, delay }: { visit: Visit; delay: number }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+          {feature.properties.permanentlyClosed && (
+            <span className="mb-1 inline-block rounded-full bg-red-600/90 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+              Closed
+            </span>
+          )}
           <p className="font-semibold leading-tight line-clamp-2">{visit.shop.name}</p>
           <p className="text-xs text-white/75">{visit.shop.neighborhood}</p>
         </div>
