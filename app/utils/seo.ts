@@ -248,7 +248,6 @@ export function buildAreaMetadata({ area, shops }: NeighborhoodArea): Metadata {
     description,
     alternates: { canonical: path },
     openGraph: { title, description, type: 'website', url: path },
-    twitter: { title, description },
   }
 }
 
