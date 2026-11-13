@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import type { Metadata } from 'next'
+import { PHASE_PRODUCTION_BUILD } from 'next/constants'
 import type { CafeOrCoffeeShopLeaf, CollectionPageLeaf, OrganizationLeaf, WebSite, WithContext } from 'schema-dts'
 import { DbShop } from '@/types/shop-types'
 import { logger } from '@/lib/logger'
@@ -97,6 +98,7 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
 
   if (error) {
     logger.error('Error fetching shops for SEO', { error: error.message })
+    if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) return []
     throw new Error(`Error fetching shops for SEO: ${error.message}`)
   }
 
