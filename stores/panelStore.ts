@@ -121,6 +121,7 @@ interface PanelState {
   history: PanelEntry[]
   /** 404s render inside the map layout, so app/not-found.tsx hides the map and panel. */
   hidden: boolean
+  sheetExpanded: boolean
 
   // setters
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
@@ -134,6 +135,7 @@ interface PanelState {
   clearHistory: (opts?: { keepCurrent?: boolean }) => void
 
   setHidden: (hidden: boolean) => void
+  setSheetExpanded: (sheetExpanded: boolean) => void
 }
 
 const usePanelStore = create<PanelState>()(
@@ -143,8 +145,10 @@ const usePanelStore = create<PanelState>()(
       panelContent: null,
       history: [],
       hidden: false,
+      sheetExpanded: false,
 
       setHidden: hidden => set({ hidden }),
+      setSheetExpanded: sheetExpanded => set({ sheetExpanded }),
 
       setPanelContent: (content, mode) =>
         set(state => {
