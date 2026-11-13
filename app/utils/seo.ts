@@ -95,14 +95,14 @@ export const getAllShopsForSeo = cache(async (): Promise<ShopListEntry[]> => {
     .eq('permanently_closed', false)
     .order('name', { ascending: true })
 
-  if (error || !data) {
-    if (error) logger.error('Error fetching shops for SEO', { error: error.message })
-    return []
+  if (error) {
+    logger.error('Error fetching shops for SEO', { error: error.message })
+    throw new Error(`Error fetching shops for SEO: ${error.message}`)
   }
 
   // A shop shows the badge when it's claimed directly or its company is
   // verified — the same rule PanelHeader/ShopCard apply on the client.
-  return data.map(({ is_verified, company, ...shop }) => ({
+  return (data ?? []).map(({ is_verified, company, ...shop }) => ({
     ...shop,
     verified: Boolean(is_verified || (company as { is_verified?: boolean } | null)?.is_verified),
   })) as ShopListEntry[]

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-  const jsonLd = buildShopListJsonLd(await getAllShopsForSeo())
+  const jsonLd = buildShopListJsonLd(await getAllShopsForSeo().catch(() => []))
 
   return (
     <>
