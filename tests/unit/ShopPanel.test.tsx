@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import Panel from '@/app/components/Panel'
 import { TShop } from '@/types/shop-types'
+import usePanelStore from '@/stores/panelStore'
 
 // Mock the Silk components
 vi.mock('@silk-hq/components', () => ({
@@ -116,6 +117,23 @@ describe('Panel Component', () => {
     fireEvent.wheel(screen.getByTestId('sheet-content'), { deltaY: 40 })
 
     expect(screen.getByTestId('sheet-root')).toHaveAttribute('data-active-detent', '2')
+  })
+
+  it('never reports the sheet as expanded on a desktop viewport', () => {
+    const originalMatchMedia = globalThis.matchMedia
+    globalThis.matchMedia = (() => ({
+      matches: true,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof globalThis.matchMedia
+    usePanelStore.setState({ sheetExpanded: true })
+
+    try {
+      render(<Panel {...defaultProps} />)
+      expect(usePanelStore.getState().sheetExpanded).toBe(false)
+    } finally {
+      globalThis.matchMedia = originalMatchMedia
+    }
   })
 
   it('stays at the middle detent when the content is scrolled up', () => {
