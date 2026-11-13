@@ -11,6 +11,7 @@ import { ExploreContent } from './ExploreContent'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import usePanelStore, { setPanelNavigate } from '@/stores/panelStore'
 import SearchFAB from './SearchFAB'
+import { PrototypeSwitcher } from './prototype/mobileChipsPrototype'
 import { useURLNeighborhoodSync } from '@/hooks/useURLNeighborhoodSync'
 
 export default function HomeClient() {
@@ -147,6 +148,7 @@ export default function HomeClient() {
       <Panel shop={currentShop} presented={presented} onPresentedChange={setPresented}>
         {panelContent}
       </Panel>
+      <PrototypeSwitcher />
     </div>
   )
 }

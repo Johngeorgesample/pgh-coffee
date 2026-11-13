@@ -7,6 +7,8 @@ import { TShop } from '@/types/shop-types'
 import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
+import { ChipRow } from './MapChips'
+import { useChipsVariant, useSheetExpanded } from './prototype/mobileChipsPrototype'
 
 interface IProps {
   children?: React.ReactNode
@@ -31,6 +33,11 @@ export default function Panel(props: IProps) {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const touchStartY = useRef<number | null>(null)
   const largeViewport = useMediaQuery('(min-width: 1024px)')
+  const variant = useChipsVariant()
+  const setExpanded = useSheetExpanded(s => s.setExpanded)
+  useEffect(() => {
+    setExpanded(presented && activeDetent === lastDetentIndex)
+  }, [presented, activeDetent, lastDetentIndex, setExpanded])
 
   // detect touch device once
   const [isTouch, setIsTouch] = useState(false)
@@ -148,7 +155,7 @@ export default function Panel(props: IProps) {
           nativeEdgeSwipePrevention
         >
           <Sheet.Backdrop themeColorDimming="auto" />
-          <Sheet.Content ref={contentRef} className="h-[90%] bg-neutral-50 overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+          <Sheet.Content ref={contentRef} className={`${variant === 'C' ? 'h-[calc(100%-4rem)]' : 'h-[90%]'} bg-neutral-50 overflow-y-auto pb-[env(safe-area-inset-bottom)]`}>
             <Sheet.Handle
               action="dismiss"
               className="block mx-auto focus:outline-none focus:ring-0 mt-2 mb-3 bg-gray-300"
@@ -157,6 +164,9 @@ export default function Panel(props: IProps) {
             </Sheet.Handle>
 
             <SearchBar />
+            {variant === 'B' && (
+              <ChipRow className="no-scrollbar mt-[4.25rem] overflow-x-auto px-[5%] pb-1 [&>button]:shrink-0 [&>button]:shadow-sm" />
+            )}
             {props.children}
 
             <Sheet.BleedingBackground className="BottomSheet-bleedingBackground" />
