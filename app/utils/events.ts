@@ -33,7 +33,7 @@ export const getEventByIdPrefix = async (prefix: string) => {
 
   if (error) {
     logger.error('Error fetching event', { error: error.message })
-    return null
+    throw new Error(`Failed to fetch event: ${error.message}`)
   }
 
   return data?.[0] ? withInheritedVerification(data[0] as EventRow) : null

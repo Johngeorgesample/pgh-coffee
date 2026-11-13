@@ -22,7 +22,7 @@ export const getUpdateByIdPrefix = async (prefix: string) => {
 
   if (error) {
     logger.error('Error fetching update', { error: error.message })
-    return null
+    throw new Error(`Failed to fetch update: ${error.message}`)
   }
 
   return data?.[0] ?? null

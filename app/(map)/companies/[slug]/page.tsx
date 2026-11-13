@@ -8,6 +8,12 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 300
+
+export async function generateStaticParams() {
+  return []
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const company = await getCompanyForSeo((await params).slug)
   if (!company) return {}
