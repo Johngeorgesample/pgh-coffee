@@ -88,7 +88,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       const map = mapRef.current?.getMap()
       const points = displayedShopsRef.current.features
         .map(f => f.geometry.coordinates)
-        .filter(([lng, lat]) => Number.isFinite(lng) && Number.isFinite(lat))
+        .filter(([lng, lat]) => lng !== 0 && lat !== 0)
       if ((!map || !map.isStyleLoaded() || points.length === 0) && attempts++ < 180) {
         raf = requestAnimationFrame(tryFit)
         return
