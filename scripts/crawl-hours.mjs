@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve as resolvePath } from "node:path";
-import { stripLeadingSqlComment } from "./lib/sql.mjs";
+import { renderSql, stripLeadingSqlComment } from "./lib/sql.mjs";
 
 // Repo root, derived from this script's location (scripts/ -> repo root).
 const ROOT = resolvePath(dirname(fileURLToPath(import.meta.url)), "..");
@@ -173,10 +173,6 @@ async function fetchShops() {
   return res.json();
 }
 
-function sqlStr(s) {
-  return `'${String(s).replace(/'/g, "''")}'`;
-}
-
 async function main() {
   const shops = await fetchShops();
   console.error(`Fetched ${shops.length} shops`);
@@ -233,7 +229,7 @@ async function main() {
     await sleep(40);
   }
 
-  writeFileSync(OUT, renderSql(results));
+  writeFileSync(OUT, renderSql(results, MIGRATION));
   console.error(`\nWrote ${OUT}`);
   // summary
   const byStatus = {};
@@ -244,146 +240,6 @@ async function main() {
     JSON.stringify(results, null, 2)
   );
 }
-
-function renderSql(results) {
-  const L = [];
-  L.push("-- Hours-of-operation backfill for pgh.coffee");
-  L.push("--");
-  L.push("-- Generated for human review. Apply by hand (no migration framework in this repo).");
-  L.push("-- Sourced from Google Places API (New). Google-sourced hours are a 30-day-max");
-  L.push("-- refreshable cache (Maps Platform terms); the 14-day refresh + compliance sweep");
-  L.push("-- keep them within policy. Only the Place ID is retained indefinitely.");
-  L.push("-- Day-of-week: 0=Sunday .. 6=Saturday. Times are local (America/New_York).");
-  L.push("--");
-  L.push(`-- Generated ${new Date().toISOString()}`);
-  L.push("");
-  L.push("-- ============================================================================");
-  L.push("-- PREFLIGHT  (returns a row: how old the hours you're about to replace are)");
-  L.push("-- ============================================================================");
-  L.push(PREFLIGHT);
-  L.push("");
-  L.push("-- ============================================================================");
-  L.push("-- MIGRATION  (creates both tables + RLS; safe to run ahead of the data below)");
-  L.push("-- ============================================================================");
-  L.push(MIGRATION);
-  L.push("");
-  L.push("-- ============================================================================");
-  L.push("-- HOURS  (one block per accepted shop; DELETE+INSERT is idempotent & re-runnable)");
-  L.push("-- ============================================================================");
-  L.push("");
-
-  for (const r of results) {
-    const s = r.shop;
-    const tag = `${s.name} / ${s.neighborhood}`;
-    if (r.status === "ok" || r.status === "no_hours") {
-      L.push(`-- ${tag}  (place_id ${r.placeId}, ${r.dist}m -> "${r.matchName}")`);
-      L.push(deleteGuard(s.uuid));
-      if (r.rows.length) {
-        const vals = r.rows
-          .map(
-            (row) =>
-              `  (${sqlStr(s.uuid)}::uuid, ${row.day}, ${sqlStr(row.opens)}::time, ${sqlStr(
-                row.closes
-              )}::time, ${row.spans})`
-          )
-          .join(",\n");
-        L.push(
-          "INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight)"
-        );
-        L.push("SELECT * FROM (VALUES");
-        L.push(vals);
-        L.push(`) v WHERE ${shopStillExists(s.uuid)};`);
-      }
-      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist));
-      L.push("");
-    } else {
-      // low_confidence / not_found / not_operational / error: meta only, no hours
-      L.push(`-- ${tag}  [${r.status}]` + (r.dist != null ? ` (nearest ${r.dist}m -> "${r.matchName}")` : "") + (r.error ? ` err: ${r.error.slice(0, 120)}` : ""));
-      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist));
-      L.push("");
-    }
-  }
-
-  L.push(VERIFICATION);
-  L.push("");
-  L.push("-- ============================================================================");
-  L.push("-- NEEDS MANUAL REVIEW");
-  L.push("-- ============================================================================");
-  for (const r of results) {
-    if (["low_confidence", "not_found", "error"].includes(r.status)) {
-      L.push(
-        `--   ${r.shop.name} / ${r.shop.neighborhood}: ${r.status}` +
-          (r.dist != null ? ` (nearest ${r.dist}m -> "${r.matchName}")` : "") +
-          (r.error ? ` ${r.error.slice(0, 120)}` : "")
-      );
-    }
-  }
-  L.push("");
-  return L.join("\n");
-}
-
-function deleteGuard(uuid) {
-  return (
-    `DELETE FROM shop_hours WHERE shop_uuid = ${sqlStr(uuid)}\n` +
-    `  AND NOT EXISTS (SELECT 1 FROM shop_hours_meta m\n` +
-    `    WHERE m.shop_uuid = ${sqlStr(uuid)} AND m.source <> 'google_places');`
-  );
-}
-
-// This file is a snapshot of the shop list at crawl time. A shop deleted since
-// then would fail the FK and abort the whole transaction, so every write is
-// guarded: a vanished shop is skipped instead of taking the run down with it.
-function shopStillExists(uuid) {
-  return `EXISTS (SELECT 1 FROM shops WHERE uuid = ${sqlStr(uuid)})`;
-}
-
-function metaUpsert(uuid, status, placeId, dist) {
-  return (
-    `INSERT INTO shop_hours_meta (shop_uuid, source, status, google_place_id, match_distance_m, fetched_at)\n` +
-    `SELECT ${sqlStr(uuid)}::uuid, 'google_places', ${sqlStr(status)}, ${
-      placeId ? sqlStr(placeId) : "NULL"
-    }, ${dist != null ? dist : "NULL"}, now()\n` +
-    `WHERE ${shopStillExists(uuid)}\n` +
-    `ON CONFLICT (shop_uuid) DO UPDATE SET\n` +
-    `  status=EXCLUDED.status, google_place_id=EXCLUDED.google_place_id,\n` +
-    `  match_distance_m=EXCLUDED.match_distance_m, fetched_at=EXCLUDED.fetched_at\n` +
-    `WHERE shop_hours_meta.source='google_places';`
-  );
-}
-
-// Deliberately an executable SELECT, not a comment: nothing else reports that
-// the live hours have aged past Google's 30-day cache limit, and a commented-out
-// query is exactly what let them sit at 50 days.
-const PREFLIGHT = `SELECT
-  max(now() - fetched_at)                                              AS oldest,
-  count(*) FILTER (WHERE fetched_at < now() - interval '30 days')      AS past_30_day_limit,
-  count(*)                                                             AS shops
-FROM shop_hours_meta WHERE source = 'google_places';`;
-
-const VERIFICATION = `-- ============================================================================
--- VERIFICATION
--- ============================================================================
--- SELECT status, count(*) FROM shop_hours_meta GROUP BY status ORDER BY status;
---
--- -- shops with no schedule rows (expected for no_hours/not_found/low_confidence/not_operational)
--- SELECT s.name, s.neighborhood, m.status
--- FROM shops s LEFT JOIN shop_hours_meta m ON m.shop_uuid=s.uuid
--- WHERE NOT EXISTS (SELECT 1 FROM shop_hours h WHERE h.shop_uuid=s.uuid)
--- ORDER BY m.status NULLS FIRST, s.name;
---
--- -- manual review queue
--- SELECT s.name, s.neighborhood, m.status, m.match_distance_m
--- FROM shop_hours_meta m JOIN shops s ON s.uuid=m.shop_uuid
--- WHERE m.status IN ('low_confidence','not_found','error') ORDER BY m.status, s.name;
---
--- -- close-before-open sanity (allowed only when spans_midnight)
--- SELECT s.name, h.day_of_week, h.opens_at, h.closes_at
--- FROM shop_hours h JOIN shops s ON s.uuid=h.shop_uuid
--- WHERE h.closes_at <= h.opens_at AND NOT h.spans_midnight;
---
--- -- compliance: no google_places hours older than 30 days should exist post-sweep
--- SELECT count(*) FROM shop_hours h JOIN shop_hours_meta m ON m.shop_uuid=h.shop_uuid
--- WHERE m.source='google_places' AND m.fetched_at < now() - interval '30 days';`;
 
 main().catch((e) => {
   console.error("FATAL", e);

@@ -26,10 +26,10 @@ node scripts/crawl-hours.mjs
    (not Google's relevance-ranked first result — that breaks duplicate-named
    chains) → confidence gate → Place Details → parses regular weekly hours.
 3. Writes:
-   - `migrations/hours-backfill.sql` — a preflight staleness query, per-shop
-     `DELETE`+`INSERT` blocks (idempotent), the schema
-     (`CREATE TABLE IF NOT EXISTS`), verification queries, and a "NEEDS MANUAL
-     REVIEW" list.
+   - `migrations/hours-backfill.sql` — the schema
+     (`CREATE TABLE IF NOT EXISTS`), a staleness warning, per-shop
+     `DELETE`+`INSERT` blocks (idempotent), verification queries, and a "NEEDS
+     MANUAL REVIEW" list.
    - `migrations/hours-backfill-results.json` — raw per-shop results.
 
 Both outputs are **gitignored**. Google Places hours are 30-day-max cached
@@ -44,11 +44,14 @@ script to regenerate them. The committed schema lives in
 - Shops whose `shop_hours_meta.source` is `manual`/`shop_submitted` are
   protected by SQL guards in the generated blocks and never overwritten.
 - Review the match distances and the manual-review list before applying.
-- **Generating the file changes nothing.** Hours stay as old as they were until
-  someone runs the SQL, and Google's terms cap the cache at 30 days. Run the
-  `PREFLIGHT` query at the top of the generated file first — it reports the age
-  of what's live and how many rows are already past the limit.
-- The file is a snapshot of the shop list at crawl time. Writes are guarded on
-  the shop still existing, so a shop deleted since the crawl is skipped rather
-  than failing the FK and aborting the run — but re-crawl anyway, its hours
-  won't be in the file.
+- **Generating the file changes nothing, and nothing refreshes hours on a
+  schedule.** Hours stay as old as they were until someone runs the SQL, and
+  Google's terms cap the cache at 30 days. The file raises a `WARNING` if the
+  hours it is replacing are already past that (visible in `psql`; the Supabase
+  SQL editor drops it, so run the compliance query under `VERIFICATION` there).
+- `fetched_at` only advances when a shop's hours were actually replaced. A shop
+  that errored or stopped matching keeps its old hours and its old `fetched_at`,
+  so it still shows up as stale.
+- The file is a snapshot of the shop list at crawl time. A shop deleted since
+  the crawl is skipped, and one whose hours became `manual`/`shop_submitted` is
+  left alone — but re-crawl anyway, a new shop's hours won't be in the file.
