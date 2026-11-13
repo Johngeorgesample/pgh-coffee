@@ -55,7 +55,7 @@ export default function ShopSearch() {
           <h2 className="mt-6 text-[11px] font-semibold uppercase tracking-wider text-gray-500">Shops</h2>
         )}
         <ShopList coffeeShops={displayedShops.features} />
-        {isSearching && shopCount === 0 && entityCount === 0 && (
+        {isSearching && shopCount === 0 && entityCount === 0 && areaLinks.length === 0 && (
           <div className="mt-6 text-center text-gray-500">
             <p className="font-medium text-gray-700">Nothing matches &ldquo;{searchValue}&rdquo;</p>
             <p className="mt-1 text-sm">

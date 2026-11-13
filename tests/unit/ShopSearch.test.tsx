@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react'
 import ShopSearch from '@/app/components/ShopSearch'
 
 const noEntities = { roasters: [], companies: [] }
-let mockState = { searchValue: '', features: [] as unknown[], entities: noEntities as Record<string, unknown[]> }
+let mockState = { searchValue: '', features: [] as unknown[], allShops: undefined as unknown[] | undefined, entities: noEntities as Record<string, unknown[]> }
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: (selector: (s: unknown) => unknown) => selector({ ...mockState, allShops: { features: mockState.features } }),
+  default: (selector: (s: unknown) => unknown) => selector({ ...mockState, allShops: { features: mockState.allShops ?? mockState.features } }),
   useDisplayedShops: () => ({ features: mockState.features }),
 }))
 vi.mock('@/app/components/ShopList', () => ({ default: () => null }))
@@ -16,19 +16,26 @@ vi.mock('next/dynamic', () => ({ default: () => () => null }))
 
 describe('ShopSearch', () => {
   it('explains an empty result for a search', () => {
-    mockState = { searchValue: 'zzz', features: [], entities: noEntities }
+    mockState = { searchValue: 'zzz', features: [], allShops: undefined, entities: noEntities }
     render(<ShopSearch />)
     expect(screen.getByText(/Nothing matches/)).toHaveTextContent('zzz')
   })
 
   it('stays quiet before the user types', () => {
-    mockState = { searchValue: '', features: [], entities: noEntities }
+    mockState = { searchValue: '', features: [], allShops: undefined, entities: noEntities }
     render(<ShopSearch />)
     expect(screen.queryByText(/Nothing matches/)).toBeNull()
   })
 
   it('does not call a search empty when only a roaster matches', () => {
-    mockState = { searchValue: 'la prima', features: [], entities: { roasters: [{ name: 'La Prima', slug: 'la-prima' }], companies: [] } }
+    mockState = { searchValue: 'la prima', features: [], allShops: undefined, entities: { roasters: [{ name: 'La Prima', slug: 'la-prima' }], companies: [] } }
+    render(<ShopSearch />)
+    expect(screen.queryByText(/Nothing matches/)).toBeNull()
+  })
+
+  it('does not call a search empty when a neighborhood matches', () => {
+    const squirrelHill = [{ properties: { name: 'Commonplace', neighborhood: 'Squirrel Hill North' } }]
+    mockState = { searchValue: 'squi', features: [], allShops: squirrelHill, entities: noEntities }
     render(<ShopSearch />)
     expect(screen.queryByText(/Nothing matches/)).toBeNull()
   })
