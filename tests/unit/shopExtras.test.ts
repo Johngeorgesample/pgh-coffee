@@ -28,4 +28,18 @@ describe('shop extras prefetch', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(4)
   })
+
+  test('a failed prefetch is retried instead of leaving the section empty', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response('', { status: 500 }))
+      .mockResolvedValue(new Response('[]'))
+    vi.stubGlobal('fetch', fetchMock)
+
+    prefetchShopExtras('shop-c')
+    const res = await fetchShopExtra(shopHoursUrl('shop-c'))
+
+    expect(res.ok).toBe(true)
+    expect(fetchMock).toHaveBeenCalledTimes(4)
+  })
 })

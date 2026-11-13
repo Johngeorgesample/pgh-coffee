@@ -19,5 +19,9 @@ export const prefetchShopExtras = (shopId: string) => {
 export const fetchShopExtra = (url: string, init?: RequestInit) => {
   const entry = prefetched.get(url)
   prefetched.delete(url)
-  return entry && Date.now() - entry.at < FRESH_FOR_MS ? entry.response : fetch(url, init)
+  if (!entry || Date.now() - entry.at >= FRESH_FOR_MS) return fetch(url, init)
+  return entry.response.then(
+    res => (res.ok ? res : fetch(url, init)),
+    () => fetch(url, init),
+  )
 }
