@@ -5,6 +5,7 @@ import { ClockIcon } from '@heroicons/react/24/outline'
 import { TShop } from '@/types/shop-types'
 import { HoursRow, formatTime, formatUpdatedDate, isOpenNow, pittsburghNow } from '@/app/utils/hours'
 import ShopHoursSkeleton from './ShopHoursSkeleton'
+import { fetchShopExtra, shopHoursUrl } from '@/app/utils/shopExtras'
 
 interface IProps {
   shop: TShop
@@ -47,7 +48,7 @@ export default function ShopHours({ shop }: IProps) {
     let cancelled = false
     ;(async () => {
       try {
-        const res = await fetch(`/api/shops/hours/${shopId}`)
+        const res = await fetchShopExtra(shopHoursUrl(shopId))
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: { hours: HoursRow[]; updatedAt: string | null } = await res.json()
         if (cancelled) return
