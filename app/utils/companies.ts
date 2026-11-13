@@ -24,8 +24,26 @@ export const getCompanyBySlug = async (slug: string) => {
   return data
 }
 
+export const getCompanyWithShops = async (slug: string) => {
+  const { data, error } = await getClient()
+    .from('companies')
+    .select(`*, shops!company_id(${SHOP_WITH_ROASTER_SELECT}), roaster!company_id(name, slug)`)
+    .eq('slug', slug)
+    .eq('shops.permanently_closed', false)
+    .maybeSingle()
+
+  if (error) {
+    logger.error('Error fetching company with shops', { error: error.message })
+    throw new Error(error.message)
+  }
+  if (!data) return null
+
+  const { roaster, ...company } = data
+  return { ...company, roaster: roaster[0] ?? null }
+}
+
 // cache() so generateMetadata, the page, and the OG image share one query per request.
-export const getCompanyForSeo = cache(getCompanyBySlug)
+export const getCompanyForSeo = cache(getCompanyWithShops)
 
 export const getCompanyShopPhotos = async (companyId: string) => {
   const { data, error } = await getClient()
@@ -40,34 +58,4 @@ export const getCompanyShopPhotos = async (companyId: string) => {
   }
 
   return data.map((shop) => shop.photo as string | null)
-}
-
-export const getCompanyShops = async (companyId: string) => {
-  const { data, error } = await getClient()
-    .from('shops')
-    .select(SHOP_WITH_ROASTER_SELECT)
-    .eq('company_id', companyId)
-    .eq('permanently_closed', false)
-
-  if (error) {
-    logger.error('Error fetching company shops', { error: error.message })
-    return null
-  }
-
-  return data
-}
-
-export const getCompanyRoaster = async (companyId: string) => {
-  const { data, error } = await getClient()
-    .from('roaster')
-    .select('name, slug')
-    .eq('company_id', companyId)
-    .maybeSingle()
-
-  if (error) {
-    logger.error('Error fetching company roaster', { error: error.message })
-    return null
-  }
-
-  return data
 }
