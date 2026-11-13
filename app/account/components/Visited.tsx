@@ -4,18 +4,14 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Stamp, MapPin } from 'lucide-react'
 import EmptyCard from './EmptyCard'
-import ShopCard from '@/app/components/ShopCard'
 import VisitChecklist from './VisitChecklist'
-import { formatDBShopAsFeature } from '@/app/utils/utils'
-import type { DbShop } from '@/types/shop-types'
-
-interface Visit {
-  id: string
-  created_at: string
-  shop: DbShop
-}
+import Passport from '@/app/u/[id]/Passport'
+import PassportCover from '@/app/u/[id]/PassportCover'
+import { useOwnProfile } from '@/hooks'
+import type { Visit } from '@/app/utils/visitStats'
 
 export default function Visited() {
+  const { profile } = useOwnProfile()
   const [visits, setVisits] = useState<Visit[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -50,17 +46,12 @@ export default function Visited() {
   return (
     <div className="space-y-6">
       {hasVisits ? (
-        <div className="space-y-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Passport</h1>
-            <p className="text-gray-500">Keep track of the coffee shops you&apos;ve visited.</p>
+        <>
+          <div className="overflow-hidden rounded-2xl">
+            <PassportCover name={profile?.display_name || 'Your passport'} avatarUrl={profile?.avatar_url ?? null} visits={visits} />
           </div>
-          <ul>
-            {visits.map((visit) => (
-              <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-            ))}
-          </ul>
-        </div>
+          <Passport visits={visits} />
+        </>
       ) : !skipped ? (
         <VisitChecklist onSaved={fetchVisits} onSkip={() => setSkipped(true)} />
       ) : (
