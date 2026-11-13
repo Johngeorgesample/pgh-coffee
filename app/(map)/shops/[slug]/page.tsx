@@ -8,6 +8,12 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 300
+
+export async function generateStaticParams() {
+  return []
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const shop = await getShopForSeo((await params).slug)
   return shop ? buildShopMetadata(shop) : {}
@@ -22,7 +28,9 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
+      {!shop.permanently_closed && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(buildShopJsonLd(shop)) }} />
+      )}
       {/* PanelHeader renders its own <h1> with the shop name, but only after
           client-side data fetching completes, so the server-rendered HTML
           has none. */}

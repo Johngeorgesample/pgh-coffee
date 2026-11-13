@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAnalytics } from '@/hooks'
 import { ChevronRight } from 'lucide-react'
 import usePanelStore from '@/stores/panelStore'
@@ -34,6 +34,7 @@ export const EventsCTA = () => {
   const eventsError = useExploreStore(s => s.eventsError)
   const eventsLoading = useExploreStore(s => s.eventsLoading)
   const fetchEvents = useExploreStore(s => s.fetchEvents)
+  const [fadeIn] = useState(eventsLoading)
 
   useEffect(() => {
     fetchEvents()
@@ -77,12 +78,16 @@ export const EventsCTA = () => {
         </button>
       </div>
 
-      <div className="mt-3 space-y-3">
+      <div className={`mt-3 space-y-3 ${fadeIn && !eventsLoading ? 'animate-amenity-chip-fade' : ''}`}>
         {eventsLoading ? (
           <>
             <EventCardSkeleton />
             <EventCardSkeleton />
           </>
+        ) : soonestTwo.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-stone-300 px-4 py-6 text-center text-sm text-stone-500">
+            No upcoming events right now. Check back soon.
+          </p>
         ) : (
           soonestTwo.map(event => <EventCard key={event.id} entry={event} />)
         )}

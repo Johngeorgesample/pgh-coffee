@@ -1,9 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 /**
  * Resolves a company from a `/companies/{slug}` identifier. Companies carry their
@@ -12,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
  * route so both agree on the lookup.
  */
 export const getCompanyBySlug = async (slug: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('companies')
     .select('*')
     .eq('slug', slug)
@@ -24,4 +22,40 @@ export const getCompanyBySlug = async (slug: string) => {
   }
 
   return data
+}
+
+export const getCompanyWithShops = async (slug: string) => {
+  const { data, error } = await getClient()
+    .from('companies')
+    .select(`*, shops!company_id(${SHOP_WITH_ROASTER_SELECT}), roaster!company_id(name, slug)`)
+    .eq('slug', slug)
+    .eq('shops.permanently_closed', false)
+    .maybeSingle()
+
+  if (error) {
+    logger.error('Error fetching company with shops', { error: error.message })
+    throw new Error(error.message)
+  }
+  if (!data) return null
+
+  const { roaster, ...company } = data
+  return { ...company, roaster: roaster[0] ?? null }
+}
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getCompanyForSeo = cache(getCompanyWithShops)
+
+export const getCompanyShopPhotos = async (companyId: string) => {
+  const { data, error } = await getClient()
+    .from('shops')
+    .select('photo')
+    .eq('company_id', companyId)
+    .eq('permanently_closed', false)
+
+  if (error) {
+    logger.error('Error fetching company shop photos', { error: error.message })
+    return []
+  }
+
+  return data.map((shop) => shop.photo as string | null)
 }

@@ -5,8 +5,11 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl'
 import { MapMouseEvent } from 'mapbox-gl'
 import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
-import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
+import useShopsStore, { useDisplayedShops, useIsClosed } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
+import MapChips from './MapChips'
+import { getFeatureBounds } from '@/app/utils/utils'
+import { nearestShops } from '@/app/utils/shopsByDistance'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -16,6 +19,12 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   const displayedShops = useDisplayedShops()
   const hoveredShop = useShopsStore(s => s.hoveredShop)
   const currentShop = useShopsStore(s => s.currentShop)
+  const overrideShops = useShopsStore(s => s.overrideShops)
+  const nearPoint = useShopsStore(s => s.nearPoint)
+  const allShops = useShopsStore(s => s.allShops)
+  const visitedUUIDs = useShopsStore(s => s.visitedUUIDs)
+  const passportMode = useShopsStore(s => s.passportMode)
+  const isClosed = useIsClosed()
   const { handleShopSelect } = useShopSelection()
   const mapRef = useRef<MapRef | null>(null)
   const layerId = 'myPoint'
@@ -30,6 +39,9 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
     CIRCLE_PAINT: {
       SELECTED_COLOR: '#fff',
       DEFAULT_COLOR: '#FDE047',
+      MUTED_COLOR: '#78716C',
+      MUTED_OPACITY: 0.45,
+      VISITED_GLOW_OPACITY: 0.3,
       ZOOM_LEVELS: [
         { zoom: 8, radius: 4 },
         { zoom: 12, radius: 8 },
@@ -53,37 +65,65 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   const { shopsInView, updateBounds } = useShopsInView(displayedShops.features, showAllPopups)
 
+  // Depend on the coordinates themselves, not the array: callers build a fresh
+  // literal every render, which otherwise re-ran the 1s flyTo on unrelated state
+  // changes (typing in search) and yanked the map back off wherever it was.
+  const [currentLongitude, currentLatitude] = currentShopCoordinates ?? []
+
   const panToCurrentShop = () => {
-    if (currentShopCoordinates?.every(element => Boolean(element))) {
-      if (mapRef.current) {
-        mapRef.current.flyTo({
-          center: [currentShopCoordinates[0], currentShopCoordinates[1]],
-          zoom: mapRef.current.getZoom(),
-          bearing: 0,
-          pitch: 0,
-          duration: 1000,
-          essential: true,
-        })
-      }
-    }
+    if (!currentLongitude || !currentLatitude || !mapRef.current) return
+
+    mapRef.current.flyTo({
+      center: [currentLongitude, currentLatitude],
+      zoom: mapRef.current.getZoom(),
+      bearing: 0,
+      pitch: 0,
+      duration: 1000,
+      essential: true,
+    })
   }
 
-  useEffect(panToCurrentShop, [currentShopCoordinates])
+  useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
+
+  const fitToOverrideShops = () => {
+    if (!overrideShops?.features.length || !mapRef.current) return
+    mapRef.current.fitBounds([...getFeatureBounds(overrideShops.features)], { padding: 80, maxZoom: 15, duration: 1000 })
+  }
+
+  useEffect(fitToOverrideShops, [overrideShops])
+
+  const fitToNearPoint = () => {
+    if (!nearPoint || !mapRef.current) return
+    const closest = nearestShops(allShops?.features ?? [], nearPoint).map(n => n.shop)
+    const [west, south, east, north] = getFeatureBounds(closest)
+    const [lng, lat] = nearPoint
+    mapRef.current.fitBounds(
+      [Math.min(west, lng), Math.min(south, lat), Math.max(east, lng), Math.max(north, lat)],
+      { padding: 80, maxZoom: 15, duration: 1000 },
+    )
+  }
+
+  useEffect(fitToNearPoint, [nearPoint, allShops])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
 
     return {
       ...displayedShops,
-      features: displayedShops.features.map(shop => ({
-        ...shop,
-        properties: {
-          ...shop.properties,
-          hovered: hoveredUUID === shop.properties.uuid,
-        },
-      })),
+      features: displayedShops.features.map(shop => {
+        const visited = passportMode && !!visitedUUIDs?.has(shop.properties.uuid)
+        return {
+          ...shop,
+          properties: {
+            ...shop.properties,
+            hovered: hoveredUUID === shop.properties.uuid,
+            visited,
+            muted: (passportMode && !visited) || isClosed(shop.properties.uuid),
+          },
+        }
+      }),
     }
-  }, [displayedShops, hoveredUUID])
+  }, [displayedShops, hoveredUUID, passportMode, visitedUUIDs, isClosed])
 
   const handleMouseMove = useCallback(
     (event: MapLayerMouseEvent) => {
@@ -148,7 +188,8 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
   }
 
   return (
-    <div data-testid="map-container" className="w-full lg:w-2/3 overflow-hidden">
+    <div data-testid="map-container" className="relative w-full lg:w-2/3 overflow-hidden">
+      <MapChips />
       <Map
         mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
         initialViewState={MAP_CONSTANTS.INITIAL_VIEW}
@@ -157,13 +198,40 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onLoad={updateBounds}
+        onLoad={(e) => {
+          updateBounds(e)
+          // The ref is still null when the first pan effect runs on a direct shop URL
+          panToCurrentShop()
+          fitToOverrideShops()
+          fitToNearPoint()
+        }}
         onZoomEnd={(e) => setZoomLevel(e.viewState.zoom)}
         onMoveEnd={updateBounds}
         interactiveLayerIds={[layerId]}
         ref={mapRef}
       >
         <Source id="my-data" type="geojson" data={shopsWithHoverState}>
+          <Layer
+            id="visited-glow"
+            type="circle"
+            paint={{
+              'circle-color': MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
+              'circle-blur': 1,
+              'circle-opacity': [
+                'case',
+                ['boolean', ['get', 'visited'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.VISITED_GLOW_OPACITY,
+                0,
+              ],
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                ...MAP_CONSTANTS.CIRCLE_PAINT.ZOOM_LEVELS.flatMap(({ zoom, radius }) => [zoom, radius + 8]),
+              ],
+            }}
+          />
+
           {/* White border layer */}
           <Layer
             id="shop-border"
@@ -197,7 +265,19 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
                 '#FDE047', // or another hover color if you choose
                 ['boolean', ['get', 'selected'], false],
                 MAP_CONSTANTS.CIRCLE_PAINT.SELECTED_COLOR,
+                ['boolean', ['get', 'muted'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.MUTED_COLOR,
                 MAP_CONSTANTS.CIRCLE_PAINT.DEFAULT_COLOR,
+              ],
+              'circle-opacity': [
+                'case',
+                ['boolean', ['get', 'hovered'], false],
+                1,
+                ['boolean', ['get', 'selected'], false],
+                1,
+                ['boolean', ['get', 'muted'], false],
+                MAP_CONSTANTS.CIRCLE_PAINT.MUTED_OPACITY,
+                1,
               ],
               'circle-radius': [
                 'interpolate',
@@ -209,6 +289,15 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
           />
         </Source>
 
+        {nearPoint && (
+          <Source id="near-point" type="geojson" data={{ type: 'Point', coordinates: nearPoint }}>
+            <Layer
+              id="near-point"
+              type="circle"
+              paint={{ 'circle-color': '#3B82F6', 'circle-radius': 8, 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 }}
+            />
+          </Source>
+        )}
 
         {showAllPopups &&
           shopsInView

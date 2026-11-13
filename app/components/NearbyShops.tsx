@@ -1,86 +1,37 @@
-import { useCallback, useMemo, useState, useEffect } from 'react'
-import { useAnalytics } from '@/hooks'
+import { useMemo } from 'react'
 import { TShop } from '@/types/shop-types'
-import {
-  DEFAULT_UNITS,
-  DISTANCE_UNITS,
-  DISTANCE_UNITS_STORAGE_KEY,
-  parseUnits,
-  TUnits,
-} from '@/types/unit-types'
+import { metersToUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
-import haversineDistance from 'haversine-distance'
 import NearbyShopList from '@/app/components/NearbyShopList'
+import { shopsByDistance } from '@/app/utils/shopsByDistance'
+import { useDistanceUnits } from '@/hooks/useDistanceUnits'
 
 interface IProps {
   shop: TShop
 }
 
-interface IShopWithDistance {
-  shop: TShop
-  distance: number
-}
-
-interface ISortedShopsResults {
-  shops: TShop[]
-  distances: number[]
-}
-
-const MILES_CONVERSION_FACTOR = 0.000621371
+const NEARBY_METERS = 1000
 
 export default function NearbyShops({ shop }: IProps) {
-  const plausible = useAnalytics()
   const allShops = useShopsStore(s => s.allShops)
+  const units = useDistanceUnits()
 
-  const [units, setUnits] = useState<TUnits>(DEFAULT_UNITS)
-  useEffect(() => {
-    setUnits(parseUnits(localStorage.getItem(DISTANCE_UNITS_STORAGE_KEY)))
-  }, [])
-
-  const calculateDistance = useCallback(
-    (coordA: [number, number], coordB: [number, number]) => {
-      const meters = haversineDistance(coordA, coordB)
-      return units === DISTANCE_UNITS.Miles ? meters * MILES_CONVERSION_FACTOR : meters
-    },
-    [units],
+  const nearby = useMemo(
+    () =>
+      shopsByDistance(allShops.features ?? [], shop.geometry.coordinates).filter(
+        ({ shop: s, meters }) => s.properties.uuid !== shop.properties.uuid && meters < NEARBY_METERS,
+      ),
+    [allShops, shop],
   )
 
-  const sortedShopsWithDistances = useMemo<{
-    shops: TShop[]
-    distances: number[]
-  }>(() => {
-    if (!allShops.features) return { shops: [], distances: [] }
-
-    return allShops.features
-      .filter((s: TShop) => {
-        const isDifferentShop =
-          s.properties.address !== shop.properties.address || s.properties.name !== shop.properties.name
-        const distance = haversineDistance(s.geometry.coordinates, shop.geometry.coordinates)
-        return isDifferentShop && distance < 1000
-      })
-      .map((s: TShop) => ({
-        shop: s,
-        distance: calculateDistance(shop.geometry.coordinates, s.geometry.coordinates),
-      }))
-      .sort((a: IShopWithDistance, b: IShopWithDistance) => a.distance - b.distance)
-      .reduce(
-        (acc: ISortedShopsResults, { shop, distance }: IShopWithDistance) => {
-          acc.shops.push(shop)
-          acc.distances.push(distance)
-          return acc
-        },
-        { shops: [] as TShop[], distances: [] as number[] },
-      )
-  }, [allShops, shop, calculateDistance])
-
-  if (sortedShopsWithDistances.shops.length === 0) return <div className="flex-1"></div>
+  if (nearby.length === 0) return <div className="flex-1"></div>
 
   return (
     <section className="relative mt-3 flex-1 px-4 sm:px-6">
       <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Nearby shops</p>
       <NearbyShopList
-        shops={sortedShopsWithDistances.shops}
-        distances={sortedShopsWithDistances.distances}
+        shops={nearby.map(n => n.shop)}
+        distances={nearby.map(n => metersToUnits(n.meters, units))}
         units={units}
       />
     </section>

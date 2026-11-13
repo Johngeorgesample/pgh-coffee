@@ -1,4 +1,5 @@
 import { DbShop, TFeatureCollection, TShop, TShopRoaster } from '@/types/shop-types'
+import { withCompanyVerification } from '@/app/utils/verification'
 
 export const SHOP_WITH_ROASTER_SELECT = '*, company:company_id(*), roasterRef:roaster_id(name, slug, company_id)'
 
@@ -28,7 +29,8 @@ const toFeature = (shop: DbShop): TShop => ({
     amenities: shop.amenities ?? undefined,
     roaster: toFeatureRoaster(shop),
     description: shop.description ?? undefined,
-    verified: shop.is_verified ?? undefined,
+    verified: Boolean(withCompanyVerification(shop).is_verified),
+    permanentlyClosed: shop.permanently_closed ?? undefined,
   },
   geometry: {
     type: 'Point',
@@ -78,6 +80,8 @@ const baseSynonymMap: Record<string, string[]> = {
   'café': ['cafe', 'caffe'],
   'coffee': ['cofee'],
   'ghost': ['trace'],
+  'boredom': ['heatcheck'],
+  '19': ['nineteen']
 }
 
 /**
@@ -160,4 +164,10 @@ export const doesShopMatchFilter = (shopName: string, shopNeighborhood: string, 
       return regex.test(shopCardText)
     })
   })
+}
+
+export const getFeatureBounds = (shops: TShop[]) => {
+  const lngs = shops.map(shop => shop.geometry.coordinates[0])
+  const lats = shops.map(shop => shop.geometry.coordinates[1])
+  return [Math.min(...lngs), Math.min(...lats), Math.max(...lngs), Math.max(...lats)] as const
 }

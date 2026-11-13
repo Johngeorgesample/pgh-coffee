@@ -1,12 +1,13 @@
 'use client'
 
-import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { ArrowTopRightOnSquareIcon, BuildingStorefrontIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import LocationList from '@/app/components/LocationList'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimButton from '@/app/components/ClaimButton'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useSeededFetch } from '@/hooks/useSeededFetch'
 import { useRouter } from 'next/navigation'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useAnalytics } from '@/hooks'
@@ -34,23 +35,7 @@ export const Company = ({ slug }: { slug: string }) => {
   const setSearchValue = useShopsStore(s => s.setSearchValue)
   const plausible = useAnalytics()
   const router = useRouter()
-  const [company, setCompany] = useState<TCompany | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setCompany(null)
-    setLoading(true)
-    const fetchCompany = async () => {
-      try {
-        const response = await fetch(`/api/companies/${slug}`)
-        const data = await response.json()
-        setCompany(data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCompany()
-  }, [slug])
+  const { data: company, loading } = useSeededFetch<TCompany>(`company:${slug}`, `/api/companies/${slug}`)
 
   useEffect(() => {
     if (company?.shops) {
@@ -134,7 +119,7 @@ export const Company = ({ slug }: { slug: string }) => {
                 href={`https://www.instagram.com/${company.instagram_handle}/`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition ease-out active:scale-95"
               >
                 <Instagram className="h-4 w-4" />
                 Instagram
@@ -145,7 +130,7 @@ export const Company = ({ slug }: { slug: string }) => {
                 href={company.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition ease-out active:scale-95"
               >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                 Website
@@ -168,7 +153,7 @@ export const Company = ({ slug }: { slug: string }) => {
         {company.roaster && (
           <Link
             href={`/roasters/${company.roaster.slug}`}
-            className="group mt-5 flex items-center gap-3 rounded-xl border border-gray-200 p-3 transition-colors hover:border-gray-300 hover:bg-gray-50"
+            className="group mt-5 flex items-center gap-3 rounded-xl border border-gray-200 p-3 transition-colors hover:border-gray-300 hover:bg-gray-50 active:bg-gray-100"
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-yellow-300 text-gray-950">
               <Flame className="h-4 w-4" />

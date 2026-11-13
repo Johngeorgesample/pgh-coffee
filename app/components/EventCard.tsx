@@ -41,12 +41,13 @@ export type EventCardData = {
   post_date?: string
   postDate?: string
   event_date?: string | null
+  start_time?: string | null
+  end_time?: string | null
   shop?: {
     name: string
     neighborhood: string
     uuid: string
     is_verified?: boolean
-    company?: { is_verified?: boolean } | null
   }
   roaster?: Pick<RoasterRef, 'name' | 'slug'> & { is_verified?: boolean }
 }

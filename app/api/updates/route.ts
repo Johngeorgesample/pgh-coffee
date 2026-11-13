@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { UPDATE_SELECT } from '@/app/utils/updates'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 const fetchUpdates = async (shopID?: string) => {
-  let query = supabase
+  let query = getClient()
     .from('updates')
     .select(UPDATE_SELECT)
     .order('post_date', { ascending: false })

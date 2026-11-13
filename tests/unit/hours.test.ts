@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { HoursRow, formatTime, isOpenNow } from '@/app/utils/hours'
+import { HoursRow, formatTime, formatUpdatedDate, isOpenNow } from '@/app/utils/hours'
 
 // day_of_week: 0=Sun .. 6=Sat
 const row = (day: number, opens: string, closes: string, spans = false): HoursRow => ({
@@ -22,6 +22,12 @@ describe('formatTime', () => {
     expect(formatTime('12:00:00')).toBe('12 PM')
     expect(formatTime('13:05:00')).toBe('1:05 PM')
     expect(formatTime('23:59:00')).toBe('11:59 PM')
+  })
+})
+
+describe('formatUpdatedDate', () => {
+  it('uses the Pittsburgh date when UTC has already rolled over', () => {
+    expect(formatUpdatedDate('2026-10-19T02:00:00Z')).toBe('Oct 18')
   })
 })
 

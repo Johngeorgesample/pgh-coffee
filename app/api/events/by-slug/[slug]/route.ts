@@ -6,7 +6,12 @@ export async function GET(req: NextRequest, props: { params: Promise<{ slug: str
   const { slug } = await props.params
 
   const prefix = extractUuidPrefix(slug)
-  const event = prefix ? await getEventByIdPrefix(prefix) : null
+  let event
+  try {
+    event = prefix ? await getEventByIdPrefix(prefix) : null
+  } catch {
+    return NextResponse.json({ error: 'Error fetching event' }, { status: 500 })
+  }
 
   if (!event) {
     return NextResponse.json({ error: 'Event not found' }, { status: 404 })

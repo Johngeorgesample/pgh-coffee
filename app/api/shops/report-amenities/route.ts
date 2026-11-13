@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { AMENITY_KEYS } from '@/lib/amenityKeys'
 import { isRealSupabaseError } from '@/lib/supabaseErrors'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 export async function POST(request: Request) {
   const { shop_id, amenities } = await request.json()
@@ -20,6 +16,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid amenity value' }, { status: 400 })
   }
 
+  const supabase = getClient()
   const { data: shop, error: shopError } = await supabase
     .from('shops')
     .select('uuid')

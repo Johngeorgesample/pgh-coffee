@@ -1,11 +1,18 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import Panel from '@/app/components/Panel'
 import { TShop } from '@/types/shop-types'
+import usePanelStore from '@/stores/panelStore'
 
 // Mock the Silk components
 vi.mock('@silk-hq/components', () => ({
   Sheet: {
-    Root: ({ children, presented }: any) => presented ? <div data-testid="sheet-root">{children}</div> : null,
+    Root: ({ children, presented, activeDetent, onActiveDetentChange }: any) =>
+      presented ? (
+        <div data-testid="sheet-root" data-active-detent={activeDetent}>
+          <button data-testid="set-middle-detent" onClick={() => onActiveDetentChange(1)} />
+          {children}
+        </div>
+      ) : null,
     Portal: ({ children }: any) => <div data-testid="sheet-portal">{children}</div>,
     View: ({ children }: any) => <div data-testid="sheet-view">{children}</div>,
     Backdrop: () => <div data-testid="sheet-backdrop" />,
@@ -40,7 +47,7 @@ vi.mock('@/stores/coffeeShopsStore', () => ({
 
 // Mock SearchBar component
 vi.mock('@/app/components/SearchBar', () => ({
-  default: ({ onClose }: any) => <div data-testid="search-bar">Search Bar</div>
+  default: () => <div data-testid="search-bar">Search Bar</div>
 }))
 
 beforeAll(() => {
@@ -100,5 +107,41 @@ describe('Panel Component', () => {
     fireEvent.click(button)
 
     expect(mockHandlePanelContentClick).toHaveBeenCalledWith(mockShop)
+  })
+
+  // jsdom reports no touch support, so this exercises the pointer-device path.
+  it('expands from the middle detent to full when the content is scrolled down', () => {
+    render(<Panel {...defaultProps} />)
+    fireEvent.click(screen.getByTestId('set-middle-detent'))
+
+    fireEvent.wheel(screen.getByTestId('sheet-content'), { deltaY: 40 })
+
+    expect(screen.getByTestId('sheet-root')).toHaveAttribute('data-active-detent', '2')
+  })
+
+  it('never reports the sheet as expanded on a desktop viewport', () => {
+    const originalMatchMedia = globalThis.matchMedia
+    globalThis.matchMedia = (() => ({
+      matches: true,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof globalThis.matchMedia
+    usePanelStore.setState({ sheetExpanded: true })
+
+    try {
+      render(<Panel {...defaultProps} />)
+      expect(usePanelStore.getState().sheetExpanded).toBe(false)
+    } finally {
+      globalThis.matchMedia = originalMatchMedia
+    }
+  })
+
+  it('stays at the middle detent when the content is scrolled up', () => {
+    render(<Panel {...defaultProps} />)
+    fireEvent.click(screen.getByTestId('set-middle-detent'))
+
+    fireEvent.wheel(screen.getByTestId('sheet-content'), { deltaY: -40 })
+
+    expect(screen.getByTestId('sheet-root')).toHaveAttribute('data-active-detent', '1')
   })
 })

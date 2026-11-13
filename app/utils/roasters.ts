@@ -1,9 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
+import { withCompanyVerification } from '@/app/utils/verification'
+import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 
 /**
  * Resolves a roaster from a `/roasters/{slug}` identifier. Roasters carry their
@@ -12,7 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
  * route so both agree on the query.
  */
 export const getRoasterBySlug = async (slug: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from('roaster')
     .select('*, company:company_id(*)')
     .eq('slug', slug)
@@ -23,5 +22,24 @@ export const getRoasterBySlug = async (slug: string) => {
     return null
   }
 
-  return data
+  return withCompanyVerification(data)
 }
+
+export const getRoasterWithShops = async (slug: string) => {
+  const { data, error } = await getClient()
+    .from('roaster')
+    .select(`*, company:company_id(*), shops!roaster_id(${SHOP_WITH_ROASTER_SELECT})`)
+    .eq('slug', slug)
+    .eq('shops.permanently_closed', false)
+    .maybeSingle()
+
+  if (error) {
+    logger.error('Error fetching roaster with shops', { error: error.message })
+    throw new Error(error.message)
+  }
+
+  return data && withCompanyVerification(data)
+}
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getRoasterForSeo = cache(getRoasterWithShops)

@@ -46,6 +46,17 @@ describe('Event by-slug API Route', () => {
     expect((await response.json()).title).toBe('Latte Throwdown')
   })
 
+  test('marks the shop and roaster verified when their owning company is verified', async () => {
+    const company = { is_verified: true }
+    const shop = { name: 'De Fer', is_verified: false, company }
+    const roaster = { name: 'Commonplace', is_verified: false, company }
+    mockLimit.mockResolvedValueOnce({ data: [{ ...event, shop, roaster }], error: null })
+
+    const body = await (await callWith('latte-throwdown-12345678')).json()
+    expect(body.shop.is_verified).toBe(true)
+    expect(body.roaster.is_verified).toBe(true)
+  })
+
   test('returns 404 without querying when the slug has no id suffix', async () => {
     const response = await callWith('not-a-real-slug')
     expect(response.status).toBe(404)
@@ -59,11 +70,11 @@ describe('Event by-slug API Route', () => {
     expect(response.status).toBe(404)
   })
 
-  test('returns 404 on database error', async () => {
+  test('returns 500, not 404, on database error', async () => {
     mockLimit.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
     const response = await callWith('whatever-12345678')
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(500)
   })
 
   test('excludes hidden events', async () => {

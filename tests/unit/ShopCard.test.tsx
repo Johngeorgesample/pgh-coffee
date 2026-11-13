@@ -1,10 +1,13 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { describe, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import ShopCard, { roundDistance, generateDistanceText } from '@/app/components/ShopCard'
 import type { TShop } from '@/types/shop-types'
 
 const handleShopSelectMock = vi.fn()
 const setHoveredShopMock = vi.fn()
+const prefetchMock = vi.fn()
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({ prefetch: prefetchMock }) }))
 
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: handleShopSelectMock }),
@@ -13,9 +16,7 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => ({
-    setHoveredShop: setHoveredShopMock,
-  }),
+  default: (selector: (s: unknown) => unknown) => selector({ setHoveredShop: setHoveredShopMock }),
 }))
 
 describe('roundDistance', () => {
@@ -66,6 +67,14 @@ describe('ShopCard', () => {
     vi.clearAllMocks()
   })
 
+  it('prefetches the shop page on hover so the click has nothing left to load', () => {
+    render(<ShopCard {...defaultProps} />)
+
+    fireEvent.mouseEnter(screen.getByRole('button'))
+
+    expect(prefetchMock).toHaveBeenCalledWith('/shops/test-shop-downtown-1234')
+  })
+
   it('renders shop name and neighborhood', () => {
     render(<ShopCard {...defaultProps} />)
 
@@ -114,15 +123,6 @@ describe('ShopCard', () => {
 
   it('shows verified badge for a verified shop', () => {
     const shop = { ...mockShop, properties: { ...mockShop.properties, verified: true } }
-    render(<ShopCard {...defaultProps} shop={shop} />)
-    expect(screen.getByText('Verified')).toBeTruthy()
-  })
-
-  it('shows verified badge when the owning company is verified', () => {
-    const shop = {
-      ...mockShop,
-      properties: { ...mockShop.properties, company: { is_verified: true } },
-    } as TShop
     render(<ShopCard {...defaultProps} shop={shop} />)
     expect(screen.getByText('Verified')).toBeTruthy()
   })

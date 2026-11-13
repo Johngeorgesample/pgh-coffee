@@ -1,14 +1,22 @@
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+import { getClient } from '@/lib/supabase/server-client'
+import { withCompanyVerification } from '@/app/utils/verification'
 
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(is_verified)), roaster:roaster_id(*, company:company_id(is_verified))'
 
-const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)'
+type Verifiable = Parameters<typeof withCompanyVerification>[0]
+
+export type EventRow = { shop?: Verifiable | null; roaster?: Verifiable | null }
+
+export const withInheritedVerification = <T extends EventRow>(event: T) =>
+  ({
+    ...event,
+    shop: event.shop && withCompanyVerification(event.shop),
+    roaster: event.roaster && withCompanyVerification(event.roaster),
+  }) as T
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
-  supabase.from('events').select(select).eq('is_hidden', false)
+  getClient().from('events').select(select).eq('is_hidden', false)
 
 /**
  * Resolves an event from a `/events/{slug}` identifier's id prefix. The `id`
@@ -25,8 +33,8 @@ export const getEventByIdPrefix = async (prefix: string) => {
 
   if (error) {
     logger.error('Error fetching event', { error: error.message })
-    return null
+    throw new Error(`Failed to fetch event: ${error.message}`)
   }
 
-  return data?.[0] ?? null
+  return data?.[0] ? withInheritedVerification(data[0] as EventRow) : null
 }

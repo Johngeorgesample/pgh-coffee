@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { getClient } from '@/lib/supabase/server-client'
 
 export interface Shop {
   uuid: string
@@ -13,11 +13,6 @@ export interface Roaster {
   name: string
   instagram: string | null
 }
-
-export const supabase = createClient(
-  process.env.SUPABASE_URL as string,
-  process.env.SUPABASE_ANON_KEY as string
-)
 
 export async function getImageData(request: Request): Promise<{ base64Image: string; mediaType: string } | null> {
   const contentType = request.headers.get('content-type') ?? ''
@@ -82,7 +77,7 @@ export async function callAnthropicVision<T>(prompt: string, base64Image: string
 }
 
 export async function getAllShops(): Promise<Shop[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from('shops')
     .select('uuid, name, neighborhood, address, company:company_id(instagram_handle)')
     .order('name')
@@ -95,7 +90,7 @@ export async function getAllShops(): Promise<Shop[]> {
 
 /** Local roasters only: a national brand is far likelier to be mentioned in passing than to host. */
 export async function getAllRoasters(): Promise<Roaster[]> {
-  const { data } = await supabase.from('roaster').select('uuid:id, name, instagram').eq('is_local', true).order('name')
+  const { data } = await getClient().from('roaster').select('uuid:id, name, instagram').eq('is_local', true).order('name')
   return (data ?? []) as unknown as Roaster[]
 }
 
@@ -129,7 +124,7 @@ export function validateUUID<T extends { uuid: string }>(candidates: T[], uuid: 
 
 /** The shop's own in-house roaster, used when the post names no roaster of its own. */
 export async function getRoasterID(shopUuid: string): Promise<string | null> {
-  const { data: shop } = await supabase
+  const { data: shop } = await getClient()
     .from('shops')
     .select('company_id')
     .eq('uuid', shopUuid)
@@ -137,7 +132,7 @@ export async function getRoasterID(shopUuid: string): Promise<string | null> {
 
   if (!shop?.company_id) return null
 
-  const { data: roaster } = await supabase
+  const { data: roaster } = await getClient()
     .from('roaster')
     .select('id')
     .eq('company_id', shop.company_id)

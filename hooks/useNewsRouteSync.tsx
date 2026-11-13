@@ -4,6 +4,7 @@ import usePanelStore, { getPanelNewsItem } from '@/stores/panelStore'
 import { NewsDetails } from '@/app/components/NewsDetails'
 import { News } from '@/app/components/News'
 import { buildContentSlug } from '@/app/utils/slug'
+import { clearOwnPanel } from './clearOwnPanel'
 
 const isSameNewsSlug = (content: ReactNode, slug: string) => {
   const news = getPanelNewsItem(content)
@@ -44,6 +45,9 @@ export const useNewsRouteSync = () => {
 
     if (hasNewsList) {
       usePanelStore.getState().setPanelContent(<News />, 'news')
+      return
     }
+
+    clearOwnPanel('news')
   }, [slug, onNewsRoute, hasNewsList])
 }

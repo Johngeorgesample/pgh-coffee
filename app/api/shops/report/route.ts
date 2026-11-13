@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { REPORT_TYPES, isReportType } from '@/lib/reportTypes'
 import { isRealSupabaseError } from '@/lib/supabaseErrors'
-
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getClient } from '@/lib/supabase/server-client'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -27,6 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: `Missing ${required}` }, { status: 400 })
   }
 
+  const supabase = getClient()
   // Validate that the shop exists
   const { data: shop, error: shopError } = await supabase
     .from('shops')
