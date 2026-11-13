@@ -16,15 +16,9 @@ export default function PassportToggle() {
     <MapChip on={passportMode} onClick={() => setPassportMode(!passportMode)}>
       <Stamp className={`size-4 transition-colors ${passportMode ? 'fill-green-500 text-green-800' : 'text-stone-500'}`} />
       Passport
-      {passportMode ? (
-        <span className="tabular-nums text-stone-700">
-          {visitedCount} of {totalCount} visited
-        </span>
-      ) : (
-        <span className="tabular-nums text-stone-500">
-          {visitedCount}/{totalCount}
-        </span>
-      )}
+      <span className={`tabular-nums transition-colors ${passportMode ? 'text-stone-700' : 'text-stone-500'}`}>
+        {visitedCount}/{totalCount}
+      </span>
     </MapChip>
   )
 }
