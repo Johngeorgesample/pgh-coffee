@@ -25,22 +25,21 @@ export const getRoasterBySlug = async (slug: string) => {
   return withCompanyVerification(data)
 }
 
-// cache() so generateMetadata, the page, and the OG image share one query per request.
-export const getRoasterForSeo = cache(getRoasterBySlug)
-
-// Shops that serve this roaster's coffee (joined via shops.roaster_id), so the
-// roaster page can show where to drink it. Mirrors getCompanyShops.
-export const getRoasterShops = async (roasterId: string) => {
+export const getRoasterWithShops = async (slug: string) => {
   const { data, error } = await getClient()
-    .from('shops')
-    .select(SHOP_WITH_ROASTER_SELECT)
-    .eq('roaster_id', roasterId)
-    .eq('permanently_closed', false)
+    .from('roaster')
+    .select(`*, company:company_id(*), shops!roaster_id(${SHOP_WITH_ROASTER_SELECT})`)
+    .eq('slug', slug)
+    .eq('shops.permanently_closed', false)
+    .maybeSingle()
 
   if (error) {
-    logger.error('Error fetching roaster shops', { error: error.message })
-    return null
+    logger.error('Error fetching roaster with shops', { error: error.message })
+    throw new Error(error.message)
   }
 
-  return data
+  return data && withCompanyVerification(data)
 }
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getRoasterForSeo = cache(getRoasterWithShops)

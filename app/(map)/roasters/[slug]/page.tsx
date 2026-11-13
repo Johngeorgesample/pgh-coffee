@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getRoasterForSeo, getRoasterShops } from '@/app/utils/roasters'
+import { getRoasterForSeo } from '@/app/utils/roasters'
 import PanelSeed from '@/app/components/PanelSeed'
 import { buildEntryMetadata } from '@/app/utils/seo'
 
@@ -26,6 +26,5 @@ export default async function RoasterPage({ params }: Props) {
   const roaster = await getRoasterForSeo(slug)
   if (!roaster) notFound()
 
-  const shops = await getRoasterShops(roaster.id)
-  return shops && <PanelSeed seedKey={`roaster:${slug}`} data={{ ...roaster, shops }} />
+  return <PanelSeed seedKey={`roaster:${slug}`} data={roaster} />
 }

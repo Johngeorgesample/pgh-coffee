@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getCompanyForSeo, getCompanyShops, getCompanyRoaster } from '@/app/utils/companies'
+import { getCompanyForSeo } from '@/app/utils/companies'
 import PanelSeed from '@/app/components/PanelSeed'
 import { buildEntryMetadata } from '@/app/utils/seo'
 
@@ -26,6 +26,5 @@ export default async function CompanyPage({ params }: Props) {
   const company = await getCompanyForSeo(slug)
   if (!company) notFound()
 
-  const [shops, roaster] = await Promise.all([getCompanyShops(company.id), getCompanyRoaster(company.id)])
-  return shops && <PanelSeed seedKey={`company:${slug}`} data={{ ...company, shops, roaster }} />
+  return <PanelSeed seedKey={`company:${slug}`} data={company} />
 }
