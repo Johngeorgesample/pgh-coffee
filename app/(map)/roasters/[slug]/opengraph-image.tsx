@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { ogFonts } from '@/app/utils/ogFonts'
 import { getRoasterForSeo } from '@/app/utils/roasters'
 import { getCompanyShopPhotos } from '@/app/utils/companies'
 import { OG_IMAGE_SIZE, OG_CONTENT_TYPE } from '@/app/utils/ogTheme'
@@ -15,6 +16,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
   return new ImageResponse(
     <OgPhotoCard photo={photos.find(Boolean) ?? null} title={roaster?.name ?? 'pgh.coffee'} subtitle="Coffee roaster" />,
-    size,
+    { ...size, fonts: ogFonts },
   )
 }

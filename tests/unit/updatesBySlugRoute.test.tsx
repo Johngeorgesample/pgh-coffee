@@ -54,10 +54,10 @@ describe('Update by-slug API Route', () => {
     expect(response.status).toBe(404)
   })
 
-  test('returns 404 on database error', async () => {
+  test('returns 500, not 404, on database error', async () => {
     mockLimit.mockResolvedValueOnce({ data: null, error: { message: 'Database error' } })
 
     const response = await callWith('whatever-12345678')
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(500)
   })
 })

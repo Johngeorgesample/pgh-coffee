@@ -5,6 +5,9 @@ import type { TShop } from '@/types/shop-types'
 
 const handleShopSelectMock = vi.fn()
 const setHoveredShopMock = vi.fn()
+const prefetchMock = vi.fn()
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({ prefetch: prefetchMock }) }))
 
 vi.mock('@/hooks', () => ({
   useShopSelection: () => ({ handleShopSelect: handleShopSelectMock }),
@@ -13,9 +16,7 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/stores/coffeeShopsStore', () => ({
   __esModule: true,
-  default: () => ({
-    setHoveredShop: setHoveredShopMock,
-  }),
+  default: (selector: (s: unknown) => unknown) => selector({ setHoveredShop: setHoveredShopMock }),
 }))
 
 describe('roundDistance', () => {
@@ -64,6 +65,14 @@ describe('ShopCard', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('prefetches the shop page on hover so the click has nothing left to load', () => {
+    render(<ShopCard {...defaultProps} />)
+
+    fireEvent.mouseEnter(screen.getByRole('button'))
+
+    expect(prefetchMock).toHaveBeenCalledWith('/shops/test-shop-downtown-1234')
   })
 
   it('renders shop name and neighborhood', () => {

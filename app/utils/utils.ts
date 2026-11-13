@@ -165,3 +165,9 @@ export const doesShopMatchFilter = (shopName: string, shopNeighborhood: string, 
     })
   })
 }
+
+export const getFeatureBounds = (shops: TShop[]) => {
+  const lngs = shops.map(shop => shop.geometry.coordinates[0])
+  const lats = shops.map(shop => shop.geometry.coordinates[1])
+  return [Math.min(...lngs), Math.min(...lats), Math.max(...lngs), Math.max(...lats)] as const
+}

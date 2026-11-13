@@ -1,11 +1,14 @@
 'use client'
 
 import { MapPinIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 import VerifiedBadge from './VerifiedBadge'
 import { TShop } from '@/types/shop-types'
 import { DISTANCE_UNITS, TUnits } from '@/types/unit-types'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { useShopSelection, useAnalytics } from '@/hooks'
+import { buildShopSlug } from '@/app/utils/shopSlug'
+import { prefetchShopExtras } from '@/app/utils/shopExtras'
 
 interface IProps {
   distance?: string
@@ -16,6 +19,7 @@ interface IProps {
   onMouseEnter?: () => void
   onMouseLeave?: () => void
   featured?: boolean
+  closedNow?: boolean
   // Overrides the default map-selection click (store mutation + panel + analytics).
   // Used outside the map app — e.g. the public profile passport just navigates.
   onClick?: () => void
@@ -33,6 +37,11 @@ export default function ShopCard(props: IProps) {
   const plausible = useAnalytics()
   const { handleShopSelect } = useShopSelection()
   const setHoveredShop = useShopsStore(s => s.setHoveredShop)
+  const router = useRouter()
+  const prefetchShop = () => {
+    router.prefetch(`/shops/${buildShopSlug(props.shop.properties)}`)
+    prefetchShopExtras(props.shop.properties.uuid)
+  }
 
   const handleClick = () => {
     if (props.onClick) {
@@ -59,7 +68,12 @@ export default function ShopCard(props: IProps) {
 
   return (
     <li
-      onMouseEnter={() => setHoveredShop(props.shop)}
+      onMouseEnter={() => {
+        setHoveredShop(props.shop)
+        prefetchShop()
+      }}
+      onFocus={prefetchShop}
+      onTouchStart={prefetchShop}
       onMouseLeave={() => setHoveredShop(null)}
       className={`${props.featured ? 'h-46' : 'h-28'} relative mb-4 rounded-sm overflow-hidden shadow-md cursor-pointer transition-transform ease-out active:scale-[0.98] motion-reduce:active:scale-100`}
       onClick={handleClick}
@@ -86,6 +100,11 @@ export default function ShopCard(props: IProps) {
             {props.shop.properties.permanentlyClosed && (
               <span className="shrink-0 rounded-full bg-red-600/90 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
                 Closed
+              </span>
+            )}
+            {props.closedNow && !props.shop.properties.permanentlyClosed && (
+              <span className="shrink-0 rounded-full bg-stone-900/80 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+                Closed now
               </span>
             )}
           </p>

@@ -7,6 +7,7 @@ import { TShop } from '@/types/shop-types'
 import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
+import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
   children?: React.ReactNode
@@ -31,6 +32,11 @@ export default function Panel(props: IProps) {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const touchStartY = useRef<number | null>(null)
   const largeViewport = useMediaQuery('(min-width: 1024px)')
+  const setSheetExpanded = usePanelStore(s => s.setSheetExpanded)
+
+  useEffect(() => {
+    setSheetExpanded(!largeViewport && presented && activeDetent === lastDetentIndex)
+  }, [largeViewport, presented, activeDetent, lastDetentIndex, setSheetExpanded])
 
   // detect touch device once
   const [isTouch, setIsTouch] = useState(false)
@@ -98,6 +104,24 @@ export default function Panel(props: IProps) {
     }
   }, [isTouch, activeDetent, middleDetentIndex, lastDetentIndex])
 
+  // Pointer devices get the same middle -> full expansion as the touch gesture
+  // above. Without it the sheet is stuck at 60vh in a desktop browser, so a
+  // narrow-viewport check never reaches the state mobile users are actually in.
+  useEffect(() => {
+    if (isTouch) return
+    const el = contentRef.current
+    if (!el) return
+
+    const onWheel = (e: WheelEvent) => {
+      if (activeDetent !== middleDetentIndex || e.deltaY <= 0) return
+      e.preventDefault()
+      setActiveDetent(lastDetentIndex)
+    }
+
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [isTouch, activeDetent, middleDetentIndex, lastDetentIndex])
+
   if (largeViewport) {
     return (
       <div data-testid="shop-panel" className="relative z-10">
@@ -135,7 +159,7 @@ export default function Panel(props: IProps) {
               action="dismiss"
               className="block mx-auto focus:outline-none focus:ring-0 mt-2 mb-3 bg-gray-300"
             >
-              Drag to expand
+              Drag to dismiss
             </Sheet.Handle>
 
             <SearchBar />

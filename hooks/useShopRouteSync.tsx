@@ -14,9 +14,10 @@ export const useShopRouteSync = () => {
   // `slug` is shared by every [slug] route (shops, events, news), so only act
   // when we're actually on a shop page.
   const onShopRoute = pathname.startsWith('/shops/')
+  const onAnotherDetailRoute = !onShopRoute && !!slug
 
   // Store actions are read via getState() rather than closed over so the effect
-  // depends only on `slug` and `onShopRoute` — no exhaustive-deps suppression.
+  // depends only on the route values — no exhaustive-deps suppression.
   useEffect(() => {
     const { currentShop, setCurrentShop } = useShopsStore.getState()
 
@@ -24,16 +25,25 @@ export const useShopRouteSync = () => {
     // de-highlights) when one is set, but only reset the panel to explore when a
     // shop panel is actually showing, so we don't clobber a company/roaster/news
     // panel that lives on the bare `/` route.
-    const clearShopPanel = () => {
+    const clearSelectedShop = () => {
       if (useShopsStore.getState().currentShop?.properties?.uuid) {
         setCurrentShop({} as TShop)
       }
+    }
+
+    const clearShopPanel = () => {
+      clearSelectedShop()
       if (usePanelStore.getState().panelMode === 'shop') {
         usePanelStore.getState().reset({ mode: 'explore', content: <ExploreContent /> })
       }
     }
 
-    if (!onShopRoute || !slug) {
+    if (onAnotherDetailRoute) {
+      clearSelectedShop()
+      return
+    }
+
+    if (!slug) {
       clearShopPanel()
       return
     }
@@ -67,5 +77,5 @@ export const useShopRouteSync = () => {
       })
 
     return () => controller.abort()
-  }, [slug, onShopRoute])
+  }, [slug, onShopRoute, onAnotherDetailRoute])
 }

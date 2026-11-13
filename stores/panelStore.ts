@@ -7,14 +7,14 @@ import { buildShopSlug } from '@/app/utils/shopSlug'
 import { buildContentSlug } from '@/app/utils/slug'
 import useCoffeeShopsStore from './coffeeShopsStore'
 
-export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event'
+export type PanelMode = 'explore' | 'search' | 'shop' | 'list' | 'news' | 'events' | 'company' | 'roaster' | 'event' | 'near'
 
 type PanelEntry = {
   mode: PanelMode
   content: ReactNode
 }
 
-const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood'] as const
+const URL_PARAMS = ['shop', 'company', 'roaster', 'news', 'event', 'events', 'neighborhood', 'near'] as const
 
 function hasProps<K extends string>(
   content: ReactNode,
@@ -73,6 +73,8 @@ function getURLParamForEntry(entry: PanelEntry): URLTarget | null {
       return null
     case 'events':
       return { type: 'query', key: 'events', value: '' }
+    case 'near':
+      return hasProps(content, 'query') ? { type: 'query', key: 'near', value: content.props.query as string } : null
     default:
       return null
   }
@@ -119,6 +121,7 @@ interface PanelState {
   history: PanelEntry[]
   /** 404s render inside the map layout, so app/not-found.tsx hides the map and panel. */
   hidden: boolean
+  sheetExpanded: boolean
 
   // setters
   /** Pushes a new panel onto the stack (default). Use opts.push=false to replace. */
@@ -132,6 +135,7 @@ interface PanelState {
   clearHistory: (opts?: { keepCurrent?: boolean }) => void
 
   setHidden: (hidden: boolean) => void
+  setSheetExpanded: (sheetExpanded: boolean) => void
 }
 
 const usePanelStore = create<PanelState>()(
@@ -141,8 +145,10 @@ const usePanelStore = create<PanelState>()(
       panelContent: null,
       history: [],
       hidden: false,
+      sheetExpanded: false,
 
       setHidden: hidden => set({ hidden }),
+      setSheetExpanded: sheetExpanded => set({ sheetExpanded }),
 
       setPanelContent: (content, mode) =>
         set(state => {

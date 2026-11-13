@@ -22,11 +22,15 @@ vi.mock('react-map-gl', () => ({
 vi.mock('@/stores/coffeeShopsStore', () => ({
   default: vi.fn(),
   useDisplayedShops: vi.fn(),
+  useIsClosed: () => () => false,
 }))
+
+vi.mock('@/app/components/MapChips', () => ({ default: () => null }))
 
 vi.mock('@/hooks', () => ({
   useShopSelection: vi.fn(),
   useShopsInView: vi.fn(),
+  useAnalytics: () => vi.fn(),
 }))
 
 describe('MapContainer panning', () => {

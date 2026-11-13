@@ -17,8 +17,9 @@ vi.mock('react-map-gl', () => ({
   Source: ({ children }: any) => <div>{children}</div>,
   Layer: () => null,
 }))
-vi.mock('@/stores/coffeeShopsStore', () => ({ default: vi.fn(), useDisplayedShops: vi.fn() }))
-vi.mock('@/hooks', () => ({ useShopSelection: vi.fn(), useShopsInView: vi.fn() }))
+vi.mock('@/stores/coffeeShopsStore', () => ({ default: vi.fn(), useDisplayedShops: vi.fn(), useIsClosed: () => () => false }))
+vi.mock('@/app/components/MapChips', () => ({ default: () => null }))
+vi.mock('@/hooks', () => ({ useShopSelection: vi.fn(), useShopsInView: vi.fn(), useAnalytics: () => vi.fn() }))
 
 const shops = (coords: [number, number][]) =>
   ({ type: 'FeatureCollection', features: coords.map(c => ({ geometry: { coordinates: c }, properties: {} })) }) as any
@@ -42,6 +43,6 @@ describe('MapContainer neighborhood fit', () => {
     rerender(<MapContainer currentShopCoordinates={[0, 0]} />)
 
     expect(fitBounds).toHaveBeenCalledTimes(1)
-    expect(fitBounds.mock.calls[0][0]).toEqual([[-80.0, 40.44], [-79.99, 40.45]])
+    expect(fitBounds.mock.calls[0][0]).toEqual([-80.0, 40.44, -79.99, 40.45])
   })
 })

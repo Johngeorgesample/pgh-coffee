@@ -84,6 +84,10 @@ export const EventsCTA = () => {
             <EventCardSkeleton />
             <EventCardSkeleton />
           </>
+        ) : soonestTwo.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-stone-300 px-4 py-6 text-center text-sm text-stone-500">
+            No upcoming events right now. Check back soon.
+          </p>
         ) : (
           soonestTwo.map(event => <EventCard key={event.id} entry={event} />)
         )}

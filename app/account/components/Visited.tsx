@@ -1,91 +1,69 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Stamp, MapPin } from 'lucide-react'
-import ShopCard from '@/app/components/ShopCard'
-import { formatDBShopAsFeature } from '@/app/utils/utils'
-import type { DbShop } from '@/types/shop-types'
-
-interface Visit {
-  id: string
-  created_at: string
-  shop: DbShop
-}
+import EmptyCard from './EmptyCard'
+import VisitChecklist from './VisitChecklist'
+import Passport from '@/app/u/[id]/Passport'
+import PassportCover from '@/app/u/[id]/PassportCover'
+import { useOwnProfile } from '@/hooks'
+import type { Visit } from '@/app/utils/visitStats'
 
 export default function Visited() {
+  const { profile } = useOwnProfile()
   const [visits, setVisits] = useState<Visit[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [skipped, setSkipped] = useState(false)
 
   const hasVisits = visits && visits.length > 0
 
+  const fetchVisits = useCallback(async () => {
+    const res = await fetch('/api/visits')
+    if (!res.ok) throw new Error(`Failed to fetch visits: ${res.status}`)
+    const data = await res.json()
+    setVisits(Array.isArray(data) ? data : [])
+  }, [])
+
   useEffect(() => {
-    fetch('/api/visits')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch visits: ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((data) => {
-        setVisits(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
+    fetchVisits()
       .catch((err) => {
         console.error('Failed to fetch visits:', err)
         setError(true)
-        setLoading(false)
       })
-  }, [])
+      .finally(() => setLoading(false))
+  }, [fetchVisits])
 
   if (loading) return <div>Loading...</div>
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Stamp className="h-12 w-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Couldn&apos;t load your passport</h3>
-          <p className="text-gray-500 max-w-sm">
-            Something went wrong while loading your visited shops. Please try refreshing the page.
-          </p>
-        </div>
-      </div>
+      <EmptyCard icon={Stamp} title="Couldn't load your passport" body="Something went wrong while loading your visited shops. Please try refreshing the page." />
     )
   }
 
   return (
     <div className="space-y-6">
       {hasVisits ? (
-        <div className="space-y-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Passport</h1>
-            <p className="text-gray-500">Keep track of the coffee shops you&apos;ve visited.</p>
+        <>
+          <div className="overflow-hidden rounded-2xl">
+            <PassportCover name={profile?.display_name || 'Your passport'} avatarUrl={profile?.avatar_url ?? null} visits={visits} />
           </div>
-          <ul>
-            {visits.map((visit) => (
-              <ShopCard key={visit.id} shop={formatDBShopAsFeature(visit.shop)} />
-            ))}
-          </ul>
-        </div>
+          <Passport visits={visits} />
+        </>
+      ) : !skipped ? (
+        <VisitChecklist onSaved={fetchVisits} onSkip={() => setSkipped(true)} />
       ) : (
-        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Stamp className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No visits yet</h3>
-            <p className="text-gray-500 max-w-sm">
-              Mark the shops you&apos;ve been to and watch your passport fill up.
-            </p>
-            <Link
-              href="/"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
-            >
-              <MapPin className="h-4 w-4" />
-              Explore shops
-            </Link>
-          </div>
-        </div>
+        <EmptyCard icon={Stamp} title="No visits yet" body="Mark the shops you've been to and watch your passport fill up.">
+          <Link
+            href="/"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg py-3 px-4 text-sm font-semibold text-black bg-yellow-300 hover:bg-yellow-400"
+          >
+            <MapPin className="h-4 w-4" />
+            Explore shops
+          </Link>
+        </EmptyCard>
       )}
     </div>
   )

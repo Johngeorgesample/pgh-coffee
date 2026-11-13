@@ -10,6 +10,12 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 300
+
+export async function generateStaticParams() {
+  return []
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const shop = await getShopForSeo((await params).slug)
   return shop ? buildShopMetadata(shop) : {}
