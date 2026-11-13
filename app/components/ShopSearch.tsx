@@ -55,7 +55,7 @@ export default function ShopSearch() {
             </span>
           </Link>
         ))}
-        {isSearching && (
+        {isSearching && areaLinks.length === 0 && (
           <Link
             href={`/?near=${encodeURIComponent(searchValue)}`}
             onClick={() => setSearchValue('')}
