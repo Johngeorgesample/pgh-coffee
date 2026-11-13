@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getShopForSeo, buildShopMetadata, buildShopJsonLd, jsonLdToString } from '@/app/utils/seo'
+import { areaForNeighborhood, areaPath } from '@/app/utils/neighborhoodAreas'
 import { formatDBShopAsFeature } from '@/app/utils/utils'
 import ShopSeed from './ShopSeed'
 
@@ -26,6 +28,8 @@ export default async function ShopPage({ params }: Props) {
 
   if (!shop) notFound()
 
+  const area = areaForNeighborhood(shop.neighborhood)
+
   return (
     <>
       {!shop.permanently_closed && (
@@ -35,6 +39,13 @@ export default async function ShopPage({ params }: Props) {
           client-side data fetching completes, so the server-rendered HTML
           has none. */}
       <h1 className="sr-only">{shop.name}</h1>
+      {/* Crawlable (no-JS) internal link to the neighborhood landing page;
+          the visible equivalent lives in the client-rendered PanelHeader. */}
+      {!shop.permanently_closed && (
+        <Link className="sr-only" tabIndex={-1} href={areaPath(area)}>
+          Coffee shops in {area}
+        </Link>
+      )}
       {/* Seed the client store with the shop the server already fetched so
           useShopRouteSync short-circuits instead of re-fetching over the API. */}
       <ShopSeed shop={formatDBShopAsFeature(shop)} />

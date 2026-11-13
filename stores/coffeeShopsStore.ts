@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
 import { doesShopMatchFilter } from '@/app/utils/utils'
+import { areaForNeighborhood } from '@/app/utils/neighborhoodAreas'
 import { isOpenNow, pittsburghNow, type HoursRow } from '@/app/utils/hours'
 
 interface CoffeeShopsState {
@@ -16,6 +17,8 @@ interface CoffeeShopsState {
   // Filters
   searchValue: string
   setSearchValue: (value: string) => void
+  areaFilter: string | null
+  setAreaFilter: (area: string) => void
   activeAmenityFilters: string[]
   toggleAmenityFilter: (amenity: string) => void
   clearAmenityFilters: () => void
@@ -73,7 +76,9 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 
       // Filters
       searchValue: '',
-      setSearchValue: value => set({ searchValue: value }),
+      setSearchValue: value => set({ searchValue: value, areaFilter: null }),
+      areaFilter: null,
+      setAreaFilter: area => set({ searchValue: area, areaFilter: area }),
 
       activeAmenityFilters: [],
       toggleAmenityFilter: amenity =>
@@ -145,6 +150,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 export function useDisplayedShops(): TFeatureCollection {
   const allShops = useCoffeeShopsStore(s => s.allShops)
   const searchValue = useCoffeeShopsStore(s => s.searchValue)
+  const areaFilter = useCoffeeShopsStore(s => s.areaFilter)
   const activeAmenityFilters = useCoffeeShopsStore(s => s.activeAmenityFilters)
   const currentShop = useCoffeeShopsStore(s => s.currentShop)
   const overrideShops = useCoffeeShopsStore(s => s.overrideShops)
@@ -153,7 +159,9 @@ export function useDisplayedShops(): TFeatureCollection {
     if (overrideShops) return overrideShops
 
     const filtered = allShops.features.filter(shop => {
-      if (!doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)) {
+      if (areaFilter) {
+        if (areaForNeighborhood(shop.properties.neighborhood) !== areaFilter) return false
+      } else if (!doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)) {
         return false
       }
       if (
@@ -188,6 +196,7 @@ export function useDisplayedShops(): TFeatureCollection {
   }, [
     allShops,
     searchValue,
+    areaFilter,
     activeAmenityFilters,
     currentShop?.properties?.address,
     currentShop?.properties?.name,

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import useCoffeeShopsStore from '@/stores/coffeeShopsStore'
+import { areaForNeighborhood } from '@/app/utils/neighborhoodAreas'
 
 /**
  * Keeps the search filter in sync with the `neighborhood` URL param.
@@ -7,10 +8,12 @@ import useCoffeeShopsStore from '@/stores/coffeeShopsStore'
  */
 export const useURLNeighborhoodSync = () => {
   const setSearchValue = useCoffeeShopsStore(s => s.setSearchValue)
+  const setAreaFilter = useCoffeeShopsStore(s => s.setAreaFilter)
 
   const syncFromURL = () => {
     const neighborhood = new URLSearchParams(window.location.search).get('neighborhood')
-    setSearchValue(neighborhood ?? '')
+    if (neighborhood) setAreaFilter(areaForNeighborhood(neighborhood))
+    else setSearchValue('')
   }
 
   useEffect(() => {

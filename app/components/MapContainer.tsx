@@ -7,6 +7,7 @@ import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore, { useDisplayedShops, useIsClosed } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
+import { TShop } from '@/types/shop-types'
 import MapChips from './MapChips'
 import { getFeatureBounds } from '@/app/utils/utils'
 import { nearestShops } from '@/app/utils/shopsByDistance'
@@ -105,6 +106,15 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   useEffect(fitToNearPoint, [nearPoint, allShops])
 
+  const [mapLoaded, setMapLoaded] = useState(false)
+  const fittedToArea = useRef(false)
+  useEffect(() => {
+    const map = mapRef.current?.getMap()
+    if (fittedToArea.current || !mapLoaded || !map) return
+    if (!new URLSearchParams(window.location.search).has('neighborhood')) return
+    fittedToArea.current = fitToShops(map, displayedShops.features)
+  }, [mapLoaded, displayedShops])
+
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
 
@@ -199,6 +209,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onLoad={(e) => {
+          setMapLoaded(true)
           updateBounds(e)
           // The ref is still null when the first pan effect runs on a direct shop URL
           panToCurrentShop()
@@ -332,4 +343,11 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       </Map>
     </div>
   )
+}
+
+function fitToShops(map: ReturnType<MapRef['getMap']>, shops: TShop[]) {
+  const located = shops.filter(({ geometry: { coordinates: [lng, lat] } }) => lng !== 0 && lat !== 0)
+  if (located.length === 0) return false
+  map.fitBounds([...getFeatureBounds(located)], { padding: 80, maxZoom: 15, duration: 1000 })
+  return true
 }
