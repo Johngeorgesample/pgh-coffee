@@ -13,6 +13,8 @@ import { areaPath, nearestAreas, shopNoun } from '@/app/utils/neighborhoodAreas'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import { Footer } from '@/app/components/about'
 
+export const revalidate = 3600
+
 type Props = {
   params: Promise<{ slug: string }>
 }

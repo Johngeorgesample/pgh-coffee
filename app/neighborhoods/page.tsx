@@ -4,6 +4,8 @@ import { getNeighborhoodAreas } from '@/app/utils/seo'
 import { areaPath, shopNoun } from '@/app/utils/neighborhoodAreas'
 import { Footer } from '@/app/components/about'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Coffee shops by neighborhood | pgh.coffee',
   description: 'Independent Pittsburgh coffee shops, organized by neighborhood.',
