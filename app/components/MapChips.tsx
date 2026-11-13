@@ -7,6 +7,7 @@ import useShopsStore from '@/stores/coffeeShopsStore'
 import MapChip from './MapChip'
 import PassportToggle from './PassportToggle'
 import { NEAR_ME } from '@/hooks/useNearRouteSync'
+import usePanelStore from '@/stores/panelStore'
 
 function OpenNowToggle() {
   const plausible = useAnalytics()
@@ -39,8 +40,15 @@ function NearMeToggle() {
 }
 
 export default function MapChips() {
+  const sheetExpanded = usePanelStore(s => s.sheetExpanded)
+
   return (
-    <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
+    <div
+      inert={sheetExpanded}
+      className={`absolute left-4 top-4 z-10 flex flex-wrap gap-2 transition duration-200 ease-out ${
+        sheetExpanded ? '-translate-y-2 opacity-0' : ''
+      }`}
+    >
       <OpenNowToggle />
       <PassportToggle />
       <NearMeToggle />

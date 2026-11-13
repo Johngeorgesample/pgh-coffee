@@ -7,6 +7,7 @@ import { TShop } from '@/types/shop-types'
 import useShopStore from '@/stores/coffeeShopsStore'
 import SearchBar from './SearchBar'
 import { useMediaQuery } from '@/hooks'
+import usePanelStore from '@/stores/panelStore'
 
 interface IProps {
   children?: React.ReactNode
@@ -31,6 +32,11 @@ export default function Panel(props: IProps) {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const touchStartY = useRef<number | null>(null)
   const largeViewport = useMediaQuery('(min-width: 1024px)')
+  const setSheetExpanded = usePanelStore(s => s.setSheetExpanded)
+
+  useEffect(() => {
+    setSheetExpanded(!largeViewport && presented && activeDetent === lastDetentIndex)
+  }, [largeViewport, presented, activeDetent, lastDetentIndex, setSheetExpanded])
 
   // detect touch device once
   const [isTouch, setIsTouch] = useState(false)
