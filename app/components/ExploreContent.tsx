@@ -5,7 +5,6 @@ import { TShop } from '@/types/shop-types'
 import FeaturedShop from './Explore/FeaturedShop'
 import { EventsCTA } from './Explore/EventsCTA'
 import { NewsCTA } from './Explore/NewsCTA'
-import { NeighborhoodsCTA } from './Explore/NeighborhoodsCTA'
 import useShopsStore from '@/stores/coffeeShopsStore'
 import { AmenityFilterList } from './AmenityFilterList'
 
@@ -27,9 +26,6 @@ export const ExploreContent = () => {
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="flex flex-col sm:grid gap-3 px-6 lg:px-4 mt-16 mb-8">
         <AmenityFilterList />
-        <div>
-          <NeighborhoodsCTA />
-        </div>
         <div>
           <NewsCTA />
         </div>
