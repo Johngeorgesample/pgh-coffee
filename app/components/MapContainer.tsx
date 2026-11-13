@@ -7,6 +7,7 @@ import type { MapLayerMouseEvent } from 'react-map-gl'
 import { useShopSelection, useShopsInView } from '@/hooks'
 import useShopsStore, { useDisplayedShops } from '@/stores/coffeeShopsStore'
 import ShopPopup from './ShopPopup'
+import { TShop } from '@/types/shop-types'
 
 interface MapContainerProps {
   currentShopCoordinates: [number, number]
@@ -73,40 +74,14 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
 
   useEffect(panToCurrentShop, [currentLongitude, currentLatitude])
 
-  // On arrival via `?neighborhood=`, fit the camera to that neighborhood's shops
-  // (displayedShops is already filtered to them). react-map-gl attaches mapRef
-  // asynchronously without a re-render, so poll via rAF until the map's style is
-  // loaded and the filtered shops have arrived, then fit once. Give up after a
-  // few seconds so a name that filters to nothing can't loop forever.
-  const displayedShopsRef = useRef(displayedShops)
-  displayedShopsRef.current = displayedShops
+  const [mapLoaded, setMapLoaded] = useState(false)
+  const fittedToArea = useRef(false)
   useEffect(() => {
+    const map = mapRef.current?.getMap()
+    if (fittedToArea.current || !mapLoaded || !map) return
     if (!new URLSearchParams(window.location.search).has('neighborhood')) return
-    let raf = 0
-    let attempts = 0
-    const tryFit = () => {
-      const map = mapRef.current?.getMap()
-      const points = displayedShopsRef.current.features
-        .map(f => f.geometry.coordinates)
-        .filter(([lng, lat]) => lng !== 0 && lat !== 0)
-      if ((!map || !map.isStyleLoaded() || points.length === 0) && attempts++ < 180) {
-        raf = requestAnimationFrame(tryFit)
-        return
-      }
-      if (!map || points.length === 0) return
-      const lngs = points.map(p => p[0])
-      const lats = points.map(p => p[1])
-      map.fitBounds(
-        [
-          [Math.min(...lngs), Math.min(...lats)],
-          [Math.max(...lngs), Math.max(...lats)],
-        ],
-        { padding: 80, maxZoom: 15, duration: 1000 }
-      )
-    }
-    tryFit()
-    return () => cancelAnimationFrame(raf)
-  }, [])
+    fittedToArea.current = fitToShops(map, displayedShops.features)
+  }, [mapLoaded, displayedShops])
 
   const shopsWithHoverState = useMemo(() => {
     if (!displayedShops?.features) return displayedShops
@@ -196,6 +171,7 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onLoad={(e) => {
+          setMapLoaded(true)
           updateBounds(e)
           // The ref is still null when the first pan effect runs on a direct shop URL
           panToCurrentShop()
@@ -285,4 +261,19 @@ export default function MapContainer({ currentShopCoordinates }: MapContainerPro
       </Map>
     </div>
   )
+}
+
+function fitToShops(map: ReturnType<MapRef['getMap']>, shops: TShop[]) {
+  const points = shops.map(f => f.geometry.coordinates).filter(([lng, lat]) => lng !== 0 && lat !== 0)
+  if (points.length === 0) return false
+  const lngs = points.map(p => p[0])
+  const lats = points.map(p => p[1])
+  map.fitBounds(
+    [
+      [Math.min(...lngs), Math.min(...lats)],
+      [Math.max(...lngs), Math.max(...lats)],
+    ],
+    { padding: 80, maxZoom: 15, duration: 1000 }
+  )
+  return true
 }
