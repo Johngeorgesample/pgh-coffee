@@ -26,6 +26,9 @@ export default function Nav() {
         </Link>
       </span>
       <div className="hidden sm:flex items-center gap-6">
+        <Link className="flex gap-1 text-md hover:bg-black/5 p-2 hover:rounded-lg" href="/neighborhoods">
+          Neighborhoods
+        </Link>
         <Link className="flex gap-1 text-md hover:bg-black/5 p-2 hover:rounded-lg" href="/about">
           About
         </Link>

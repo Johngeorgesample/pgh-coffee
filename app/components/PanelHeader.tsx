@@ -1,9 +1,11 @@
 'use client'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAnalytics } from '@/hooks'
 import { TShop } from '@/types/shop-types'
 import VerifiedBadge from './VerifiedBadge'
 import { BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { areaForNeighborhood, areaPath } from '@/app/utils/neighborhoodAreas'
 import { XCircleIcon } from '@heroicons/react/24/solid'
 
 interface IProps {
@@ -16,6 +18,9 @@ export default function PanelHeader(props: IProps) {
   const router = useRouter()
 
   const hasPhoto = !!photo
+
+  // Every neighborhood with a shop has a landing page, so this shop's always does.
+  const area = areaForNeighborhood(neighborhood)
 
   return (
     <div id="header" data-testid="header">
@@ -49,7 +54,19 @@ export default function PanelHeader(props: IProps) {
             {name}
             {verified && <VerifiedBadge className="mt-0.5" />}
           </h1>
-          <p className="text-base text-white/80 mt-0.5">{neighborhood}</p>
+          <p className="text-base text-white/80 mt-0.5">
+            {permanentlyClosed ? (
+              neighborhood
+            ) : (
+              <Link
+                href={areaPath(area)}
+                onClick={e => e.stopPropagation()}
+                className="underline underline-offset-2 hover:text-white"
+              >
+                {neighborhood}
+              </Link>
+            )}
+          </p>
           {permanentlyClosed && (
             <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
               <XCircleIcon className="size-4 shrink-0" />
