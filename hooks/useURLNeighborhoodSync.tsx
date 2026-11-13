@@ -7,10 +7,12 @@ import useCoffeeShopsStore from '@/stores/coffeeShopsStore'
  */
 export const useURLNeighborhoodSync = () => {
   const setSearchValue = useCoffeeShopsStore(s => s.setSearchValue)
+  const setAreaFilter = useCoffeeShopsStore(s => s.setAreaFilter)
 
   const syncFromURL = () => {
     const neighborhood = new URLSearchParams(window.location.search).get('neighborhood')
-    setSearchValue(neighborhood ?? '')
+    if (neighborhood) setAreaFilter(neighborhood)
+    else setSearchValue('')
   }
 
   useEffect(() => {
