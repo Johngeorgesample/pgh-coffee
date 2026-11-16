@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { isRealSupabaseError } from '@/lib/supabaseErrors'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -12,7 +13,7 @@ const TARGETS = {
   roaster: { table: 'roaster', idColumn: 'id', fkColumn: 'roaster_id' },
 } as const
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   let body
   try {
     body = await request.json()
@@ -91,3 +92,5 @@ export async function POST(request: Request) {
   metrics.claimSubmitted(persistedType)
   return NextResponse.json({ ok: true }, { status: 201 })
 }
+
+export const POST = withMetrics('shops/claim:POST', handlePOST)

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
+import { withMetrics } from '@/lib/withMetrics'
 
 // Don't let Next apply a fixed ISR window; the Cache-Control below drives CDN
 // caching instead.
@@ -27,7 +28,7 @@ const round = (n: number) => Math.round(n * 1e5) / 1e5
 // Coordinates live in the path (not the query string) so the shared CDN — which
 // keys on path alone — caches a distinct image per shop instead of leaking one
 // shop's map across coordinates. See tests/unit/cdnCacheInvariant.test.ts.
-export async function GET(_req: Request, ctx: { params: Promise<{ lng: string; lat: string }> }) {
+async function handleGET(_req: Request, ctx: { params: Promise<{ lng: string; lat: string }> }) {
   if (!MAPBOX_TOKEN) {
     return NextResponse.json({ error: 'Mapbox token not configured' }, { status: 500 })
   }
@@ -60,3 +61,5 @@ export async function GET(_req: Request, ctx: { params: Promise<{ lng: string; l
     },
   })
 }
+
+export const GET = withMetrics('shops/static-map/[lng]/[lat]', handleGET)

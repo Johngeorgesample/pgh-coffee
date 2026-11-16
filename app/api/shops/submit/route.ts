@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const { name, address, neighborhood, website } = await request.json()
 
   if (!name || !address) {
@@ -24,3 +25,5 @@ export async function POST(request: Request) {
   metrics.shopSubmitted()
   return NextResponse.json(data, { status: 201 })
 }
+
+export const POST = withMetrics('shops/submit:POST', handlePOST)

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getCompanyWithShops } from '@/app/utils/companies'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function GET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
+async function handleGET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
   const { company: slug } = await props.params
 
   let company
@@ -18,3 +19,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
 
   return NextResponse.json(company, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }
+
+export const GET = withMetrics('companies/[company]', handleGET)

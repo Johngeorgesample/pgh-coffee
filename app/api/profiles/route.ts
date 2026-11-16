@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function GET() {
+async function handleGET() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -24,7 +25,7 @@ export async function GET() {
   return NextResponse.json(data)
 }
 
-export async function PATCH(request: Request) {
+async function handlePATCH(request: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -52,3 +53,6 @@ export async function PATCH(request: Request) {
 
   return NextResponse.json(data)
 }
+
+export const GET = withMetrics('profiles', handleGET)
+export const PATCH = withMetrics('profiles:PATCH', handlePATCH)

@@ -4,6 +4,7 @@ import { formatDBShopAsFeature } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const mapDbShopToTShop = (s: DbShop): TShop | null => {
   if (s.latitude == null || s.longitude == null) return null
@@ -33,7 +34,7 @@ const fetchCuratedLists = async () => {
 }
 
 // API Route Handler
-export async function GET() {
+async function handleGET() {
   const lists = await fetchCuratedLists()
 
   if (!lists) {
@@ -42,3 +43,5 @@ export async function GET() {
 
   return NextResponse.json(lists, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }
+
+export const GET = withMetrics('curated-lists', handleGET)

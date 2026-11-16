@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
+import { withMetrics } from '@/lib/withMetrics'
 
 const MAX_SHOP_UUIDS = 1000
 
@@ -67,7 +68,7 @@ async function addVisits(supabase: Supabase, userID: string, shopUUIDs: unknown)
   return saveVisits(supabase, userID, shops)
 }
 
-export async function GET() {
+async function handleGET() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -100,7 +101,7 @@ export async function GET() {
   return NextResponse.json(data)
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
   return addVisits(supabase, user.id, shopUUIDs ?? [shopUUID])
 }
 
-export async function DELETE(request: Request) {
+async function handleDELETE(request: Request) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -163,3 +164,7 @@ export async function DELETE(request: Request) {
   metrics.visitRemoved()
   return NextResponse.json({ success: true })
 }
+
+export const GET = withMetrics('visits', handleGET)
+export const POST = withMetrics('visits:POST', handlePOST)
+export const DELETE = withMetrics('visits:DELETE', handleDELETE)

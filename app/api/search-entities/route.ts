@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { publicCacheHeaders, SHOP_DATA_TTL } from '@/lib/cacheHeaders'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const fetchNamed = async (table: 'roaster' | 'companies') => {
   const { data, error } = await getClient().from(table).select('name, slug').order('name')
@@ -14,7 +15,7 @@ const fetchNamed = async (table: 'roaster' | 'companies') => {
   return data
 }
 
-export async function GET() {
+async function handleGET() {
   const [roasters, companies] = await Promise.all([fetchNamed('roaster'), fetchNamed('companies')])
 
   if (!roasters || !companies) {
@@ -23,3 +24,5 @@ export async function GET() {
 
   return NextResponse.json({ roasters, companies }, { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 }
+
+export const GET = withMetrics('search-entities', handleGET)

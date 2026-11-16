@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { getCompanyBySlug } from '@/app/utils/companies'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const getCompanyNews = async (companyId: string) => {
   const { data, error } = await getClient()
@@ -17,7 +18,7 @@ const getCompanyNews = async (companyId: string) => {
   return data
 }
 
-export async function GET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
+async function handleGET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
   const params = await props.params
   const { company } = params
 
@@ -35,3 +36,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
 
   return NextResponse.json(news)
 }
+
+export const GET = withMetrics('companies/[company]/news', handleGET)
