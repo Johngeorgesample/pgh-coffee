@@ -1,4 +1,5 @@
 import { getClient } from '@/lib/supabase/server-client'
+import { metrics } from '@/lib/metrics'
 
 export interface Shop {
   uuid: string
@@ -72,6 +73,8 @@ export async function callAnthropicVision<T>(prompt: string, base64Image: string
   }
 
   const result = await response.json()
+  metrics.anthropicTokens('input', result.usage?.input_tokens ?? 0)
+  metrics.anthropicTokens('output', result.usage?.output_tokens ?? 0)
   const text = result.content[0].text.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
   return JSON.parse(text) as T
 }
