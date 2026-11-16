@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { formatDataToGeoJSON, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const fetchShopsByIds = async (ids: string[]) => {
   const { data, error } = await getClient()
@@ -18,7 +19,7 @@ const fetchShopsByIds = async (ids: string[]) => {
 }
 
 // API Route Handler
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url)
   const idsParam = searchParams.get('ids')
 
@@ -50,3 +51,5 @@ export async function GET(request: Request) {
   const geojson = formatDataToGeoJSON(shops)
   return NextResponse.json(geojson)
 }
+
+export const GET = withMetrics('shops/batch', handleGET)

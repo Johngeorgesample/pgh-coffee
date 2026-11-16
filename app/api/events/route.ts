@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { visibleEvents, withInheritedVerification, type EventRow } from '@/app/utils/events'
+import { withMetrics } from '@/lib/withMetrics'
 
 const fetchEvents = async (shopID?: string, roasterID?: string) => {
   let query = visibleEvents()
@@ -25,7 +26,7 @@ const fetchEvents = async (shopID?: string, roasterID?: string) => {
 }
 
 // API Route Handler
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url)
   const shopID = searchParams.get('shop_id') ?? ''
   const roasterID = searchParams.get('roaster_id') ?? ''
@@ -41,3 +42,5 @@ export async function GET(request: Request) {
   // would be served across different filters (every shop showing every event).
   return NextResponse.json(events)
 }
+
+export const GET = withMetrics('events', handleGET)

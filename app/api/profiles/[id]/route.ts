@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getPublicProfile } from '@/app/utils/profiles'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function GET(
+async function handleGET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -17,3 +18,5 @@ export async function GET(
     headers: { 'Cache-Control': 'private, no-store' },
   })
 }
+
+export const GET = withMetrics('profiles/[id]', handleGET)

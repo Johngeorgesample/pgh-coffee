@@ -4,8 +4,9 @@ import { metrics } from '@/lib/metrics'
 import { REPORT_TYPES, isReportType } from '@/lib/reportTypes'
 import { isRealSupabaseError } from '@/lib/supabaseErrors'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const body = await request.json()
   const { shop_id, report_type, details, reported_website } = body
 
@@ -55,3 +56,5 @@ export async function POST(request: Request) {
   metrics.shopReportSubmitted()
   return NextResponse.json(data, { status: 201 })
 }
+
+export const POST = withMetrics('shops/report:POST', handlePOST)

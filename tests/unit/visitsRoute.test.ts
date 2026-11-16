@@ -13,7 +13,7 @@ const mockUpsertResult = vi.fn()
 const mockVisitAdded = vi.fn()
 
 vi.mock('@/lib/metrics', () => ({
-  metrics: { visitAdded: mockVisitAdded, visitRemoved: vi.fn() },
+  metrics: { visitAdded: mockVisitAdded, visitRemoved: vi.fn(), requestCompleted: vi.fn() },
 }))
 
 // Mock the server Supabase client

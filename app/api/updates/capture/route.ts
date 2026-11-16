@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { getImageData, getSourceUrl, getAllShops, getAllRoasters, buildEntityContext, validateUUID, callAnthropicVision, getRoasterID } from '@/lib/capture'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 interface ExtractedUpdate {
   shop_name: string
@@ -31,7 +32,7 @@ function buildPrompt(entityContext: string): string {
 }${entityContext}`
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const secret = request.headers.get('x-capture-secret')
   if (secret !== process.env.CAPTURE_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -92,3 +93,5 @@ export async function POST(request: Request) {
     message: 'Inserted into updates and live immediately.',
   }, { status: 201 })
 }
+
+export const POST = withMetrics('updates/capture:POST', handlePOST)

@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { metrics } from '@/lib/metrics'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function GET() {
+async function handleGET() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -36,7 +37,7 @@ export async function GET() {
   return NextResponse.json(data)
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
   return NextResponse.json(data, { status: 201 })
 }
 
-export async function DELETE(request: Request) {
+async function handleDELETE(request: Request) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -129,3 +130,7 @@ export async function DELETE(request: Request) {
   metrics.favoriteRemoved()
   return NextResponse.json({ success: true })
 }
+
+export const GET = withMetrics('favorites', handleGET)
+export const POST = withMetrics('favorites:POST', handlePOST)
+export const DELETE = withMetrics('favorites:DELETE', handleDELETE)

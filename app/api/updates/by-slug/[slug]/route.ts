@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { extractUuidPrefix } from '@/app/utils/slug'
 import { getUpdateByIdPrefix } from '@/app/utils/updates'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function GET(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
+async function handleGET(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params
 
   const prefix = extractUuidPrefix(slug)
@@ -19,3 +20,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ slug: str
 
   return NextResponse.json(update)
 }
+
+export const GET = withMetrics('updates/by-slug/[slug]', handleGET)
