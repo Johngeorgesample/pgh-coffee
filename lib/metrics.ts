@@ -111,4 +111,7 @@ export const metrics = {
     gauge('request_duration_seconds', durationSeconds, { route, instance: INSTANCE })
   },
   shopsPerNeighborhood:       (neighborhood: string, count: number) => gauge('shops_total', count, { neighborhood }),
+  anthropicTokens:            (direction: 'input' | 'output', tokens: number) => {
+    if (tokens > 0) increment('anthropic_tokens_total', { direction }, tokens)
+  },
 }
