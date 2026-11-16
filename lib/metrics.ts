@@ -72,8 +72,19 @@ function push(metricName: string, value: number, labels: Record<string, string> 
   }).catch(() => {})
 }
 
-function increment(metricName: string, labels: Record<string, string> = {}) {
-  push(metricName, 1, labels)
+// Each process reports a running total under its own `instance` label, so every
+// series is monotonic and rate()/increase() work across serverless instances.
+const INSTANCE = Math.random().toString(36).slice(2, 10)
+const counterTotals: Record<string, number> = {}
+
+export const nextCounterTotal = (metricName: string, labels: Record<string, string>, by: number) => {
+  const key = `${metricName}|${JSON.stringify(Object.entries(labels).sort())}`
+  counterTotals[key] = (counterTotals[key] ?? 0) + by
+  return counterTotals[key]
+}
+
+function increment(metricName: string, labels: Record<string, string> = {}, by = 1) {
+  push(metricName, nextCounterTotal(metricName, labels, by), { ...labels, instance: INSTANCE })
 }
 
 function gauge(metricName: string, value: number, labels: Record<string, string> = {}) {
@@ -86,10 +97,10 @@ export const metrics = {
   claimSubmitted:             (claimType: ClaimType) => increment('claim_submitted_total', { claim_type: claimType }),
   shopAmenityReportSubmitted: () => increment('amenity_report_submitted_total'),
   shopNotFound:               (reason: 'invalid_slug' | 'no_match') => increment('shop_not_found_total', { reason }),
-  shopViewed:                 (name: string, neighborhood: string) => increment('shop_view_total', { name, neighborhood }),
+  shopViewed:                 (neighborhood: string) => increment('shop_view_total', { neighborhood }),
   favoriteAdded:              (neighborhood: string) => increment('favorite_added_total', { neighborhood }),
   favoriteRemoved:            () => increment('favorite_removed_total'),
-  visitAdded:                 (neighborhood: string, count = 1) => push('visit_added_total', count, { neighborhood }),
+  visitAdded:                 (neighborhood: string, count = 1) => increment('visit_added_total', { neighborhood }, count),
   visitRemoved:               () => increment('visit_removed_total'),
   authSignIn:                 () => increment('auth_signin_total'),
   authSignUp:                 () => increment('auth_signup_total'),
@@ -97,7 +108,7 @@ export const metrics = {
   apiError:                   (route: string) => increment('api_error_total', { route }),
   requestCompleted:           (route: string, statusCode: number, durationSeconds: number) => {
     increment('request_total', { route, status_code: String(statusCode) })
-    gauge('request_duration_seconds', durationSeconds, { route })
+    gauge('request_duration_seconds', durationSeconds, { route, instance: INSTANCE })
   },
   shopsPerNeighborhood:       (neighborhood: string, count: number) => gauge('shops_total', count, { neighborhood }),
 }

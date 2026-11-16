@@ -28,6 +28,6 @@ export const GET = withMetrics('shops/by-slug/[slug]', async (req: NextRequest, 
     return NextResponse.json({ message: 'Shop not found' }, { status: 404 })
   }
 
-  metrics.shopViewed(shop.name, shop.neighborhood)
+  metrics.shopViewed(shop.neighborhood)
   return NextResponse.json(formatDBShopAsFeature(shop), { headers: publicCacheHeaders(SHOP_DATA_TTL) })
 })
