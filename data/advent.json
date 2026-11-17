@@ -1,10 +1,24 @@
 [
   {
     "day": 1,
-    "roasterSlug": "dynamic-coffee-roasters",
-    "roasterName": "Dynamic Coffee Roasters",
-    "coffee": "To be announced",
-    "notes": []
+    "roasterSlug": "standing-wave-coffee",
+    "roasterName": "Standing Wave Coffee",
+    "coffee": "Double Hydraulic",
+    "notes": [
+      "Vanilla",
+      "Baked nuts",
+      "Cinnamon",
+      "Chocolate",
+      "Citrus",
+      "Cocoa"
+    ],
+    "origin": "Brazil & Colombia",
+    "roast": "Medium-dark",
+    "blurb": "Standing Wave’s house espresso is named after Double Hydraulic, a classic Class III rapid on the Youghiogheny River. It’s a traditional blend of 70% Brazil, a pulped natural Red Catuai from Marachador grown at 1,200 MASL, with notes of vanilla, baked nuts and cinnamon, and 30% Colombia, a washed Typica and Caturra from Huila grown at 1,800 MASL, with notes of chocolate, citrus, baked fruit and cocoa.",
+    "varietal": "Red Catuai, Typica & Caturra",
+    "process": "Pulped natural & washed",
+    "founded": 2020,
+    "agtron": 72.9
   },
   {
     "day": 2,
@@ -19,14 +33,18 @@
     ],
     "origin": "Chikmagalur, Karnataka, India",
     "producer": "Ashok & Divya Patre",
-    "process": "Thermal shock natural"
+    "process": "Thermal shock natural",
+    "founded": 2003,
+    "agtron": 91.3
   },
   {
     "day": 3,
     "roasterSlug": "redhawk-coffee-roasters",
     "roasterName": "Redhawk Coffee Roasters",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2016,
+    "agtron": 85.9
   },
   {
     "day": 4,
@@ -42,21 +60,26 @@
     "origin": "Djimma, Ethiopia",
     "producer": "Gera Estate",
     "process": "Anaerobic",
-    "roast": "Light-medium"
+    "roast": "Light-medium",
+    "founded": 2011,
+    "agtron": 95.5
   },
   {
     "day": 5,
     "roasterSlug": "de-fer-coffee-and-tea",
     "roasterName": "De Fer Coffee & Tea",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2017
   },
   {
     "day": 6,
     "roasterSlug": "the-boredom-set",
     "roasterName": "The Boredom Set",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2024,
+    "agtron": 91.7
   },
   {
     "day": 7,
@@ -72,7 +95,9 @@
     "producer": "Pranoy Thipaiah",
     "origin": "Chikmagalur, Karnataka, India",
     "process": "Culture-inoculated washed",
-    "blurb": "At Kerehaklu Estate, producer Pranoy Thipaiah isolates and cultivates native microbial cultures from the farm’s environment. These cultures are introduced during a 36-hour submerged fermentation, guiding the process while preserving the estate’s character. The result is a coffee with layered sweetness, floral complexity, and bright acidity."
+    "blurb": "At Kerehaklu Estate, producer Pranoy Thipaiah isolates and cultivates native microbial cultures from the farm’s environment. These cultures are introduced during a 36-hour submerged fermentation, guiding the process while preserving the estate’s character. The result is a coffee with layered sweetness, floral complexity, and bright acidity.",
+    "founded": 2026,
+    "agtron": 84.3
   },
   {
     "day": 8,
@@ -89,21 +114,27 @@
     "producer": "Smallholders via Kyagalanyi Coffee",
     "origin": "Rwenzori Mountains, Uganda",
     "process": "Natural",
-    "roast": "Light"
+    "roast": "Light",
+    "founded": 2024,
+    "agtron": 93.3
   },
   {
     "day": 9,
     "roasterSlug": "its-still-coffee",
     "roasterName": "It's Still Coffee",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2025,
+    "agtron": 94.2
   },
   {
     "day": 10,
     "roasterSlug": "ghost-coffee-collab",
     "roasterName": "Ghost Coffee Collab",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2022,
+    "agtron": 85.5
   },
   {
     "day": 11,
@@ -121,7 +152,9 @@
       "Cinnamon",
       "Orange"
     ],
-    "roast": "Medium"
+    "roast": "Medium",
+    "founded": 1988,
+    "agtron": 60.4
   },
   {
     "day": 13,
@@ -140,26 +173,17 @@
       "Burnt sugar"
     ],
     "origin": "Haiti",
-    "roast": "Full City+"
+    "roast": "Full City+",
+    "founded": 2023,
+    "agtron": 62.9
   },
   {
     "day": 15,
-    "roasterSlug": "standing-wave-coffee",
-    "roasterName": "Standing Wave Coffee",
-    "coffee": "Double Hydraulic",
-    "notes": [
-      "Vanilla",
-      "Baked nuts",
-      "Cinnamon",
-      "Chocolate",
-      "Citrus",
-      "Cocoa"
-    ],
-    "origin": "Brazil & Colombia",
-    "roast": "Medium-dark",
-    "blurb": "Standing Wave’s house espresso is named after Double Hydraulic, a classic Class III rapid on the Youghiogheny River. It’s a traditional blend of 70% Brazil, a pulped natural Red Catuai from Marachador grown at 1,200 MASL, with notes of vanilla, baked nuts and cinnamon, and 30% Colombia, a washed Typica and Caturra from Huila grown at 1,800 MASL, with notes of chocolate, citrus, baked fruit and cocoa.",
-    "varietal": "Red Catuai, Typica & Caturra",
-    "process": "Pulped natural & washed"
+    "roasterSlug": "dynamic-coffee-roasters",
+    "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2022
   },
   {
     "day": 16,
@@ -202,21 +226,25 @@
     "roasterSlug": "the-coffee-tree-roasters",
     "roasterName": "The Coffee Tree Roasters",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 1993,
+    "agtron": 80.4
   },
   {
     "day": 23,
     "roasterSlug": "macizo",
     "roasterName": "Macizo",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2025
   },
   {
     "day": 24,
     "roasterSlug": "dynamic-coffee-roasters",
     "roasterName": "Dynamic Coffee Roasters",
     "coffee": "To be announced",
-    "notes": []
+    "notes": [],
+    "founded": 2022
   },
   {
     "day": 25,

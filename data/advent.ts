@@ -18,6 +18,8 @@ export interface AdventDay {
   // Absent until the day's roaster is confirmed.
   roasterSlug?: string
   roasterName: string
+  founded?: number
+  agtron?: number
   coffee: string
   notes: string[]
   producer?: string

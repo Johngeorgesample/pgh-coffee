@@ -15,13 +15,13 @@ export const ORDERS: Order[] = [
     id: 'geo',
     label: 'North to south',
     blurb: 'Start with the roaster farthest north and work your way south across the region. Jar numbers jump around, so check which one to open.',
-    sequence: [22, 3, 9, 14, 1, 24, 2, 10, 12, 6, 5, 4, 15, 8, 7, 11, 13, 16, 17, 18, 19, 20, 21, 23, 25],
+    sequence: [22, 3, 9, 14, 15, 24, 2, 10, 12, 6, 5, 4, 1, 8, 7, 11, 13, 16, 17, 18, 19, 20, 21, 23, 25],
   },
   {
     id: 'founded',
     label: 'Oldest first',
     blurb: 'Start with the longest-running roaster and finish with the newest. Jar numbers jump around, so check which one to open.',
-    sequence: [12, 22, 1, 24, 2, 5, 3, 23, 7, 14, 6, 9, 4, 15, 8, 10, 11, 13, 16, 17, 18, 19, 20, 21, 25],
+    sequence: [12, 22, 15, 24, 2, 5, 3, 23, 7, 14, 6, 9, 4, 1, 8, 10, 11, 13, 16, 17, 18, 19, 20, 21, 25],
   },
 ]
 
