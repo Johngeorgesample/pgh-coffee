@@ -64,7 +64,7 @@ const Identity = ({ step, entry }: { step: number; entry: AdventDay }) => (
       href={`/advent/${entry.day}`}
       className="mt-auto inline-flex items-center gap-1 self-start pt-6 text-xs font-medium text-yellow-300 hover:underline"
     >
-      Read the day <ArrowRight className="size-3.5" />
+      Learn more about the coffee <ArrowRight className="size-3.5" />
     </Link>
   </div>
 )
