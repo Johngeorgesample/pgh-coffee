@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Lock } from 'lucide-react'
 import OrderPicker from '@/app/components/advent/OrderPicker'
 import PeekButton from '@/app/components/advent/PeekButton'
+import TodayCard from '@/app/components/advent/TodayCard'
 import { daysOpen } from '@/app/utils/advent'
 import { ADVENT_LINEUP, AdventDay } from '@/data/advent'
 import { ORDERS, jarsInOrder } from '@/data/advent-orders'
@@ -18,24 +19,13 @@ const pad = (n: number) => String(n).padStart(2, '0')
 
 const useRoute = () => {
   const [order, setOrder] = useState(ORDERS[0])
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(1)
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
-  useEffect(() => setOpen(daysOpen(new Date())), [])
+  useEffect(() => setOpen(Math.max(daysOpen(new Date()), 1)), [])
   const stops = jarsInOrder(order).map(stop => ({ ...stop, hidden: stop.step > open && !revealed.has(stop.entry.day) }))
   const reveal = (jar: number) => setRevealed(prev => new Set(prev).add(jar))
   return { order, setOrder, stops, today: stops[open - 1], reveal, showJar: order.id !== ORDERS[0].id }
 }
-
-const NoteChips = ({ entry }: { entry: AdventDay }) =>
-  entry.notes.length ? (
-    <ul className="flex flex-wrap gap-1.5">
-      {entry.notes.map(note => (
-        <li key={note} className="rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
-          {note}
-        </li>
-      ))}
-    </ul>
-  ) : null
 
 const OpenStop = ({ entry, showJar }: { entry: AdventDay; showJar: boolean }) => (
   <Link href={`/advent/${entry.day}`} className="group flex items-start justify-between gap-4">
@@ -61,17 +51,13 @@ const LockedStop = ({ step, onReveal }: { step: number; onReveal: () => void }) 
   </div>
 )
 
-const TodayCard = ({ step, entry }: { step: number; entry: AdventDay }) => (
-  <Link href={`/advent/${entry.day}`} className="block rounded-2xl bg-gray-950 p-6 text-white transition-colors hover:bg-gray-900">
-    <p className="text-xs font-bold uppercase tracking-wider text-yellow-300">Today · Day {step}</p>
-    <p className="mt-4 text-xs font-bold uppercase tracking-wider text-white/60">{entry.roasterName}</p>
-    <p className="mt-1 font-serif text-2xl leading-tight tracking-tight">{entry.coffee}</p>
-    {entry.origin && <p className="mt-1 text-sm text-white/60">{entry.origin}</p>}
-    <div className="mt-4">
-      <NoteChips entry={entry} />
-    </div>
-  </Link>
-)
+type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; showJar: boolean; onReveal: () => void }
+
+const Stop = ({ step, entry, hidden, isToday, showJar, onReveal }: TStopProps) => {
+  if (isToday) return <TodayCard step={step} entry={entry} />
+  if (hidden) return <LockedStop step={step} onReveal={onReveal} />
+  return <OpenStop entry={entry} showJar={showJar} />
+}
 
 const WhosInTheBox = () => (
   <div className="rounded-2xl border border-stone-200 p-6">
@@ -108,13 +94,12 @@ export default function AdventRoute() {
               <span className="absolute -left-[45px] top-0 flex size-7 items-center justify-center rounded-full bg-gray-950 text-xs font-bold text-white ring-4 ring-white">
                 {step}
               </span>
-              {hidden ? <LockedStop step={step} onReveal={() => reveal(entry.day)} /> : <OpenStop entry={entry} showJar={showJar} />}
+              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} showJar={showJar} onReveal={() => reveal(entry.day)} />
             </li>
           ))}
         </ol>
       </div>
       <aside className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-        {today && <TodayCard step={today.step} entry={today.entry} />}
         <WhosInTheBox />
       </aside>
     </section>
