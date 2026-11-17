@@ -28,7 +28,7 @@ export default function AdventCalendar() {
               Twenty-five days of Pittsburgh coffee.
             </h1>
             <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">
-              Curated by{' '}
+              Twenty-five whole-bean coffees from Pittsburgh roasters, curated by{' '}
               <Link href={DYNAMIC_ROASTER_PATH} className="underline decoration-white/40 underline-offset-4 transition-colors hover:text-yellow-300 hover:decoration-yellow-300">
                 Dynamic Coffee Roasters
               </Link>
