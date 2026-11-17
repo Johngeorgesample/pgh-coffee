@@ -273,7 +273,10 @@ export const EventDetails = ({ event }: EventDetailsProps) => {
                 >
                   <CalendarPlus className="w-5 h-5" />
                 </MenuButton>
-                <MenuItems className="absolute bottom-full right-0 w-60 mb-2 bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden focus:outline-none z-10">
+                <MenuItems
+                  anchor={{ to: event.url ? 'top end' : 'top start', gap: 8, padding: 16 }}
+                  className="w-60 bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden focus:outline-none z-50"
+                >
                   <MenuItem>
                     <button
                       onClick={() => handleAddToCalendar('google')}
