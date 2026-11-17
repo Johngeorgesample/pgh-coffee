@@ -42,6 +42,7 @@ const STREET_ADDRESS = /\b\d+[A-Za-z]?(?: [A-Z][A-Za-z.]*)+, [A-Z][A-Za-z ]+, PA
 
 const buildLocation = (event: EventCardData) =>
   event.description?.match(STREET_ADDRESS)?.[0] ??
+  event.shop?.address ??
   (event.shop ? `${event.shop.name}, ${event.shop.neighborhood}, Pittsburgh, PA` : event.roaster?.name ?? '')
 
 const buildDescription = (event: EventCardData) =>
