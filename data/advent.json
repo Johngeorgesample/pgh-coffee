@@ -115,8 +115,13 @@
     "day": 12,
     "roasterSlug": "la-prima-espresso",
     "roasterName": "La Prima Espresso",
-    "coffee": "To be announced",
-    "notes": []
+    "coffee": "Buon Natale",
+    "notes": [
+      "Brownie",
+      "Cinnamon",
+      "Orange"
+    ],
+    "roast": "Medium"
   },
   {
     "day": 13,
@@ -128,7 +133,7 @@
     "day": 14,
     "roasterSlug": "compass-point-coffee",
     "roasterName": "Compass Point Coffee",
-    "coffee": "To be announced",
+    "coffee": "Haitian Premium – Cafe Kreyol – Zombie Desert",
     "notes": [
       "Chocolate",
       "Malt",
@@ -141,16 +146,20 @@
     "day": 15,
     "roasterSlug": "standing-wave-coffee",
     "roasterName": "Standing Wave Coffee",
-    "coffee": "Double Hydraulics",
+    "coffee": "Double Hydraulic",
     "notes": [
-      "Caramel",
+      "Vanilla",
+      "Baked nuts",
+      "Cinnamon",
       "Chocolate",
-      "Nutty"
+      "Citrus",
+      "Cocoa"
     ],
-    "origin": "Colombia & Brazil",
-    "process": "Natural washed",
+    "origin": "Brazil & Colombia",
     "roast": "Medium-dark",
-    "blurb": "A continental combination of two South American coffee producing powerhouses. This dynamically designed espresso blend is bold and bright. Light enough to be sweet and yet dark enough for a thick crema for that perfect double shot! The name comes from Double Hydraulics, a Class III+ rapid famous for surfing on the Lower Youghiogheny."
+    "blurb": "Standing Wave’s house espresso is named after Double Hydraulic, a classic Class III rapid on the Youghiogheny River. It’s a traditional blend of 70% Brazil, a pulped natural Red Catuai from Marachador grown at 1,200 MASL, with notes of vanilla, baked nuts and cinnamon, and 30% Colombia, a washed Typica and Caturra from Huila grown at 1,800 MASL, with notes of chocolate, citrus, baked fruit and cocoa.",
+    "varietal": "Red Catuai, Typica & Caturra",
+    "process": "Pulped natural & washed"
   },
   {
     "day": 16,
