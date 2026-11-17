@@ -30,7 +30,12 @@ describe('buildICS location', () => {
     expect(locationOf(ics)).toBe('LOCATION:5171 Brownsville Rd\\, Pittsburgh\\, PA 15236')
   })
 
-  it('falls back to the shop, then the roaster', () => {
+  it("uses the shop's street address when it has one", () => {
+    const ics = buildICS({ ...event, shop: { ...shop, address: '205 21st St, Pittsburgh, PA 15222' } })
+    expect(locationOf(ics)).toBe('LOCATION:205 21st St\\, Pittsburgh\\, PA 15222')
+  })
+
+  it('falls back to the shop name, then the roaster', () => {
     expect(locationOf(buildICS({ ...event, shop, roaster }))).toBe('LOCATION:La Prima\\, Strip District\\, Pittsburgh\\, PA')
     expect(locationOf(buildICS({ ...event, roaster }))).toBe('LOCATION:19 Coffee')
   })

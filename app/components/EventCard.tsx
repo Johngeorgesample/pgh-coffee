@@ -47,6 +47,7 @@ export type EventCardData = {
     name: string
     neighborhood: string
     uuid: string
+    address?: string
     is_verified?: boolean
   }
   roaster?: Pick<RoasterRef, 'name' | 'slug'> & { is_verified?: boolean }
