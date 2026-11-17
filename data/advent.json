@@ -225,8 +225,10 @@
     "day": 22,
     "roasterSlug": "the-coffee-tree-roasters",
     "roasterName": "The Coffee Tree Roasters",
-    "coffee": "To be announced",
-    "notes": [],
+    "coffee": "Zambia",
+    "notes": ["Grape", "Blood orange", "Tobacco"],
+    "origin": "Zambia",
+    "process": "Anaerobic natural",
     "founded": 1993,
     "agtron": 80.4
   },
