@@ -29,6 +29,14 @@
     }
   }
 
+  --animate-marquee: marquee 90s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   @keyframes pop {
     50% {
       transform: scale(1.3);

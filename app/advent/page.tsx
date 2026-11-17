@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
 import { Footer } from '@/app/components/about'
 import AdventRoute from '@/app/components/advent/AdventRoute'
+import BoxSides from '@/app/components/advent/BoxSides'
+import Image from 'next/image'
+import lid from '@/public/advent/center.png'
 import Link from 'next/link'
 import { DYNAMIC_ROASTER_PATH, DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
 
@@ -20,9 +23,8 @@ export const metadata: Metadata = {
 export default function AdventCalendar() {
   return (
     <div>
-      <header className="relative bg-gradient-to-br from-stone-700 to-stone-900">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center lg:py-20">
+      <header className="bg-neutral-950">
+        <div className=" mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center lg:py-20">
           <div>
             <h1 className="mb-5 font-serif text-5xl leading-[1.05] tracking-tight text-white text-pretty md:text-6xl lg:text-7xl">
               Twenty-five days of Pittsburgh coffee.
@@ -48,8 +50,18 @@ export default function AdventCalendar() {
               <ArrowUpRightIcon className="size-4" />
             </a>
           </div>
+          <Image
+            src={lid}
+            alt="Pittsburgh Coffee Advent Calendar 2026 box lid, illustrated with city landmarks"
+            priority
+            placeholder="blur"
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="mx-auto w-full max-w-xl rotate-2 rounded-2xl shadow-2xl ring-1 ring-white/10"
+          />
         </div>
       </header>
+
+      <BoxSides />
 
       <AdventRoute />
 
