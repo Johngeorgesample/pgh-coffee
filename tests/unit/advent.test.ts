@@ -1,12 +1,31 @@
 import { describe, expect, it } from 'vitest'
-import { parseDayParam } from '@/app/utils/advent'
+import { daysOpen, parseDayParam } from '@/app/utils/advent'
 import { ADVENT_LINEUP } from '@/data/advent'
+import { ORDERS } from '@/data/advent-orders'
 
-// The lineup is authored by hand, so a typo here would silently 404 a printed
-// QR code or break the roaster link.
+// The lineup is authored by hand, so a typo here would silently 404 a
+// day page or break the roaster link.
 describe('lineup', () => {
   it('covers days 1..25 exactly once', () => {
     expect(ADVENT_LINEUP.map(e => e.day)).toEqual(Array.from({ length: 25 }, (_, i) => i + 1))
+  })
+})
+
+describe('orders', () => {
+  it.each(ORDERS.map(o => [o.label, o.sequence]))('%s opens every jar exactly once', (_, sequence) => {
+    expect([...sequence].sort((a, b) => a - b)).toEqual(ADVENT_LINEUP.map(e => e.day))
+  })
+})
+
+describe('daysOpen', () => {
+  it('rolls over at midnight Pittsburgh time, not UTC', () => {
+    expect(daysOpen(new Date('2026-12-01T03:00:00Z'))).toBe(0)
+    expect(daysOpen(new Date('2026-12-01T05:30:00Z'))).toBe(1)
+  })
+
+  it('keeps everything open once the calendar is over', () => {
+    expect(daysOpen(new Date('2026-12-31T12:00:00Z'))).toBe(25)
+    expect(daysOpen(new Date('2027-01-02T12:00:00Z'))).toBe(25)
   })
 })
 

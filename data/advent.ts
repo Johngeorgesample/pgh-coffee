@@ -11,6 +11,7 @@ import lineup from './advent.json'
 // everything else renders when present, so entries can be filled in over time.
 
 export const ADVENT_DAYS = 25
+export const ADVENT_YEAR = 2026
 
 export interface AdventDay {
   day: number

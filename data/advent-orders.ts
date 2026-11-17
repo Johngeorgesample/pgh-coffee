@@ -4,7 +4,6 @@ export type Order = { id: string; label: string; blurb: string; sequence: number
 
 const range = ADVENT_LINEUP.map(entry => entry.day)
 
-// Sample mappings: the shape Misha would send ("for this order, open jars in this sequence").
 export const ORDERS: Order[] = [
   {
     id: 'curated',
@@ -28,5 +27,3 @@ export const ORDERS: Order[] = [
 
 export const jarsInOrder = (order: Order) =>
   order.sequence.map((jar, i) => ({ step: i + 1, entry: findAdventDay(jar)! }))
-
-export const pad = (n: number) => String(n).padStart(2, '0')

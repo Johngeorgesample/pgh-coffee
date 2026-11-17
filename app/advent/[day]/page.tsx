@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
-import { ChevronRight, Flame, MapPin, QrCode } from 'lucide-react'
+import { ChevronRight, Flame, MapPin } from 'lucide-react'
 import { Footer } from '@/app/components/about'
 import BrewVideo from '@/app/components/advent/BrewVideo'
 import TastingJournal from '@/app/components/advent/TastingJournal'
@@ -30,15 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const ScanStrip = ({ day }: { day: number }) => (
+const DayStrip = ({ day }: { day: number }) => (
   <div className="border-b border-yellow-300 bg-yellow-100">
     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3">
-      <p className="flex items-center gap-2.5 text-sm text-yellow-900">
-        <QrCode className="size-4 shrink-0" aria-hidden />
-        <span>
-          You scanned <strong className="font-bold">Day {String(day).padStart(2, '0')}</strong> of the Pittsburgh Coffee
-          Advent Calendar.
-        </span>
+      <p className="text-sm text-yellow-900">
+        <strong className="font-bold">Day {String(day).padStart(2, '0')}</strong> of the Pittsburgh Coffee Advent Calendar
       </p>
       <Link
         href="/advent"
@@ -67,7 +63,7 @@ export default async function AdventDayPage({ params }: Props) {
 
   return (
     <div>
-      <ScanStrip day={entry.day} />
+      <DayStrip day={entry.day} />
 
       <header className="relative h-64 bg-gradient-to-br from-stone-700 to-stone-900 sm:h-80">
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />

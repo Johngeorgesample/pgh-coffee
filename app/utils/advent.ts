@@ -1,8 +1,17 @@
-import { ADVENT_DAYS } from '@/data/advent'
+import { ADVENT_DAYS, ADVENT_YEAR } from '@/data/advent'
 
-// Only canonical '1'..'25' resolve, so the printed QR codes have exactly one
-// URL each and '/advent/07' does not become a duplicate of '/advent/7'.
+// Only canonical '1'..'25' resolve, so each day has exactly one URL and
+// '/advent/07' does not become a duplicate of '/advent/7'.
 export const parseDayParam = (raw: string) => {
   const day = Number(raw)
   return Number.isInteger(day) && day >= 1 && day <= ADVENT_DAYS && String(day) === raw ? day : null
+}
+
+const pittsburghDate = (now: Date) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now).split('-').map(Number)
+
+export const daysOpen = (now: Date) => {
+  const [year, month, day] = pittsburghDate(now)
+  if (year !== ADVENT_YEAR) return year < ADVENT_YEAR ? 0 : ADVENT_DAYS
+  return month < 12 ? 0 : Math.min(day, ADVENT_DAYS)
 }
