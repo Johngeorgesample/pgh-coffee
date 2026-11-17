@@ -8,7 +8,7 @@ export const ORDERS: Order[] = [
   {
     id: 'curated',
     label: 'Curated',
-    blurb: 'The order Dylan at Dynamic Coffee Roasters picked. Jar numbers follow this order, so each day is simply the next jar.',
+    blurb: 'The order picked by Dynamic Coffee Roasters and Origin Coffee Club. Jar numbers follow this order, so each day is simply the next jar.',
     sequence: range,
   },
   {
