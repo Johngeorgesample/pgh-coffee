@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { ReactNode, useEffect, useRef, useState } from 'react'
+import SectionHead from '@/app/components/advent/SectionHead'
 
 type Align = 'left' | 'center' | 'right'
 type Stage = 'closed' | 'ask' | 'warn' | 'leaving'
@@ -98,8 +99,9 @@ const Label = ({ step }: { step: number }) => (
   <Image src={`/advent/labels/${step}.webp`} alt="" width={240} height={240} sizes="96px" className="size-full" />
 )
 
-const LockedLid = ({ step }: { step: number }) => (
-  <span className={LID}>
+export const LockedLid = ({ step, className = '', children }: { step: number; className?: string; children?: ReactNode }) => (
+  <span className={`${LID} ${className}`}>
+    {children}
     <Label step={step} />
   </span>
 )
@@ -163,10 +165,7 @@ export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps)
 
   return (
     <section className="mt-12 animate-rise motion-reduce:animate-none">
-      <div className="flex items-baseline justify-between gap-4 border-b-2 border-gray-950 pb-2">
-        <h3 className="font-serif text-2xl tracking-tight text-gray-950">Still sealed</h3>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">{jars.length} jars</p>
-      </div>
+      <SectionHead title="Still sealed" count={jars.length} />
       <ul ref={ref} className="mt-6 grid grid-cols-5 gap-4 sm:grid-cols-6 md:grid-cols-8">
         {jars.map(jar => (
           <li key={jar.day}>

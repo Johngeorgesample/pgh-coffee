@@ -23,6 +23,18 @@ describe('AdventRoute', () => {
     expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
   })
 
+  it('leads with today, then the opened jars, then the sealed ones', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
+    render(<AdventRoute />)
+
+    const today = screen.getByText('Today · Dec 3')
+    const opened = screen.getByRole('heading', { name: 'Opened' })
+    const sealed = screen.getByRole('heading', { name: 'Still sealed' })
+    expect(today.compareDocumentPosition(opened) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(opened.compareDocumentPosition(sealed) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('keeps every jar sealed and unopenable before December, counting down to the first', () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-11-18T12:00:00-05:00'))
