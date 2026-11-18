@@ -52,6 +52,4 @@ export const ANNOUNCED_ROASTERS: { name: string; slug?: string }[] = [
   { name: 'Standing Wave Coffee', slug: 'standing-wave-coffee' },
 ]
 
-export const UNANNOUNCED_ROASTER_COUNT = 6
-
 export const findAdventDay = (day: number) => ADVENT_LINEUP.find(entry => entry.day === day)

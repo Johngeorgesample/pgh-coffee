@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import left from '@/public/advent/left.webp'
-import { ANNOUNCED_ROASTERS, UNANNOUNCED_ROASTER_COUNT } from '@/data/advent'
+import { ANNOUNCED_ROASTERS } from '@/data/advent'
 
-const ROW = 'flex items-baseline justify-between gap-3 py-1.5 font-serif text-xl leading-snug tracking-tight text-gray-950'
+const ROW = 'flex items-baseline justify-between gap-3 py-1.5 font-serif text-xl leading-snug tracking-tight'
 
 export default function WhosInTheBox() {
   return (
@@ -19,16 +19,18 @@ export default function WhosInTheBox() {
           {ANNOUNCED_ROASTERS.map(({ slug, name }) => (
             <li key={name} className="border-b-2 border-gray-950/15 last:border-b-0">
               {slug ? (
-                <Link href={`/roasters/${slug}`} className={`${ROW} decoration-2 underline-offset-4 hover:underline`}>
+                <Link href={`/roasters/${slug}`} className={`${ROW} text-gray-950 decoration-2 underline-offset-4 hover:underline`}>
                   {name}
                 </Link>
               ) : (
-                <span className={ROW}>{name}</span>
+                <span className={`${ROW} text-gray-950`}>{name}</span>
               )}
             </li>
           ))}
+          <li>
+            <span className={`${ROW} italic text-gray-700`}>and more…</span>
+          </li>
         </ul>
-        <p className="mt-4 text-sm font-semibold text-gray-900">+ {UNANNOUNCED_ROASTER_COUNT} more, announced soon</p>
       </div>
     </div>
   )
