@@ -66,7 +66,7 @@ const Warn = ({ onCancel, onAccept }: { onCancel: () => void; onAccept: () => vo
     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950">
       <span className="bg-yellow-300 px-1">Spoiler ahead</span>
     </p>
-    <p className="mt-1.5 text-sm leading-snug text-gray-950">This shows the roaster and coffee before its day. It can&apos;t be resealed.</p>
+    <p className="mt-1.5 text-sm leading-snug text-gray-950">No take-backs: the roaster and coffee are on the next page.</p>
     <Actions accept="Open anyway" onCancel={onCancel} onAccept={onAccept} />
   </>
 )
