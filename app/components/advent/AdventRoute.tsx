@@ -10,7 +10,7 @@ import TodayCard from '@/app/components/advent/TodayCard'
 import SectionHead from '@/app/components/advent/SectionHead'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen, daysUntilOpening, devDayDate } from '@/app/utils/advent'
-import { ORDERS, jarsInOrder } from '@/data/advent-orders'
+import { ORDERS, jarHref, jarsInOrder } from '@/data/advent-orders'
 
 const currentDate = () => (process.env.NETLIFY_CONTEXT !== 'production' && devDayDate(window.location.search)) || new Date()
 
@@ -41,12 +41,12 @@ export default function AdventRoute() {
             <section className="mt-10 animate-rise motion-reduce:animate-none">
               <SectionHead title="Today's coffee" />
               <div className="mt-8">
-                <TodayCard entry={today.entry} step={today.step} />
+                <TodayCard entry={today.entry} step={today.step} href={today.href} />
               </div>
             </section>
           )}
           {opened.length > 0 && <OpenedJars stops={opened} />}
-          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={day => router.push(`/advent/${day}`)} />}
+          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={day => router.push(jarHref(order, day))} />}
         </div>
       </div>
       <aside className="flex flex-col gap-4 lg:self-start">

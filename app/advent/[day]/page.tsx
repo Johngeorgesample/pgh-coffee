@@ -10,11 +10,12 @@ import DayHead from '@/app/components/advent/DayHead'
 import RoastMeter from '@/app/components/advent/RoastMeter'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
+import { findOrder, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 import top from '@/public/advent/top.webp'
 
-type Props = { params: Promise<{ day: string }> }
+type Props = { params: Promise<{ day: string }>; searchParams: Promise<{ order?: string }> }
 type TRoaster = Awaited<ReturnType<typeof getRoasterBySlug>>
 
 const resolveDay = async (params: Props['params']) => {
@@ -24,10 +25,13 @@ const resolveDay = async (params: Props['params']) => {
   return entry
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+const resolveStep = async (entry: AdventDay, searchParams: Props['searchParams']) => stepOf(findOrder((await searchParams).order), entry.day)
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const entry = await resolveDay(params)
-  const title = `${entry.coffee} — ${entry.roasterName} | Day ${entry.day}`
-  const description = `Day ${entry.day} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}.${entry.notes.length ? ` ${entry.notes.join(', ')}.` : ''}`
+  const step = await resolveStep(entry, searchParams)
+  const title = `${entry.coffee} — ${entry.roasterName} | Day ${step}`
+  const description = `Day ${step} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}.${entry.notes.length ? ` ${entry.notes.join(', ')}.` : ''}`
   return {
     title: `${title} | pgh.coffee`,
     description,
@@ -107,7 +111,7 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
   </Section>
 )
 
-const Sheet = ({ entry }: { entry: AdventDay }) => (
+const Sheet = ({ entry, step }: { entry: AdventDay; step: number }) => (
   <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
     <DayHead />
     <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
@@ -118,7 +122,7 @@ const Sheet = ({ entry }: { entry: AdventDay }) => (
             <Image src={`/advent/labels/${entry.day}.webp`} alt={`Jar ${entry.day}`} width={240} height={240} sizes="96px" className="size-full" />
           </span>
           <span className="mt-12 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
-            Day {String(entry.day).padStart(2, '0')} · Dec {entry.day}
+            Day {String(step).padStart(2, '0')} · Dec {step}
           </span>
         </span>
       </div>
@@ -151,14 +155,15 @@ const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) =>
   </main>
 )
 
-export default async function AdventDayPage({ params }: Props) {
+export default async function AdventDayPage({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
+  const step = await resolveStep(entry, searchParams)
   const roaster = entry.roasterSlug ? await getRoasterBySlug(entry.roasterSlug) : null
 
   return (
     <div className="bg-stone-50">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-20">
-        <Sheet entry={entry} />
+        <Sheet entry={entry} step={step} />
         <Reading entry={entry} roaster={roaster} />
       </div>
       <Footer />

@@ -9,7 +9,7 @@ const entry: AdventDay = { day: 2, roasterName: 'Commonplace Coffee', coffee: 'R
 
 describe('TodayCard', () => {
   it('leaves out details the roaster has not sent', () => {
-    render(<TodayCard entry={entry} step={2} />)
+    render(<TodayCard entry={entry} step={2} href="/advent/2" />)
     expect(screen.queryByText('Varietal')).not.toBeInTheDocument()
   })
 })

@@ -25,5 +25,11 @@ export const ORDERS: Order[] = [
   },
 ]
 
+export const findOrder = (id?: string) => ORDERS.find(order => order.id === id) ?? ORDERS[0]
+
+export const stepOf = (order: Order, jar: number) => order.sequence.indexOf(jar) + 1
+
+export const jarHref = (order: Order, jar: number) => (order === ORDERS[0] ? `/advent/${jar}` : `/advent/${jar}?order=${order.id}`)
+
 export const jarsInOrder = (order: Order) =>
-  order.sequence.map((jar, i) => ({ step: i + 1, entry: findAdventDay(jar)! }))
+  order.sequence.map((jar, i) => ({ step: i + 1, entry: findAdventDay(jar)!, href: jarHref(order, jar) }))

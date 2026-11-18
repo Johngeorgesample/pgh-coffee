@@ -9,11 +9,11 @@ const EASE = 'ease-[cubic-bezier(0.23,1,0.32,1)]'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-type TTagProps = { step: number; entry: AdventDay; tilt: string }
+type TTagProps = { step: number; entry: AdventDay; href: string; tilt: string }
 
-const Tag = ({ step, entry, tilt }: TTagProps) => (
+const Tag = ({ step, entry, href, tilt }: TTagProps) => (
   <Link
-    href={`/advent/${entry.day}`}
+    href={href}
     className={`group relative block pl-8 pt-8 transition-transform duration-150 ${EASE} active:scale-[0.97] motion-reduce:transition-none`}
   >
     <LockedLid step={step} className="absolute left-0 top-0 z-10 w-16!">
@@ -31,16 +31,16 @@ const Tag = ({ step, entry, tilt }: TTagProps) => (
   </Link>
 )
 
-type TOpenedJarsProps = { stops: { step: number; entry: AdventDay }[] }
+type TOpenedJarsProps = { stops: { step: number; entry: AdventDay; href: string }[] }
 
 export default function OpenedJars({ stops }: TOpenedJarsProps) {
   return (
     <section className="mt-12">
       <SectionHead title="Opened" count={stops.length} />
       <ul className="mt-8 grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3">
-        {stops.map(({ step, entry }, i) => (
+        {stops.map(({ step, entry, href }, i) => (
           <li key={entry.day} style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }} className="animate-rise motion-reduce:animate-none">
-            <Tag step={step} entry={entry} tilt={i % 2 ? 'rotate-[1.5deg]' : '-rotate-[1.5deg]'} />
+            <Tag step={step} entry={entry} href={href} tilt={i % 2 ? 'rotate-[1.5deg]' : '-rotate-[1.5deg]'} />
           </li>
         ))}
       </ul>

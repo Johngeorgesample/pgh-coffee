@@ -37,7 +37,7 @@ const Label = ({ day, jar }: { day: number; jar: number }) => (
   </div>
 )
 
-export default function TodayCard({ entry, step }: { entry: AdventDay; step: number }) {
+export default function TodayCard({ entry, step, href }: { entry: AdventDay; step: number; href: string }) {
   return (
     <div className="pb-4">
       <div className="group/lift">
@@ -47,7 +47,7 @@ export default function TodayCard({ entry, step }: { entry: AdventDay; step: num
             <div className="flex flex-col justify-center pt-10 md:pr-6">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
               <h3 className="mt-1 font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">
-                <Link href={`/advent/${entry.day}`} className="after:absolute after:inset-0 after:z-10">
+                <Link href={href} className="after:absolute after:inset-0 after:z-10">
                   {entry.coffee}
                 </Link>
               </h3>

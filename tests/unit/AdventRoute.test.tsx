@@ -66,6 +66,7 @@ describe('AdventRoute', () => {
     fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
     expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
     expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Colombia Cauca' })).toHaveAttribute('href', '/advent/17?order=geo')
   })
 
   it("only goes to a sealed jar's day after the spoiler warning is accepted, leaving it sealed", async () => {
