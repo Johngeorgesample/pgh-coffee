@@ -6,6 +6,7 @@ import OpenedJars from '@/app/components/advent/OpenedJars'
 import OrderPicker from '@/app/components/advent/OrderPicker'
 import SealedJars from '@/app/components/advent/SealedJars'
 import TodayCard from '@/app/components/advent/TodayCard'
+import SectionHead from '@/app/components/advent/SectionHead'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen, daysUntilOpening, devDayDate } from '@/app/utils/advent'
 import { ORDERS, jarsInOrder } from '@/data/advent-orders'
@@ -45,9 +46,12 @@ export default function AdventRoute() {
         <div key={order.id}>
           {countdown !== null && <BeforeOpening days={countdown} />}
           {today && (
-            <div className="mt-10 animate-rise motion-reduce:animate-none">
-              <TodayCard entry={today.entry} step={today.step} showJar={showJar} />
-            </div>
+            <section className="mt-10 animate-rise motion-reduce:animate-none">
+              <SectionHead title="Today's coffee" />
+              <div className="mt-8">
+                <TodayCard entry={today.entry} step={today.step} showJar={showJar} />
+              </div>
+            </section>
           )}
           {opened.length > 0 && <OpenedJars stops={opened} showJar={showJar} justRevealed={justRevealed} />}
           {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={reveal} />}
