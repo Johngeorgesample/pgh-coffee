@@ -15,3 +15,12 @@ export const daysOpen = (now: Date) => {
   if (year !== ADVENT_YEAR) return year < ADVENT_YEAR ? 0 : ADVENT_DAYS
   return month < 12 ? 0 : Math.min(day, ADVENT_DAYS)
 }
+
+const AGTRON_DARK = 40
+const AGTRON_LIGHT = 100
+
+export const agtronPercent = (agtron: number) =>
+  Math.min(1, Math.max(0, (agtron - AGTRON_DARK) / (AGTRON_LIGHT - AGTRON_DARK)))
+
+export const beanShade = (agtron: number) =>
+  `color-mix(in oklab, #e6c48f ${Math.round(agtronPercent(agtron) * 100)}%, #2a1608)`

@@ -1,16 +1,9 @@
 import Link from 'next/link'
 import { ArrowRight, Droplets, Flame, MapPin, Sprout } from 'lucide-react'
 import { AdventDay } from '@/data/advent'
+import { beanShade } from '@/app/utils/advent'
 
 type TTile = { icon: typeof MapPin; label: string; value: string; swatch?: string }
-
-const AGTRON_DARK = 40
-const AGTRON_LIGHT = 100
-
-const beanShade = (agtron: number) => {
-  const light = Math.min(1, Math.max(0, (agtron - AGTRON_DARK) / (AGTRON_LIGHT - AGTRON_DARK)))
-  return `color-mix(in oklab, #e6c48f ${Math.round(light * 100)}%, #2a1608)`
-}
 
 const roastLabel = (entry: AdventDay) =>
   [entry.roast, entry.agtron && `Agtron ${Math.round(entry.agtron)}`].filter(Boolean).join(' · ')
