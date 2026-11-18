@@ -7,12 +7,12 @@ const entry: AdventDay = { day: 2, roasterName: 'Commonplace Coffee', coffee: 'R
 
 describe('TodayCard', () => {
   it('falls back to the Agtron reading when the roaster gave no roast level', () => {
-    render(<TodayCard step={2} entry={entry} />)
+    render(<TodayCard entry={entry} />)
     expect(screen.getByText('Agtron 91')).toBeInTheDocument()
   })
 
-  it('leaves out tiles for details the roaster has not sent', () => {
-    render(<TodayCard step={2} entry={entry} />)
+  it('leaves out details the roaster has not sent', () => {
+    render(<TodayCard entry={entry} />)
     expect(screen.queryByText('Varietal')).not.toBeInTheDocument()
   })
 })
