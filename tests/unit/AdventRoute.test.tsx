@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import AdventRoute from '@/app/components/advent/AdventRoute'
 
 vi.mock('@/public/advent/top.webp', () => ({ default: { src: '/advent/top.webp', width: 2819, height: 800 } }))
@@ -15,5 +15,14 @@ describe('AdventRoute', () => {
 
     expect(screen.getAllByText('Dec').map(el => el.nextElementSibling?.textContent)).toEqual(['1', '2'])
     expect(screen.getByText('Opens Dec 4')).toBeInTheDocument()
+  })
+
+  it('dates today by its place in the chosen order, not by jar number', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
+    render(<AdventRoute />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
+    expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
   })
 })
