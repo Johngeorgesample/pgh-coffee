@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const specs = (entry: AdventDay) =>
   [
+    ['Tasting notes', entry.notes.join(' · ')],
     ['Origin', entry.origin],
     ['Varietal', entry.varietal],
     ['Process', entry.process],
@@ -54,17 +55,6 @@ const SpecList = ({ entry }: { entry: AdventDay }) => (
       </div>
     ))}
   </dl>
-)
-
-const FlavorList = ({ notes }: { notes: string[] }) => (
-  <ul className="flex flex-wrap gap-x-5 gap-y-1 font-serif text-3xl tracking-tight text-slate-900">
-    {notes.map((note, i) => (
-      <li key={note} className="animate-rise motion-reduce:animate-none" style={{ animationDelay: `${i * 40}ms` }}>
-        {note}
-        {i < notes.length - 1 && <span className="ml-5 text-yellow-400">·</span>}
-      </li>
-    ))}
-  </ul>
 )
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => (
@@ -118,10 +108,9 @@ const Sheet = ({ entry }: { entry: AdventDay }) => (
 
 const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) => (
   <main className="flex flex-col gap-14 lg:pt-6">
-    {(entry.notes.length > 0 || entry.blurb) && (
+    {entry.blurb && (
       <Section title="In the cup">
-        <FlavorList notes={entry.notes} />
-        {entry.blurb && <p className="mt-6 max-w-2xl leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>}
+        <p className="max-w-2xl leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>
       </Section>
     )}
     <Section title="Watch the roaster brew it">
