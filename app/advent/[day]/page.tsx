@@ -109,7 +109,7 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
 
 const Sheet = ({ entry }: { entry: AdventDay }) => (
   <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
-    <DayHead day={entry.day} />
+    <DayHead />
     <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
       <div className="relative border-b-4 border-gray-950">
         <Image src={top} alt="" sizes="340px" className="h-24 w-full object-cover object-left" />
