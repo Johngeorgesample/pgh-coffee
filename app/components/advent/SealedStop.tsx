@@ -19,7 +19,7 @@ const Stamp = ({ step, armed }: { step: number; armed: boolean }) => (
 )
 
 const Confirm = ({ step, onReveal, onCancel }: Props & { onCancel: () => void }) => (
-  <div className={`${CARD} border-gray-950 bg-yellow-300 shadow-[3px_3px_0_#030712]`}>
+  <div className={`${CARD} animate-arm border-gray-950 bg-yellow-300 shadow-[3px_3px_0_#030712] motion-reduce:animate-none`}>
     <span className="flex items-center gap-3">
       <Stamp step={step} armed />
       <span className="text-sm font-semibold text-gray-950">Spoiler ahead: open it early?</span>

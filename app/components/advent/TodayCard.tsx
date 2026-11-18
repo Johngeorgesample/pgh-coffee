@@ -35,7 +35,7 @@ const Label = ({ day }: { day: number }) => (
 export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; step: number; showJar: boolean }) {
   return (
     <div className="pb-4">
-      <div className="group relative overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out has-[a:hover]:-translate-y-1 has-[a:hover]:shadow-[8px_8px_0_#030712] motion-reduce:transform-none">
+      <div className="group relative overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:-translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:shadow-[8px_8px_0_#030712] has-[a:active]:translate-y-0.5 has-[a:active]:shadow-[3px_3px_0_#030712] motion-reduce:transform-none">
         <Label day={step} />
         <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
           <div className="flex flex-col justify-center md:pr-6">

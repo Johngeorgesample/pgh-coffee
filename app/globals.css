@@ -7,6 +7,7 @@
   --animate-stamp: stamp 350ms ease-out 150ms backwards;
   --animate-pop: pop 300ms ease-out;
   --animate-rise: rise 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  --animate-arm: arm 150ms cubic-bezier(0.23, 1, 0.32, 1);
 
   @keyframes stamp {
     from {
@@ -26,6 +27,13 @@
     from {
       opacity: 0;
       transform: translateY(6px);
+    }
+  }
+
+  @keyframes arm {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
     }
   }
 
