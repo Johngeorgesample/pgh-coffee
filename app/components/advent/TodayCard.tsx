@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import RoastMeter from '@/app/components/advent/RoastMeter'
 import top from '@/public/advent/top.webp'
 import { AdventDay } from '@/data/advent'
 
@@ -13,11 +12,11 @@ const specs = (entry: AdventDay) =>
   ].filter(Boolean) as { label: string; value: string }[]
 
 const Specs = ({ entry }: { entry: AdventDay }) => (
-  <dl className="space-y-2">
+  <dl className="flex flex-col border-y-2 border-gray-950 md:-my-5 md:-mt-7 md:-mr-5 md:border-y-0 md:border-l-2">
     {specs(entry).map(({ label, value }) => (
-      <div key={label}>
+      <div key={label} className="flex flex-1 flex-col justify-center border-gray-950/20 py-3 not-last:border-b-2 md:px-5">
         <dt className="text-[10px] font-bold uppercase tracking-widest text-gray-900">{label}</dt>
-        <dd className="text-sm text-gray-950">{value}</dd>
+        <dd className="mt-0.5 text-sm text-gray-950">{value}</dd>
       </div>
     ))}
   </dl>
@@ -37,8 +36,8 @@ export default function TodayCard({ entry }: { entry: AdventDay }) {
     <div className="pb-4">
       <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
         <Label day={entry.day} />
-        <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr]">
-          <div>
+        <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
+          <div className="md:pr-6">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
             <Link href={`/advent/${entry.day}`} className="mt-1 block decoration-2 underline-offset-4 hover:underline">
               <h3 className="font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">{entry.coffee}</h3>
@@ -51,14 +50,7 @@ export default function TodayCard({ entry }: { entry: AdventDay }) {
               Read today&rsquo;s coffee <ArrowRight className="size-4" />
             </Link>
           </div>
-          <div className="md:border-l-2 md:border-gray-950 md:pl-6">
-            <Specs entry={entry} />
-            {entry.agtron && (
-              <div className="mt-4">
-                <RoastMeter agtron={entry.agtron} roast={entry.roast} />
-              </div>
-            )}
-          </div>
+          <Specs entry={entry} />
         </div>
       </div>
     </div>
