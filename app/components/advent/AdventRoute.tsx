@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import BeforeOpening from '@/app/components/advent/BeforeOpening'
 import OpenedJars from '@/app/components/advent/OpenedJars'
@@ -16,33 +17,24 @@ const currentDate = () => (process.env.NETLIFY_CONTEXT !== 'production' && devDa
 const useRoute = () => {
   const [order, setOrder] = useState(ORDERS[0])
   const [now, setNow] = useState<Date | null>(null)
-  const [revealed, setRevealed] = useState<Set<number>>(new Set())
-  const [justRevealed, setJustRevealed] = useState<number | null>(null)
   useEffect(() => setNow(currentDate()), [])
   const open = now ? daysOpen(now) : 0
-  const stops = jarsInOrder(order).map(stop => ({ ...stop, hidden: stop.step > open && !revealed.has(stop.entry.day) }))
-  const reveal = (jar: number) => {
-    setRevealed(prev => new Set(prev).add(jar))
-    setJustRevealed(jar)
-  }
-  const changeOrder = (next: typeof order) => {
-    setJustRevealed(null)
-    setOrder(next)
-  }
+  const stops = jarsInOrder(order).map(stop => ({ ...stop, hidden: stop.step > open }))
   const countdown = now && open === 0 ? daysUntilOpening(now) : null
   const locked = open === 0
-  return { order, changeOrder, stops, today: stops[open - 1], countdown, locked, reveal, justRevealed, showJar: order.id !== ORDERS[0].id }
+  return { order, setOrder, stops, today: stops[open - 1], countdown, locked, showJar: order.id !== ORDERS[0].id }
 }
 
 export default function AdventRoute() {
-  const { order, changeOrder, stops, today, countdown, locked, reveal, justRevealed, showJar } = useRoute()
+  const { order, setOrder, stops, today, countdown, locked, showJar } = useRoute()
+  const router = useRouter()
   const sealed = stops.filter(stop => stop.hidden).map(({ step, entry }) => ({ step, day: entry.day }))
   const opened = stops.filter(stop => !stop.hidden && stop.step !== today?.step)
 
   return (
     <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div>
-        {!locked && <OrderPicker order={order} onChange={changeOrder} />}
+        {!locked && <OrderPicker order={order} onChange={setOrder} />}
         <div key={order.id}>
           {countdown !== null && <BeforeOpening days={countdown} />}
           {today && (
@@ -53,8 +45,8 @@ export default function AdventRoute() {
               </div>
             </section>
           )}
-          {opened.length > 0 && <OpenedJars stops={opened} showJar={showJar} justRevealed={justRevealed} />}
-          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={reveal} />}
+          {opened.length > 0 && <OpenedJars stops={opened} showJar={showJar} />}
+          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={day => router.push(`/advent/${day}`)} />}
         </div>
       </div>
       <aside className="flex flex-col gap-4 lg:self-start">

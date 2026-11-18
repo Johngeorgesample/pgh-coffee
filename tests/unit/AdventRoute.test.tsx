@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import AdventRoute from '@/app/components/advent/AdventRoute'
 
+const push = vi.fn()
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
 vi.mock('@/public/advent/top.webp', () => ({ default: { src: '/advent/top.webp', width: 2819, height: 800 } }))
 vi.mock('@/public/advent/left.webp', () => ({ default: { src: '/advent/left.webp', width: 2882, height: 800 } }))
 
@@ -66,7 +68,7 @@ describe('AdventRoute', () => {
     expect(screen.getByText('Jar 17')).toBeInTheDocument()
   })
 
-  it('only opens a sealed jar after the spoiler warning is accepted', async () => {
+  it("only goes to a sealed jar's day after the spoiler warning is accepted, leaving it sealed", async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
@@ -74,15 +76,12 @@ describe('AdventRoute', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
     fireEvent.click(screen.getByRole('button', { name: 'Nevermind' }))
-    const link = (day: number) => screen.getAllByRole('link').find(a => a.getAttribute('href') === `/advent/${day}`)
-    expect(link(4)).toBeUndefined()
+    expect(push).not.toHaveBeenCalled()
 
     fireEvent.click(screen.getByRole('button', { name: 'Open Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
     fireEvent.click(screen.getByRole('button', { name: 'Open anyway' }))
-    await waitFor(() => expect(link(4)).toBeDefined())
-    expect(link(4)).toHaveTextContent(/^Dec\s*4/)
-    expect(link(4)!.firstElementChild).toHaveClass('animate-stamp')
-    expect(link(2)!.firstElementChild).not.toHaveClass('animate-stamp')
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/advent/4'))
+    expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/4')).toBeUndefined()
   })
 })
