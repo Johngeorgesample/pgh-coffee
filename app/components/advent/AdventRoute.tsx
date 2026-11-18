@@ -6,14 +6,10 @@ import { Lock } from 'lucide-react'
 import OrderPicker from '@/app/components/advent/OrderPicker'
 import PeekButton from '@/app/components/advent/PeekButton'
 import TodayCard from '@/app/components/advent/TodayCard'
+import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen } from '@/app/utils/advent'
-import { ADVENT_LINEUP, AdventDay } from '@/data/advent'
+import { AdventDay } from '@/data/advent'
 import { ORDERS, jarsInOrder } from '@/data/advent-orders'
-
-const roasters = Array.from(
-  new Map(ADVENT_LINEUP.filter(e => e.roasterSlug).map(e => [e.roasterSlug!, e.roasterName])),
-  ([slug, name]) => ({ slug, name })
-).sort((a, b) => a.name.localeCompare(b.name))
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
@@ -59,24 +55,6 @@ const Stop = ({ step, entry, hidden, isToday, showJar, onReveal }: TStopProps) =
   return <OpenStop entry={entry} showJar={showJar} />
 }
 
-const WhosInTheBox = () => (
-  <div className="rounded-2xl border border-stone-200 p-6">
-    <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Who&rsquo;s in the box</h2>
-    <ul className="mt-4 flex flex-wrap gap-2">
-      {roasters.map(({ slug, name }) => (
-        <li key={slug}>
-          <Link
-            href={`/roasters/${slug}`}
-            className="inline-flex rounded-full border border-gray-200 bg-neutral-50 px-3 py-1 text-sm text-slate-700 transition-colors hover:border-stone-400 hover:bg-white"
-          >
-            {name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-)
-
 export default function AdventRoute() {
   const { order, setOrder, stops, today, reveal, showJar } = useRoute()
 
@@ -99,7 +77,7 @@ export default function AdventRoute() {
           ))}
         </ol>
       </div>
-      <aside className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
+      <aside className="flex flex-col gap-4 lg:self-start">
         <WhosInTheBox />
       </aside>
     </section>
