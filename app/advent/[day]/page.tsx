@@ -82,7 +82,7 @@ const Blurb = ({ text }: { text: string }) => {
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => (
   <section>
-    <h2 className="mb-3.5 text-xs font-semibold uppercase tracking-wider text-stone-500">{title}</h2>
+    <h2 className="mb-4 font-serif text-4xl tracking-tight text-gray-950">{title}</h2>
     {children}
   </section>
 )
