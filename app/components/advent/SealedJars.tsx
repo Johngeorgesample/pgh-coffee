@@ -11,7 +11,7 @@ const UNSCREW_MS = 220
 const LID_TRANSFORM: Record<Stage, string> = {
   closed: 'none',
   ask: 'rotate(-40deg) translateY(-4px)',
-  warn: 'rotate(-90deg) translateY(-6px)',
+  warn: 'rotate(-40deg) translateY(-4px)',
   leaving: 'rotate(-200deg) scale(0.6) translateY(-12px)',
 }
 
@@ -96,7 +96,7 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
         aria-expanded={armed}
         aria-label={`Peek at Dec ${step} early`}
         style={{ transform: LID_TRANSFORM[stage], opacity: stage === 'leaving' ? 0 : 1, transitionDuration: `${UNSCREW_MS}ms` }}
-        className="flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712] outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+        className={`flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712] outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${stage === 'warn' ? 'animate-buzz motion-reduce:animate-none' : ''}`}
       >
         <span
           className={`flex size-[80%] flex-col items-center justify-center rounded-full border-2 border-gray-950 leading-none transition-colors duration-150 ease-out ${
