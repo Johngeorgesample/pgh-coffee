@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
-import { MapPin } from 'lucide-react'
+import { ArrowUpRight, MapPin } from 'lucide-react'
 import { ReactNode } from 'react'
 import { Footer } from '@/app/components/about'
 import BrewVideo from '@/app/components/advent/BrewVideo'
@@ -87,19 +86,20 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
   </section>
 )
 
-const pill = 'inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-sm transition-colors hover:bg-gray-100'
+const inkButton =
+  'inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-gray-950 bg-white px-4 text-sm font-bold text-gray-950 shadow-[3px_3px_0_#030712] transition-[transform,box-shadow,background-color] duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:bg-yellow-300 [@media(hover:hover)_and_(pointer:fine)]:hover:not-active:-translate-y-0.5 [@media(hover:hover)_and_(pointer:fine)]:hover:not-active:shadow-[3px_5px_0_#030712] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
 
 const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullable<TRoaster> }) => (
   <Section title="About the roaster">
     {roaster.description && <p className={`mb-5 ${prose}`}>{roaster.description}</p>}
-    <div className="flex flex-wrap gap-2">
-      <Link href={`/roasters/${entry.roasterSlug}`} className={pill}>
-        <MapPin className="size-4" />
+    <div className="flex flex-wrap gap-3">
+      <Link href={`/roasters/${entry.roasterSlug}`} className={inkButton}>
+        <MapPin className="size-4" strokeWidth={2.5} />
         Where to find this coffee
       </Link>
       {roaster.website && (
-        <a href={roaster.website} target="_blank" rel="noopener noreferrer" className={pill}>
-          <ArrowUpRightIcon className="size-4" />
+        <a href={roaster.website} target="_blank" rel="noopener noreferrer" className={inkButton}>
+          <ArrowUpRight className="size-4" strokeWidth={2.5} />
           Website
         </a>
       )}
