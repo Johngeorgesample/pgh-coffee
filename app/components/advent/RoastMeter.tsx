@@ -1,16 +1,13 @@
 import { agtronPercent, beanShade } from '@/app/utils/advent'
 
 export default function RoastMeter({ agtron, roast }: { agtron: number; roast?: string }) {
-  const left = `${agtronPercent(agtron) * 100}%`
+  const left = `${(1 - agtronPercent(agtron)) * 100}%`
   return (
     <div>
-      <div className="flex items-baseline justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900">Roast</span>
-        <span className="font-mono text-xs font-bold text-gray-950">Agtron {Math.round(agtron)}</span>
-      </div>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900">Roast</span>
       <div
         className="relative mt-2.5 h-3 rounded-full border-2 border-gray-950"
-        style={{ background: `linear-gradient(to right, ${beanShade(40)}, ${beanShade(100)})` }}
+        style={{ background: `linear-gradient(to left, ${beanShade(40)}, ${beanShade(100)})` }}
       >
         <span
           className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-gray-950 shadow-[2px_2px_0_#030712]"
@@ -18,8 +15,8 @@ export default function RoastMeter({ agtron, roast }: { agtron: number; roast?: 
         />
       </div>
       <div className="relative mt-1.5 h-5 text-xs">
-        <span className="absolute left-0 font-semibold text-gray-900">Dark</span>
-        <span className="absolute right-0 font-semibold text-gray-900">Light</span>
+        <span className="absolute left-0 font-semibold text-gray-900">Light</span>
+        <span className="absolute right-0 font-semibold text-gray-900">Dark</span>
         {roast && (
           <span
             className="absolute -translate-x-1/2 rounded-md bg-gray-950 px-1.5 py-0.5 font-bold whitespace-nowrap text-white"
