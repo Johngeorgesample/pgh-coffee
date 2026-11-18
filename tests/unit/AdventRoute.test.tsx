@@ -17,7 +17,7 @@ describe('AdventRoute', () => {
     expect(opened).toContain('/advent/2')
     expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/2')).toHaveTextContent(/^Dec\s*2/)
     expect(opened).not.toContain('/advent/4')
-    expect(screen.getByRole('button', { name: 'Peek at Dec 4 early' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
   })
 
   it('dates today by its place in the chosen order and says which jar to open', () => {
@@ -35,15 +35,15 @@ describe('AdventRoute', () => {
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Not yet' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open Dec 4 early' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Nevermind' }))
     const link = (day: number) => screen.getAllByRole('link').find(a => a.getAttribute('href') === `/advent/${day}`)
     expect(link(4)).toBeUndefined()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open anyway' }))
     await waitFor(() => expect(link(4)).toBeDefined())
     expect(link(4)).toHaveTextContent(/^Dec\s*4/)
     expect(link(4)!.firstElementChild).toHaveClass('animate-stamp')

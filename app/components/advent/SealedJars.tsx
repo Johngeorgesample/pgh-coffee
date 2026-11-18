@@ -39,12 +39,23 @@ const alignFor = (el: HTMLElement): Align => {
 
 const prefersReducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
 
-const Ask = ({ step, onNext }: { step: number; onNext: () => void }) => (
-  <>
-    <p className="text-sm font-semibold leading-snug text-gray-950">Peek at Dec {step} early?</p>
-    <button autoFocus onClick={onNext} className={`mt-2 w-full bg-yellow-300 ${BUTTON}`}>
-      Show me
+type TActionsProps = { accept: string; onCancel: () => void; onAccept: () => void }
+
+const Actions = ({ accept, onCancel, onAccept }: TActionsProps) => (
+  <div className="mt-2 grid grid-cols-2 gap-1.5">
+    <button onClick={onCancel} className={`bg-white ${BUTTON}`}>
+      Nevermind
     </button>
+    <button autoFocus onClick={onAccept} className={`bg-yellow-300 ${BUTTON}`}>
+      {accept}
+    </button>
+  </div>
+)
+
+const Ask = ({ step, onCancel, onNext }: { step: number; onCancel: () => void; onNext: () => void }) => (
+  <>
+    <p className="text-sm font-semibold leading-snug text-gray-950">Open Dec {step} early?</p>
+    <Actions accept="Open it" onCancel={onCancel} onAccept={onNext} />
   </>
 )
 
@@ -54,14 +65,7 @@ const Warn = ({ onCancel, onAccept }: { onCancel: () => void; onAccept: () => vo
       <span className="bg-yellow-300 px-1">Spoiler ahead</span>
     </p>
     <p className="mt-1.5 text-sm leading-snug text-gray-950">This shows the roaster and coffee before its day. It can&apos;t be resealed.</p>
-    <div className="mt-2 grid grid-cols-2 gap-1.5">
-      <button onClick={onCancel} className={`bg-white ${BUTTON}`}>
-        Not yet
-      </button>
-      <button autoFocus onClick={onAccept} className={`bg-yellow-300 ${BUTTON}`}>
-        Open it
-      </button>
-    </div>
+    <Actions accept="Open anyway" onCancel={onCancel} onAccept={onAccept} />
   </>
 )
 
@@ -101,7 +105,7 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
           onToggle()
         }}
         aria-expanded={armed}
-        aria-label={`Peek at Dec ${step} early`}
+        aria-label={`Open Dec ${step} early`}
         style={{ transform: LID_TRANSFORM[stage], opacity: stage === 'leaving' ? 0 : 1, transitionDuration: `${UNSCREW_MS}ms` }}
         className={`flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712] outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${STAGE_ANIMATION[stage]}`}
       >
@@ -116,7 +120,7 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
       </button>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
-          {stage === 'ask' ? <Ask step={step} onNext={warn} /> : <Warn onCancel={cancel} onAccept={unscrew} />}
+          {stage === 'ask' ? <Ask step={step} onCancel={cancel} onNext={warn} /> : <Warn onCancel={cancel} onAccept={unscrew} />}
         </Popover>
       )}
     </div>
