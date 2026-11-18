@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Lock } from 'lucide-react'
 import OrderPicker from '@/app/components/advent/OrderPicker'
-import PeekButton from '@/app/components/advent/PeekButton'
+import SealedStop from '@/app/components/advent/SealedStop'
 import TodayCard from '@/app/components/advent/TodayCard'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen } from '@/app/utils/advent'
@@ -60,22 +59,12 @@ const PastStop = ({ step, entry, showJar }: { step: number; entry: AdventDay; sh
   </Link>
 )
 
-const LockedStop = ({ step, onReveal }: { step: number; onReveal: () => void }) => (
-  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-    <p className="flex items-center gap-1.5 text-sm font-medium text-stone-400">
-      <Lock className="size-3.5" />
-      Opens Dec {step}
-    </p>
-    <PeekButton step={step} onReveal={onReveal} />
-  </div>
-)
-
 type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; isPast: boolean; showJar: boolean; onReveal: () => void }
 
 const Stop = ({ step, entry, hidden, isToday, isPast, showJar, onReveal }: TStopProps) => {
   if (isToday) return <TodayCard entry={entry} step={step} showJar={showJar} />
   if (isPast) return <PastStop step={step} entry={entry} showJar={showJar} />
-  if (hidden) return <LockedStop step={step} onReveal={onReveal} />
+  if (hidden) return <SealedStop step={step} onReveal={onReveal} />
   return <OpenStop entry={entry} showJar={showJar} />
 }
 

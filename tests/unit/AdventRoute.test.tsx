@@ -13,8 +13,11 @@ describe('AdventRoute', () => {
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
 
-    expect(screen.getAllByText('Dec').map(el => el.nextElementSibling?.textContent)).toEqual(['1', '2'])
-    expect(screen.getByText('Opens Dec 4')).toBeInTheDocument()
+    const opened = screen.getAllByRole('link').map(a => a.getAttribute('href')).filter(href => href?.startsWith('/advent/'))
+    expect(opened).toContain('/advent/2')
+    expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/2')).toHaveTextContent(/^Dec\s*2/)
+    expect(opened).not.toContain('/advent/4')
+    expect(screen.getByRole('button', { name: 'Peek at Dec 4 early' })).toBeInTheDocument()
   })
 
   it('dates today by its place in the chosen order and says which jar to open', () => {
