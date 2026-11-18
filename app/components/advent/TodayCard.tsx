@@ -32,7 +32,7 @@ const Label = ({ day }: { day: number }) => (
   </div>
 )
 
-export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; step: number; showJar: boolean }) {
+export default function TodayCard({ entry, step }: { entry: AdventDay; step: number }) {
   return (
     <div className="pb-4">
       <div className="group relative overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:-translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:shadow-[8px_8px_0_#030712] has-[a:active]:translate-y-0.5 has-[a:active]:shadow-[3px_3px_0_#030712] motion-reduce:transform-none">
@@ -41,11 +41,9 @@ export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; 
           <div className="flex flex-col justify-center md:pr-6">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
-              {showJar && (
-                <span className="shrink-0 rounded-md border-2 border-gray-950 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-950">
-                  Jar {String(entry.day).padStart(2, '0')}
-                </span>
-              )}
+              <span className="shrink-0 rounded-md border-2 border-gray-950 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-950">
+                Jar {String(entry.day).padStart(2, '0')}
+              </span>
             </div>
             <h3 className="mt-1 font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">
               <Link href={`/advent/${entry.day}`} className="after:absolute after:inset-0 after:z-10">

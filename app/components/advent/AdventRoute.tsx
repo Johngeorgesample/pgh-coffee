@@ -22,11 +22,11 @@ const useRoute = () => {
   const stops = jarsInOrder(order).map(stop => ({ ...stop, hidden: stop.step > open }))
   const countdown = now && open === 0 ? daysUntilOpening(now) : null
   const locked = open === 0
-  return { order, setOrder, stops, today: stops[open - 1], countdown, locked, showJar: order.id !== ORDERS[0].id }
+  return { order, setOrder, stops, today: stops[open - 1], countdown, locked }
 }
 
 export default function AdventRoute() {
-  const { order, setOrder, stops, today, countdown, locked, showJar } = useRoute()
+  const { order, setOrder, stops, today, countdown, locked } = useRoute()
   const router = useRouter()
   const sealed = stops.filter(stop => stop.hidden).map(({ step, entry }) => ({ step, day: entry.day }))
   const opened = stops.filter(stop => !stop.hidden && stop.step !== today?.step)
@@ -41,11 +41,11 @@ export default function AdventRoute() {
             <section className="mt-10 animate-rise motion-reduce:animate-none">
               <SectionHead title="Today's coffee" />
               <div className="mt-8">
-                <TodayCard entry={today.entry} step={today.step} showJar={showJar} />
+                <TodayCard entry={today.entry} step={today.step} />
               </div>
             </section>
           )}
-          {opened.length > 0 && <OpenedJars stops={opened} showJar={showJar} />}
+          {opened.length > 0 && <OpenedJars stops={opened} />}
           {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={day => router.push(`/advent/${day}`)} />}
         </div>
       </div>
