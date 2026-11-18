@@ -5,8 +5,8 @@ type Props = { order: Order; onChange: (order: Order) => void }
 export default function OrderPicker({ order, onChange }: Props) {
   return (
     <div>
-      <h2 className="font-serif text-3xl tracking-tight text-slate-900">{order.label} order</h2>
-      <fieldset className="mt-4 inline-flex rounded-full bg-stone-100 p-1 text-sm">
+      <h2 className="font-serif text-3xl tracking-tight text-gray-950">{order.label} order</h2>
+      <fieldset className="mt-4 inline-flex overflow-hidden rounded-xl border-2 border-gray-950 bg-white text-sm shadow-[3px_3px_0_#030712]">
         <legend className="sr-only">Order</legend>
         {ORDERS.map(o => {
           const active = o.id === order.id
@@ -15,8 +15,8 @@ export default function OrderPicker({ order, onChange }: Props) {
               key={o.id}
               aria-pressed={active}
               onClick={() => onChange(o)}
-              className={`rounded-full px-3.5 py-1.5 font-medium transition-colors active:scale-[0.97] ${
-                active ? 'bg-white text-slate-900 shadow-sm' : 'text-stone-500 hover:text-slate-900'
+              className={`border-gray-950 px-4 py-2 font-semibold transition-colors duration-150 ease-out not-last:border-r-2 ${
+                active ? 'bg-yellow-300 text-gray-950' : 'text-gray-600 hover:bg-yellow-50 hover:text-gray-950'
               }`}
             >
               {o.label}
@@ -24,7 +24,7 @@ export default function OrderPicker({ order, onChange }: Props) {
           )
         })}
       </fieldset>
-      <p key={order.id} className="mt-3 max-w-xl animate-rise text-sm leading-relaxed text-stone-500 motion-reduce:animate-none">
+      <p key={order.id} className="mt-3 max-w-xl animate-rise text-sm leading-relaxed text-gray-700 motion-reduce:animate-none">
         {order.blurb}
       </p>
     </div>
