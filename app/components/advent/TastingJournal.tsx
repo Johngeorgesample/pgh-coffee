@@ -39,34 +39,38 @@ const Chip = ({ on, ...props }: { on: boolean } & React.ComponentProps<'button'>
   />
 )
 
-const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => void }) => (
-  <div className="flex items-center gap-3">
-    <div className="flex">
-      {[1, 2, 3, 4, 5].map(n => (
-        <button
-          key={n}
-          type="button"
-          onClick={() => onChange(n)}
-          aria-label={`${n} out of 5`}
-          aria-pressed={n === value}
-          className="p-1"
-        >
-          <Star
-            className={`size-6 ${n <= value ? 'fill-yellow-300 text-yellow-300' : 'fill-gray-200 text-gray-200'}`}
-          />
-        </button>
-      ))}
+const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => void }) => {
+  const [tap, setTap] = useState({ star: 0, count: 0 })
+  const rate = (n: number) => {
+    setTap(prev => ({ star: n, count: prev.count + 1 }))
+    onChange(n)
+  }
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map(n => (
+          <button key={n} type="button" onClick={() => rate(n)} aria-label={`${n} out of 5`} aria-pressed={n === value} className="p-1">
+            <Star
+              key={n === tap.star ? tap.count : 0}
+              className={`size-6 ${n <= value ? 'fill-yellow-300 text-yellow-300' : 'fill-gray-200 text-gray-200'} ${
+                n === tap.star ? 'animate-pop motion-reduce:animate-none' : ''
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+      <p className="text-lg font-bold text-slate-900">
+        {value || '—'} <span className="text-sm font-medium text-stone-400">/ 5</span>
+      </p>
     </div>
-    <p className="text-lg font-bold text-slate-900">
-      {value || '—'} <span className="text-sm font-medium text-stone-400">/ 5</span>
-    </p>
-  </div>
-)
+  )
+}
 
 export default function TastingJournal({ day, notes }: { day: number; notes: string[] }) {
   const { user } = useAuth()
   const [entry, setEntry] = useState(EMPTY)
   const [draft, setDraft] = useState<string | null>(null)
+  const [justSaved, setJustSaved] = useState(false)
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
@@ -78,7 +82,15 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
     localStorage.setItem(storageKey(day), JSON.stringify(next))
   }
 
-  const set = (patch: Partial<Entry>) => write({ ...patch, logged: false })
+  const set = (patch: Partial<Entry>) => {
+    setJustSaved(false)
+    write({ ...patch, logged: false })
+  }
+
+  const save = () => {
+    setJustSaved(true)
+    write({ logged: true })
+  }
 
   const toggleTasted = (note: string) =>
     set({ tasted: entry.tasted.includes(note) ? entry.tasted.filter(n => n !== note) : [...entry.tasted, note] })
@@ -170,9 +182,10 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
         {user ? (
           <button
             type="button"
-            onClick={() => write({ logged: true })}
-            className="min-h-11 rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+            onClick={save}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-[transform,background-color] duration-150 ease-out hover:bg-gray-800 active:scale-[0.97]"
           >
+            {entry.logged && <Check className={`size-4 ${justSaved ? 'animate-stamp motion-reduce:animate-none' : ''}`} strokeWidth={3} />}
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
