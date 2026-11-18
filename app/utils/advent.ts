@@ -24,3 +24,6 @@ export const agtronPercent = (agtron: number) =>
 
 export const beanShade = (agtron: number) =>
   `color-mix(in oklab, #e6c48f ${Math.round(agtronPercent(agtron) * 100)}%, #2a1608)`
+
+export const splitMarked = (text: string) =>
+  text.split(/\[([^\]]+)\]/).map((part, i) => ({ text: part, marked: i % 2 === 1 }))

@@ -8,6 +8,13 @@
   --animate-pop: pop 300ms ease-out;
   --animate-rise: rise 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
   --animate-arm: arm 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  --animate-sweep: sweep 250ms cubic-bezier(0.23, 1, 0.32, 1) both;
+
+  @keyframes sweep {
+    from {
+      transform: scaleX(0);
+    }
+  }
 
   @keyframes stamp {
     from {

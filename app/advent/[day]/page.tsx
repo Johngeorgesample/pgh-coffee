@@ -11,7 +11,7 @@ import DayHead from '@/app/components/advent/DayHead'
 import RoastMeter from '@/app/components/advent/RoastMeter'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
-import { parseDayParam } from '@/app/utils/advent'
+import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 import top from '@/public/advent/top.webp'
 
@@ -56,6 +56,29 @@ const SpecList = ({ entry }: { entry: AdventDay }) => (
     ))}
   </dl>
 )
+
+const prose = 'max-w-2xl text-lg leading-relaxed text-gray-800 text-pretty'
+
+const Highlight = ({ text, order }: { text: string; order: number }) => (
+  <mark className="relative isolate bg-transparent font-semibold whitespace-nowrap text-gray-950">
+    <span
+      aria-hidden
+      className="absolute -inset-x-0.5 top-1 bottom-0.5 -z-10 origin-left -rotate-1 animate-sweep rounded-sm bg-yellow-300 motion-reduce:animate-none"
+      style={{ animationDelay: `${200 + order * 60}ms` }}
+    />
+    {text}
+  </mark>
+)
+
+const Blurb = ({ text }: { text: string }) => {
+  const parts = splitMarked(text)
+  const order = (i: number) => parts.slice(0, i).filter(p => p.marked).length
+  return (
+    <p className={prose}>
+      {parts.map((part, i) => (part.marked ? <Highlight key={i} text={part.text} order={order(i)} /> : part.text))}
+    </p>
+  )
+}
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => (
   <section>
@@ -110,7 +133,7 @@ const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) =>
   <main className="flex flex-col gap-14 lg:pt-6">
     {entry.blurb && (
       <Section title="In the cup">
-        <p className="max-w-2xl leading-relaxed text-slate-600 text-pretty">{entry.blurb}</p>
+        <Blurb text={entry.blurb} />
       </Section>
     )}
     <Section title="Watch the roaster brew it">

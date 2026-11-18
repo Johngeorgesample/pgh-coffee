@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { daysOpen, parseDayParam } from '@/app/utils/advent'
+import { daysOpen, parseDayParam, splitMarked } from '@/app/utils/advent'
 import { ADVENT_LINEUP } from '@/data/advent'
 import { ORDERS } from '@/data/advent-orders'
 
@@ -44,3 +44,15 @@ describe('parseDayParam', () => {
 
 
 
+
+describe('splitMarked', () => {
+  it('marks bracketed phrases and leaves a stray bracket as text', () => {
+    expect(splitMarked('notes of [vanilla] and [baked nuts], 70% [Brazil')).toEqual([
+      { text: 'notes of ', marked: false },
+      { text: 'vanilla', marked: true },
+      { text: ' and ', marked: false },
+      { text: 'baked nuts', marked: true },
+      { text: ', 70% [Brazil', marked: false },
+    ])
+  })
+})
