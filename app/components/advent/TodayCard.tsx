@@ -6,6 +6,7 @@ import { AdventDay } from '@/data/advent'
 
 const specs = (entry: AdventDay) =>
   [
+    entry.notes.length > 0 && { label: 'Tasting notes', value: entry.notes.join(' · ') },
     entry.origin && { label: 'Origin', value: entry.origin },
     entry.varietal && { label: 'Varietal', value: entry.varietal },
     entry.process && { label: 'Process', value: entry.process },
@@ -37,18 +38,19 @@ export default function TodayCard({ entry }: { entry: AdventDay }) {
       <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
         <Label day={entry.day} />
         <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
-          <div className="md:pr-6">
+          <div className="flex flex-col justify-center md:pr-6">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
             <Link href={`/advent/${entry.day}`} className="mt-1 block decoration-2 underline-offset-4 hover:underline">
               <h3 className="font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">{entry.coffee}</h3>
             </Link>
-            {entry.notes.length > 0 && <p className="mt-2 text-base text-gray-700">{entry.notes.join(' · ')}</p>}
-            <Link
-              href={`/advent/${entry.day}`}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gray-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 active:scale-[0.97]"
-            >
-              Read today&rsquo;s coffee <ArrowRight className="size-4" />
-            </Link>
+            <div>
+              <Link
+                href={`/advent/${entry.day}`}
+                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gray-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 active:scale-[0.97]"
+              >
+                Read today&rsquo;s coffee <ArrowRight className="size-4" />
+              </Link>
+            </div>
           </div>
           <Specs entry={entry} />
         </div>
