@@ -37,6 +37,9 @@ describe('AdventRoute', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
-    expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/4')).toHaveTextContent(/^Dec\s*4/)
+    const link = (day: number) => screen.getAllByRole('link').find(a => a.getAttribute('href') === `/advent/${day}`)!
+    expect(link(4)).toHaveTextContent(/^Dec\s*4/)
+    expect(link(4).firstElementChild).toHaveClass('animate-stamp')
+    expect(link(2).firstElementChild).not.toHaveClass('animate-stamp')
   })
 })
