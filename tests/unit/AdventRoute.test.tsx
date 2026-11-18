@@ -29,4 +29,14 @@ describe('AdventRoute', () => {
     expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
     expect(screen.getByText('Jar 12')).toBeInTheDocument()
   })
+
+  it('stamps a peeked day the same way as an opened one', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
+    render(<AdventRoute />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
+    expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/4')).toHaveTextContent(/^Dec\s*4/)
+  })
 })

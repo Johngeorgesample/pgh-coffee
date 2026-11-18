@@ -22,21 +22,7 @@ const useRoute = () => {
   return { order, setOrder, stops, today: stops[open - 1], reveal, showJar: order.id !== ORDERS[0].id }
 }
 
-const OpenStop = ({ entry, showJar }: { entry: AdventDay; showJar: boolean }) => (
-  <Link href={`/advent/${entry.day}`} className="group flex items-start justify-between gap-4">
-    <div>
-      <p className="text-xs font-bold uppercase tracking-wider text-amber-800">{entry.roasterName}</p>
-      <p className="mt-1 font-serif text-xl leading-tight tracking-tight text-slate-900 group-hover:underline">{entry.coffee}</p>
-    </div>
-    {showJar && (
-      <span className="shrink-0 rounded-lg border border-stone-200 bg-stone-50 px-2.5 py-1 font-mono text-xs text-slate-600">
-        Jar {pad(entry.day)}
-      </span>
-    )}
-  </Link>
-)
-
-const PastStop = ({ step, entry, showJar }: { step: number; entry: AdventDay; showJar: boolean }) => (
+const OpenStop = ({ step, entry, showJar }: { step: number; entry: AdventDay; showJar: boolean }) => (
   <Link
     href={`/advent/${entry.day}`}
     className="group flex overflow-hidden rounded-xl border-2 border-gray-950 bg-white shadow-[3px_3px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#030712] active:translate-y-0 active:shadow-[2px_2px_0_#030712] motion-reduce:transform-none"
@@ -59,13 +45,12 @@ const PastStop = ({ step, entry, showJar }: { step: number; entry: AdventDay; sh
   </Link>
 )
 
-type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; isPast: boolean; showJar: boolean; onReveal: () => void }
+type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; showJar: boolean; onReveal: () => void }
 
-const Stop = ({ step, entry, hidden, isToday, isPast, showJar, onReveal }: TStopProps) => {
+const Stop = ({ step, entry, hidden, isToday, showJar, onReveal }: TStopProps) => {
   if (isToday) return <TodayCard entry={entry} step={step} showJar={showJar} />
-  if (isPast) return <PastStop step={step} entry={entry} showJar={showJar} />
   if (hidden) return <SealedStop step={step} onReveal={onReveal} />
-  return <OpenStop entry={entry} showJar={showJar} />
+  return <OpenStop step={step} entry={entry} showJar={showJar} />
 }
 
 export default function AdventRoute() {
@@ -82,7 +67,7 @@ export default function AdventRoute() {
               style={{ animationDelay: `${Math.min(step, 12) * 18}ms` }}
               className="relative min-h-12 animate-rise pb-6 last:pb-0 motion-reduce:animate-none"
             >
-              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} isPast={!!today && step < today.step} showJar={showJar} onReveal={() => reveal(entry.day)} />
+              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} showJar={showJar} onReveal={() => reveal(entry.day)} />
             </li>
           ))}
         </ol>
