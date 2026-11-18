@@ -24,16 +24,25 @@ const readEntry = (day: number) => {
   }
 }
 
+const press = 'transition-[transform,box-shadow,background-color] duration-150 ease-out active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
+
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-500">{children}</h3>
+  <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-900">{children}</h3>
+)
+
+const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div className="flex flex-col gap-3 border-t-2 border-gray-950 pt-5">
+    <Label>{label}</Label>
+    {children}
+  </div>
 )
 
 const Chip = ({ on, ...props }: { on: boolean } & React.ComponentProps<'button'>) => (
   <button
     type="button"
     aria-pressed={on}
-    className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-colors ${
-      on ? 'border-yellow-300 bg-yellow-100 text-yellow-800' : 'border-gray-200 bg-white text-slate-700 hover:bg-gray-100'
+    className={`inline-flex min-h-11 items-center gap-1.5 rounded-lg border-2 border-gray-950 px-3.5 text-sm font-bold text-gray-950 ${press} ${
+      on ? 'bg-yellow-300 shadow-[2px_2px_0_#030712]' : 'bg-white [@media(hover:hover)_and_(pointer:fine)]:hover:bg-yellow-100'
     }`}
     {...props}
   />
@@ -46,30 +55,85 @@ const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => v
     onChange(n)
   }
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <Label>Your rating</Label>
+        <p className="mt-1 font-serif text-3xl tracking-tight text-gray-950">
+          {value || '—'}
+          <span className="text-lg text-gray-500"> / 5</span>
+        </p>
+      </div>
       <div className="flex">
         {[1, 2, 3, 4, 5].map(n => (
-          <button key={n} type="button" onClick={() => rate(n)} aria-label={`${n} out of 5`} aria-pressed={n === value} className="p-1">
+          <button
+            key={n}
+            type="button"
+            onClick={() => rate(n)}
+            aria-label={`${n} out of 5`}
+            aria-pressed={n === value}
+            className="p-1 transition-transform duration-150 ease-out active:scale-90"
+          >
             <Star
               key={n === tap.star ? tap.count : 0}
-              className={`size-6 ${n <= value ? 'fill-yellow-300 text-yellow-300' : 'fill-gray-200 text-gray-200'} ${
+              strokeWidth={2.5}
+              className={`size-7 text-gray-950 ${n <= value ? 'fill-yellow-300' : 'fill-white'} ${
                 n === tap.star ? 'animate-pop motion-reduce:animate-none' : ''
               }`}
             />
           </button>
         ))}
       </div>
-      <p className="text-lg font-bold text-slate-900">
-        {value || '—'} <span className="text-sm font-medium text-stone-400">/ 5</span>
-      </p>
     </div>
   )
 }
 
+const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
+  const [draft, setDraft] = useState<string | null>(null)
+  const commit = () => {
+    onAdd(draft?.trim() ?? '')
+    setDraft(null)
+  }
+  if (draft === null)
+    return (
+      <button
+        type="button"
+        onClick={() => setDraft('')}
+        className="min-h-11 rounded-lg border-2 border-dashed border-gray-950/40 px-3.5 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-950"
+      >
+        + Add your own note
+      </button>
+    )
+  return (
+    <input
+      ref={el => el?.focus()}
+      value={draft}
+      onChange={e => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={e => e.key === 'Enter' && commit()}
+      aria-label="Add your own tasting note"
+      placeholder="Dried cherry…"
+      className="min-h-11 rounded-lg border-2 border-gray-950 px-3.5 text-sm text-gray-950 outline-none focus:border-gray-950 focus:bg-yellow-50 focus:ring-0"
+    />
+  )
+}
+
+const LoggedStamp = ({ day, justSaved }: { day: number; justSaved: boolean }) => (
+  <span className="absolute top-0 right-5 -translate-y-1/2">
+    <span
+      className={`block -rotate-6 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712] ${
+        justSaved ? 'animate-stamp motion-reduce:animate-none' : ''
+      }`}
+    >
+      Logged · Dec {day}
+    </span>
+  </span>
+)
+
+const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
+
 export default function TastingJournal({ day, notes }: { day: number; notes: string[] }) {
   const { user } = useAuth()
   const [entry, setEntry] = useState(EMPTY)
-  const [draft, setDraft] = useState<string | null>(null)
   const [justSaved, setJustSaved] = useState(false)
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
@@ -95,104 +159,58 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
   const toggleTasted = (note: string) =>
     set({ tasted: entry.tasted.includes(note) ? entry.tasted.filter(n => n !== note) : [...entry.tasted, note] })
 
-  const addOwnNote = () => {
-    const note = draft?.trim()
+  const addOwnNote = (note: string) => {
     if (note && !entry.tasted.includes(note)) set({ tasted: [...entry.tasted, note] })
-    setDraft(null)
   }
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-      {entry.logged && (
-        <div className="mb-5 flex justify-end">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-yellow-800">
-            <Check className="size-3.5" /> Logged today
-          </span>
-        </div>
-      )}
-
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-stone-50 p-5">
-        <div>
-          <p className="font-semibold text-slate-900">Your rating</p>
-          <p className="text-sm text-stone-500">Tap to score this cup</p>
-        </div>
+    <div className="relative rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
+      {entry.logged && <LoggedStamp day={day} justSaved={justSaved} />}
+      <div className="flex flex-col gap-7 p-5 sm:p-7">
         <Rating value={entry.rating} onChange={rating => set({ rating })} />
-      </div>
 
-      <Label>Did you taste these notes?</Label>
-      <div className="mb-6 flex flex-wrap gap-2">
-        {[...notes, ...entry.tasted.filter(n => !notes.includes(n))].map(note => (
-          <Chip key={note} on={entry.tasted.includes(note)} onClick={() => toggleTasted(note)}>
-            {entry.tasted.includes(note) ? <Check className="size-4" /> : <span className="size-4 rounded-full border border-gray-300" />}
-            {note}
-          </Chip>
-        ))}
-        {draft === null ? (
-          <button
-            type="button"
-            onClick={() => setDraft('')}
-            className="min-h-11 rounded-full border border-dashed border-gray-300 px-4 text-sm font-medium text-stone-500 transition-colors hover:bg-gray-50"
-          >
-            + Add your own note
-          </button>
-        ) : (
-          <input
-            ref={el => el?.focus()}
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            onBlur={addOwnNote}
-            onKeyDown={e => e.key === 'Enter' && addOwnNote()}
-            aria-label="Add your own tasting note"
-            placeholder="Dried cherry…"
-            className="min-h-11 rounded-full border border-gray-300 px-4 text-sm text-slate-900 focus:border-yellow-300 focus:outline-none"
+        <Field label="Did you taste these?">
+          <div className="flex flex-wrap gap-2">
+            {[...notes, ...entry.tasted.filter(n => !notes.includes(n))].map(note => (
+              <Chip key={note} on={entry.tasted.includes(note)} onClick={() => toggleTasted(note)}>
+                {entry.tasted.includes(note) && <Check className="size-4" strokeWidth={3} />}
+                {note}
+              </Chip>
+            ))}
+            <OwnNote onAdd={addOwnNote} />
+          </div>
+        </Field>
+
+        <Field label="Brewed with">
+          <div className="flex flex-wrap gap-2">
+            {BREW_METHODS.map(method => (
+              <Chip key={method} on={entry.method === method} onClick={() => set({ method: entry.method === method ? '' : method })}>
+                {method}
+              </Chip>
+            ))}
+          </div>
+        </Field>
+
+        <Field label="Personal notes">
+          <textarea
+            rows={3}
+            value={entry.body}
+            onChange={e => set({ body: e.target.value })}
+            aria-label="Personal notes"
+            placeholder="e.g., ground at 14 clicks on Comandante, bright juicy apple finish with pleasant acidity…"
+            className="w-full rounded-lg border-2 border-gray-950 p-3 text-gray-950 placeholder:text-gray-400 outline-none focus:border-gray-950 focus:bg-yellow-50 focus:ring-0"
           />
-        )}
+        </Field>
       </div>
 
-      <Label>Brew method used</Label>
-      <div className="mb-6 flex flex-wrap gap-2">
-        {BREW_METHODS.map(method => (
-          <button
-            key={method}
-            type="button"
-            aria-pressed={entry.method === method}
-            onClick={() => set({ method: entry.method === method ? '' : method })}
-            className={`min-h-11 rounded-full border px-4 text-sm font-semibold transition-colors ${
-              entry.method === method
-                ? 'border-gray-950 bg-gray-950 text-white'
-                : 'border-gray-200 bg-white text-slate-700 hover:bg-gray-100'
-            }`}
-          >
-            {method}
-          </button>
-        ))}
-      </div>
-
-      <Label>Personal notes</Label>
-      <textarea
-        rows={3}
-        value={entry.body}
-        onChange={e => set({ body: e.target.value })}
-        aria-label="Personal notes"
-        placeholder="e.g., ground at 14 clicks on Comandante, bright juicy apple finish with pleasant acidity…"
-        className="mb-6 w-full rounded-xl border border-gray-200 bg-stone-50 p-4 text-slate-900 placeholder:text-stone-400 focus:border-yellow-300 focus:outline-none"
-      />
-
-      <div>
+      <div className="border-t-4 border-gray-950 p-4">
         {user ? (
-          <button
-            type="button"
-            onClick={save}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-[transform,background-color] duration-150 ease-out hover:bg-gray-800 active:scale-[0.97]"
-          >
+          <button type="button" onClick={save} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
             {entry.logged && <Check className={`size-4 ${justSaved ? 'animate-stamp motion-reduce:animate-none' : ''}`} strokeWidth={3} />}
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
-          <Link
-            href={`/sign-in?mode=signup&next=/advent/${day}`}
-            className="inline-flex min-h-11 items-center rounded-full bg-gray-950 px-6 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
-          >
+          <Link href={`/sign-in?mode=signup&next=/advent/${day}`} className={`${saveClass} bg-yellow-300`}>
             Save tasting note
           </Link>
         )}
