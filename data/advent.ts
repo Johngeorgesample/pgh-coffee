@@ -34,4 +34,24 @@ export interface AdventDay {
 
 export const ADVENT_LINEUP: AdventDay[] = lineup
 
+export const ANNOUNCED_ROASTERS: { name: string; slug?: string }[] = [
+  { name: '19 Coffee', slug: '19-coffee' },
+  { name: 'Allegheny Coffee & Tea Exchange', slug: 'allegheny-coffee-and-tea-exchange' },
+  { name: 'Aspen Coffee Co.', slug: 'aspen-coffee-co' },
+  { name: 'Burning Oaks Coffee Company', slug: 'burning-oaks-coffee-company' },
+  { name: 'Colombino Coffee', slug: 'colombino-coffee' },
+  { name: 'Commonplace Coffee', slug: 'commonplace' },
+  { name: 'De Fer Coffee & Tea', slug: 'de-fer-coffee-and-tea' },
+  { name: 'Dynamic Coffee Roasters', slug: 'dynamic-coffee-roasters' },
+  { name: 'Ghost Coffee Collab', slug: 'ghost-coffee-collab' },
+  { name: 'Hilltop Coffee' },
+  { name: "It's Still Coffee", slug: 'its-still-coffee' },
+  { name: 'Macizo', slug: 'macizo' },
+  { name: "Reginald's Coffee", slug: 'reginalds-coffee' },
+  { name: "Rockin' Cat", slug: 'rockin-cat' },
+  { name: 'Standing Wave Coffee', slug: 'standing-wave-coffee' },
+]
+
+export const UNANNOUNCED_ROASTER_COUNT = 6
+
 export const findAdventDay = (day: number) => ADVENT_LINEUP.find(entry => entry.day === day)

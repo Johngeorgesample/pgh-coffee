@@ -1,14 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import left from '@/public/advent/left.webp'
-import { ADVENT_LINEUP } from '@/data/advent'
+import { ANNOUNCED_ROASTERS, UNANNOUNCED_ROASTER_COUNT } from '@/data/advent'
 
-const roasters = Array.from(
-  new Map(ADVENT_LINEUP.filter(e => e.roasterSlug).map(e => [e.roasterSlug!, e.roasterName])),
-  ([slug, name]) => ({ slug, name })
-).sort((a, b) => a.name.localeCompare(b.name))
-
-const announced = ADVENT_LINEUP.filter(e => !e.roasterSlug).length
+const ROW = 'flex items-baseline justify-between gap-3 py-1.5 font-serif text-xl leading-snug tracking-tight text-gray-950'
 
 export default function WhosInTheBox() {
   return (
@@ -21,18 +16,19 @@ export default function WhosInTheBox() {
       </div>
       <div className="p-6">
         <ul className="mt-4">
-          {roasters.map(({ slug, name }) => (
-            <li key={slug} className="border-b-2 border-gray-950/15 last:border-b-0">
-              <Link
-                href={`/roasters/${slug}`}
-                className="flex items-baseline justify-between gap-3 py-1.5 font-serif text-xl leading-snug tracking-tight text-gray-950 decoration-2 underline-offset-4 hover:underline"
-              >
-                {name}
-              </Link>
+          {ANNOUNCED_ROASTERS.map(({ slug, name }) => (
+            <li key={name} className="border-b-2 border-gray-950/15 last:border-b-0">
+              {slug ? (
+                <Link href={`/roasters/${slug}`} className={`${ROW} decoration-2 underline-offset-4 hover:underline`}>
+                  {name}
+                </Link>
+              ) : (
+                <span className={ROW}>{name}</span>
+              )}
             </li>
           ))}
         </ul>
-        {announced > 0 && <p className="mt-4 text-sm font-semibold text-gray-900">+ {announced} more, announced soon</p>}
+        <p className="mt-4 text-sm font-semibold text-gray-900">+ {UNANNOUNCED_ROASTER_COUNT} more, announced soon</p>
       </div>
     </div>
   )
