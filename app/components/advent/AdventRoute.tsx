@@ -13,7 +13,7 @@ import { ORDERS, jarsInOrder } from '@/data/advent-orders'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-const currentDate = () => (process.env.NODE_ENV !== 'production' && devDayDate(window.location.search)) || new Date()
+const currentDate = () => (process.env.NETLIFY_CONTEXT !== 'production' && devDayDate(window.location.search)) || new Date()
 
 const useRoute = () => {
   const [order, setOrder] = useState(ORDERS[0])

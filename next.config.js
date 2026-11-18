@@ -6,6 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
+    NETLIFY_CONTEXT: process.env.CONTEXT ?? '',
   },
   // Static OG routes read these at build time, but /u/[id] renders on demand and
   // file tracing doesn't follow readFileSync(process.cwd()) into the bundle.
