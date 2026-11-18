@@ -37,6 +37,29 @@ const OpenStop = ({ entry, showJar }: { entry: AdventDay; showJar: boolean }) =>
   </Link>
 )
 
+const PastStop = ({ step, entry, showJar }: { step: number; entry: AdventDay; showJar: boolean }) => (
+  <Link
+    href={`/advent/${entry.day}`}
+    className="group flex overflow-hidden rounded-xl border-2 border-gray-950 bg-white shadow-[3px_3px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#030712] active:translate-y-0 active:shadow-[2px_2px_0_#030712] motion-reduce:transform-none"
+  >
+    <span className="flex w-16 shrink-0 flex-col items-center justify-center border-r-2 border-gray-950 bg-yellow-300 py-2 leading-none">
+      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-900">Dec</span>
+      <span className="font-serif text-3xl text-gray-950">{step}</span>
+    </span>
+    <div className="flex min-w-0 flex-1 items-center justify-between gap-4 px-4 py-2.5">
+      <div className="min-w-0">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
+        <p className="truncate font-serif text-lg leading-tight text-gray-950">{entry.coffee}</p>
+      </div>
+      {showJar && (
+        <span className="shrink-0 rounded-md border-2 border-gray-950 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-950">
+          Jar {pad(entry.day)}
+        </span>
+      )}
+    </div>
+  </Link>
+)
+
 const LockedStop = ({ step, onReveal }: { step: number; onReveal: () => void }) => (
   <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
     <p className="flex items-center gap-1.5 text-sm font-medium text-stone-400">
@@ -47,10 +70,11 @@ const LockedStop = ({ step, onReveal }: { step: number; onReveal: () => void }) 
   </div>
 )
 
-type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; showJar: boolean; onReveal: () => void }
+type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; isPast: boolean; showJar: boolean; onReveal: () => void }
 
-const Stop = ({ step, entry, hidden, isToday, showJar, onReveal }: TStopProps) => {
+const Stop = ({ step, entry, hidden, isToday, isPast, showJar, onReveal }: TStopProps) => {
   if (isToday) return <TodayCard entry={entry} />
+  if (isPast) return <PastStop step={step} entry={entry} showJar={showJar} />
   if (hidden) return <LockedStop step={step} onReveal={onReveal} />
   return <OpenStop entry={entry} showJar={showJar} />
 }
@@ -62,17 +86,14 @@ export default function AdventRoute() {
     <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div>
         <OrderPicker order={order} onChange={setOrder} />
-        <ol key={order.id} className="relative ml-3.5 mt-10 border-l border-stone-200 pl-8">
+        <ol key={order.id} className="mt-10">
           {stops.map(({ step, entry, hidden }) => (
             <li
               key={entry.day}
               style={{ animationDelay: `${Math.min(step, 12) * 18}ms` }}
               className="relative min-h-12 animate-rise pb-6 last:pb-0 motion-reduce:animate-none"
             >
-              <span className="absolute -left-[45px] top-0 flex size-7 items-center justify-center rounded-full bg-gray-950 text-xs font-bold text-white ring-4 ring-white">
-                {step}
-              </span>
-              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} showJar={showJar} onReveal={() => reveal(entry.day)} />
+              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} isPast={!!today && step < today.step} showJar={showJar} onReveal={() => reveal(entry.day)} />
             </li>
           ))}
         </ol>
