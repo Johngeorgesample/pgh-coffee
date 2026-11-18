@@ -16,6 +16,16 @@ export const daysOpen = (now: Date) => {
   return month < 12 ? 0 : Math.min(day, ADVENT_DAYS)
 }
 
+export const daysUntilOpening = (now: Date) => {
+  const [year, month, day] = pittsburghDate(now)
+  return Math.round((Date.UTC(ADVENT_YEAR, 11, 1) - Date.UTC(year, month - 1, day)) / 86_400_000)
+}
+
+export const devDayDate = (search: string) => {
+  const day = parseDayParam(new URLSearchParams(search).get('dev-day') ?? '')
+  return day ? new Date(`${ADVENT_YEAR}-12-${String(day).padStart(2, '0')}T12:00:00-05:00`) : null
+}
+
 const AGTRON_DARK = 40
 const AGTRON_LIGHT = 100
 

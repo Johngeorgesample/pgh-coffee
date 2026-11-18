@@ -91,6 +91,26 @@ const useStage = (armed: boolean, onReveal: () => void, onClose: () => void) => 
   return { stage: current, warn: () => setStage('warn'), unscrew, cancel, reset: () => setStage('ask') }
 }
 
+const LID =
+  'flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712]'
+
+const Face = ({ step, lit }: { step: number; lit: boolean }) => (
+  <span
+    className={`flex size-[80%] flex-col items-center justify-center rounded-full border-2 border-gray-950 leading-none transition-colors duration-150 ease-out ${
+      lit ? 'bg-yellow-300' : 'bg-white'
+    }`}
+  >
+    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-900">Dec</span>
+    <span className="font-serif text-2xl text-gray-950">{step}</span>
+  </span>
+)
+
+const LockedLid = ({ step }: { step: number }) => (
+  <span className={LID}>
+    <Face step={step} lit={false} />
+  </span>
+)
+
 type TLidProps = { step: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
 
 const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
@@ -107,16 +127,9 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
         aria-expanded={armed}
         aria-label={`Open Dec ${step} early`}
         style={{ transform: LID_TRANSFORM[stage], opacity: stage === 'leaving' ? 0 : 1, transitionDuration: `${UNSCREW_MS}ms` }}
-        className={`flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712] outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${STAGE_ANIMATION[stage]}`}
+        className={`${LID} outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${STAGE_ANIMATION[stage]}`}
       >
-        <span
-          className={`flex size-[80%] flex-col items-center justify-center rounded-full border-2 border-gray-950 leading-none transition-colors duration-150 ease-out ${
-            stage === 'closed' ? 'bg-white' : 'bg-yellow-300'
-          }`}
-        >
-          <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-900">Dec</span>
-          <span className="font-serif text-2xl text-gray-950">{step}</span>
-        </span>
+        <Face step={step} lit={stage !== 'closed'} />
       </button>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
@@ -143,7 +156,9 @@ const useDismiss = (active: boolean, close: () => void) => {
   return ref
 }
 
-export default function SealedJars({ jars, onReveal }: { jars: Jar[]; onReveal: (day: number) => void }) {
+type TSealedJarsProps = { jars: Jar[]; locked: boolean; onReveal: (day: number) => void }
+
+export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps) {
   const [armed, setArmed] = useState<number | null>(null)
   const close = () => setArmed(null)
   const ref = useDismiss(armed !== null, close)
@@ -162,7 +177,11 @@ export default function SealedJars({ jars, onReveal }: { jars: Jar[]; onReveal: 
       <ul ref={ref} className="mt-6 grid grid-cols-5 gap-4 sm:grid-cols-6 md:grid-cols-8">
         {jars.map(jar => (
           <li key={jar.day}>
-            <Lid step={jar.step} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
+            {locked ? (
+              <LockedLid step={jar.step} />
+            ) : (
+              <Lid step={jar.step} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
+            )}
           </li>
         ))}
       </ul>

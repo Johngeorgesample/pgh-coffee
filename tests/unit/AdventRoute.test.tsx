@@ -6,7 +6,10 @@ vi.mock('@/public/advent/top.webp', () => ({ default: { src: '/advent/top.webp',
 vi.mock('@/public/advent/left.webp', () => ({ default: { src: '/advent/left.webp', width: 2882, height: 800 } }))
 
 describe('AdventRoute', () => {
-  afterEach(() => vi.useRealTimers())
+  afterEach(() => {
+    vi.useRealTimers()
+    window.history.replaceState(null, '', '/')
+  })
 
   it('stamps the days before today and keeps later days locked', () => {
     vi.useFakeTimers({ toFake: ['Date'] })
@@ -17,6 +20,27 @@ describe('AdventRoute', () => {
     expect(opened).toContain('/advent/2')
     expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/2')).toHaveTextContent(/^Dec\s*2/)
     expect(opened).not.toContain('/advent/4')
+    expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
+  })
+
+  it('keeps every jar sealed and unopenable before December, counting down to the first', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-18T12:00:00-05:00'))
+    render(<AdventRoute />)
+
+    expect(screen.queryAllByRole('link').filter(a => a.getAttribute('href')?.startsWith('/advent/'))).toHaveLength(0)
+    expect(screen.queryByRole('button', { name: /^Open Dec/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'North to south' })).not.toBeInTheDocument()
+    expect(screen.getByText('13 days to go')).toBeInTheDocument()
+  })
+
+  it('pretends it is the dev-day in December when that param is set', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-18T12:00:00-05:00'))
+    window.history.replaceState(null, '', '/advent?dev-day=3')
+    render(<AdventRoute />)
+
+    expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
   })
 

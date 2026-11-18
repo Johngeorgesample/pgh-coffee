@@ -2,22 +2,26 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import BeforeOpening from '@/app/components/advent/BeforeOpening'
 import OrderPicker from '@/app/components/advent/OrderPicker'
 import SealedJars from '@/app/components/advent/SealedJars'
 import TodayCard from '@/app/components/advent/TodayCard'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
-import { daysOpen } from '@/app/utils/advent'
+import { daysOpen, daysUntilOpening, devDayDate } from '@/app/utils/advent'
 import { AdventDay } from '@/data/advent'
 import { ORDERS, jarsInOrder } from '@/data/advent-orders'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
+const currentDate = () => (process.env.NODE_ENV !== 'production' && devDayDate(window.location.search)) || new Date()
+
 const useRoute = () => {
   const [order, setOrder] = useState(ORDERS[0])
-  const [open, setOpen] = useState(1)
+  const [now, setNow] = useState<Date | null>(null)
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
   const [justRevealed, setJustRevealed] = useState<number | null>(null)
-  useEffect(() => setOpen(Math.max(daysOpen(new Date()), 1)), [])
+  useEffect(() => setNow(currentDate()), [])
+  const open = now ? daysOpen(now) : 0
   const stops = jarsInOrder(order).map(stop => ({ ...stop, hidden: stop.step > open && !revealed.has(stop.entry.day) }))
   const reveal = (jar: number) => {
     setRevealed(prev => new Set(prev).add(jar))
@@ -27,7 +31,9 @@ const useRoute = () => {
     setJustRevealed(null)
     setOrder(next)
   }
-  return { order, changeOrder, stops, today: stops[open - 1], reveal, justRevealed, showJar: order.id !== ORDERS[0].id }
+  const countdown = now && open === 0 ? daysUntilOpening(now) : null
+  const locked = open === 0
+  return { order, changeOrder, stops, today: stops[open - 1], countdown, locked, reveal, justRevealed, showJar: order.id !== ORDERS[0].id }
 }
 
 type TOpenStopProps = { step: number; entry: AdventDay; showJar: boolean; stamped: boolean }
@@ -86,14 +92,15 @@ const Stop = ({ step, entry, isToday, showJar, stamped }: TStopProps) =>
   )
 
 export default function AdventRoute() {
-  const { order, changeOrder, stops, today, reveal, justRevealed, showJar } = useRoute()
+  const { order, changeOrder, stops, today, countdown, locked, reveal, justRevealed, showJar } = useRoute()
   const sealed = stops.filter(stop => stop.hidden).map(({ step, entry }) => ({ step, day: entry.day }))
 
   return (
     <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div>
-        <OrderPicker order={order} onChange={changeOrder} />
+        {!locked && <OrderPicker order={order} onChange={changeOrder} />}
         <div key={order.id}>
+          {countdown !== null && <BeforeOpening days={countdown} />}
           <ol className="mt-10">
             {stops
               .filter(stop => !stop.hidden)
@@ -113,7 +120,7 @@ export default function AdventRoute() {
                 </li>
               ))}
           </ol>
-          {sealed.length > 0 && <SealedJars jars={sealed} onReveal={reveal} />}
+          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={reveal} />}
         </div>
       </div>
       <aside className="flex flex-col gap-4 lg:self-start">
