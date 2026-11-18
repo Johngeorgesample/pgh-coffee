@@ -47,7 +47,7 @@ export default function AdventHero() {
           </h1>
           <p className="mb-8 text-lg leading-relaxed text-gray-900 md:text-xl">
             One jar a day, December 1st through Christmas. Grind it, brew it, and get to know the people roasting coffee in
-            Pittsburgh. Picked by{' '}
+            Pittsburgh. Curated by{' '}
             <Link href={DYNAMIC_ROASTER_PATH} className={LINK}>Dynamic Coffee Roasters</Link> and{' '}
             <Link href="https://www.origincoffee.club/" target="_blank" className={LINK}>Origin Coffee Club</Link>.
           </p>
