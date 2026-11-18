@@ -91,7 +91,7 @@ const pill = 'inline-flex items-center gap-1.5 rounded-full border border-gray-2
 
 const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullable<TRoaster> }) => (
   <Section title="About the roaster">
-    {roaster.description && <p className="mb-5 max-w-2xl text-sm leading-relaxed text-gray-600">{roaster.description}</p>}
+    {roaster.description && <p className={`mb-5 ${prose}`}>{roaster.description}</p>}
     <div className="flex flex-wrap gap-2">
       <Link href={`/roasters/${entry.roasterSlug}`} className={pill}>
         <MapPin className="size-4" />
