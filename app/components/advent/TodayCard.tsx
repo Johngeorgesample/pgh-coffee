@@ -23,11 +23,16 @@ const Specs = ({ entry }: { entry: AdventDay }) => (
   </dl>
 )
 
-const Label = ({ day }: { day: number }) => (
+const Label = ({ day, jar }: { day: number; jar: number }) => (
   <div className="relative border-b-4 border-gray-950">
     <Image src={top} alt="" sizes="(min-width: 1024px) 760px, 100vw" className="h-16 w-full object-cover object-left" />
-    <span className="absolute bottom-0 left-5 translate-y-1/2 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
-      Today · Dec {day}
+    <span className="absolute bottom-0 left-5 flex translate-y-1/2 items-center gap-3">
+      <span className="block size-24 animate-stamp overflow-hidden rounded-full border-4 border-gray-950 shadow-[4px_4px_0_#030712] motion-reduce:animate-none">
+        <Image src={`/advent/labels/${jar}.webp`} alt={`Jar ${jar}`} width={240} height={240} sizes="96px" className="size-full" />
+      </span>
+      <span className="mt-12 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
+        Today · Dec {day}
+      </span>
     </span>
   </div>
 )
@@ -36,15 +41,10 @@ export default function TodayCard({ entry, step }: { entry: AdventDay; step: num
   return (
     <div className="pb-4">
       <div className="group relative overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:-translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:has-[a:hover]:shadow-[8px_8px_0_#030712] has-[a:active]:translate-y-0.5 has-[a:active]:shadow-[3px_3px_0_#030712] motion-reduce:transform-none">
-        <Label day={step} />
+        <Label day={step} jar={entry.day} />
         <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
-          <div className="flex flex-col justify-center md:pr-6">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
-              <span className="shrink-0 rounded-md border-2 border-gray-950 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-950">
-                Jar {String(entry.day).padStart(2, '0')}
-              </span>
-            </div>
+          <div className="flex flex-col justify-center pt-10 md:pr-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
             <h3 className="mt-1 font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">
               <Link href={`/advent/${entry.day}`} className="after:absolute after:inset-0 after:z-10">
                 {entry.coffee}
