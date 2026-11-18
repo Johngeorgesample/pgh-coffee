@@ -63,7 +63,7 @@ describe('AdventRoute', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
     expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
-    expect(screen.getByText('Jar 12')).toBeInTheDocument()
+    expect(screen.getByText('Jar 17')).toBeInTheDocument()
   })
 
   it('only opens a sealed jar after the spoiler warning is accepted', async () => {
