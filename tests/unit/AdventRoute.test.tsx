@@ -58,6 +58,18 @@ describe('AdventRoute', () => {
     expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
   })
 
+  it('remembers the chosen order in the URL so coming back restores it', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
+    const { unmount } = render(<AdventRoute />)
+    fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
+    expect(window.location.search).toBe('?order=geo')
+    unmount()
+
+    render(<AdventRoute />)
+    expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
+  })
+
   it('dates today by its place in the chosen order and says which jar to open', () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))

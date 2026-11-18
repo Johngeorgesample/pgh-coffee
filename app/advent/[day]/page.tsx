@@ -10,7 +10,7 @@ import DayHead from '@/app/components/advent/DayHead'
 import RoastMeter from '@/app/components/advent/RoastMeter'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
-import { findOrder, stepOf } from '@/data/advent-orders'
+import { Order, findOrder, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 import top from '@/public/advent/top.webp'
@@ -25,11 +25,11 @@ const resolveDay = async (params: Props['params']) => {
   return entry
 }
 
-const resolveStep = async (entry: AdventDay, searchParams: Props['searchParams']) => stepOf(findOrder((await searchParams).order), entry.day)
+const resolveOrder = async (searchParams: Props['searchParams']) => findOrder((await searchParams).order)
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const entry = await resolveDay(params)
-  const step = await resolveStep(entry, searchParams)
+  const step = stepOf(await resolveOrder(searchParams), entry.day)
   const title = `${entry.coffee} — ${entry.roasterName} | Day ${step}`
   const description = `Day ${step} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}.${entry.notes.length ? ` ${entry.notes.join(', ')}.` : ''}`
   return {
@@ -111,9 +111,9 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
   </Section>
 )
 
-const Sheet = ({ entry, step }: { entry: AdventDay; step: number }) => (
+const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: number }) => (
   <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
-    <DayHead />
+    <DayHead order={order} />
     <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
       <div className="relative border-b-4 border-gray-950">
         <Image src={top} alt="" sizes="340px" className="h-24 w-full object-cover object-left" />
@@ -157,13 +157,13 @@ const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) =>
 
 export default async function AdventDayPage({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
-  const step = await resolveStep(entry, searchParams)
+  const order = await resolveOrder(searchParams)
   const roaster = entry.roasterSlug ? await getRoasterBySlug(entry.roasterSlug) : null
 
   return (
     <div className="bg-stone-50">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-20">
-        <Sheet entry={entry} step={step} />
+        <Sheet entry={entry} order={order} step={stepOf(order, entry.day)} />
         <Reading entry={entry} roaster={roaster} />
       </div>
       <Footer />
