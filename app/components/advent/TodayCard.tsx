@@ -35,7 +35,7 @@ const Label = ({ day }: { day: number }) => (
 export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; step: number; showJar: boolean }) {
   return (
     <div className="pb-4">
-      <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
+      <div className="group relative overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] transition-[transform,box-shadow] duration-150 ease-out has-[a:hover]:-translate-y-1 has-[a:hover]:shadow-[8px_8px_0_#030712] motion-reduce:transform-none">
         <Label day={step} />
         <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
           <div className="flex flex-col justify-center md:pr-6">
@@ -47,20 +47,20 @@ export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; 
                 </span>
               )}
             </div>
-            <Link href={`/advent/${entry.day}`} className="mt-1 block decoration-2 underline-offset-4 hover:underline">
-              <h3 className="font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">{entry.coffee}</h3>
-            </Link>
-            <div>
-              <Link
-                href={`/advent/${entry.day}`}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gray-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 active:scale-[0.97]"
-              >
-                Read today&rsquo;s coffee <ArrowRight className="size-4" />
+            <h3 className="mt-1 font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">
+              <Link href={`/advent/${entry.day}`} className="after:absolute after:inset-0 after:z-10">
+                {entry.coffee}
               </Link>
-            </div>
+            </h3>
           </div>
           <Specs entry={entry} />
         </div>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute bottom-4 left-4 z-20 flex size-10 -translate-x-2 items-center justify-center rounded-full border-2 border-gray-950 bg-yellow-300 text-gray-950 opacity-0 shadow-[2px_2px_0_#030712] transition-[opacity,transform] duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-has-[a:focus-visible]:translate-x-0 group-has-[a:focus-visible]:opacity-100 motion-reduce:translate-x-0 motion-reduce:transition-opacity"
+        >
+          <ArrowRight className="size-5" strokeWidth={2.5} />
+        </span>
       </div>
     </div>
   )
