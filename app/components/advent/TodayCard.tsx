@@ -1,6 +1,8 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import RoastMeter from '@/app/components/advent/RoastMeter'
+import top from '@/public/advent/top.webp'
 import { AdventDay } from '@/data/advent'
 
 const specs = (entry: AdventDay) =>
@@ -11,39 +13,54 @@ const specs = (entry: AdventDay) =>
   ].filter(Boolean) as { label: string; value: string }[]
 
 const Specs = ({ entry }: { entry: AdventDay }) => (
-  <dl className="mt-6 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+  <dl className="space-y-2">
     {specs(entry).map(({ label, value }) => (
       <div key={label}>
-        <dt className="text-[11px] font-bold uppercase tracking-widest text-stone-500">{label}</dt>
-        <dd className="mt-1 text-sm leading-snug text-slate-900">{value}</dd>
+        <dt className="text-[10px] font-bold uppercase tracking-widest text-gray-900">{label}</dt>
+        <dd className="text-sm text-gray-950">{value}</dd>
       </div>
     ))}
   </dl>
 )
 
+const Label = ({ day }: { day: number }) => (
+  <div className="relative border-b-4 border-gray-950">
+    <Image src={top} alt="" sizes="(min-width: 1024px) 760px, 100vw" className="h-16 w-full object-cover object-left" />
+    <span className="absolute bottom-0 left-5 translate-y-1/2 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
+      Today · Dec {day}
+    </span>
+  </div>
+)
+
 export default function TodayCard({ entry }: { entry: AdventDay }) {
   return (
-    <div className="border-b border-stone-200 pb-8">
-      <p className="text-xs font-bold uppercase tracking-wider text-amber-700">Today</p>
-      <p className="mt-3 text-xs font-bold uppercase tracking-wider text-amber-800">{entry.roasterName}</p>
-      <Link href={`/advent/${entry.day}`} className="group mt-1 block">
-        <h3 className="font-serif text-4xl leading-tight tracking-tight text-slate-900 text-balance group-hover:underline md:text-5xl">
-          {entry.coffee}
-        </h3>
-      </Link>
-      {entry.notes.length > 0 && <p className="mt-3 text-lg text-stone-600">{entry.notes.join(', ')}</p>}
-      <Specs entry={entry} />
-      {entry.agtron && (
-        <div className="mt-6 max-w-sm">
-          <RoastMeter agtron={entry.agtron} roast={entry.roast} />
+    <div className="pb-4">
+      <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
+        <Label day={entry.day} />
+        <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr]">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
+            <Link href={`/advent/${entry.day}`} className="mt-1 block decoration-2 underline-offset-4 hover:underline">
+              <h3 className="font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">{entry.coffee}</h3>
+            </Link>
+            {entry.notes.length > 0 && <p className="mt-2 text-base text-gray-700">{entry.notes.join(' · ')}</p>}
+            <Link
+              href={`/advent/${entry.day}`}
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gray-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 active:scale-[0.97]"
+            >
+              Read today&rsquo;s coffee <ArrowRight className="size-4" />
+            </Link>
+          </div>
+          <div className="md:border-l-2 md:border-gray-950 md:pl-6">
+            <Specs entry={entry} />
+            {entry.agtron && (
+              <div className="mt-4">
+                <RoastMeter agtron={entry.agtron} roast={entry.roast} />
+              </div>
+            )}
+          </div>
         </div>
-      )}
-      <Link
-        href={`/advent/${entry.day}`}
-        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-slate-900 hover:underline"
-      >
-        Read today&rsquo;s coffee <ArrowRight className="size-4" />
-      </Link>
+      </div>
     </div>
   )
 }
