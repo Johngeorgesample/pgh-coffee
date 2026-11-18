@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import OrderPicker from '@/app/components/advent/OrderPicker'
-import SealedStop from '@/app/components/advent/SealedStop'
+import SealedJars from '@/app/components/advent/SealedJars'
 import TodayCard from '@/app/components/advent/TodayCard'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen } from '@/app/utils/advent'
@@ -59,32 +59,35 @@ const OpenStop = ({ step, entry, showJar, stamped }: TOpenStopProps) => (
   </Link>
 )
 
-type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; showJar: boolean; stamped: boolean; onReveal: () => void }
+type TStopProps = { step: number; entry: AdventDay; isToday: boolean; showJar: boolean; stamped: boolean }
 
-const Stop = ({ step, entry, hidden, isToday, showJar, stamped, onReveal }: TStopProps) => {
-  if (isToday) return <TodayCard entry={entry} step={step} showJar={showJar} />
-  if (hidden) return <SealedStop step={step} onReveal={onReveal} />
-  return <OpenStop step={step} entry={entry} showJar={showJar} stamped={stamped} />
-}
+const Stop = ({ step, entry, isToday, showJar, stamped }: TStopProps) =>
+  isToday ? <TodayCard entry={entry} step={step} showJar={showJar} /> : <OpenStop step={step} entry={entry} showJar={showJar} stamped={stamped} />
 
 export default function AdventRoute() {
   const { order, changeOrder, stops, today, reveal, justRevealed, showJar } = useRoute()
+  const sealed = stops.filter(stop => stop.hidden).map(({ step, entry }) => ({ step, day: entry.day }))
 
   return (
     <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div>
         <OrderPicker order={order} onChange={changeOrder} />
-        <ol key={order.id} className="mt-10">
-          {stops.map(({ step, entry, hidden }) => (
-            <li
-              key={entry.day}
-              style={{ animationDelay: `${Math.min(step, 12) * 18}ms` }}
-              className="relative min-h-12 animate-rise pb-6 last:pb-0 motion-reduce:animate-none"
-            >
-              <Stop step={step} entry={entry} hidden={hidden} isToday={step === today?.step} showJar={showJar} stamped={entry.day === justRevealed} onReveal={() => reveal(entry.day)} />
-            </li>
-          ))}
-        </ol>
+        <div key={order.id}>
+          <ol className="mt-10">
+            {stops
+              .filter(stop => !stop.hidden)
+              .map(({ step, entry }) => (
+                <li
+                  key={entry.day}
+                  style={{ animationDelay: `${Math.min(step, 12) * 18}ms` }}
+                  className="relative min-h-12 animate-rise pb-6 last:pb-0 motion-reduce:animate-none"
+                >
+                  <Stop step={step} entry={entry} isToday={step === today?.step} showJar={showJar} stamped={entry.day === justRevealed} />
+                </li>
+              ))}
+          </ol>
+          {sealed.length > 0 && <SealedJars jars={sealed} onReveal={reveal} />}
+        </div>
       </div>
       <aside className="flex flex-col gap-4 lg:self-start">
         <WhosInTheBox />

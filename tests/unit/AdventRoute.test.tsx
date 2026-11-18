@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import AdventRoute from '@/app/components/advent/AdventRoute'
 
 vi.mock('@/public/advent/top.webp', () => ({ default: { src: '/advent/top.webp', width: 2819, height: 800 } }))
@@ -30,16 +30,23 @@ describe('AdventRoute', () => {
     expect(screen.getByText('Jar 12')).toBeInTheDocument()
   })
 
-  it('stamps a peeked day the same way as an opened one', () => {
+  it('only opens a sealed jar after the spoiler warning is accepted', async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
-    const link = (day: number) => screen.getAllByRole('link').find(a => a.getAttribute('href') === `/advent/${day}`)!
+    fireEvent.click(screen.getByRole('button', { name: 'Not yet' }))
+    const link = (day: number) => screen.getAllByRole('link').find(a => a.getAttribute('href') === `/advent/${day}`)
+    expect(link(4)).toBeUndefined()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Peek at Dec 4 early' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Show me' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
+    await waitFor(() => expect(link(4)).toBeDefined())
     expect(link(4)).toHaveTextContent(/^Dec\s*4/)
-    expect(link(4).firstElementChild).toHaveClass('animate-stamp')
-    expect(link(2).firstElementChild).not.toHaveClass('animate-stamp')
+    expect(link(4)!.firstElementChild).toHaveClass('animate-stamp')
+    expect(link(2)!.firstElementChild).not.toHaveClass('animate-stamp')
   })
 })
