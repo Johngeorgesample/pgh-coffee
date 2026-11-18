@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 
 type Align = 'left' | 'center' | 'right'
@@ -91,23 +92,15 @@ const useStage = (armed: boolean, onReveal: () => void, onClose: () => void) => 
   return { stage: current, warn: () => setStage('warn'), unscrew, cancel, reset: () => setStage('ask') }
 }
 
-const LID =
-  'flex aspect-square w-full items-center justify-center rounded-full border-2 border-gray-950 bg-[repeating-conic-gradient(#030712_0deg_3deg,#fff_3deg_9deg)] shadow-[3px_3px_0_#030712]'
+const LID = 'block aspect-square w-full overflow-hidden rounded-full border-2 border-gray-950 shadow-[3px_3px_0_#030712]'
 
-const Face = ({ step, lit }: { step: number; lit: boolean }) => (
-  <span
-    className={`flex size-[80%] flex-col items-center justify-center rounded-full border-2 border-gray-950 leading-none transition-colors duration-150 ease-out ${
-      lit ? 'bg-yellow-300' : 'bg-white'
-    }`}
-  >
-    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-900">Dec</span>
-    <span className="font-serif text-2xl text-gray-950">{step}</span>
-  </span>
+const Label = ({ step }: { step: number }) => (
+  <Image src={`/advent/labels/${step}.webp`} alt="" width={240} height={240} sizes="96px" className="size-full" />
 )
 
 const LockedLid = ({ step }: { step: number }) => (
   <span className={LID}>
-    <Face step={step} lit={false} />
+    <Label step={step} />
   </span>
 )
 
@@ -129,7 +122,7 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
         style={{ transform: LID_TRANSFORM[stage], opacity: stage === 'leaving' ? 0 : 1, transitionDuration: `${UNSCREW_MS}ms` }}
         className={`${LID} outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${STAGE_ANIMATION[stage]}`}
       >
-        <Face step={step} lit={stage !== 'closed'} />
+        <Label step={step} />
       </button>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
