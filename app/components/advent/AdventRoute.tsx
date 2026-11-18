@@ -73,7 +73,7 @@ const LockedStop = ({ step, onReveal }: { step: number; onReveal: () => void }) 
 type TStopProps = { step: number; entry: AdventDay; hidden: boolean; isToday: boolean; isPast: boolean; showJar: boolean; onReveal: () => void }
 
 const Stop = ({ step, entry, hidden, isToday, isPast, showJar, onReveal }: TStopProps) => {
-  if (isToday) return <TodayCard entry={entry} step={step} />
+  if (isToday) return <TodayCard entry={entry} step={step} showJar={showJar} />
   if (isPast) return <PastStop step={step} entry={entry} showJar={showJar} />
   if (hidden) return <LockedStop step={step} onReveal={onReveal} />
   return <OpenStop entry={entry} showJar={showJar} />

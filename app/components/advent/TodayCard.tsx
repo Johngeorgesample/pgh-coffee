@@ -32,14 +32,21 @@ const Label = ({ day }: { day: number }) => (
   </div>
 )
 
-export default function TodayCard({ entry, step }: { entry: AdventDay; step: number }) {
+export default function TodayCard({ entry, step, showJar }: { entry: AdventDay; step: number; showJar: boolean }) {
   return (
     <div className="pb-4">
       <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
         <Label day={step} />
         <div className="grid gap-6 p-5 pt-7 md:grid-cols-[1.3fr_1fr] md:gap-0">
           <div className="flex flex-col justify-center md:pr-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
+              {showJar && (
+                <span className="shrink-0 rounded-md border-2 border-gray-950 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-950">
+                  Jar {String(entry.day).padStart(2, '0')}
+                </span>
+              )}
+            </div>
             <Link href={`/advent/${entry.day}`} className="mt-1 block decoration-2 underline-offset-4 hover:underline">
               <h3 className="font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">{entry.coffee}</h3>
             </Link>

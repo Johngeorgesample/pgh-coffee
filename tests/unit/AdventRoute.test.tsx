@@ -17,12 +17,13 @@ describe('AdventRoute', () => {
     expect(screen.getByText('Opens Dec 4')).toBeInTheDocument()
   })
 
-  it('dates today by its place in the chosen order, not by jar number', () => {
+  it('dates today by its place in the chosen order and says which jar to open', () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
 
     fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
     expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
+    expect(screen.getByText('Jar 12')).toBeInTheDocument()
   })
 })
