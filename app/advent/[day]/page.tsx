@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowUpRightIcon } from '@heroicons/react/24/outline'
@@ -12,6 +13,7 @@ import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
 import { parseDayParam } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
+import top from '@/public/advent/top.webp'
 
 type Props = { params: Promise<{ day: string }> }
 type TRoaster = Awaited<ReturnType<typeof getRoasterBySlug>>
@@ -44,11 +46,11 @@ const specs = (entry: AdventDay) =>
   ].filter((pair): pair is [string, string] => Boolean(pair[1]))
 
 const SpecList = ({ entry }: { entry: AdventDay }) => (
-  <dl className="divide-y divide-stone-200 border-y border-stone-200 text-sm">
+  <dl className="border-y-2 border-gray-950 text-sm">
     {specs(entry).map(([label, value]) => (
-      <div key={label} className="flex justify-between gap-6 py-3">
-        <dt className="text-stone-500">{label}</dt>
-        <dd className="text-right font-semibold text-slate-900">{value}</dd>
+      <div key={label} className="flex justify-between gap-6 border-gray-950/20 py-2.5 not-last:border-b-2">
+        <dt className="text-[10px] font-bold uppercase tracking-widest text-gray-900">{label}</dt>
+        <dd className="text-right font-semibold text-gray-950">{value}</dd>
       </div>
     ))}
   </dl>
@@ -93,14 +95,24 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
 )
 
 const Sheet = ({ entry }: { entry: AdventDay }) => (
-  <aside className="flex flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
+  <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
     <DayHead day={entry.day} />
-    <div>
-      <p className="text-xs font-bold uppercase tracking-wider text-amber-800">{entry.roasterName}</p>
-      <h1 className="mt-1.5 font-serif text-4xl leading-tight tracking-tight text-slate-900 text-balance">{entry.coffee}</h1>
+    <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
+      <div className="relative border-b-4 border-gray-950">
+        <Image src={top} alt="" sizes="340px" className="h-24 w-full object-cover object-left" />
+        <span className="absolute bottom-0 left-5 translate-y-1/2 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
+          Day {String(entry.day).padStart(2, '0')} · Dec {entry.day}
+        </span>
+      </div>
+      <div className="flex flex-col gap-6 p-5 pt-8">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
+          <h1 className="mt-1.5 font-serif text-4xl leading-tight tracking-tight text-gray-950 text-balance">{entry.coffee}</h1>
+        </div>
+        {entry.agtron && <RoastMeter agtron={entry.agtron} roast={entry.roast} />}
+        {specs(entry).length > 0 && <SpecList entry={entry} />}
+      </div>
     </div>
-    {entry.agtron && <RoastMeter agtron={entry.agtron} roast={entry.roast} />}
-    {specs(entry).length > 0 && <SpecList entry={entry} />}
   </aside>
 )
 

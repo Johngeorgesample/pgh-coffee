@@ -2,44 +2,36 @@ import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ADVENT_DAYS } from '@/data/advent'
 
-const pad = (n: number) => String(n).padStart(2, '0')
-
-const Arrow = ({ day, dir }: { day: number; dir: 'prev' | 'next' }) => {
+const Step = ({ day, dir }: { day: number; dir: 'prev' | 'next' }) => {
   const Icon = dir === 'prev' ? ChevronLeft : ChevronRight
-  const base = 'flex size-10 items-center justify-center rounded-full border'
+  const base = 'flex size-10 items-center justify-center rounded-lg border-2'
   if (day < 1 || day > ADVENT_DAYS)
     return (
-      <span aria-hidden className={`${base} border-stone-200 text-stone-300`}>
-        <Icon className="size-5" />
+      <span aria-hidden className={`${base} border-gray-950/15 text-gray-300`}>
+        <Icon className="size-5" strokeWidth={2.5} />
       </span>
     )
   return (
     <Link
       href={`/advent/${day}`}
       aria-label={`Day ${day}`}
-      className={`${base} border-stone-300 bg-white text-slate-900 transition-colors hover:bg-stone-100 active:scale-[0.96]`}
+      className={`${base} border-gray-950 bg-white text-gray-950 shadow-[2px_2px_0_#030712] transition-[transform,box-shadow,background-color] duration-150 ease-out hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none`}
     >
-      <Icon className="size-5" />
+      <Icon className="size-5" strokeWidth={2.5} />
     </Link>
   )
 }
 
 export default function DayHead({ day }: { day: number }) {
   return (
-    <div>
-      <Link href="/advent" className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 transition-colors hover:text-slate-900">
-        <ArrowLeft className="size-4" /> Advent calendar
+    <div className="flex items-center justify-between">
+      <Link href="/advent" className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 transition-colors hover:text-gray-950">
+        <ArrowLeft className="size-4" strokeWidth={2.5} /> Advent calendar
       </Link>
-      <div className="mt-6 flex items-end justify-between">
-        <p className="flex items-baseline gap-2 font-serif leading-[0.85] text-slate-900">
-          <span className="text-3xl tracking-tight text-stone-500">Day</span>
-          <span className="text-[7rem] tracking-tighter">{pad(day)}</span>
-        </p>
-        <nav aria-label="Other days" className="flex gap-2 pb-2">
-          <Arrow day={day - 1} dir="prev" />
-          <Arrow day={day + 1} dir="next" />
-        </nav>
-      </div>
+      <nav aria-label="Other days" className="flex gap-2">
+        <Step day={day - 1} dir="prev" />
+        <Step day={day + 1} dir="next" />
+      </nav>
     </div>
   )
 }
