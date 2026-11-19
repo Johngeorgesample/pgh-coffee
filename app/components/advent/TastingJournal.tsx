@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { Check, Star } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 import { storageGet, storageSet } from '@/app/utils/storage'
+import SaveCupDialog from './SaveCupDialog'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
@@ -137,6 +137,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [entry, setEntry] = useState(EMPTY)
   const [justSaved, setJustSaved] = useState(false)
   const [justTicked, setJustTicked] = useState<string | null>(null)
+  const [asking, setAsking] = useState(false)
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
@@ -218,10 +219,20 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
-          <Link href={`/sign-in?mode=signup&next=${encodeURIComponent(returnTo)}`} className={`${saveClass} bg-yellow-300`}>
+          <button type="button" onClick={() => setAsking(true)} className={`${saveClass} bg-yellow-300`}>
             Save tasting note
-          </Link>
+          </button>
         )}
+        <SaveCupDialog
+          open={asking}
+          onClose={() => setAsking(false)}
+          onSaved={() => {
+            setAsking(false)
+            save()
+          }}
+          day={day}
+          returnTo={returnTo}
+        />
       </div>
     </div>
   )
