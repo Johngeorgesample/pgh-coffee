@@ -12,7 +12,12 @@ const BASE = 'http://n'
 
 export function safeNextPath(next: string | null): string {
   if (!next?.startsWith('/')) return '/'
-  const url = new URL(next, BASE)
+  let url: URL
+  try {
+    url = new URL(next, BASE)
+  } catch {
+    return '/'
+  }
   const path = url.pathname + url.search + url.hash
   return url.origin === BASE && !path.startsWith('//') ? path : '/'
 }

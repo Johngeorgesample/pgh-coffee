@@ -74,6 +74,8 @@ describe('safeNextPath', () => {
     ['/\\evil.com', 'backslash reads as a slash'],
     ['/\t/evil.com', 'tab is stripped'],
     ['/.//evil.com', 'dot segment collapses'],
+    ['//[', 'unparseable host'],
+    ['/\\[', 'unparseable host behind a backslash'],
   ])('rejects %j (%s)', (next) => {
     expect(safeNextPath(next)).toBe('/')
     expect(new URL(`https://pgh.coffee${safeNextPath(next)}`).host).toBe('pgh.coffee')
