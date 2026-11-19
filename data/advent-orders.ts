@@ -35,5 +35,7 @@ export const calendarHref = (order: Order) => `/advent${orderQuery(order)}`
 
 export const jarHref = (order: Order, jar: number) => `/advent/${jar}${orderQuery(order)}`
 
+export const jarOgHref = (order: Order, jar: number) => `/advent/${jar}/og${orderQuery(order)}`
+
 export const jarsInOrder = (order: Order) =>
   order.sequence.map((jar, i) => ({ step: i + 1, entry: findAdventDay(jar)!, href: jarHref(order, jar) }))

@@ -18,6 +18,7 @@ const nextConfig = {
     '/roasters/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
     '/companies/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
     '/neighborhoods/[slug]/opengraph-image': ['./public/logo_with_no_text_transparent_108.png', './public/Inter-*.ttf'],
+    '/advent/[day]/og': ['./public/Gelasio-Regular.woff', './public/Inter-*.ttf', './public/advent/og/**'],
   },
   // @datadog/pprof is a native addon and can't be bundled
   serverExternalPackages: ['@pyroscope/nodejs', '@datadog/pprof'],

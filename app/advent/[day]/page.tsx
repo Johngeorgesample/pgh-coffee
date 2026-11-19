@@ -10,7 +10,7 @@ import RoastMeter from '@/app/components/advent/RoastMeter'
 import MarkVisited from '@/app/components/advent/MarkVisited'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
-import { Order, findOrder, jarHref, stepOf } from '@/data/advent-orders'
+import { Order, findOrder, jarHref, jarOgHref, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 import top from '@/public/advent/top.webp'
@@ -29,13 +29,14 @@ const resolveOrder = async (searchParams: Props['searchParams']) => findOrder((a
 
 export async function generateMetadata({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
-  const step = stepOf(await resolveOrder(searchParams), entry.day)
-  const title = `${entry.coffee} — ${entry.roasterName} | Day ${step}`
-  const description = `Day ${step} of the Pittsburgh coffee advent calendar: ${entry.coffee} from ${entry.roasterName}.${entry.notes.length ? ` ${entry.notes.join(', ')}.` : ''}`
+  const order = await resolveOrder(searchParams)
+  const step = stepOf(order, entry.day)
+  const title = `Day ${step} | Coffee Advent Calendar`
+  const description = `Day ${step} of the Pittsburgh coffee advent calendar: one jar from a Pittsburgh roaster. Open it to see what's inside.`
   return {
     title: `${title} | pgh.coffee`,
     description,
-    openGraph: { title, description, images: ['/advent/opengraph-image'] },
+    openGraph: { title, description, images: [jarOgHref(order, entry.day)] },
     robots: { index: false },
   }
 }
