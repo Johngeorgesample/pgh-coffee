@@ -36,7 +36,7 @@ export async function generateMetadata({ params, searchParams }: Props) {
   return {
     title: `${title} | pgh.coffee`,
     description,
-    openGraph: { title, description, images: [jarOgHref(order, entry.day)] },
+    openGraph: { title, description, type: 'website', url: `/advent/${entry.day}`, images: [jarOgHref(order, entry.day)] },
     robots: { index: false },
   }
 }
