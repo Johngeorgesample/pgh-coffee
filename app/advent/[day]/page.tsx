@@ -13,6 +13,7 @@ import { AdventDay, findAdventDay } from '@/data/advent'
 import { Order, findOrder, jarHref, jarOgHref, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
+import { OG_IMAGE_SIZE } from '@/app/utils/ogTheme'
 import top from '@/public/advent/top.webp'
 
 type Props = { params: Promise<{ day: string }>; searchParams: Promise<{ order?: string }> }
@@ -31,12 +32,18 @@ export async function generateMetadata({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
   const order = await resolveOrder(searchParams)
   const step = stepOf(order, entry.day)
-  const title = `Day ${step} | Coffee Advent Calendar`
+  const title = `Day ${step} | Pittsburgh coffee advent calendar`
   const description = `Day ${step} of the Pittsburgh coffee advent calendar: one jar from a Pittsburgh roaster. Open it to see what's inside.`
   return {
     title: `${title} | pgh.coffee`,
     description,
-    openGraph: { title, description, type: 'website', url: `/advent/${entry.day}`, images: [jarOgHref(order, entry.day)] },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: jarHref(order, entry.day),
+      images: [{ url: jarOgHref(order, entry.day), ...OG_IMAGE_SIZE, alt: `Day ${step} of the Pittsburgh coffee advent calendar` }],
+    },
     robots: { index: false },
   }
 }

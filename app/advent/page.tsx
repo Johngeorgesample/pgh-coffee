@@ -8,6 +8,7 @@ const description = `Twenty-five days of Pittsburgh coffee: one jar a day from P
 export const metadata: Metadata = {
   title: 'Pittsburgh coffee advent calendar | pgh.coffee',
   description,
+  alternates: { canonical: '/advent' },
   openGraph: {
     title: 'Pittsburgh coffee advent calendar | pgh.coffee',
     description,
