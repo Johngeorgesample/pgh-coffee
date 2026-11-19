@@ -113,7 +113,7 @@ const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
       onKeyDown={e => e.key === 'Enter' && commit()}
       aria-label="Add your own tasting note"
       placeholder="Dried cherry…"
-      className="min-h-11 rounded-lg border-2 border-gray-950 px-3.5 text-sm text-gray-950 outline-none focus:border-gray-950 focus:bg-yellow-50 focus:ring-0"
+      className="min-h-11 rounded-lg border-2 border-gray-950 px-3.5 text-base text-gray-950 sm:text-sm outline-none focus:border-gray-950 focus:bg-yellow-50 focus:ring-0"
     />
   )
 }
