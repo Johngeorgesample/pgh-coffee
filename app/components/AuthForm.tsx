@@ -18,6 +18,8 @@ export default function AuthForm({ onSuccess, idPrefix = '', next = '/', initial
   const [error, setError] = useState<string | null>(null)
   const [mode, setMode] = useState(initialMode)
 
+  const callbackUrl = () => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
@@ -34,7 +36,7 @@ export default function AuthForm({ onSuccess, idPrefix = '', next = '/', initial
         fetch('/api/auth/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'User signed in' }) })
         onSuccess()
       } else {
-        const { data, error } = await supabase.auth.signUp({ email, password })
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callbackUrl() } })
 
         if (error) {
           setError(error.message)
@@ -66,7 +68,7 @@ export default function AuthForm({ onSuccess, idPrefix = '', next = '/', initial
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        redirectTo: callbackUrl(),
       },
     })
     if (error) setError(error.message)
