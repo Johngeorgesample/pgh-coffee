@@ -8,6 +8,7 @@ import { Footer } from '@/app/components/about'
 import BrewVideo from '@/app/components/advent/BrewVideo'
 import DayHead from '@/app/components/advent/DayHead'
 import RoastMeter from '@/app/components/advent/RoastMeter'
+import MarkVisited from '@/app/components/advent/MarkVisited'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
 import { Order, findOrder, stepOf } from '@/data/advent-orders'
@@ -140,6 +141,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
 
 const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roaster: TRoaster }) => (
   <main className="flex flex-col gap-14 lg:pt-6">
+    <MarkVisited jar={entry.day} />
     {entry.blurb && (
       <Section title="In the cup">
         <Blurb text={entry.blurb} />

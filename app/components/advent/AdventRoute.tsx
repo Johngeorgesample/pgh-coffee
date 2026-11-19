@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import BeforeOpening from '@/app/components/advent/BeforeOpening'
 import ChooseOrder from '@/app/components/advent/ChooseOrder'
 import DevPanel from '@/app/components/advent/DevPanel'
+import { readVisited } from '@/app/components/advent/MarkVisited'
 import OpenedJars from '@/app/components/advent/OpenedJars'
 import SealedJars from '@/app/components/advent/SealedJars'
 import TodayCard from '@/app/components/advent/TodayCard'
@@ -30,9 +31,11 @@ const storedStart = () => Number(localStorage.getItem(STARTED_KEY)) || 1
 const useOrder = () => {
   const [order, setOrder] = useState<Order | null>(null)
   const [started, setStarted] = useState(1)
+  const [visited, setVisited] = useState<number[]>([])
   useEffect(() => {
     setOrder(storedOrder())
     setStarted(storedStart())
+    setVisited(readVisited())
   }, [])
   const choose = (next: Order, step: number) => {
     localStorage.setItem(ORDER_KEY, next.id)
@@ -40,26 +43,26 @@ const useOrder = () => {
     setOrder(next)
     setStarted(step)
   }
-  return { order, started, choose }
+  return { order, started, visited, choose }
 }
 
 const useRoute = () => {
-  const { order, started, choose } = useOrder()
+  const { order, started, visited, choose } = useOrder()
   const [now, setNow] = useState<Date | null>(null)
   useEffect(() => setNow(currentDate()), [])
   const open = now ? daysOpen(now) : 0
   const stops = jarsInOrder(order ?? ORDERS[0]).map(stop => ({ ...stop, hidden: !order || stop.step > open }))
   const countdown = now && open === 0 ? daysUntilOpening(now) : null
-  return { order, started, choose, stops, open, today: order ? stops[open - 1] : undefined, countdown }
+  return { order, started, visited, choose, stops, open, today: order ? stops[open - 1] : undefined, countdown }
 }
 
 export default function AdventRoute() {
-  const { order, started, choose, stops, open, today, countdown } = useRoute()
+  const { order, started, visited, choose, stops, open, today, countdown } = useRoute()
   const router = useRouter()
   const jars = stops.map(({ step, entry, hidden }) => ({ step, day: entry.day, sealed: hidden }))
-  const past = stops.filter(stop => !stop.hidden && stop.step !== today?.step)
-  const catchUp = past.filter(stop => stop.step < started)
-  const opened = past.filter(stop => stop.step >= started)
+  const opened = stops
+    .filter(stop => !stop.hidden && stop.step !== today?.step)
+    .map(stop => ({ ...stop, missed: stop.step < started && !visited.includes(stop.entry.day) }))
 
   return (
     <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -76,8 +79,7 @@ export default function AdventRoute() {
               </div>
             </section>
           )}
-          {catchUp.length > 0 && <OpenedJars title="Catch up" stops={catchUp} />}
-          {opened.length > 0 && <OpenedJars title="Opened" stops={opened} />}
+          {opened.length > 0 && <OpenedJars stops={opened} />}
           {jars.some(jar => jar.sealed) && (
             <SealedJars jars={jars} locked={!order || open === 0} onReveal={day => order && router.push(jarHref(order, day))} />
           )}

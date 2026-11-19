@@ -80,7 +80,7 @@ describe('AdventRoute', () => {
     expect(screen.getByRole('link', { name: 'Colombia Cauca' })).toHaveAttribute('href', '/advent/17?order=geo')
   })
 
-  it('files the days before a late start under Catch up, not Opened, and keeps them there', () => {
+  it('keeps jars from before a late start sealed in Opened until their page is visited', () => {
     startOn('2026-12-03T12:00:00-05:00', '')
     const { unmount } = render(<AdventRoute />)
     fireEvent.click(screen.getByRole('button', { name: "Open today\u2019s jar" }))
@@ -89,11 +89,13 @@ describe('AdventRoute', () => {
     unmount()
 
     vi.setSystemTime(new Date('2026-12-05T12:00:00-05:00'))
+    localStorage.setItem('advent:visited', '[2]')
     render(<AdventRoute />)
-    const hrefsUnder = (title: string) =>
-      Array.from(screen.getByRole('heading', { name: title }).closest('section')!.querySelectorAll('a'), a => a.getAttribute('href'))
-    expect(hrefsUnder('Catch up')).toEqual(['/advent/1', '/advent/2'])
-    expect(hrefsUnder('Opened')).toEqual(['/advent/3', '/advent/4'])
+    const card = (href: string) => screen.getAllByRole('link').find(a => a.getAttribute('href') === href)
+    expect(card('/advent/1')).toHaveTextContent('Still sealed')
+    expect(card('/advent/2')).not.toHaveTextContent('Still sealed')
+    expect(card('/advent/3')).not.toHaveTextContent('Still sealed')
+    expect(screen.getByText(/1 from before you started is still sealed/)).toBeInTheDocument()
   })
 
   it('restores the picked order and offers no way to switch', () => {

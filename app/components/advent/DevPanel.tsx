@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-const KEYS = ['advent:order', 'advent:started']
+const KEYS = ['advent:order', 'advent:started', 'advent:visited']
 
 const DAYS = Array.from({ length: 25 }, (_, i) => i + 1)
 
