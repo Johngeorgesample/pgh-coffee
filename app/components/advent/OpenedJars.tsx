@@ -29,12 +29,12 @@ const Tag = ({ step, entry, href, tilt }: TTagProps) => (
   </Link>
 )
 
-type TOpenedJarsProps = { stops: { step: number; entry: AdventDay; href: string }[] }
+type TOpenedJarsProps = { title: string; stops: { step: number; entry: AdventDay; href: string }[] }
 
-export default function OpenedJars({ stops }: TOpenedJarsProps) {
+export default function OpenedJars({ title, stops }: TOpenedJarsProps) {
   return (
     <section className="mt-12">
-      <SectionHead title="Opened" count={stops.length} />
+      <SectionHead title={title} count={stops.length} />
       <ul className="mt-8 grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3">
         {stops.map(({ step, entry, href }, i) => (
           <li key={entry.day} style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }} className="animate-rise motion-reduce:animate-none">
