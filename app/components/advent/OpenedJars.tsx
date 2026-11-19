@@ -24,7 +24,7 @@ const Tag = ({ step, entry, href, tilt }: TTagProps) => (
     >
       <div className="flex items-baseline justify-between gap-2">
         <p className="text-[10px] font-bold uppercase leading-tight tracking-[0.15em] text-gray-900">{entry.roasterName}</p>
-        <p className="shrink-0 font-mono text-[10px] font-bold text-gray-500">Jar {pad(entry.day)}</p>
+        <p className="shrink-0 font-mono text-[10px] font-bold text-gray-500">Day {pad(step)}</p>
       </div>
       <p className="mt-0.5 font-serif text-base leading-tight text-gray-950">{entry.coffee}</p>
     </div>
