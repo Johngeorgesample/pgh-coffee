@@ -140,7 +140,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
 )
 
 const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roaster: TRoaster }) => (
-  <main className="flex flex-col gap-14 lg:pt-6">
+  <div className="flex flex-col gap-14 lg:pt-6">
     <MarkVisited jar={entry.day} />
     {entry.blurb && (
       <Section title="In the cup">
@@ -154,7 +154,7 @@ const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roa
       <TastingJournal day={entry.day} step={step} notes={entry.notes} />
     </Section>
     {roaster && <AboutRoaster entry={entry} roaster={roaster} />}
-  </main>
+  </div>
 )
 
 export default async function AdventDayPage({ params, searchParams }: Props) {
