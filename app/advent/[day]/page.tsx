@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -28,7 +27,7 @@ const resolveDay = async (params: Props['params']) => {
 
 const resolveOrder = async (searchParams: Props['searchParams']) => findOrder((await searchParams).order)
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
   const step = stepOf(await resolveOrder(searchParams), entry.day)
   const title = `${entry.coffee} — ${entry.roasterName} | Day ${step}`

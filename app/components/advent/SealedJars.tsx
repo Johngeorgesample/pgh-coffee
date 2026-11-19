@@ -32,7 +32,7 @@ const POPOVER_ALIGN: Record<Align, string> = {
 
 const BUTTON = 'rounded-lg border-2 border-gray-950 py-1 text-xs font-bold uppercase tracking-wide text-gray-950 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]'
 
-const alignFor = (el: HTMLElement): Align => {
+const alignFor = (el: HTMLElement) => {
   const box = el.getBoundingClientRect()
   const row = el.closest('ul')!.getBoundingClientRect()
   const center = (box.left + box.width / 2 - row.left) / row.width

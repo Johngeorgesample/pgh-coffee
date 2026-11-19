@@ -10,7 +10,7 @@
  */
 const BASE = 'http://n'
 
-export function safeNextPath(next: string | null): string {
+export function safeNextPath(next: string | null) {
   if (!next?.startsWith('/')) return '/'
   let url: URL
   try {
