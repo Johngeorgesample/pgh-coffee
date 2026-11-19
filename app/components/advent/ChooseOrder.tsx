@@ -33,8 +33,8 @@ const Ask = ({ late, pick, setPick, onCancel, onConfirm }: TAskProps) => (
     </p>
     <h2 className="mt-2 font-serif text-2xl leading-tight tracking-tight text-gray-950">Which order are you drinking in?</h2>
     <p className="mt-1.5 text-sm leading-snug text-gray-700">
-      We&rsquo;ll tell you which jar is today&rsquo;s once you pick. You can&rsquo;t switch later, since the jars you&rsquo;ve opened
-      would come up again.
+      Pick an order and we&rsquo;ll point you to today&rsquo;s jar. It&rsquo;s locked in after that, so you never land on a jar
+      you&rsquo;ve already opened.
     </p>
     {late && (
       <p className="mt-2 text-sm leading-snug font-semibold text-gray-950">Already opened some jars by number? That&rsquo;s {ORDERS[0].label}.</p>
