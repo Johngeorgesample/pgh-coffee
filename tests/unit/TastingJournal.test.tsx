@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 
-const renderJournal = () => render(<TastingJournal day={1} step={1} notes={['Red apple', 'Cocoa']} />)
+const renderJournal = () => render(<TastingJournal day={1} step={1} notes={['Red apple', 'Cocoa']} returnTo="/advent/1" />)
 
 describe('TastingJournal', () => {
   beforeEach(() => localStorage.clear())

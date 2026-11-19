@@ -11,7 +11,7 @@ import RoastMeter from '@/app/components/advent/RoastMeter'
 import MarkVisited from '@/app/components/advent/MarkVisited'
 import TastingJournal from '@/app/components/advent/TastingJournal'
 import { AdventDay, findAdventDay } from '@/data/advent'
-import { Order, findOrder, stepOf } from '@/data/advent-orders'
+import { Order, findOrder, jarHref, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
 import { getRoasterBySlug } from '@/app/utils/roasters'
 import top from '@/public/advent/top.webp'
@@ -139,7 +139,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
   </aside>
 )
 
-const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roaster: TRoaster }) => (
+const Reading = ({ entry, order, step, roaster }: { entry: AdventDay; order: Order; step: number; roaster: TRoaster }) => (
   <div className="flex flex-col gap-14 lg:pt-6">
     <MarkVisited jar={entry.day} />
     {entry.blurb && (
@@ -151,7 +151,7 @@ const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roa
       <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
     </Section>
     <Section title="My tasting journal">
-      <TastingJournal day={entry.day} step={step} notes={entry.notes} />
+      <TastingJournal day={entry.day} step={step} notes={entry.notes} returnTo={jarHref(order, entry.day)} />
     </Section>
     {roaster && <AboutRoaster entry={entry} roaster={roaster} />}
   </div>
@@ -167,7 +167,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
     <div className="bg-stone-50">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-20">
         <Sheet entry={entry} order={order} step={step} />
-        <Reading entry={entry} step={step} roaster={roaster} />
+        <Reading entry={entry} order={order} step={step} roaster={roaster} />
       </div>
       <Footer />
     </div>

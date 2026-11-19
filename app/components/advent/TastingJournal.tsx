@@ -131,7 +131,7 @@ const LoggedStamp = ({ step, justSaved }: { step: number; justSaved: boolean }) 
 
 const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
 
-export default function TastingJournal({ day, step, notes }: { day: number; step: number; notes: string[] }) {
+export default function TastingJournal({ day, step, notes, returnTo }: { day: number; step: number; notes: string[]; returnTo: string }) {
   const { user } = useAuth()
   const [entry, setEntry] = useState(EMPTY)
   const [justSaved, setJustSaved] = useState(false)
@@ -217,7 +217,7 @@ export default function TastingJournal({ day, step, notes }: { day: number; step
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
-          <Link href={`/sign-in?mode=signup&next=/advent/${day}`} className={`${saveClass} bg-yellow-300`}>
+          <Link href={`/sign-in?mode=signup&next=${encodeURIComponent(returnTo)}`} className={`${saveClass} bg-yellow-300`}>
             Save tasting note
           </Link>
         )}
