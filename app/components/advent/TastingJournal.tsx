@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Check, Star } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
+import { storageGet, storageSet } from '@/app/utils/storage'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
@@ -18,7 +19,7 @@ const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: fals
 
 const readEntry = (day: number) => {
   try {
-    return { ...EMPTY, ...JSON.parse(localStorage.getItem(storageKey(day)) ?? '{}') } as Entry
+    return { ...EMPTY, ...JSON.parse(storageGet(storageKey(day)) ?? '{}') } as Entry
   } catch {
     return EMPTY
   }
@@ -144,7 +145,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const write = (patch: Partial<Entry>) => {
     const next = { ...entry, ...patch }
     setEntry(next)
-    localStorage.setItem(storageKey(day), JSON.stringify(next))
+    storageSet(storageKey(day), JSON.stringify(next))
   }
 
   const set = (patch: Partial<Entry>) => {

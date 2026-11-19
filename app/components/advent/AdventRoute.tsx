@@ -12,6 +12,7 @@ import TodayCard from '@/app/components/advent/TodayCard'
 import SectionHead from '@/app/components/advent/SectionHead'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
 import { daysOpen, daysUntilOpening, devDayDate } from '@/app/utils/advent'
+import { storageGet, storageSet } from '@/app/utils/storage'
 import { ORDERS, Order, findOrder, jarHref, jarsInOrder } from '@/data/advent-orders'
 
 const DEV_TOOLS = process.env.NETLIFY_CONTEXT !== 'production'
@@ -22,11 +23,11 @@ const ORDER_KEY = 'advent:order'
 const STARTED_KEY = 'advent:started'
 
 const storedOrder = () => {
-  const id = localStorage.getItem(ORDER_KEY)
+  const id = storageGet(ORDER_KEY)
   return id ? findOrder(id) : null
 }
 
-const storedStart = () => Number(localStorage.getItem(STARTED_KEY)) || 1
+const storedStart = () => Number(storageGet(STARTED_KEY)) || 1
 
 const useOrder = () => {
   const [order, setOrder] = useState<Order | null>(null)
@@ -38,8 +39,8 @@ const useOrder = () => {
     setVisited(readVisited())
   }, [])
   const choose = (next: Order, step: number) => {
-    localStorage.setItem(ORDER_KEY, next.id)
-    localStorage.setItem(STARTED_KEY, String(step))
+    storageSet(ORDER_KEY, next.id)
+    storageSet(STARTED_KEY, String(step))
     setOrder(next)
     setStarted(step)
   }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { storageGet, storageSet } from '@/app/utils/storage'
 
 const KEYS = ['advent:order', 'advent:started', 'advent:visited']
 
@@ -31,15 +32,15 @@ declare global {
 
 const readState = () => ({
   day: new URLSearchParams(window.location.search).get('dev-day') ?? '',
-  stored: KEYS.map(key => localStorage.getItem(key) ?? '—'),
+  stored: KEYS.map(key => storageGet(key) ?? '—'),
 })
 
 const useToggle = () => {
   const [enabled, setEnabled] = useState(false)
   useEffect(() => {
-    setEnabled(localStorage.getItem(FLAG) === '1')
+    setEnabled(storageGet(FLAG) === '1')
     window.adventDev = (on = true) => {
-      if (on) localStorage.setItem(FLAG, '1')
+      if (on) storageSet(FLAG, '1')
       else localStorage.removeItem(FLAG)
       setEnabled(on)
     }
