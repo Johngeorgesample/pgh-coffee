@@ -55,7 +55,7 @@ export default function AdventHero() {
             href={DYNAMIC_SHOP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl bg-gray-950 px-5 py-3 font-semibold text-white transition-colors hover:bg-gray-800 active:scale-[0.97]"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gray-950 px-5 py-3 font-semibold text-white transition-[transform,background-color] duration-150 ease-out hover:bg-gray-800 active:scale-[0.97]"
           >
             Get a calendar
             <ArrowUpRightIcon className="size-4" />

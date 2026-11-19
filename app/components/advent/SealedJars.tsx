@@ -30,7 +30,7 @@ const POPOVER_ALIGN: Record<Align, string> = {
   right: 'right-0 origin-bottom-right',
 }
 
-const BUTTON = 'rounded-lg border-2 border-gray-950 py-1 text-xs font-bold uppercase tracking-wide text-gray-950 active:scale-[0.97]'
+const BUTTON = 'rounded-lg border-2 border-gray-950 py-1 text-xs font-bold uppercase tracking-wide text-gray-950 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]'
 
 const alignFor = (el: HTMLElement): Align => {
   const box = el.getBoundingClientRect()
@@ -106,6 +106,18 @@ export const LockedLid = ({ jar, className = '', children }: { jar: number; clas
   </span>
 )
 
+const SleepingLid = ({ step, jar }: { step: number; jar: number }) => {
+  const [taps, setTaps] = useState(0)
+  return (
+    <button onClick={() => setTaps(n => n + 1)} aria-label={`Jar ${step}, sealed`} className="block w-full">
+      <LockedLid key={taps} jar={jar} className={taps ? 'animate-buzz motion-reduce:animate-none' : ''} />
+      <span aria-live="polite" className="sr-only">
+        {taps ? `Opens Dec ${step}` : ''}
+      </span>
+    </button>
+  )
+}
+
 type TLidProps = { step: number; jar: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
 
 const Lid = ({ step, jar, armed, onToggle, onClose, onReveal }: TLidProps) => {
@@ -170,7 +182,7 @@ export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps)
         {jars.map(jar => (
           <li key={jar.day}>
             {locked ? (
-              <LockedLid jar={jar.day} />
+              <SleepingLid step={jar.step} jar={jar.day} />
             ) : (
               <Lid step={jar.step} jar={jar.day} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
             )}

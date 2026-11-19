@@ -135,6 +135,7 @@ export default function TastingJournal({ day, step, notes }: { day: number; step
   const { user } = useAuth()
   const [entry, setEntry] = useState(EMPTY)
   const [justSaved, setJustSaved] = useState(false)
+  const [justTicked, setJustTicked] = useState<string | null>(null)
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
@@ -156,11 +157,15 @@ export default function TastingJournal({ day, step, notes }: { day: number; step
     write({ logged: true })
   }
 
-  const toggleTasted = (note: string) =>
+  const toggleTasted = (note: string) => {
+    setJustTicked(note)
     set({ tasted: entry.tasted.includes(note) ? entry.tasted.filter(n => n !== note) : [...entry.tasted, note] })
+  }
 
   const addOwnNote = (note: string) => {
-    if (note && !entry.tasted.includes(note)) set({ tasted: [...entry.tasted, note] })
+    if (!note || entry.tasted.includes(note)) return
+    setJustTicked(note)
+    set({ tasted: [...entry.tasted, note] })
   }
 
   return (
@@ -173,7 +178,9 @@ export default function TastingJournal({ day, step, notes }: { day: number; step
           <div className="flex flex-wrap gap-2">
             {[...notes, ...entry.tasted.filter(n => !notes.includes(n))].map(note => (
               <Chip key={note} on={entry.tasted.includes(note)} onClick={() => toggleTasted(note)}>
-                {entry.tasted.includes(note) && <Check className="size-4" strokeWidth={3} />}
+                {entry.tasted.includes(note) && (
+                  <Check className={`size-4 ${note === justTicked ? 'animate-pop motion-reduce:animate-none' : ''}`} strokeWidth={3} />
+                )}
                 {note}
               </Chip>
             ))}
