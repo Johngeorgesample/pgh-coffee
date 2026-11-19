@@ -7,6 +7,7 @@ interface IProps {
   distances?: number[]
   units?: TUnits
   hideShopNames?: boolean
+  isClosed?: (uuid: string) => boolean
 }
 
 export default function ShopList(props: IProps) {
@@ -18,6 +19,7 @@ export default function ShopList(props: IProps) {
             key={shop.properties.name + shop.properties.address}
             distance={props.distances?.[index] != null ? String(props.distances[index]) : undefined}
             hideShopName={props.hideShopNames}
+            closedNow={props.isClosed?.(shop.properties.uuid)}
             shop={shop}
             units={props.units}
           />

@@ -3,8 +3,9 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import { Flame, Instagram } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAnalytics } from '@/hooks'
+import { useSeededFetch } from '@/hooks/useSeededFetch'
 import LocationList from '@/app/components/LocationList'
 import VerifiedBadge from '@/app/components/VerifiedBadge'
 import ClaimButton from '@/app/components/ClaimButton'
@@ -31,25 +32,12 @@ interface TRoaster {
 
 export const RoasterDetails = ({ slug }: { slug: string }) => {
   const setOverrideShops = useShopsStore(s => s.setOverrideShops)
-  const [roaster, setRoaster] = useState<TRoaster | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data: roaster, loading } = useSeededFetch<TRoaster>(`roaster:${slug}`, `/api/roasters/${slug}`)
   const plausible = useAnalytics()
 
   useEffect(() => {
-    const fetchRoaster = async () => {
-      try {
-        const response = await fetch(`/api/roasters/${slug}`)
-        const data = await response.json()
-        setRoaster(data)
-        plausible('RoasterView', {
-          props: { roasterName: data.name, roasterSlug: slug },
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchRoaster()
-  }, [slug, plausible])
+    if (roaster) plausible('RoasterView', { props: { roasterName: roaster.name, roasterSlug: slug } })
+  }, [roaster, slug, plausible])
 
   useEffect(() => {
     if (roaster?.shops && roaster.shops.length > 0) {
@@ -124,7 +112,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
                     props: { roasterName: roaster.name, roasterSlug: roaster.slug },
                   })
                 }
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition ease-out active:scale-95"
               >
                 <Instagram className="h-4 w-4" />
                 Instagram
@@ -140,7 +128,7 @@ export const RoasterDetails = ({ slug }: { slug: string }) => {
                     props: { roasterName: roaster.name, roasterSlug: roaster.slug },
                   })
                 }
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm hover:bg-gray-100 transition ease-out active:scale-95"
               >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                 Website

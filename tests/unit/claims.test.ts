@@ -16,13 +16,17 @@ vi.mock('@/app/utils/roasters', () => ({ getRoasterBySlug: vi.fn() }))
 // A chainable stub returns a per-table result so the coverage counts resolve.
 let shopCountResult: { count: number | null; error: unknown }
 let companyRoasterResult: { data: unknown[] | null; error: unknown }
+let shopFilters: [string, unknown][]
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
     from: (table: string) => {
       const result = () => (table === 'shops' ? shopCountResult : companyRoasterResult)
       const chain = {
         select: () => chain,
-        eq: () => chain,
+        eq: (column: string, value: unknown) => {
+          if (table === 'shops') shopFilters.push([column, value])
+          return chain
+        },
         limit: () => chain,
         then: (resolve: (v: unknown) => void) => resolve(result()),
       }
@@ -42,6 +46,7 @@ describe('resolveClaimTarget', () => {
     vi.clearAllMocks()
     shopCountResult = { count: 0, error: null }
     companyRoasterResult = { data: [], error: null }
+    shopFilters = []
   })
 
   test('returns null when no entry param is given', async () => {
@@ -134,6 +139,14 @@ describe('resolveClaimTarget', () => {
       locationCount: 3,
       hasRoaster: true,
     })
+  })
+
+  test('excludes permanently closed shops from the location count', async () => {
+    mockCompany.mockResolvedValueOnce({ id: 'company-1', name: 'Commonplace Coffee' } as any)
+
+    await resolveClaimTarget({ company: 'commonplace' })
+
+    expect(shopFilters).toContainEqual(['permanently_closed', false])
   })
 
   test('returns null when the company is not found', async () => {

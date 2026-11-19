@@ -4,9 +4,11 @@ import { describe, test, expect, beforeAll, vi } from 'vitest'
 // the route imports cleanly without touching real Supabase/Anthropic.
 vi.mock('@/lib/capture', () => ({
   getImageData: vi.fn(),
-  getShopCandidates: vi.fn(),
-  buildShopContext: vi.fn(),
-  validateShopUUID: vi.fn(),
+  getSourceUrl: vi.fn(),
+  getAllShops: vi.fn(),
+  getAllRoasters: vi.fn(),
+  buildEntityContext: vi.fn(),
+  validateUUID: vi.fn(),
   callAnthropicVision: vi.fn(),
   getRoasterID: vi.fn(),
   supabase: { from: vi.fn() },

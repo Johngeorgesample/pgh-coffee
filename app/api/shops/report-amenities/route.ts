@@ -4,8 +4,9 @@ import { metrics } from '@/lib/metrics'
 import { AMENITY_KEYS } from '@/lib/amenityKeys'
 import { isRealSupabaseError } from '@/lib/supabaseErrors'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const { shop_id, amenities } = await request.json()
 
   if (!shop_id || !Array.isArray(amenities)) {
@@ -47,3 +48,5 @@ export async function POST(request: Request) {
   metrics.shopAmenityReportSubmitted()
   return NextResponse.json(data, { status: 201 })
 }
+
+export const POST = withMetrics('shops/report-amenities:POST', handlePOST)

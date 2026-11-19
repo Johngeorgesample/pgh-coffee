@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import VisitStats from './VisitStats'
 import ShareProfileCard from './ShareProfileCard'
 import ShopListPreview from './ShopListPreview'
@@ -15,7 +16,14 @@ export default function Dashboard() {
         title="Passport"
         endpoint="/api/visits"
         viewAllHref="/account/visited"
-        emptyText="No visits yet. Mark shops you've been to and watch your passport fill up."
+        emptyText={
+          <>
+            No visits yet. Been to some already?{' '}
+            <Link href="/account/visited" className="font-medium text-yellow-600 hover:text-yellow-700">
+              Check them off →
+            </Link>
+          </>
+        }
       />
       <ShopListPreview
         title="Favorites"

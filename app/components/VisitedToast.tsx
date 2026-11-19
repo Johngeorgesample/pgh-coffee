@@ -25,7 +25,7 @@ export default function VisitedToast({ isOpen, onClose, shopName }: VisitedToast
     <Transition show={isOpen}>
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 pointer-events-none">
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 pointer-events-auto">
+          <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 pointer-events-auto">
             <TransitionChild
               enter="transition ease-out duration-300"
               enterFrom="opacity-0 translate-y-4"
@@ -42,7 +42,7 @@ export default function VisitedToast({ isOpen, onClose, shopName }: VisitedToast
                 <Link
                   href="/account/visited"
                   onClick={onClose}
-                  className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 whitespace-nowrap"
+                  className="ml-2 text-sm font-medium text-yellow-300 hover:text-yellow-200 active:text-yellow-200 whitespace-nowrap"
                 >
                   View passport
                 </Link>

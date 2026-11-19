@@ -1,7 +1,19 @@
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { withCompanyVerification } from '@/app/utils/verification'
 
-const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(*)), roaster:roaster_id(*)'
+const EVENT_SELECT = '*, shop:shop_id(*, company:company_id(is_verified)), roaster:roaster_id(*, company:company_id(is_verified))'
+
+type Verifiable = Parameters<typeof withCompanyVerification>[0]
+
+export type EventRow = { shop?: Verifiable | null; roaster?: Verifiable | null }
+
+export const withInheritedVerification = <T extends EventRow>(event: T) =>
+  ({
+    ...event,
+    shop: event.shop && withCompanyVerification(event.shop),
+    roaster: event.roaster && withCompanyVerification(event.roaster),
+  }) as T
 
 export const visibleEvents = (select: string = EVENT_SELECT) =>
   getClient().from('events').select(select).eq('is_hidden', false)
@@ -21,8 +33,8 @@ export const getEventByIdPrefix = async (prefix: string) => {
 
   if (error) {
     logger.error('Error fetching event', { error: error.message })
-    return null
+    throw new Error(`Failed to fetch event: ${error.message}`)
   }
 
-  return data?.[0] ?? null
+  return data?.[0] ? withInheritedVerification(data[0] as EventRow) : null
 }

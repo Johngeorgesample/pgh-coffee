@@ -12,9 +12,10 @@ const AmenityReportModal = dynamic(() => import('./AmenityReportModal'), { ssr: 
 interface IProps {
   amenities: string[]
   shopId: string
+  canReport: boolean
 }
 
-export default function ShopAmenities({ amenities, shopId }: IProps) {
+export default function ShopAmenities({ amenities, shopId, canReport }: IProps) {
   const plausible = useAnalytics()
   const [showModal, setShowModal] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -51,12 +52,14 @@ export default function ShopAmenities({ amenities, shopId }: IProps) {
         })}
       </div>
 
-      <p className="mt-3 text-xs text-gray-700">
-        Missing something?{' '}
-        <button type="button" aria-label="Report amenity" className="text-amber-700" onClick={handleOnClick}>
-          Let me know
-        </button>
-      </p>
+      {canReport && (
+        <p className="mt-3 text-xs text-gray-700">
+          Missing something?{' '}
+          <button type="button" aria-label="Report amenity" className="text-amber-700" onClick={handleOnClick}>
+            Let me know
+          </button>
+        </p>
+      )}
 
       {showModal && (
         <AmenityReportModal

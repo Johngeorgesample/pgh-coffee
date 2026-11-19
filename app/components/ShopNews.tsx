@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { TShop } from '@/types/shop-types'
 import { NewsCard } from '@/app/components/NewsCard'
 import { NewsItem } from '@/types/news-types'
+import { fetchShopExtra, shopUpdatesUrl } from '@/app/utils/shopExtras'
 
 type Props = { shop: TShop }
 
 async function fetchShopUpdates(shopId: string, signal: AbortSignal) {
-  const qs = new URLSearchParams({ shop_id: shopId })
-  const res = await fetch(`/api/updates?${qs.toString()}`, { signal })
+  const res = await fetchShopExtra(shopUpdatesUrl(shopId), { signal })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json() as Promise<NewsItem[]>
 }

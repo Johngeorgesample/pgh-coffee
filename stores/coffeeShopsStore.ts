@@ -1,8 +1,10 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { TFeatureCollection, TShop } from '@/types/shop-types'
 import { doesShopMatchFilter } from '@/app/utils/utils'
+import { areaForNeighborhood } from '@/app/utils/neighborhoodAreas'
+import { isOpenNow, pittsburghNow, type HoursRow } from '@/app/utils/hours'
 
 interface CoffeeShopsState {
   allShops: TFeatureCollection
@@ -15,6 +17,8 @@ interface CoffeeShopsState {
   // Filters
   searchValue: string
   setSearchValue: (value: string) => void
+  areaFilter: string | null
+  setAreaFilter: (area: string) => void
   activeAmenityFilters: string[]
   toggleAmenityFilter: (amenity: string) => void
   clearAmenityFilters: () => void
@@ -22,7 +26,24 @@ interface CoffeeShopsState {
   // Override for Company/Roaster pages that show a subset of shops
   overrideShops: TFeatureCollection | null
   setOverrideShops: (shops: TFeatureCollection | null) => void
+
+  nearPoint: [number, number] | null
+  setNearPoint: (point: [number, number] | null) => void
+
+  visitedUUIDs: Set<string> | null
+  fetchVisits: () => Promise<void>
+  clearVisits: () => void
+  setVisited: (uuid: string, visited: boolean) => void
+  passportMode: boolean
+  setPassportMode: (on: boolean) => void
+
+  shopHours: Record<string, HoursRow[]> | null
+  fetchShopHours: () => Promise<void>
+  openNow: boolean
+  setOpenNow: (on: boolean) => void
 }
+
+let visitsRequest: Promise<void> | null = null
 
 const useCoffeeShopsStore = create<CoffeeShopsState>()(
   devtools(
@@ -39,6 +60,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
         }
         try {
           const response = await fetch('/api/shops/geojson')
+          if (!response.ok) throw new Error(`Failed to fetch shops: ${response.status}`)
           const data: TFeatureCollection = await response.json()
           set({ allShops: data })
         } catch (error) {
@@ -54,7 +76,9 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 
       // Filters
       searchValue: '',
-      setSearchValue: value => set({ searchValue: value }),
+      setSearchValue: value => set({ searchValue: value, areaFilter: null }),
+      areaFilter: null,
+      setAreaFilter: area => set({ searchValue: area, areaFilter: area }),
 
       activeAmenityFilters: [],
       toggleAmenityFilter: amenity =>
@@ -67,6 +91,53 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 
       overrideShops: null,
       setOverrideShops: shops => set({ overrideShops: shops }),
+
+      nearPoint: null,
+      setNearPoint: nearPoint => set({ nearPoint }),
+
+      visitedUUIDs: null,
+      fetchVisits: () => {
+        visitsRequest ??= (async () => {
+          try {
+            const response = await fetch('/api/visits')
+            if (!response.ok) throw new Error(`Failed to fetch visits: ${response.status}`)
+            const visits: { shop: { uuid: string } | null }[] = await response.json()
+            set({ visitedUUIDs: new Set(visits.flatMap(visit => visit.shop?.uuid ?? [])) })
+          } catch (error) {
+            console.error('Error fetching visits:', error)
+          } finally {
+            visitsRequest = null
+          }
+        })()
+        return visitsRequest
+      },
+      clearVisits: () => set({ visitedUUIDs: null, passportMode: false }),
+      setVisited: (uuid, visited) =>
+        set(prev => {
+          const next = new Set(prev.visitedUUIDs)
+          if (visited) next.add(uuid)
+          else next.delete(uuid)
+          return { visitedUUIDs: next, passportMode: prev.passportMode && next.size > 0 }
+        }),
+      passportMode: false,
+      setPassportMode: passportMode => set({ passportMode }),
+
+      shopHours: null,
+      fetchShopHours: async () => {
+        if (useCoffeeShopsStore.getState().shopHours) return
+        try {
+          const response = await fetch('/api/shops/hours')
+          if (!response.ok) throw new Error(`Failed to fetch shop hours: ${response.status}`)
+          set({ shopHours: await response.json() })
+        } catch (error) {
+          console.error('Error fetching shop hours:', error)
+        }
+      },
+      openNow: false,
+      setOpenNow: openNow => {
+        set({ openNow })
+        if (openNow) useCoffeeShopsStore.getState().fetchShopHours()
+      },
     }),
     { name: 'ShopsStore' },
   ),
@@ -79,6 +150,7 @@ const useCoffeeShopsStore = create<CoffeeShopsState>()(
 export function useDisplayedShops(): TFeatureCollection {
   const allShops = useCoffeeShopsStore(s => s.allShops)
   const searchValue = useCoffeeShopsStore(s => s.searchValue)
+  const areaFilter = useCoffeeShopsStore(s => s.areaFilter)
   const activeAmenityFilters = useCoffeeShopsStore(s => s.activeAmenityFilters)
   const currentShop = useCoffeeShopsStore(s => s.currentShop)
   const overrideShops = useCoffeeShopsStore(s => s.overrideShops)
@@ -87,7 +159,9 @@ export function useDisplayedShops(): TFeatureCollection {
     if (overrideShops) return overrideShops
 
     const filtered = allShops.features.filter(shop => {
-      if (!doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)) {
+      if (areaFilter) {
+        if (areaForNeighborhood(shop.properties.neighborhood) !== areaFilter) return false
+      } else if (!doesShopMatchFilter(shop.properties.name, shop.properties.neighborhood, searchValue)) {
         return false
       }
       if (
@@ -122,11 +196,33 @@ export function useDisplayedShops(): TFeatureCollection {
   }, [
     allShops,
     searchValue,
+    areaFilter,
     activeAmenityFilters,
     currentShop?.properties?.address,
     currentShop?.properties?.name,
     overrideShops,
   ])
+}
+
+export function useIsClosed() {
+  const openNow = useCoffeeShopsStore(s => s.openNow)
+  const shopHours = useCoffeeShopsStore(s => s.shopHours)
+  const minute = useMinuteTick(openNow)
+
+  return useMemo(() => {
+    const now = pittsburghNow()
+    return (uuid: string) => openNow && !!shopHours?.[uuid] && !isOpenNow(shopHours[uuid], now)
+  }, [openNow, shopHours, minute])
+}
+
+function useMinuteTick(enabled: boolean) {
+  const [tick, setTick] = useState(0)
+  useEffect(() => {
+    if (!enabled) return
+    const id = setInterval(() => setTick(t => t + 1), 60_000)
+    return () => clearInterval(id)
+  }, [enabled])
+  return tick
 }
 
 export default useCoffeeShopsStore

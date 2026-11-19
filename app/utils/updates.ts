@@ -1,5 +1,7 @@
+import { cache } from 'react'
 import { logger } from '@/lib/logger'
 import { getClient } from '@/lib/supabase/server-client'
+import { extractUuidPrefix } from '@/app/utils/slug'
 
 export const UPDATE_SELECT = '*, shop:shops(*, company:company_id(*)), roaster:roaster_id(id, name, slug)'
 
@@ -20,8 +22,14 @@ export const getUpdateByIdPrefix = async (prefix: string) => {
 
   if (error) {
     logger.error('Error fetching update', { error: error.message })
-    return null
+    throw new Error(`Failed to fetch update: ${error.message}`)
   }
 
   return data?.[0] ?? null
 }
+
+// cache() so generateMetadata, the page, and the OG image share one query per request.
+export const getUpdateForSeo = cache(async (slug: string) => {
+  const prefix = extractUuidPrefix(slug)
+  return prefix ? getUpdateByIdPrefix(prefix) : null
+})

@@ -20,6 +20,8 @@ export type NewsItem = {
   tags?: string[] | null
   post_date?: string | null
   event_date?: string | null
+  start_time?: string | null
+  end_time?: string | null
   shop_id?: string
   shop?: DbShop
   roaster_id?: string | null

@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { formatDBShopAsFeature, SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { DbShop } from '@/types/shop-types'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 // Disable Next's fixed ISR window; we'll control TTL via Cache-Control
 export const revalidate = 0
@@ -55,10 +56,13 @@ function secondsUntilNextMidnightTz(now = new Date(), tz = TZ) {
   return Math.max(1, Math.round((nextMidnight.getTime() - now.getTime()) / 1000))
 }
 
-export async function GET() {
+async function handleGET() {
   const supabase = getClient()
 
-  const { data: uuids, error: uuidErr } = await supabase.from('shops').select('uuid')
+  const { data: uuids, error: uuidErr } = await supabase
+    .from('shops')
+    .select('uuid')
+    .eq('permanently_closed', false)
 
   if (uuidErr || !uuids?.length) {
     return NextResponse.json({ error: 'No shops found' }, { status: 500 })
@@ -98,3 +102,5 @@ export async function GET() {
     },
   })
 }
+
+export const GET = withMetrics('featured-shop', handleGET)

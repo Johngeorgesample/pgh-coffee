@@ -25,6 +25,7 @@ vi.mock('@/lib/metrics', () => ({
     authSignIn: mockAuthSignIn,
     authSignUp: mockAuthSignUp,
     authSignOut: mockAuthSignOut,
+    requestCompleted: vi.fn(),
   },
 }))
 

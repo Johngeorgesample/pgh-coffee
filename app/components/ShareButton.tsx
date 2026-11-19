@@ -14,7 +14,7 @@ export default function ShareButton() {
         onClick={copyCurrentUrl}
         aria-label="Share"
         title="Share"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition-colors"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 hover:bg-stone-100 transition ease-out active:scale-95"
       >
         <Share2 className="size-[18px]" />
       </button>

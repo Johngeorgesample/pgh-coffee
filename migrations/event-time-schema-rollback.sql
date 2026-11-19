@@ -1,0 +1,2 @@
+ALTER TABLE events DROP COLUMN IF EXISTS end_time;
+ALTER TABLE events DROP COLUMN IF EXISTS start_time;

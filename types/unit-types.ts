@@ -8,3 +8,8 @@ export const DISTANCE_UNITS_STORAGE_KEY = 'distanceUnits'
 
 export const parseUnits = (stored: string | null | undefined): TUnits =>
   stored === DISTANCE_UNITS.Miles || stored === DISTANCE_UNITS.Meters ? stored : DEFAULT_UNITS
+
+const MILES_PER_METER = 0.000621371
+
+export const metersToUnits = (meters: number, units: TUnits) =>
+  units === DISTANCE_UNITS.Miles ? meters * MILES_PER_METER : meters

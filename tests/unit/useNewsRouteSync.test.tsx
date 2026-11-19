@@ -84,7 +84,7 @@ describe('useNewsRouteSync', () => {
     renderHook(() => useNewsRouteSync())
 
     await waitFor(() => {
-      const [content] = h.panelState.setPanelContent.mock.calls.at(-1)
+      const [content] = h.panelState.setPanelContent.mock.calls.at(-1)!
       expect(content.type).toBe(News)
     })
   })

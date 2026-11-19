@@ -60,3 +60,7 @@ export const isOpenNow = (rows: HoursRow[], now: PghTime): boolean => {
     return r.day_of_week === now.day && now.minutes >= opens && now.minutes < closes
   })
 }
+
+// '2026-10-19T02:00:00Z' -> 'Oct 18' (the Pittsburgh date, not the UTC one)
+export const formatUpdatedDate = (iso: string): string =>
+  new Intl.DateTimeFormat('en-US', { timeZone: TZ, month: 'short', day: 'numeric' }).format(new Date(iso))

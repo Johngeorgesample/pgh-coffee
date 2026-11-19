@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { getCompanyBySlug } from '@/app/utils/companies'
-import { visibleEvents } from '@/app/utils/events'
+import { visibleEvents, withInheritedVerification, type EventRow } from '@/app/utils/events'
+import { withMetrics } from '@/lib/withMetrics'
 
 const getCompanyEvents = async (companyId: string) => {
-  const { data, error } = await visibleEvents('*, shop:shops!inner(*, company:company_id(*))')
+  const { data, error } = await visibleEvents('*, shop:shops!inner(*, company:company_id(is_verified))')
     .eq('shops.company_id', companyId)
 
   if (error) {
@@ -12,10 +13,10 @@ const getCompanyEvents = async (companyId: string) => {
     return null
   }
 
-  return data
+  return (data as EventRow[]).map(withInheritedVerification)
 }
 
-export async function GET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
+async function handleGET(req: NextRequest, props: { params: Promise<{ company: string }> }) {
   const params = await props.params
   const { company } = params
 
@@ -33,3 +34,5 @@ export async function GET(req: NextRequest, props: { params: Promise<{ company: 
 
   return NextResponse.json(events)
 }
+
+export const GET = withMetrics('companies/[company]/events', handleGET)

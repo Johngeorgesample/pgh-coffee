@@ -17,6 +17,7 @@
     "@heroicons/react": "^2.1.1",
     "@netlify/functions": "^5.1.5",
     "@next/bundle-analyzer": "^15.1.7",
+    "@pyroscope/nodejs": "^0.6.4",
     "@scalar/api-reference-react": "^0.9.58",
     "@silk-hq/components": "^0.9.11",
     "@supabase/ssr": "^0.8.0",
@@ -28,7 +29,7 @@
     "jsdom-testing-mocks": "^1.13.1",
     "lucide-react": "^0.562.0",
     "mapbox-gl": "^3.6.0",
-    "next": "15.5.22",
+    "next": "15.5.25",
     "next-plausible": "^3.12.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -51,13 +52,13 @@
     "schema-dts": "^2.0.0",
     "tailwindcss": "^4.0.0",
     "typescript": "5.7.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "postcss": "^8.5.18",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
     "brace-expansion": "^5.0.8"
   }
 }

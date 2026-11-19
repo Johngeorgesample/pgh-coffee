@@ -35,6 +35,7 @@ export interface DbShop {
   amenities?: string[]
   description?: string | null
   is_verified?: boolean
+  permanently_closed?: boolean
 }
 
 // The roaster a shop serves, plus whether it's the shop's own in-house roaster.
@@ -64,6 +65,7 @@ export interface TShop {
     roaster?: TShopRoaster | null
     description?: string | null
     verified?: boolean
+    permanentlyClosed?: boolean
     selected?: boolean
   }
   geometry: {

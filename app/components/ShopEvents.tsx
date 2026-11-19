@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { TShop } from '@/types/shop-types'
 import { EventCard, type EventCardData } from '@/app/components/EventCard'
+import { fetchShopExtra, shopEventsUrl } from '@/app/utils/shopExtras'
 
 type EventEntry = {
   id: string
@@ -30,7 +31,7 @@ export const ShopEvents = ({ shop }: Props) => {
     if (!shopId) return
 
     setLoading(true)
-    fetch(`/api/events?shop_id=${shopId}`)
+    fetchShopExtra(shopEventsUrl(shopId))
       .then(res => res.ok ? res.json() : [])
       .then(data => {
         setEvents(data)

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { UPDATE_SELECT } from '@/app/utils/updates'
 import { getClient } from '@/lib/supabase/server-client'
+import { withMetrics } from '@/lib/withMetrics'
 
 const fetchUpdates = async (shopID?: string) => {
   let query = getClient()
@@ -23,7 +24,7 @@ const fetchUpdates = async (shopID?: string) => {
   return data
 }
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url)
   const shopID = searchParams.get('shop_id') ?? ''
   const updates = await fetchUpdates(shopID)
@@ -37,3 +38,5 @@ export async function GET(request: Request) {
   // across different shops (every shop showing every update).
   return NextResponse.json(updates)
 }
+
+export const GET = withMetrics('updates', handleGET)

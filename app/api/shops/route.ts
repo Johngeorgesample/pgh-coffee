@@ -5,7 +5,11 @@ import { SHOP_WITH_ROASTER_SELECT } from '@/app/utils/utils'
 import { getClient } from '@/lib/supabase/server-client'
 
 const fetchShops = async (neighborhood?: string) => {
-  let query = getClient().from('shops').select(SHOP_WITH_ROASTER_SELECT).order('name', { ascending: true })
+  let query = getClient()
+    .from('shops')
+    .select(SHOP_WITH_ROASTER_SELECT)
+    .eq('permanently_closed', false)
+    .order('name', { ascending: true })
 
   if (neighborhood) {
     query = query.eq('neighborhood', neighborhood)

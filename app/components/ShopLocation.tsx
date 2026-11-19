@@ -1,5 +1,5 @@
 import { MapPinIcon } from '@heroicons/react/24/outline'
-import { getGoogleMapsUrl } from './DirectionsButton'
+import { getGoogleMapsUrl, openMobileMaps } from './DirectionsButton'
 
 interface IProps {
   address: string
@@ -21,14 +21,14 @@ const buildStaticMapUrl = (lng: number, lat: number) => {
 export default function ShopLocation({ address, coordinates }: IProps) {
   const [lng, lat] = coordinates
   const mapUrl = buildStaticMapUrl(lng, lat)
-  // Preserve the existing (double-swapped) call so the Google Maps query stays
-  // lat,lng — see DirectionsButton.getGoogleMapsUrl.
+  // Keep a real href for desktop, keyboard access, and browsers without JS;
+  // onClick replaces it only when the device supports a native maps link.
   const mapsHref = getGoogleMapsUrl({ latitude: coordinates[0], longitude: coordinates[1] })
 
   return (
     <>
       <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Location</p>
-      <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="block group">
+      <a href={mapsHref} target="_blank" rel="noopener noreferrer" onClick={(event) => openMobileMaps(event, coordinates)} className="block group">
       {mapUrl && (
         <div className="relative mb-3">
           <img

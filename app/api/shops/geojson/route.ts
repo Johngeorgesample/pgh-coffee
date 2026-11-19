@@ -9,6 +9,7 @@ const fetchShops = async () => {
   const { data, error } = await getClient()
     .from('shops')
     .select(SHOP_WITH_ROASTER_SELECT)
+    .eq('permanently_closed', false)
     .order('name', { ascending: true })
   if (error) {
     logger.error('Error fetching shops', { error: error.message })
