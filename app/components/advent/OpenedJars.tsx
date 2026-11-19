@@ -16,7 +16,7 @@ const Tag = ({ step, entry, href, tilt }: TTagProps) => (
     href={href}
     className={`group relative block pl-8 pt-8 transition-transform duration-150 ${EASE} active:scale-[0.97] motion-reduce:transition-none`}
   >
-    <LockedLid step={step} className="absolute left-0 top-0 z-10 w-16!">
+    <LockedLid jar={entry.day} className="absolute left-0 top-0 z-10 w-16!">
       <span className="sr-only">Dec {step}</span>
     </LockedLid>
     <div

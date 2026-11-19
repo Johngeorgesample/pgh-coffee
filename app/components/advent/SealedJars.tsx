@@ -95,20 +95,20 @@ const useStage = (armed: boolean, onReveal: () => void, onClose: () => void) => 
 
 const LID = 'block aspect-square w-full overflow-hidden rounded-full border-2 border-gray-950 shadow-[3px_3px_0_#030712]'
 
-const Label = ({ step }: { step: number }) => (
-  <Image src={`/advent/labels/${step}.webp`} alt="" width={240} height={240} sizes="96px" className="size-full" />
+const Label = ({ jar }: { jar: number }) => (
+  <Image src={`/advent/labels/${jar}.webp`} alt="" width={240} height={240} sizes="96px" className="size-full" />
 )
 
-export const LockedLid = ({ step, className = '', children }: { step: number; className?: string; children?: ReactNode }) => (
+export const LockedLid = ({ jar, className = '', children }: { jar: number; className?: string; children?: ReactNode }) => (
   <span className={`${LID} ${className}`}>
     {children}
-    <Label step={step} />
+    <Label jar={jar} />
   </span>
 )
 
-type TLidProps = { step: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
+type TLidProps = { step: number; jar: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
 
-const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
+const Lid = ({ step, jar, armed, onToggle, onClose, onReveal }: TLidProps) => {
   const [align, setAlign] = useState<Align>('center')
   const { stage, warn, unscrew, cancel, reset } = useStage(armed, onReveal, onClose)
   return (
@@ -124,7 +124,7 @@ const Lid = ({ step, armed, onToggle, onClose, onReveal }: TLidProps) => {
         style={{ transform: LID_TRANSFORM[stage], opacity: stage === 'leaving' ? 0 : 1, transitionDuration: `${UNSCREW_MS}ms` }}
         className={`${LID} outline-offset-4 transition-[transform,opacity] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${STAGE_ANIMATION[stage]}`}
       >
-        <Label step={step} />
+        <Label jar={jar} />
       </button>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
@@ -170,9 +170,9 @@ export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps)
         {jars.map(jar => (
           <li key={jar.day}>
             {locked ? (
-              <LockedLid step={jar.step} />
+              <LockedLid jar={jar.day} />
             ) : (
-              <Lid step={jar.step} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
+              <Lid step={jar.step} jar={jar.day} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
             )}
           </li>
         ))}
