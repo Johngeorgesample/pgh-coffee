@@ -4,7 +4,9 @@ import TastingJournal from '@/app/components/advent/TastingJournal'
 
 global.fetch = vi.fn().mockResolvedValue({ ok: true })
 
-vi.mock('@/app/components/AuthProvider', () => ({ useAuth: () => ({ user: null }) }))
+const auth = vi.hoisted(() => ({ user: null as { id: string } | null }))
+
+vi.mock('@/app/components/AuthProvider', () => ({ useAuth: () => ({ user: auth.user }) }))
 
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
@@ -15,7 +17,10 @@ vi.mock('@/lib/supabase/client', () => ({
 const renderJournal = () => render(<TastingJournal day={1} step={1} notes={['Red apple', 'Cocoa']} returnTo="/advent/1" />)
 
 describe('TastingJournal', () => {
-  beforeEach(() => localStorage.clear())
+  beforeEach(() => {
+    localStorage.clear()
+    auth.user = null
+  })
 
   // Signed-out visitors are sent to sign-up mid-entry, so the draft has to
   // survive the round trip or the CTA destroys what it is asking them to keep.
@@ -57,5 +62,18 @@ describe('TastingJournal', () => {
 
     await waitFor(() => expect(screen.getByText('Logged · Day 01')).toBeInTheDocument())
     expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true })
+  })
+
+  it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', () => {
+    renderJournal()
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+
+    cleanup()
+    auth.user = { id: 'u1' }
+    renderJournal()
+
+    expect(screen.getByText('Logged · Day 01')).toBeInTheDocument()
+    expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true, pending: false })
   })
 })

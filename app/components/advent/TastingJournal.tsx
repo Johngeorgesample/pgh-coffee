@@ -13,9 +13,9 @@ const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso'
 // real lineup ships and people expect their cups on every device.
 const storageKey = (day: number) => `advent:journal:${day}`
 
-type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean }
+type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
 
-const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: false }
+const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: false, pending: false }
 
 const readEntry = (day: number) => {
   try {
@@ -156,8 +156,17 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
   const save = () => {
     setJustSaved(true)
-    write({ logged: true })
+    write({ logged: true, pending: false })
   }
+
+  const askToSave = () => {
+    write({ pending: true })
+    setAsking(true)
+  }
+
+  useEffect(() => {
+    if (user && entry.pending) save()
+  })
 
   const toggleTasted = (note: string) => {
     setJustTicked(note)
@@ -219,7 +228,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
         ) : (
-          <button type="button" onClick={() => setAsking(true)} className={`${saveClass} bg-yellow-300`}>
+          <button type="button" onClick={askToSave} className={`${saveClass} bg-yellow-300`}>
             Save tasting note
           </button>
         )}
