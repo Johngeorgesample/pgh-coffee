@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { renderToString } from 'react-dom/server'
 import AdventRoute from '@/app/components/advent/AdventRoute'
 
 const push = vi.fn()
@@ -22,6 +23,11 @@ describe('AdventRoute', () => {
     vi.useRealTimers()
     localStorage.clear()
     window.history.replaceState(null, '', '/')
+  })
+
+  it('server-renders no jars, since it cannot know the visitor\'s order or what they have opened', () => {
+    startOn('2026-12-03T12:00:00-05:00')
+    expect(renderToString(<AdventRoute />)).not.toContain('Still sealed')
   })
 
   it('stamps the days before today and keeps later days locked', () => {
