@@ -53,6 +53,15 @@ export default function TodayCard({ entry, step, href }: { entry: AdventDay; ste
               </h3>
             </div>
             <Specs entry={entry} />
+            <span
+              aria-hidden
+              className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.2em] text-gray-950 md:col-span-2 [@media(hover:hover)_and_(pointer:fine)]:hidden"
+            >
+              Story &amp; brew guide
+              <span className="flex size-10 items-center justify-center rounded-full border-2 border-gray-950 bg-yellow-300 shadow-[2px_2px_0_#030712]">
+                <ArrowRight className="size-5" strokeWidth={2.5} />
+              </span>
+            </span>
           </div>
           <span
             aria-hidden
