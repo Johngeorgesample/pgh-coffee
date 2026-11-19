@@ -117,21 +117,21 @@ const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
   )
 }
 
-const LoggedStamp = ({ day, justSaved }: { day: number; justSaved: boolean }) => (
+const LoggedStamp = ({ step, justSaved }: { step: number; justSaved: boolean }) => (
   <span className="absolute top-0 right-5 -translate-y-1/2">
     <span
       className={`block -rotate-6 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712] ${
         justSaved ? 'animate-stamp motion-reduce:animate-none' : ''
       }`}
     >
-      Logged · Dec {day}
+      Logged · Day {String(step).padStart(2, '0')}
     </span>
   </span>
 )
 
 const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
 
-export default function TastingJournal({ day, notes }: { day: number; notes: string[] }) {
+export default function TastingJournal({ day, step, notes }: { day: number; step: number; notes: string[] }) {
   const { user } = useAuth()
   const [entry, setEntry] = useState(EMPTY)
   const [justSaved, setJustSaved] = useState(false)
@@ -165,7 +165,7 @@ export default function TastingJournal({ day, notes }: { day: number; notes: str
 
   return (
     <div className="relative rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
-      {entry.logged && <LoggedStamp day={day} justSaved={justSaved} />}
+      {entry.logged && <LoggedStamp step={step} justSaved={justSaved} />}
       <div className="flex flex-col gap-7 p-5 sm:p-7">
         <Rating value={entry.rating} onChange={rating => set({ rating })} />
 

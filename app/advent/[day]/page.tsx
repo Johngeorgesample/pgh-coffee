@@ -122,7 +122,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
             <Image src={`/advent/labels/${entry.day}.webp`} alt={`Jar ${entry.day}`} width={240} height={240} sizes="96px" className="size-full" />
           </span>
           <span className="mt-12 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
-            Day {String(step).padStart(2, '0')} · Dec {step}
+            Day {String(step).padStart(2, '0')}
           </span>
         </span>
       </div>
@@ -138,7 +138,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
   </aside>
 )
 
-const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) => (
+const Reading = ({ entry, step, roaster }: { entry: AdventDay; step: number; roaster: TRoaster }) => (
   <main className="flex flex-col gap-14 lg:pt-6">
     {entry.blurb && (
       <Section title="In the cup">
@@ -149,7 +149,7 @@ const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) =>
       <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
     </Section>
     <Section title="My tasting journal">
-      <TastingJournal day={entry.day} notes={entry.notes} />
+      <TastingJournal day={entry.day} step={step} notes={entry.notes} />
     </Section>
     {roaster && <AboutRoaster entry={entry} roaster={roaster} />}
   </main>
@@ -158,13 +158,14 @@ const Reading = ({ entry, roaster }: { entry: AdventDay; roaster: TRoaster }) =>
 export default async function AdventDayPage({ params, searchParams }: Props) {
   const entry = await resolveDay(params)
   const order = await resolveOrder(searchParams)
+  const step = stepOf(order, entry.day)
   const roaster = entry.roasterSlug ? await getRoasterBySlug(entry.roasterSlug) : null
 
   return (
     <div className="bg-stone-50">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-20">
-        <Sheet entry={entry} order={order} step={stepOf(order, entry.day)} />
-        <Reading entry={entry} roaster={roaster} />
+        <Sheet entry={entry} order={order} step={step} />
+        <Reading entry={entry} step={step} roaster={roaster} />
       </div>
       <Footer />
     </div>

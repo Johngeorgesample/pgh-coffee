@@ -30,7 +30,7 @@ describe('AdventRoute', () => {
     vi.setSystemTime(new Date('2026-12-03T12:00:00-05:00'))
     render(<AdventRoute />)
 
-    const today = screen.getByText('Today · Dec 3')
+    const today = screen.getByText('Today · Day 03')
     const opened = screen.getByRole('heading', { name: 'Opened' })
     const sealed = screen.getByRole('heading', { name: 'Still sealed' })
     expect(today.compareDocumentPosition(opened) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
@@ -54,7 +54,7 @@ describe('AdventRoute', () => {
     window.history.replaceState(null, '', '/advent?dev-day=3')
     render(<AdventRoute />)
 
-    expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
+    expect(screen.getByText('Today · Day 03')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Open Dec 4 early' })).toBeInTheDocument()
   })
 
@@ -76,7 +76,7 @@ describe('AdventRoute', () => {
     render(<AdventRoute />)
 
     fireEvent.click(screen.getByRole('button', { name: 'North to south' }))
-    expect(screen.getByText('Today · Dec 3')).toBeInTheDocument()
+    expect(screen.getByText('Today · Day 03')).toBeInTheDocument()
     expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Colombia Cauca' })).toHaveAttribute('href', '/advent/17?order=geo')
   })
