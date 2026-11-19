@@ -6,7 +6,7 @@ import SectionHead from '@/app/components/advent/SectionHead'
 
 type Align = 'left' | 'center' | 'right'
 type Stage = 'closed' | 'ask' | 'warn' | 'leaving'
-type Jar = { step: number; day: number }
+type Jar = { step: number; day: number; sealed: boolean }
 
 const UNSCREW_MS = 350
 
@@ -118,6 +118,8 @@ const SleepingLid = ({ step, jar }: { step: number; jar: number }) => {
   )
 }
 
+const EmptySlot = () => <span className="block aspect-square w-full rounded-full border-2 border-dashed border-gray-950/30" />
+
 type TLidProps = { step: number; jar: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
 
 const Lid = ({ step, jar, armed, onToggle, onClose, onReveal }: TLidProps) => {
@@ -177,11 +179,13 @@ export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps)
 
   return (
     <section className="mt-12 animate-rise motion-reduce:animate-none">
-      <SectionHead title="Still sealed" count={jars.length} />
-      <ul ref={ref} className="mt-6 grid grid-cols-5 gap-4 sm:grid-cols-6 md:grid-cols-8">
+      <SectionHead title="Still sealed" count={jars.filter(jar => jar.sealed).length} />
+      <ul ref={ref} className="mx-auto mt-6 grid max-w-xl grid-cols-5 gap-4">
         {jars.map(jar => (
-          <li key={jar.day}>
-            {locked ? (
+          <li key={jar.day} aria-hidden={!jar.sealed || undefined}>
+            {!jar.sealed ? (
+              <EmptySlot />
+            ) : locked ? (
               <SleepingLid step={jar.step} jar={jar.day} />
             ) : (
               <Lid step={jar.step} jar={jar.day} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />

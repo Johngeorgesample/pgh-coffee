@@ -42,7 +42,7 @@ const useRoute = () => {
 export default function AdventRoute() {
   const { order, changeOrder, stops, today, countdown, locked } = useRoute()
   const router = useRouter()
-  const sealed = stops.filter(stop => stop.hidden).map(({ step, entry }) => ({ step, day: entry.day }))
+  const jars = stops.map(({ step, entry, hidden }) => ({ step, day: entry.day, sealed: hidden }))
   const opened = stops.filter(stop => !stop.hidden && stop.step !== today?.step)
 
   return (
@@ -60,7 +60,7 @@ export default function AdventRoute() {
             </section>
           )}
           {opened.length > 0 && <OpenedJars stops={opened} />}
-          {sealed.length > 0 && <SealedJars jars={sealed} locked={locked} onReveal={day => router.push(jarHref(order, day))} />}
+          {jars.some(jar => jar.sealed) && <SealedJars jars={jars} locked={locked} onReveal={day => router.push(jarHref(order, day))} />}
         </div>
       </div>
       <aside className="flex flex-col gap-4 lg:self-start">
