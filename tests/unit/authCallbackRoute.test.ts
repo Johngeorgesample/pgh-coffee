@@ -71,9 +71,13 @@ describe('safeNextPath', () => {
     ['//evil.com', 'protocol-relative'],
     ['https://evil.com', 'absolute URL'],
     [' //evil.com', 'leading space'],
+    ['/\\evil.com', 'backslash reads as a slash'],
+    ['/\t/evil.com', 'tab is stripped'],
+    ['/.//evil.com', 'dot segment collapses'],
   ])('rejects %j (%s)', (next) => {
     expect(safeNextPath(next)).toBe('/')
     expect(new URL(`https://pgh.coffee${safeNextPath(next)}`).host).toBe('pgh.coffee')
+    expect(new URL(safeNextPath(next), 'https://pgh.coffee').host).toBe('pgh.coffee')
   })
 
   test('keeps a rooted internal path', () => {
