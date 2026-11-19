@@ -35,7 +35,7 @@ export async function generateMetadata({ params, searchParams }: Props) {
   return {
     title: `${title} | pgh.coffee`,
     description,
-    openGraph: { title, description, images: ['/opengraph-image'] },
+    openGraph: { title, description, images: ['/advent/opengraph-image'] },
     robots: { index: false },
   }
 }

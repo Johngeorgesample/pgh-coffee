@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Coffee Advent Calendar | pgh.coffee',
     description,
-    images: ['/opengraph-image'],
   },
 }
 
