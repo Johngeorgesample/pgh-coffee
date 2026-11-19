@@ -6,7 +6,7 @@ import top from '@/public/advent/top.webp'
 import right from '@/public/advent/right.webp'
 import bottom from '@/public/advent/bottom.webp'
 import left from '@/public/advent/left.webp'
-import { DYNAMIC_ROASTER_PATH, DYNAMIC_SHOP_URL } from '@/app/utils/advent-links'
+import { DYNAMIC_SHOP_URL, DYNAMIC_WEBSITE_URL } from '@/app/utils/advent-links'
 
 const ROWS = [
   { sides: [top, right, bottom, left], className: '-translate-x-[8%]' },
@@ -48,7 +48,7 @@ export default function AdventHero() {
           <p className="mb-8 text-lg leading-relaxed text-gray-900 md:text-xl">
             One jar a day, December 1st through Christmas. Grind it, brew it, and get to know the people roasting coffee in
             Pittsburgh. Curated by{' '}
-            <Link href={DYNAMIC_ROASTER_PATH} className={LINK}>Dynamic Coffee Roasters</Link> and{' '}
+            <Link href={DYNAMIC_WEBSITE_URL} target="_blank" className={LINK}>Dynamic Coffee Roasters</Link> and{' '}
             <Link href="https://www.origincoffee.club/" target="_blank" className={LINK}>Origin Coffee Club</Link>.
           </p>
           <a
