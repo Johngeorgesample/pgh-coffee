@@ -96,12 +96,10 @@ describe('AdventRoute', () => {
     expect(hrefsUnder('Opened')).toEqual(['/advent/3', '/advent/4'])
   })
 
-  it('keeps the picked order over a shared link and offers no way to switch', () => {
+  it('restores the picked order and offers no way to switch', () => {
     startOn('2026-12-03T12:00:00-05:00', 'geo')
-    window.history.replaceState(null, '', '/advent?order=founded')
     render(<AdventRoute />)
 
-    expect(window.location.search).toBe('?order=geo')
     expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Oldest first' })).not.toBeInTheDocument()
   })

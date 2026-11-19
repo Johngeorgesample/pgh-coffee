@@ -73,11 +73,11 @@ const SealedToday = ({ step, onOpen }: { step: number; onOpen: () => void }) => 
   </div>
 )
 
-type TChooseOrderProps = { step: number; suggested: Order; onChoose: (order: Order) => void }
+type TChooseOrderProps = { step: number; onChoose: (order: Order) => void }
 
-export default function ChooseOrder({ step, suggested, onChoose }: TChooseOrderProps) {
+export default function ChooseOrder({ step, onChoose }: TChooseOrderProps) {
   const dialog = useRef<HTMLDialogElement>(null)
-  const [pick, setPick] = useState(suggested)
+  const [pick, setPick] = useState(ORDERS[0])
   return (
     <section className="mt-10 animate-rise motion-reduce:animate-none">
       <SectionHead title="Today's coffee" />
