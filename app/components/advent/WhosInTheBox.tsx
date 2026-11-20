@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import left from '@/public/advent/left.webp'
+import TrackedLink from '@/app/components/advent/TrackedLink'
 import { ANNOUNCED_ROASTERS } from '@/data/advent'
 
 const ROW = 'flex items-baseline justify-between gap-3 py-1.5 font-serif text-xl leading-snug tracking-tight'
@@ -19,9 +19,14 @@ export default function WhosInTheBox() {
           {ANNOUNCED_ROASTERS.map(({ slug, name }) => (
             <li key={name} className="border-b-2 border-gray-950/15 last:border-b-0">
               {slug ? (
-                <Link href={`/roasters/${slug}`} className={`${ROW} text-gray-950 decoration-2 underline-offset-4 hover:underline`}>
+                <TrackedLink
+                  href={`/roasters/${slug}`}
+                  event="AdventRoasterClicked"
+                  eventProps={{ roaster: slug, from: 'whosInTheBox' }}
+                  className={`${ROW} text-gray-950 decoration-2 underline-offset-4 hover:underline`}
+                >
                   {name}
-                </Link>
+                </TrackedLink>
               ) : (
                 <span className={`${ROW} text-gray-950`}>{name}</span>
               )}

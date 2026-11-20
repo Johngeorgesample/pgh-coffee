@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowUpRight, MapPin } from 'lucide-react'
 import { ReactNode } from 'react'
@@ -9,6 +8,7 @@ import DayHead from '@/app/components/advent/DayHead'
 import RoastMeter from '@/app/components/advent/RoastMeter'
 import MarkVisited from '@/app/components/advent/MarkVisited'
 import TastingJournal from '@/app/components/advent/TastingJournal'
+import TrackedLink from '@/app/components/advent/TrackedLink'
 import { AdventDay, findAdventDay } from '@/data/advent'
 import { Order, findOrder, jarHref, jarOgHref, stepOf } from '@/data/advent-orders'
 import { parseDayParam, splitMarked } from '@/app/utils/advent'
@@ -106,10 +106,15 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
   <Section title="About the roaster">
     {roaster.description && <p className={`mb-5 ${prose}`}>{roaster.description}</p>}
     <div className="flex flex-wrap gap-3">
-      <Link href={`/roasters/${entry.roasterSlug}`} className={inkButton}>
+      <TrackedLink
+        href={`/roasters/${entry.roasterSlug}`}
+        event="AdventRoasterClicked"
+        eventProps={{ roaster: entry.roasterSlug!, from: 'dayPage' }}
+        className={inkButton}
+      >
         <MapPin className="size-4" strokeWidth={2.5} />
         Where to find this coffee
-      </Link>
+      </TrackedLink>
       {roaster.website && (
         <a href={roaster.website} target="_blank" rel="noopener noreferrer" className={inkButton}>
           <ArrowUpRight className="size-4" strokeWidth={2.5} />
@@ -149,14 +154,14 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
 
 const Reading = ({ entry, order, step, roaster }: { entry: AdventDay; order: Order; step: number; roaster: TRoaster }) => (
   <div className="flex flex-col gap-14 lg:pt-6">
-    <MarkVisited jar={entry.day} />
+    <MarkVisited jar={entry.day} order={order.id} step={step} />
     {entry.blurb && (
       <Section title="In the cup">
         <Blurb text={entry.blurb} />
       </Section>
     )}
     <Section title="Watch the roaster brew it">
-      <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} />
+      <BrewVideo videoId={entry.videoId} roasterName={entry.roasterName} jar={entry.day} />
     </Section>
     <Section title="My tasting journal">
       <TastingJournal day={entry.day} step={step} notes={entry.notes} returnTo={jarHref(order, entry.day)} />

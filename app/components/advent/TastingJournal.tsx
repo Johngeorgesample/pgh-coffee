@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Check, Star } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 import { storageGet, storageSet } from '@/app/utils/storage'
+import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
@@ -130,6 +131,15 @@ const LoggedStamp = ({ step, justSaved }: { step: number; justSaved: boolean }) 
   </span>
 )
 
+const cupProps = (day: number, entry: Entry, via: string) => ({
+  jar: day,
+  via,
+  rating: entry.rating,
+  method: entry.method || 'none',
+  tasted: entry.tasted.length,
+  wroteNotes: entry.body.trim() !== '',
+})
+
 const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
 
 export default function TastingJournal({ day, step, notes, returnTo }: { day: number; step: number; notes: string[]; returnTo: string }) {
@@ -138,6 +148,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [justSaved, setJustSaved] = useState(false)
   const [justTicked, setJustTicked] = useState<string | null>(null)
   const [asking, setAsking] = useState(false)
+  const track = useAnalytics()
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
@@ -159,13 +170,25 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
     write({ logged: true, pending: false })
   }
 
+  const saveFromButton = () => {
+    if (!entry.logged) track('AdventCupSaved', { props: cupProps(day, entry, 'button') })
+    save()
+  }
+
   const askToSave = () => {
+    track('AdventSavePrompted', { props: { jar: day } })
     write({ pending: true })
     setAsking(true)
   }
 
+  const savePending = () => {
+    track('AdventSaveAuthCompleted', { props: { jar: day } })
+    track('AdventCupSaved', { props: cupProps(day, entry, 'auth') })
+    save()
+  }
+
   useEffect(() => {
-    if (user && entry.pending) save()
+    if (user && entry.pending) savePending()
   })
 
   const toggleTasted = (note: string) => {
@@ -223,7 +246,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
       <div className="border-t-4 border-gray-950 p-4">
         {user ? (
-          <button type="button" onClick={save} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
+          <button type="button" onClick={saveFromButton} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
             {entry.logged && <Check className={`size-4 ${justSaved ? 'animate-stamp motion-reduce:animate-none' : ''}`} strokeWidth={3} />}
             {entry.logged ? 'Saved' : 'Save tasting note'}
           </button>
@@ -235,10 +258,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
         <SaveCupDialog
           open={asking}
           onClose={() => setAsking(false)}
-          onSaved={() => {
-            setAsking(false)
-            save()
-          }}
+          onSaved={() => setAsking(false)}
           day={day}
           returnTo={returnTo}
         />

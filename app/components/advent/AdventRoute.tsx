@@ -11,13 +11,11 @@ import SealedJars from '@/app/components/advent/SealedJars'
 import TodayCard from '@/app/components/advent/TodayCard'
 import SectionHead from '@/app/components/advent/SectionHead'
 import WhosInTheBox from '@/app/components/advent/WhosInTheBox'
-import { daysOpen, daysUntilOpening, devDayDate } from '@/app/utils/advent'
+import { currentDate, daysOpen, daysUntilOpening } from '@/app/utils/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { ORDERS, Order, findOrder, jarHref, jarsInOrder } from '@/data/advent-orders'
 
 const DEV_TOOLS = process.env.NETLIFY_CONTEXT !== 'production'
-
-const currentDate = () => (DEV_TOOLS && devDayDate(window.location.search)) || new Date()
 
 const ORDER_KEY = 'advent:order'
 const STARTED_KEY = 'advent:started'
@@ -95,6 +93,7 @@ export default function AdventRoute() {
             {jars.some(jar => jar.sealed) && (
               <SealedJars
                 jars={jars}
+                open={open}
                 locked={!order || open === 0}
                 onReveal={day => order && router.push(jarHref(order, day))}
               />

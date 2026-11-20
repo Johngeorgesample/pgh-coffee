@@ -26,6 +26,11 @@ export const devDayDate = (search: string) => {
   return day ? new Date(`${ADVENT_YEAR}-12-${String(day).padStart(2, '0')}T12:00:00-05:00`) : null
 }
 
+export const currentDate = () =>
+  (process.env.NETLIFY_CONTEXT !== 'production' && devDayDate(window.location.search)) || new Date()
+
+export const openTiming = (step: number, open: number) => (step === open ? 'today' : step < open ? 'catchup' : 'early')
+
 const AGTRON_DARK = 40
 const AGTRON_LIGHT = 100
 

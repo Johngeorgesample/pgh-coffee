@@ -6,6 +6,9 @@ global.fetch = vi.fn().mockResolvedValue({ ok: true })
 
 const auth = vi.hoisted(() => ({ user: null as { id: string } | null }))
 
+const plausible = vi.hoisted(() => vi.fn())
+vi.mock('next-plausible', () => ({ usePlausible: () => plausible }))
+
 vi.mock('@/app/components/AuthProvider', () => ({ useAuth: () => ({ user: auth.user }) }))
 
 vi.mock('@/lib/supabase/client', () => ({
@@ -20,6 +23,7 @@ describe('TastingJournal', () => {
   beforeEach(() => {
     localStorage.clear()
     auth.user = null
+    plausible.mockClear()
   })
 
   // Signed-out visitors are sent to sign-up mid-entry, so the draft has to
@@ -58,10 +62,12 @@ describe('TastingJournal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
     fireEvent.change(await screen.findByLabelText('Email'), { target: { value: 'a@b.co' } })
     fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'hunter22' } })
+    auth.user = { id: 'u1' }
     fireEvent.click(screen.getByRole('button', { name: 'Sign up' }))
 
     await waitFor(() => expect(screen.getByText('Logged · Day 01')).toBeInTheDocument())
     expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true })
+    expect(plausible.mock.calls.filter(([event]) => event === 'AdventSaveAuthCompleted')).toHaveLength(1)
   })
 
   it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', () => {
@@ -76,4 +82,5 @@ describe('TastingJournal', () => {
     expect(screen.getByText('Logged · Day 01')).toBeInTheDocument()
     expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true, pending: false })
   })
+
 })

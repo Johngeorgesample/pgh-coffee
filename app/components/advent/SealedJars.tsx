@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import SectionHead from '@/app/components/advent/SectionHead'
+import { useAnalytics } from '@/hooks'
 
 type Align = 'left' | 'center' | 'right'
 type Stage = 'closed' | 'ask' | 'warn' | 'leaving'
@@ -106,10 +107,14 @@ export const LockedLid = ({ jar, className = '', children }: { jar: number; clas
   </span>
 )
 
-const SleepingLid = ({ step, jar }: { step: number; jar: number }) => {
+const SleepingLid = ({ step, jar, onTap }: { step: number; jar: number; onTap: () => void }) => {
   const [taps, setTaps] = useState(0)
+  const tap = () => {
+    onTap()
+    setTaps(n => n + 1)
+  }
   return (
-    <button onClick={() => setTaps(n => n + 1)} aria-label={`Jar ${step}, sealed`} className="block w-full">
+    <button onClick={tap} aria-label={`Jar ${step}, sealed`} className="block w-full">
       <LockedLid key={taps} jar={jar} className={taps ? 'animate-buzz motion-reduce:animate-none' : ''} />
       <span aria-live="polite" className="sr-only">
         {taps ? `Opens Dec ${step}` : ''}
@@ -120,11 +125,24 @@ const SleepingLid = ({ step, jar }: { step: number; jar: number }) => {
 
 const EmptySlot = () => <span className="block aspect-square w-full rounded-full border-2 border-dashed border-gray-950/30" />
 
-type TLidProps = { step: number; jar: number; armed: boolean; onToggle: () => void; onClose: () => void; onReveal: () => void }
+type TLidProps = {
+  step: number
+  jar: number
+  armed: boolean
+  onToggle: () => void
+  onClose: () => void
+  onReveal: () => void
+  onWarned: (choice: 'accept' | 'cancel') => void
+}
 
-const Lid = ({ step, jar, armed, onToggle, onClose, onReveal }: TLidProps) => {
+const Lid = ({ step, jar, armed, onToggle, onClose, onReveal, onWarned }: TLidProps) => {
   const [align, setAlign] = useState<Align>('center')
   const { stage, warn, unscrew, cancel, reset } = useStage(armed, onReveal, onClose)
+  const decide = (choice: 'accept' | 'cancel') => {
+    onWarned(choice)
+    if (choice === 'accept') unscrew()
+    else cancel()
+  }
   return (
     <div className="relative">
       <button
@@ -142,7 +160,7 @@ const Lid = ({ step, jar, armed, onToggle, onClose, onReveal }: TLidProps) => {
       </button>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
-          {stage === 'ask' ? <Ask step={step} onCancel={cancel} onNext={warn} /> : <Warn onCancel={cancel} onAccept={unscrew} />}
+          {stage === 'ask' ? <Ask step={step} onCancel={cancel} onNext={warn} /> : <Warn onCancel={() => decide('cancel')} onAccept={() => decide('accept')} />}
         </Popover>
       )}
     </div>
@@ -165,13 +183,19 @@ const useDismiss = (active: boolean, close: () => void) => {
   return ref
 }
 
-type TSealedJarsProps = { jars: Jar[]; locked: boolean; onReveal: (day: number) => void }
+type TSealedJarsProps = { jars: Jar[]; open: number; locked: boolean; onReveal: (day: number) => void }
 
-export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps) {
+export default function SealedJars({ jars, open: daysOpen, locked, onReveal }: TSealedJarsProps) {
   const [armed, setArmed] = useState<number | null>(null)
+  const track = useAnalytics()
   const close = () => setArmed(null)
   const ref = useDismiss(armed !== null, close)
-  const toggle = (step: number) => setArmed(current => (current === step ? null : step))
+  const tapped = (step: number) => track('AdventSealedJarTapped', { props: { step, daysEarly: step - daysOpen, locked } })
+  const warned = (step: number, choice: string) => track('AdventSpoilerWarning', { props: { step, daysEarly: step - daysOpen, choice } })
+  const toggle = (step: number) => {
+    if (armed !== step) tapped(step)
+    setArmed(armed === step ? null : step)
+  }
   const open = (jar: Jar) => {
     onReveal(jar.day)
     close()
@@ -186,9 +210,17 @@ export default function SealedJars({ jars, locked, onReveal }: TSealedJarsProps)
             {!jar.sealed ? (
               <EmptySlot />
             ) : locked ? (
-              <SleepingLid step={jar.step} jar={jar.day} />
+              <SleepingLid step={jar.step} jar={jar.day} onTap={() => tapped(jar.step)} />
             ) : (
-              <Lid step={jar.step} jar={jar.day} armed={armed === jar.step} onToggle={() => toggle(jar.step)} onClose={close} onReveal={() => open(jar)} />
+              <Lid
+                step={jar.step}
+                jar={jar.day}
+                armed={armed === jar.step}
+                onToggle={() => toggle(jar.step)}
+                onClose={close}
+                onReveal={() => open(jar)}
+                onWarned={choice => warned(jar.step, choice)}
+              />
             )}
           </li>
         ))}

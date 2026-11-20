@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import top from '@/public/advent/top.webp'
+import TrackedLink from '@/app/components/advent/TrackedLink'
 import { AdventDay } from '@/data/advent'
 
 const specs = (entry: AdventDay) =>
@@ -47,9 +47,14 @@ export default function TodayCard({ entry, step, href }: { entry: AdventDay; ste
             <div className="flex flex-col justify-center pt-10 md:pr-6">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-900">{entry.roasterName}</p>
               <h3 className="mt-1 font-serif text-3xl leading-tight tracking-tight text-gray-950 text-balance md:text-4xl">
-                <Link href={href} className="after:absolute after:inset-0 after:z-10">
+                <TrackedLink
+                  href={href}
+                  event="AdventTodayCardClicked"
+                  eventProps={{ step, jar: entry.day }}
+                  className="after:absolute after:inset-0 after:z-10"
+                >
                   {entry.coffee}
-                </Link>
+                </TrackedLink>
               </h3>
             </div>
             <Specs entry={entry} />

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRef, useState } from 'react'
 import top from '@/public/advent/top.webp'
 import SectionHead from '@/app/components/advent/SectionHead'
+import { useAnalytics } from '@/hooks'
 import { ORDERS, Order } from '@/data/advent-orders'
 
 const PRESS = 'transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none'
@@ -78,6 +79,11 @@ type TChooseOrderProps = { step: number; onChoose: (order: Order) => void }
 export default function ChooseOrder({ step, onChoose }: TChooseOrderProps) {
   const dialog = useRef<HTMLDialogElement>(null)
   const [pick, setPick] = useState(ORDERS[0])
+  const track = useAnalytics()
+  const confirm = () => {
+    track('AdventOrderChosen', { props: { order: pick.id, step } })
+    onChoose(pick)
+  }
   return (
     <section className="mt-10 animate-rise motion-reduce:animate-none">
       <SectionHead title="Today's coffee" />
@@ -86,10 +92,11 @@ export default function ChooseOrder({ step, onChoose }: TChooseOrderProps) {
       </div>
       <dialog
         ref={dialog}
+        onClose={() => track('AdventOrderBackedOut', { props: { pick: pick.id, step } })}
         aria-label="Choose your order"
         className="m-auto rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712] backdrop:bg-gray-950/40 open:animate-arm motion-reduce:open:animate-none"
       >
-        <Ask late={step > 1} pick={pick} setPick={setPick} onCancel={() => dialog.current?.close()} onConfirm={() => onChoose(pick)} />
+        <Ask late={step > 1} pick={pick} setPick={setPick} onCancel={() => dialog.current?.close()} onConfirm={confirm} />
       </dialog>
     </section>
   )
