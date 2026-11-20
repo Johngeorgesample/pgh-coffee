@@ -164,6 +164,7 @@ describe('AuthForm', () => {
         expect(mockSignUp).toHaveBeenCalledWith({
           email: 'newuser@example.com',
           password: 'newpassword123',
+          options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=%2F` },
         })
       })
     })

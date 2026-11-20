@@ -1,14 +1,23 @@
 /**
- * Constrains the OAuth callback's `next` parameter to a path on our own origin.
+ * Constrains a sign-in `next` parameter to a path on our own origin.
  *
- * The callback builds its redirect as `${origin}${next}`, and `origin` carries no
- * trailing slash — so an unchecked `next` escapes the host entirely: `@evil.com`
- * parses as userinfo plus host `evil.com`, and `.evil.com` yields
- * `pgh.coffee.evil.com`. Since the OAuth `redirect_to` is chosen by whoever
- * builds the sign-in link, that turns a genuine Google sign-in into a redirect
- * to an attacker's page. Only a single-slash-rooted path is safe to append.
+ * It is used both appended to `origin` (OAuth callback) and handed bare to
+ * `router.push` (password sign-in). A string check alone misses what URL
+ * parsing does: `\` reads as `/`, tabs and newlines are stripped, and `.`
+ * segments collapse — so `/\evil.com`, `/\t/evil.com` and `/.//evil.com` all
+ * become `//evil.com`. Parse it the way the browser will, then require the
+ * result to be a single-slash-rooted path on the same origin.
  */
-export function safeNextPath(next: string | null): string {
-  if (!next?.startsWith('/') || next.startsWith('//')) return '/'
-  return next
+const BASE = 'http://n'
+
+export function safeNextPath(next: string | null) {
+  if (!next?.startsWith('/')) return '/'
+  let url: URL
+  try {
+    url = new URL(next, BASE)
+  } catch {
+    return '/'
+  }
+  const path = url.pathname + url.search + url.hash
+  return url.origin === BASE && !path.startsWith('//') ? path : '/'
 }

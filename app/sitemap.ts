@@ -12,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/submit-a-shop` },
     { url: `${SITE_URL}/stickers` },
     { url: `${SITE_URL}/neighborhoods` },
+    { url: `${SITE_URL}/advent` },
   ]
 
   const areaPages: MetadataRoute.Sitemap = areas.map(({ area }) => ({
