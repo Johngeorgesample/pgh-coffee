@@ -42,24 +42,21 @@ function encodeSample(value: number, timestampMs: number): Buffer {
   return Buffer.concat([doubleField(1, value), varint((2 << 3) | 0), varint(timestampMs)])
 }
 
-function encodeWriteRequest(metricName: string, value: number, extraLabels: Record<string, string>): Buffer {
-  const labels = { __name__: metricName, app: 'pgh-coffee', env: ENV, ...extraLabels }
+type Series = { name: string; labels: Record<string, string>; samples: [value: number, timestampMs: number][] }
+
+function encodeTimeSeries({ name, labels: extraLabels, samples }: Series): Buffer {
+  const labels = { __name__: name, app: 'pgh-coffee', env: ENV, ...extraLabels }
 
   const labelBuffers = Object.entries(labels)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => embeddedField(1, encodeLabel(k, v)))
 
-  const sample = embeddedField(2, encodeSample(value, Date.now()))
-  const timeSeries = embeddedField(1, Buffer.concat([...labelBuffers, sample]))
-
-  return timeSeries
+  const sampleBuffers = samples.map(([value, timestampMs]) => embeddedField(2, encodeSample(value, timestampMs)))
+  return embeddedField(1, Buffer.concat([...labelBuffers, ...sampleBuffers]))
 }
 
-function push(metricName: string, value: number, labels: Record<string, string> = {}) {
+function send(series: Series[]) {
   if (!MIMIR_URL || !MIMIR_USER || !MIMIR_PASSWORD) return
-
-  const writeRequest = encodeWriteRequest(metricName, value, labels)
-  const compressed = compress(writeRequest)
 
   fetch(`${MIMIR_URL}/api/prom/push`, {
     method: 'POST',
@@ -68,7 +65,7 @@ function push(metricName: string, value: number, labels: Record<string, string> 
       'X-Prometheus-Remote-Write-Version': '0.1.0',
       Authorization: `Basic ${Buffer.from(`${MIMIR_USER}:${MIMIR_PASSWORD}`).toString('base64')}`,
     },
-    body: compressed,
+    body: compress(Buffer.concat(series.map(encodeTimeSeries))),
   }).catch(() => {})
 }
 
@@ -77,18 +74,36 @@ function push(metricName: string, value: number, labels: Record<string, string> 
 const INSTANCE = Math.random().toString(36).slice(2, 10)
 const counterTotals: Record<string, number> = {}
 
+const counterKey = (metricName: string, labels: Record<string, string>) =>
+  `${metricName}|${JSON.stringify(Object.entries(labels).sort())}`
+
 export const nextCounterTotal = (metricName: string, labels: Record<string, string>, by: number) => {
-  const key = `${metricName}|${JSON.stringify(Object.entries(labels).sort())}`
+  const key = counterKey(metricName, labels)
   counterTotals[key] = (counterTotals[key] ?? 0) + by
   return counterTotals[key]
 }
 
+const counterSeries = (name: string, labels: Record<string, string>, by: number, now: number): Series => {
+  const isNew = !(counterKey(name, labels) in counterTotals)
+  const total: [number, number] = [nextCounterTotal(name, labels, by), now]
+  return { name, labels: { ...labels, instance: INSTANCE }, samples: isNew ? [[0, now - 1], total] : [total] }
+}
+
+const DURATION_BUCKETS = [0.1, 0.25, 0.5, 1, 1.5, 2.5, 5, 10, Infinity]
+
+export const histogramSeries = (name: string, labels: Record<string, string>, value: number, now = Date.now()) => [
+  ...DURATION_BUCKETS.map((le) =>
+    counterSeries(`${name}_bucket`, { ...labels, le: le === Infinity ? '+Inf' : String(le) }, value <= le ? 1 : 0, now)),
+  counterSeries(`${name}_count`, labels, 1, now),
+  counterSeries(`${name}_sum`, labels, value, now),
+]
+
 function increment(metricName: string, labels: Record<string, string> = {}, by = 1) {
-  push(metricName, nextCounterTotal(metricName, labels, by), { ...labels, instance: INSTANCE })
+  send([counterSeries(metricName, labels, by, Date.now())])
 }
 
 function gauge(metricName: string, value: number, labels: Record<string, string> = {}) {
-  push(metricName, value, labels)
+  send([{ name: metricName, labels, samples: [[value, Date.now()]] }])
 }
 
 export const metrics = {
@@ -108,7 +123,7 @@ export const metrics = {
   apiError:                   (route: string) => increment('api_error_total', { route }),
   requestCompleted:           (route: string, statusCode: number, durationSeconds: number) => {
     increment('request_total', { route, status_code: String(statusCode) })
-    gauge('request_duration_seconds', durationSeconds, { route, instance: INSTANCE })
+    send(histogramSeries('http_request_duration_seconds', { route }, durationSeconds))
   },
   shopsPerNeighborhood:       (neighborhood: string, count: number) => gauge('shops_total', count, { neighborhood }),
   anthropicTokens:            (direction: 'input' | 'output', tokens: number) => {
