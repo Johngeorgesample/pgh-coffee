@@ -1,0 +1,373 @@
+[
+  {
+    "day": 1,
+    "roasterSlug": "dynamic-coffee-roasters",
+    "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "Fabio Caballero Jr. Catuai Super Natural",
+    "notes": [
+      "Stone fruit",
+      "Berries",
+      "Chocolate"
+    ],
+    "origin": "Honduras",
+    "producer": "Fabio Caballero Jr.",
+    "varietal": "Catuai",
+    "process": "Super natural",
+    "founded": 2022,
+    "agtron": 82.4
+  },
+  {
+    "day": 2,
+    "roasterSlug": "commonplace",
+    "roasterName": "Commonplace Coffee",
+    "coffee": "Ratnagiri Estate",
+    "notes": [
+      "Blueberry",
+      "Purple grape",
+      "Almond",
+      "Cantaloupe"
+    ],
+    "origin": "Chikmagalur, Karnataka, India",
+    "producer": "Ashok & Divya Patre",
+    "process": "Thermal shock natural",
+    "founded": 2003,
+    "agtron": 91.3,
+    "varietal": "Selection 9"
+  },
+  {
+    "day": 3,
+    "roasterSlug": "prestogeorge",
+    "roasterName": "Prestogeorge Coffee & Tea",
+    "coffee": "Three Rivers Blend",
+    "notes": [
+      "Roasted malt",
+      "Dark chocolate",
+      "Berry",
+      "Brown sugar"
+    ],
+    "origin": "Mexico, Ethiopia & Guatemala",
+    "blurb": "A three-roast blend named for Pittsburgh’s rivers: the Allegheny roasted light, the Ohio medium and the Monongahela medium-dark.",
+    "founded": 1958,
+    "agtron": 55.2
+  },
+  {
+    "day": 4,
+    "roasterSlug": "colombino-coffee",
+    "roasterName": "Colombino Coffee",
+    "coffee": "Duberney Cifuentes Geisha",
+    "notes": [
+      "Peach",
+      "Jasmine",
+      "Floral"
+    ],
+    "origin": "Huila, Colombia",
+    "producer": "Duberney Cifuentes",
+    "varietal": "Geisha",
+    "process": "Washed & natural",
+    "roast": "Light",
+    "founded": 2021,
+    "agtron": 79.6
+  },
+  {
+    "day": 5,
+    "roasterName": "Hilltop Coffee",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2020,
+    "agtron": 66.5
+  },
+  {
+    "day": 6,
+    "roasterSlug": "the-boredom-set",
+    "roasterName": "The Boredom Set",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2024,
+    "agtron": 91.7
+  },
+  {
+    "day": 7,
+    "roasterSlug": "macizo",
+    "roasterName": "Macizo",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2025
+  },
+  {
+    "day": 8,
+    "roasterSlug": "compass-point-coffee",
+    "roasterName": "Compass Point Coffee",
+    "coffee": "Haitian Premium – Cafe Kreyol – Zombie Desert",
+    "notes": [
+      "Chocolate",
+      "Malt",
+      "Burnt sugar"
+    ],
+    "origin": "Haiti",
+    "roast": "Full City+",
+    "founded": 2023,
+    "agtron": 62.9
+  },
+  {
+    "day": 9,
+    "roasterSlug": "burning-oaks-coffee-company",
+    "roasterName": "Burning Oaks Coffee Company",
+    "coffee": "Uganda Light Roast",
+    "notes": [
+      "Raspberry",
+      "Plum",
+      "Brown sugar",
+      "Clementine",
+      "Black tea"
+    ],
+    "producer": "Smallholders via Kyagalanyi Coffee",
+    "origin": "Rwenzori Mountains, Uganda",
+    "process": "Natural",
+    "roast": "Light",
+    "founded": 2024,
+    "agtron": 93.3
+  },
+  {
+    "day": 10,
+    "roasterSlug": "reginalds-coffee",
+    "roasterName": "Reginald's Coffee",
+    "coffee": "Schoolhouse Blend",
+    "notes": [
+      "Cocoa",
+      "Sweet",
+      "Balanced"
+    ],
+    "origin": "Colombia & Ethiopia",
+    "roast": "Medium",
+    "blurb": "Reginald’s signature blend: a Colombia base with Yirgacheffe, roasted to a well-rounded medium that works for drip or espresso.",
+    "founded": 2019,
+    "agtron": 73.9
+  },
+  {
+    "day": 11,
+    "roasterSlug": "de-fer-coffee-and-tea",
+    "roasterName": "De Fer Coffee & Tea",
+    "coffee": "Las Lajas",
+    "notes": [
+      "Strawberry",
+      "Raspberry",
+      "Red wine",
+      "Cane sugar"
+    ],
+    "origin": "Sabanilla, Costa Rica",
+    "producer": "Francisca & Oscar Chacón, Las Lajas Micromill",
+    "varietal": "Caturra, Catuai, Bourbon, Villa Sarchi, Villalobos, Sarchimor, Venecia & Costa Rica 95",
+    "process": "Alma Negra natural",
+    "roast": "Light",
+    "founded": 2017,
+    "agtron": 80.7
+  },
+  {
+    "day": 12,
+    "roasterSlug": "allegheny-coffee-and-tea-exchange",
+    "roasterName": "Allegheny Coffee & Tea Exchange",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 1968
+  },
+  {
+    "day": 13,
+    "roasterSlug": "its-still-coffee",
+    "roasterName": "It's Still Coffee",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2025,
+    "agtron": 94.2
+  },
+  {
+    "day": 14,
+    "roasterSlug": "the-coffee-tree-roasters",
+    "roasterName": "The Coffee Tree Roasters",
+    "coffee": "Zambia",
+    "notes": [
+      "Grape",
+      "Blood orange",
+      "Tobacco"
+    ],
+    "origin": "Zambia",
+    "process": "Anaerobic natural",
+    "founded": 1993,
+    "agtron": 80.4
+  },
+  {
+    "day": 15,
+    "roasterSlug": "redstart-roasters",
+    "roasterName": "Redstart Roasters",
+    "coffee": "Ethiopia Birbir Sololiya",
+    "notes": [
+      "Raspberry",
+      "Chocolate",
+      "Orange",
+      "Floral"
+    ],
+    "origin": "Ethiopia",
+    "producer": "Asikana Cooperative",
+    "varietal": "Heirloom",
+    "process": "Natural",
+    "founded": 2017,
+    "agtron": 59.5
+  },
+  {
+    "day": 16,
+    "roasterSlug": "convive",
+    "roasterName": "Convive",
+    "coffee": "Colombia Pink Bourbon",
+    "notes": [
+      "Fig",
+      "Maple",
+      "Tangerine"
+    ],
+    "origin": "Colombia",
+    "producer": "Finca San Agustin",
+    "varietal": "Pink Bourbon",
+    "process": "Washed",
+    "roast": "Light",
+    "founded": 2012,
+    "agtron": 71.8
+  },
+  {
+    "day": 17,
+    "roasterSlug": "redhawk-coffee-roasters",
+    "roasterName": "Redhawk Coffee Roasters",
+    "coffee": "Colombia Cauca",
+    "notes": [
+      "Vanilla pound cake",
+      "Candied orange peel",
+      "Caramel"
+    ],
+    "founded": 2016,
+    "agtron": 85.9,
+    "origin": "Cauca, Colombia",
+    "producer": "Namuña Cafe Agrario",
+    "process": "Washed"
+  },
+  {
+    "day": 18,
+    "roasterSlug": "aspen-coffee-co",
+    "roasterName": "Aspen Coffee Co.",
+    "coffee": "Kerehaklu Estate – Blossom Culture",
+    "notes": [
+      "Chocolate",
+      "Lavender",
+      "Lime",
+      "Sweet spice"
+    ],
+    "producer": "Pranoy Thipaiah",
+    "origin": "Chikmagalur, Karnataka, India",
+    "process": "Culture-inoculated washed",
+    "blurb": "At Kerehaklu Estate, producer Pranoy Thipaiah isolates and cultivates native microbial cultures from the farm’s environment. These cultures are introduced during a 36-hour submerged fermentation, guiding the process while preserving the estate’s character. The result is a coffee with layered sweetness, floral complexity, and bright acidity.",
+    "founded": 2026,
+    "agtron": 84.3
+  },
+  {
+    "day": 19,
+    "roasterSlug": "19-coffee",
+    "roasterName": "19 Coffee",
+    "coffee": "Ethiopia Gera",
+    "notes": [
+      "Strawberry",
+      "Pineapple",
+      "Peach",
+      "Blueberry"
+    ],
+    "origin": "Djimma, Ethiopia",
+    "producer": "Gera Estate",
+    "process": "Natural",
+    "roast": "Light-medium",
+    "founded": 2011,
+    "agtron": 95.5,
+    "varietal": "Heirloom"
+  },
+  {
+    "day": 20,
+    "roasterSlug": "standing-wave-coffee",
+    "roasterName": "Standing Wave Coffee",
+    "coffee": "Double Hydraulic",
+    "notes": [
+      "Vanilla",
+      "Baked nuts",
+      "Cinnamon",
+      "Chocolate",
+      "Citrus",
+      "Cocoa"
+    ],
+    "origin": "Brazil & Colombia",
+    "roast": "Medium-dark",
+    "blurb": "Standing Wave’s house espresso is named after Double Hydraulic, a classic Class III rapid on the Youghiogheny River. It’s a traditional blend of 70% Brazil, a pulped natural Red Catuai from Marachador grown at 1,200 MASL, with notes of vanilla, baked nuts and cinnamon, and 30% Colombia, a washed Typica and Caturra from Huila grown at 1,800 MASL, with notes of chocolate, citrus, baked fruit and cocoa.",
+    "varietal": "Red Catuai, Typica & Caturra",
+    "process": "Pulped natural & washed",
+    "founded": 2020,
+    "agtron": 72.9
+  },
+  {
+    "day": 21,
+    "roasterSlug": "la-prima-espresso",
+    "roasterName": "La Prima Espresso",
+    "coffee": "Buon Natale",
+    "notes": [
+      "Brownie",
+      "Cinnamon",
+      "Orange"
+    ],
+    "roast": "Medium",
+    "founded": 1988,
+    "agtron": 60.4,
+    "origin": "Peru & Colombia"
+  },
+  {
+    "day": 22,
+    "roasterSlug": "rockin-cat",
+    "roasterName": "Rockin' Cat",
+    "coffee": "Colombia Sierra Nevada",
+    "notes": [
+      "Cherry",
+      "Dark chocolate",
+      "Orange"
+    ],
+    "origin": "Sierra Nevada, Colombia",
+    "producer": "Sol Naciente",
+    "varietal": "Caturra & Colombia",
+    "process": "Washed",
+    "founded": 2019,
+    "agtron": 72.6
+  },
+  {
+    "day": 23,
+    "roasterSlug": "dynamic-coffee-roasters",
+    "roasterName": "Dynamic Coffee Roasters",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2022,
+    "agtron": 80.8
+  },
+  {
+    "day": 24,
+    "roasterSlug": "de-fer-coffee-and-tea",
+    "roasterName": "De Fer Coffee & Tea",
+    "coffee": "Light Up Night",
+    "notes": [
+      "Red wine",
+      "Strawberry jam",
+      "Dark chocolate"
+    ],
+    "origin": "Costa Rica & Guatemala",
+    "process": "Washed & natural",
+    "blurb": "A blend of Las Lajas, light and berry-sweet, with Quetzal, a medium Guatemalan with toffee and dark chocolate.",
+    "founded": 2017,
+    "agtron": 73.6
+  },
+  {
+    "day": 25,
+    "roasterSlug": "ghost-coffee-collab",
+    "roasterName": "Ghost Coffee Collab",
+    "coffee": "To be announced",
+    "notes": [],
+    "founded": 2022,
+    "agtron": 85.5
+  }
+]

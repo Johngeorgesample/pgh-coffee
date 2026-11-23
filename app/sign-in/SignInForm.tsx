@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AuthForm from '@/app/components/AuthForm'
+import { safeNextPath } from '@/app/auth/callback/safeNextPath'
 
 export default function SignInForm() {
   const router = useRouter()
@@ -16,8 +17,10 @@ export default function SignInForm() {
     }
   }, [searchParams])
 
+  const next = safeNextPath(searchParams.get('next'))
+
   const handleSuccess = () => {
-    router.push('/')
+    router.push(next)
     router.refresh()
   }
 
@@ -28,7 +31,7 @@ export default function SignInForm() {
           {urlError}
         </div>
       )}
-      <AuthForm onSuccess={handleSuccess} />
+      <AuthForm onSuccess={handleSuccess} next={next} initialMode={searchParams.get('mode') === 'signup' ? 'signup' : 'signin'} />
     </div>
   )
 }

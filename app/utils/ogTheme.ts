@@ -14,8 +14,8 @@ export const OG_CONTENT_TYPE = 'image/png'
 // in next.config.js, per dynamic OG route that renders it — tracing doesn't
 // follow readFileSync(process.cwd(), …) into the bundle, and the miss only
 // shows up as a 500 in production.
-const readPublicImageAsDataUri = (filename: string) =>
-  `data:image/png;base64,${readFileSync(join(process.cwd(), 'public', filename)).toString('base64')}`
+export const readPublicImageAsDataUri = (filename: string) =>
+  `data:image/${filename.endsWith('.jpg') ? 'jpeg' : 'png'};base64,${readFileSync(join(process.cwd(), 'public', filename)).toString('base64')}`
 
 // Not React's cache(): that's scoped per-request, which would re-read the
 // asset on every request instead of reusing a warm instance's first read.
