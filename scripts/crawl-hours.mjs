@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve as resolvePath } from "node:path";
-import { stripLeadingSqlComment } from "./lib/sql.mjs";
+import { deleteGuard, insertHours, metaUpsert, stripLeadingSqlComment } from "./lib/sql.mjs";
 
 // Repo root, derived from this script's location (scripts/ -> repo root).
 const ROOT = resolvePath(dirname(fileURLToPath(import.meta.url)), "..");
@@ -174,10 +174,6 @@ async function fetchShops() {
   return res.json();
 }
 
-function sqlStr(s) {
-  return `'${String(s).replace(/'/g, "''")}'`;
-}
-
 async function main() {
   const shops = await fetchShops();
   console.error(`Fetched ${shops.length} shops`);
@@ -275,25 +271,14 @@ function renderSql(results) {
       L.push(`-- ${tag}  (place_id ${r.placeId}, ${r.dist}m -> "${r.matchName}")`);
       L.push(deleteGuard(s.uuid));
       if (r.rows.length) {
-        const vals = r.rows
-          .map(
-            (row) =>
-              `  (${sqlStr(s.uuid)}, ${row.day}, ${sqlStr(row.opens)}, ${sqlStr(
-                row.closes
-              )}, ${row.spans})`
-          )
-          .join(",\n");
-        L.push(
-          "INSERT INTO shop_hours (shop_uuid, day_of_week, opens_at, closes_at, spans_midnight) VALUES"
-        );
-        L.push(vals + ";");
+        L.push(insertHours(s.uuid, r.rows));
       }
-      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist));
+      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist, true));
       L.push("");
     } else {
       // low_confidence / not_found / not_operational / error: meta only, no hours
       L.push(`-- ${tag}  [${r.status}]` + (r.dist != null ? ` (nearest ${r.dist}m -> "${r.matchName}")` : "") + (r.error ? ` err: ${r.error.slice(0, 120)}` : ""));
-      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist));
+      L.push(metaUpsert(s.uuid, r.status, r.placeId, r.dist, false));
       L.push("");
     }
   }
@@ -314,27 +299,6 @@ function renderSql(results) {
   }
   L.push("");
   return L.join("\n");
-}
-
-function deleteGuard(uuid) {
-  return (
-    `DELETE FROM shop_hours WHERE shop_uuid = ${sqlStr(uuid)}\n` +
-    `  AND NOT EXISTS (SELECT 1 FROM shop_hours_meta m\n` +
-    `    WHERE m.shop_uuid = ${sqlStr(uuid)} AND m.source <> 'google_places');`
-  );
-}
-
-function metaUpsert(uuid, status, placeId, dist) {
-  return (
-    `INSERT INTO shop_hours_meta (shop_uuid, source, status, google_place_id, match_distance_m, fetched_at)\n` +
-    `VALUES (${sqlStr(uuid)}, 'google_places', ${sqlStr(status)}, ${
-      placeId ? sqlStr(placeId) : "NULL"
-    }, ${dist != null ? dist : "NULL"}, now())\n` +
-    `ON CONFLICT (shop_uuid) DO UPDATE SET\n` +
-    `  status=EXCLUDED.status, google_place_id=EXCLUDED.google_place_id,\n` +
-    `  match_distance_m=EXCLUDED.match_distance_m, fetched_at=EXCLUDED.fetched_at\n` +
-    `WHERE shop_hours_meta.source='google_places';`
-  );
 }
 
 const VERIFICATION = `-- ============================================================================
