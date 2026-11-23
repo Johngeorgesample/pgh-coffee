@@ -46,6 +46,7 @@ next-env.d.ts
 # content under the Maps Platform terms; must not be committed (schema lives in
 # hours-schema.sql). Re-run the crawl to regenerate.
 migrations/hours-backfill.sql
+migrations/hours-backfill-compact.sql
 migrations/hours-backfill-results.json
 
 # Local Netlify folder

@@ -29,9 +29,14 @@ node scripts/crawl-hours.mjs
    - `migrations/hours-backfill.sql` — per-shop `DELETE`+`INSERT` blocks
      (idempotent), the schema (`CREATE TABLE IF NOT EXISTS`), verification
      queries, and a "NEEDS MANUAL REVIEW" list.
+   - `migrations/hours-backfill-compact.sql` — the same writes as **three**
+     statements instead of ~350, for applying through anything that can't
+     stream a file (the Supabase MCP, a SQL console). The `VALUES` lists can be
+     split at any comma to apply it in chunks. Review the file above, apply
+     this one.
    - `migrations/hours-backfill-results.json` — raw per-shop results.
 
-Both outputs are **gitignored**. Google Places hours are 30-day-max cached
+All three outputs are **gitignored**. Google Places hours are 30-day-max cached
 content under the Maps Platform terms and must not be committed; re-run this
 script to regenerate them. The committed schema lives in
 `migrations/hours-schema.sql`.
