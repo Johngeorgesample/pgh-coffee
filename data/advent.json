@@ -174,8 +174,17 @@
     "day": 13,
     "roasterSlug": "its-still-coffee",
     "roasterName": "It's Still Coffee",
-    "coffee": "To be announced",
-    "notes": [],
+    "coffee": "Cream Rose",
+    "notes": [
+      "Rose",
+      "Vanilla",
+      "Amaretto"
+    ],
+    "origin": "Armenia, Quindío, Colombia",
+    "producer": "Juan David Puerta",
+    "varietal": "Castillo",
+    "process": "Washed co-fermentation",
+    "blurb": "Juan David Puerta rests the cherries for 24 hours at Finca La Sirena, then ferments the coffee for 48 hours alongside a syrup of cherry, orange and vanilla before sun-drying it.",
     "founded": 2025,
     "agtron": 94.2
   },
