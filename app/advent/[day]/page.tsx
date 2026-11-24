@@ -72,27 +72,22 @@ const SpecList = ({ entry }: { entry: AdventDay }) => (
 
 const prose = 'max-w-2xl text-lg leading-relaxed text-gray-800 text-pretty'
 
-const Highlight = ({ text, order }: { text: string; order: number }) => (
+const Highlight = ({ text }: { text: string }) => (
   <mark className="relative isolate bg-transparent font-semibold whitespace-nowrap text-gray-950">
     <span
       data-reveal
       aria-hidden
-      className="absolute -inset-x-0.5 top-1 bottom-0.5 -z-10 origin-left -rotate-1 animate-sweep rounded-sm bg-yellow-300 motion-reduce:animate-none"
-      style={{ animationDelay: `${200 + order * 60}ms` }}
+      className="absolute -inset-x-0.5 top-1 bottom-0.5 -z-10 origin-left -rotate-1 animate-sweep rounded-sm [animation-delay:200ms] bg-yellow-300 motion-reduce:animate-none"
     />
     {text}
   </mark>
 )
 
-const Blurb = ({ text }: { text: string }) => {
-  const parts = splitMarked(text)
-  const order = (i: number) => parts.slice(0, i).filter(p => p.marked).length
-  return (
-    <p className={prose}>
-      {parts.map((part, i) => (part.marked ? <Highlight key={i} text={part.text} order={order(i)} /> : part.text))}
-    </p>
-  )
-}
+const Blurb = ({ text }: { text: string }) => (
+  <p className={prose}>
+    {splitMarked(text).map((part, i) => (part.marked ? <Highlight key={i} text={part.text} /> : part.text))}
+  </p>
+)
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => (
   <section>
