@@ -4,16 +4,18 @@ import { useState } from 'react'
 import LockedLid from './LockedLid'
 
 export default function SleepingLid({ step, jar, onTap }: { step: number; jar: number; onTap: () => void }) {
-  const [taps, setTaps] = useState(0)
+  const [tapped, setTapped] = useState(false)
+  const [buzzing, setBuzzing] = useState(false)
   const tap = () => {
     onTap()
-    setTaps(n => n + 1)
+    setTapped(true)
+    setBuzzing(true)
   }
   return (
-    <button onClick={tap} aria-label={`Jar ${step}, sealed`} className="block w-full">
-      <LockedLid key={taps} jar={jar} className={taps ? 'animate-buzz motion-reduce:animate-none' : ''} />
+    <button onClick={tap} onAnimationEnd={() => setBuzzing(false)} aria-label={`Jar ${step}, sealed`} className="block w-full">
+      <LockedLid jar={jar} className={buzzing ? 'animate-buzz motion-reduce:animate-none' : ''} />
       <span aria-live="polite" className="sr-only">
-        {taps ? `Opens Dec ${step}` : ''}
+        {tapped ? `Opens Dec ${step}` : ''}
       </span>
     </button>
   )
