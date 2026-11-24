@@ -82,7 +82,7 @@ export default function AdventRoute() {
             {countdown !== null && <BeforeOpening days={countdown} />}
             {!order && open > 0 && <ChooseOrder step={open} onChoose={next => choose(next, open)} />}
             {today && (
-              <section className="mt-10 animate-rise motion-reduce:animate-none">
+              <section data-reveal className="mt-10 animate-rise motion-reduce:animate-none">
                 <SectionHead title="Today's coffee" />
                 <div className="mt-8">
                   <TodayCard entry={today.entry} step={today.step} href={today.href} />

@@ -202,7 +202,7 @@ export default function SealedJars({ jars, open: daysOpen, locked, onReveal }: T
   }
 
   return (
-    <section className="mt-12 animate-rise motion-reduce:animate-none">
+    <section data-reveal className="mt-12 animate-rise motion-reduce:animate-none">
       <SectionHead title="Still sealed" count={jars.filter(jar => jar.sealed).length} />
       <ul ref={ref} className="mx-auto mt-6 grid max-w-xl grid-cols-5 gap-4">
         {jars.map(jar => (

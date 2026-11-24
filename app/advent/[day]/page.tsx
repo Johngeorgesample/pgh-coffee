@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 import { Footer } from '@/app/components/about'
 import BrewVideo from '@/app/components/advent/BrewVideo'
 import DayHead from '@/app/components/advent/DayHead'
+import Reveal from '@/app/components/advent/Reveal'
 import RoastMeter from '@/app/components/advent/RoastMeter'
 import MarkVisited from '@/app/components/advent/MarkVisited'
 import TastingJournal from '@/app/components/advent/TastingJournal'
@@ -74,6 +75,7 @@ const prose = 'max-w-2xl text-lg leading-relaxed text-gray-800 text-pretty'
 const Highlight = ({ text, order }: { text: string; order: number }) => (
   <mark className="relative isolate bg-transparent font-semibold whitespace-nowrap text-gray-950">
     <span
+      data-reveal
       aria-hidden
       className="absolute -inset-x-0.5 top-1 bottom-0.5 -z-10 origin-left -rotate-1 animate-sweep rounded-sm bg-yellow-300 motion-reduce:animate-none"
       style={{ animationDelay: `${200 + order * 60}ms` }}
@@ -132,7 +134,7 @@ const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: n
       <div className="relative border-b-4 border-gray-950">
         <Image src={top} alt="" sizes="340px" className="h-24 w-full object-cover object-left" />
         <span className="absolute bottom-0 left-5 flex translate-y-1/2 items-center gap-3">
-          <span className="block size-24 animate-stamp overflow-hidden rounded-full border-4 border-gray-950 shadow-[4px_4px_0_#030712] motion-reduce:animate-none">
+          <span data-reveal className="block size-24 animate-stamp overflow-hidden rounded-full border-4 border-gray-950 shadow-[4px_4px_0_#030712] motion-reduce:animate-none">
             <Image src={`/advent/labels/${entry.day}.webp`} alt={`Jar ${entry.day}`} width={240} height={240} sizes="96px" className="size-full" />
           </span>
           <span className="mt-12 -rotate-2 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712]">
@@ -183,6 +185,7 @@ export default async function AdventDayPage({ params, searchParams }: Props) {
         <Reading entry={entry} order={order} step={step} roaster={roaster} />
       </div>
       <Footer />
+      <Reveal />
     </div>
   )
 }

@@ -85,7 +85,7 @@ export default function ChooseOrder({ step, onChoose }: TChooseOrderProps) {
     onChoose(pick)
   }
   return (
-    <section className="mt-10 animate-rise motion-reduce:animate-none">
+    <section data-reveal className="mt-10 animate-rise motion-reduce:animate-none">
       <SectionHead title="Today's coffee" />
       <div className="mt-8">
         <SealedToday step={step} onOpen={() => dialog.current?.showModal()} />
