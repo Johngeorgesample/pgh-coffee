@@ -99,7 +99,8 @@
     "roasterName": "Macizo",
     "coffee": "To be announced",
     "notes": [],
-    "founded": 2025
+    "founded": 2025,
+    "agtron": 90.2
   },
   {
     "day": 8,
@@ -176,7 +177,8 @@
     "roasterName": "Allegheny Coffee & Tea Exchange",
     "coffee": "To be announced",
     "notes": [],
-    "founded": 1968
+    "founded": 1968,
+    "agtron": 80.3
   },
   {
     "day": 13,
