@@ -1,0 +1,1147 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "pgh-coffee-advent-calendar",
+    "annotations": {
+      "grafana.app/folder": "pgh-coffee"
+    }
+  },
+  "spec": {
+    "title": "Advent calendar engagement",
+    "tags": [
+      "pgh-coffee",
+      "advent"
+    ],
+    "timezone": "America/New_York",
+    "schemaVersion": 39,
+    "time": {
+      "from": "2026-11-28T00:00:00.000Z",
+      "to": "2026-12-31T23:59:59.000Z"
+    },
+    "templating": {
+      "list": [
+        {
+          "type": "custom",
+          "name": "host",
+          "label": "Site",
+          "query": "pgh.coffee,localhost:3000",
+          "current": {
+            "text": "pgh.coffee",
+            "value": "pgh.coffee"
+          },
+          "options": [
+            {
+              "text": "pgh.coffee",
+              "value": "pgh.coffee",
+              "selected": true
+            },
+            {
+              "text": "localhost:3000",
+              "value": "localhost:3000",
+              "selected": false
+            }
+          ]
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Engagement through the month",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 2,
+        "type": "stat",
+        "title": "Calendar visitors",
+        "description": "Distinct browser sessions that loaded any /advent page in the time range.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "count(sum by (session_id) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} | logfmt | page_id=~\"/advent.*\" | page_url=~\"https?://$host.*\" [$__range])))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Jars opened",
+        "description": "First visits to a jar's page. Revisits aren't counted.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 6,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventJarOpened\" | logfmt | event_name=\"AdventJarOpened\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 4,
+        "type": "stat",
+        "title": "Cups logged",
+        "description": "Tasting notes saved to an account.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 12,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventCupSaved\" | logfmt | event_name=\"AdventCupSaved\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 5,
+        "type": "stat",
+        "title": "Accounts from the save prompt",
+        "description": "Visitors who were asked to sign in to save a cup and came back signed in.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 18,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSaveAuthCompleted\" | logfmt | event_name=\"AdventSaveAuthCompleted\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 6,
+        "type": "timeseries",
+        "title": "Calendar visitors per day",
+        "description": "Distinct sessions that loaded an /advent page each day. Your shape check: strong start, a mid-month dip, and how far it recovers by the 25th. Days are UTC, so a bar starts at 7pm Pittsburgh time.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "count(sum by (session_id) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} | logfmt | page_id=~\"/advent.*\" | page_url=~\"https?://$host.*\" [1d])))",
+            "legendFormat": "visitors",
+            "queryType": "range"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "none"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": "timeseries",
+        "title": "Jars opened per day, by timing",
+        "description": "today = opened on its day, catchup = an earlier jar opened late, early = opened before its day. Lots of catch-up late in the month means people are coming back after a gap.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 13,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum by (event_data_timing) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventJarOpened\" | logfmt | event_name=\"AdventJarOpened\" | page_url=~\"https?://$host.*\" [1d]))",
+            "legendFormat": "{{event_data_timing}}",
+            "queryType": "range"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "normal"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "type": "timeseries",
+        "title": "Cups logged per day",
+        "description": "Tasting notes saved each day: the deepest form of engagement on the page.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 12,
+          "y": 13,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventCupSaved\" | logfmt | event_name=\"AdventCupSaved\" | page_url=~\"https?://$host.*\" [1d])) or vector(0)",
+            "legendFormat": "cups",
+            "queryType": "range"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "none"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": "row",
+        "title": "Which brands drive engagement",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 21,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 10,
+        "type": "table",
+        "title": "Engagement by jar",
+        "description": "One row per jar, labelled with its roaster. Opens follow where a jar falls in the month as much as the brand, so compare brands on save rate and rating, which don't depend on how many people were around that day. Jars sit on different days in the North-to-south and Oldest-first orders, which also helps separate brand from date.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 22,
+          "w": 16,
+          "h": 27
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum by (event_data_jar) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventJarOpened\" | logfmt | event_name=\"AdventJarOpened\" | page_url=~\"https?://$host.*\" [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "B",
+            "expr": "sum by (event_data_jar) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventCupSaved\" | logfmt | event_name=\"AdventCupSaved\" | page_url=~\"https?://$host.*\" [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "C",
+            "expr": "avg by (event_data_jar) (avg_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventCupSaved\" | logfmt | event_name=\"AdventCupSaved\" | page_url=~\"https?://$host.*\" | event_data_rating > 0 | unwrap event_data_rating [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "D",
+            "expr": "sum by (event_data_jar) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventBrewVideoPlayed\" | logfmt | event_name=\"AdventBrewVideoPlayed\" | page_url=~\"https?://$host.*\" [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true
+              },
+              "renameByName": {
+                "event_data_jar": "Jar",
+                "Value #A": "Opened",
+                "Value #B": "Cups logged",
+                "Value #C": "Avg rating",
+                "Value #D": "Video plays"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "mode": "binary",
+              "alias": "Save rate",
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Cups logged"
+                  }
+                },
+                "operator": "/",
+                "right": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Opened"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "sort": [
+                {
+                  "field": "Opened",
+                  "desc": true
+                }
+              ]
+            }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "noValue": "\u2013",
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Jar"
+              },
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "1": {
+                          "text": "01 \u00b7 Dynamic Coffee Roasters",
+                          "index": 1
+                        },
+                        "2": {
+                          "text": "02 \u00b7 Commonplace Coffee",
+                          "index": 2
+                        },
+                        "3": {
+                          "text": "03 \u00b7 Prestogeorge Coffee & Tea",
+                          "index": 3
+                        },
+                        "4": {
+                          "text": "04 \u00b7 Colombino Coffee",
+                          "index": 4
+                        },
+                        "5": {
+                          "text": "05 \u00b7 Hilltop Coffee",
+                          "index": 5
+                        },
+                        "6": {
+                          "text": "06 \u00b7 The Boredom Set",
+                          "index": 6
+                        },
+                        "7": {
+                          "text": "07 \u00b7 Macizo",
+                          "index": 7
+                        },
+                        "8": {
+                          "text": "08 \u00b7 Compass Point Coffee",
+                          "index": 8
+                        },
+                        "9": {
+                          "text": "09 \u00b7 Burning Oaks Coffee Company",
+                          "index": 9
+                        },
+                        "10": {
+                          "text": "10 \u00b7 Reginald's Coffee",
+                          "index": 10
+                        },
+                        "11": {
+                          "text": "11 \u00b7 De Fer Coffee & Tea",
+                          "index": 11
+                        },
+                        "12": {
+                          "text": "12 \u00b7 Allegheny Coffee & Tea Exchange",
+                          "index": 12
+                        },
+                        "13": {
+                          "text": "13 \u00b7 It's Still Coffee",
+                          "index": 13
+                        },
+                        "14": {
+                          "text": "14 \u00b7 The Coffee Tree Roasters",
+                          "index": 14
+                        },
+                        "15": {
+                          "text": "15 \u00b7 Redstart Roasters",
+                          "index": 15
+                        },
+                        "16": {
+                          "text": "16 \u00b7 Convive",
+                          "index": 16
+                        },
+                        "17": {
+                          "text": "17 \u00b7 Redhawk Coffee Roasters",
+                          "index": 17
+                        },
+                        "18": {
+                          "text": "18 \u00b7 Aspen Coffee Co.",
+                          "index": 18
+                        },
+                        "19": {
+                          "text": "19 \u00b7 19 Coffee",
+                          "index": 19
+                        },
+                        "20": {
+                          "text": "20 \u00b7 Standing Wave Coffee",
+                          "index": 20
+                        },
+                        "21": {
+                          "text": "21 \u00b7 La Prima Espresso",
+                          "index": 21
+                        },
+                        "22": {
+                          "text": "22 \u00b7 Rockin' Cat",
+                          "index": 22
+                        },
+                        "23": {
+                          "text": "23 \u00b7 Dynamic Coffee Roasters",
+                          "index": 23
+                        },
+                        "24": {
+                          "text": "24 \u00b7 De Fer Coffee & Tea",
+                          "index": 24
+                        },
+                        "25": {
+                          "text": "25 \u00b7 Ghost Coffee Collab",
+                          "index": 25
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "custom.width",
+                  "value": 240
+                },
+                {
+                  "id": "custom.align",
+                  "value": "left"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Opened"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "locale"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "gauge",
+                    "mode": "basic",
+                    "valueDisplayMode": "text"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Save rate"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percentunit"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "gauge",
+                    "mode": "basic",
+                    "valueDisplayMode": "text"
+                  }
+                },
+                {
+                  "id": "max",
+                  "value": 0.25
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Avg rating"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "none"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "showHeader": true,
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          }
+        }
+      },
+      {
+        "id": 11,
+        "type": "bargauge",
+        "title": "Roaster link clicks",
+        "description": "Clicks from the calendar through to a roaster's page on the map, from the roster sidebar or a jar's page.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 16,
+          "y": 22,
+          "w": 8,
+          "h": 27
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum by (event_data_roaster) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventRoasterClicked\" | logfmt | event_name=\"AdventRoasterClicked\" | page_url=~\"https?://$host.*\" [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": true
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0,
+            "displayName": "${__data.fields.event_data_roaster}"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 12,
+        "type": "row",
+        "title": "Orders and sign-ups",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 49,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 13,
+        "type": "piechart",
+        "title": "Order chosen",
+        "description": "Which order visitors locked in. Useful for deciding whether next year needs more than one.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum by (event_data_order) (count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventOrderChosen\" | logfmt | event_name=\"AdventOrderChosen\" | page_url=~\"https?://$host.*\" [$__range]))",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "pieType": "donut",
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": [
+              "value",
+              "percent"
+            ]
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": true
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "displayName": "${__data.fields.event_data_order}"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 14,
+        "type": "bargauge",
+        "title": "Save prompt funnel",
+        "description": "Signed-out visitors asked to save a cup, and how many came back signed in.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 8,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSavePrompted\" | logfmt | event_name=\"AdventSavePrompted\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "B",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSaveAuthCompleted\" | logfmt | event_name=\"AdventSaveAuthCompleted\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "A"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Asked to save"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "B"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Signed in and saved"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 15,
+        "type": "bargauge",
+        "title": "Opening jars early",
+        "description": "Taps on jars that aren't open yet, and what people did at the spoiler warning.",
+        "datasource": {
+          "type": "loki",
+          "uid": "grafanacloud-logs"
+        },
+        "gridPos": {
+          "x": 16,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "A",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSealedJarTapped\" | logfmt | event_name=\"AdventSealedJarTapped\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "B",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSpoilerWarning\" | logfmt | event_name=\"AdventSpoilerWarning\" | page_url=~\"https?://$host.*\" | event_data_choice=\"accept\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "C",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventSpoilerWarning\" | logfmt | event_name=\"AdventSpoilerWarning\" | page_url=~\"https?://$host.*\" | event_data_choice=\"cancel\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "grafanacloud-logs"
+            },
+            "refId": "D",
+            "expr": "sum(count_over_time({service_name=\"pgh-coffee\", kind=\"event\"} |= \"AdventOrderBackedOut\" | logfmt | event_name=\"AdventOrderBackedOut\" | page_url=~\"https?://$host.*\" [$__range])) or vector(0)",
+            "legendFormat": "",
+            "queryType": "instant",
+            "instant": true,
+            "range": false
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "A"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Tapped a sealed jar"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "B"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Opened anyway at the spoiler warning"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "C"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Backed off at the spoiler warning"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "D"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Backed out of choosing an order"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
