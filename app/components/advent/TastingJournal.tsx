@@ -73,7 +73,7 @@ const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => v
             onClick={() => rate(n)}
             aria-label={`${n} out of 5`}
             aria-pressed={n === value}
-            className="p-1 transition-transform duration-150 ease-out active:scale-90"
+            className="-m-1 p-2 transition-transform duration-150 ease-out active:scale-90"
           >
             <Star
               key={n === tap.star ? tap.count : 0}
