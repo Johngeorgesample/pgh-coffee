@@ -61,9 +61,9 @@ export default function OpenedJars({ stops }: { stops: Stop[] }) {
     <section className="mt-12">
       <SectionHead title="Opened" count={stops.length - missed} />
       {missed > 0 && <CatchUpNote count={missed} />}
-      <ul data-reveal className="mt-8 grid grid-cols-1 gap-x-5 gap-y-8 min-[440px]:grid-cols-2 sm:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-1 gap-x-5 gap-y-8 min-[440px]:grid-cols-2 sm:grid-cols-3">
         {stops.map(({ step, entry, href, missed }, i) => (
-          <li key={entry.day} style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }} className="animate-rise motion-reduce:animate-none">
+          <li key={entry.day} data-reveal style={{ animationDelay: `${(i % 3) * 40}ms` }} className="animate-rise motion-reduce:animate-none">
             {missed ? (
               <Waiting step={step} entry={entry} href={href} />
             ) : (
