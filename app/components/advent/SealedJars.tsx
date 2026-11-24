@@ -43,7 +43,7 @@ const alignFor = (el: HTMLElement) => {
 type TActionsProps = { accept: string; onCancel: () => void; onAccept: () => void }
 
 const Actions = ({ accept, onCancel, onAccept }: TActionsProps) => (
-  <div className="mt-2 grid grid-cols-2 gap-1.5">
+  <div className="mt-2 grid grid-cols-2 gap-1.5 max-[374px]:grid-cols-1">
     <button onClick={onCancel} className={`bg-white ${BUTTON}`}>
       Nevermind
     </button>
@@ -72,7 +72,7 @@ const Warn = ({ onCancel, onAccept }: { onCancel: () => void; onAccept: () => vo
 
 const Popover = ({ align, children }: { align: Align; children: ReactNode }) => (
   <div
-    className={`absolute bottom-full z-20 mb-3 w-52 animate-arm rounded-xl border-2 border-gray-950 bg-white p-3 shadow-[3px_3px_0_#030712] motion-reduce:animate-none ${POPOVER_ALIGN[align]}`}
+    className={`absolute bottom-full z-20 mb-3 w-52 animate-arm max-[374px]:w-44 rounded-xl border-2 border-gray-950 bg-white p-3 shadow-[3px_3px_0_#030712] motion-reduce:animate-none ${POPOVER_ALIGN[align]}`}
   >
     {children}
   </div>
