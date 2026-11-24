@@ -57,7 +57,7 @@ export default function TodayCard({ entry, step, href }: { entry: AdventDay; ste
                 </TrackedLink>
               </h3>
             </div>
-            <Specs entry={entry} />
+            {specs(entry).length > 0 && <Specs entry={entry} />}
             <span
               aria-hidden
               className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.2em] text-gray-950 md:col-span-2 [@media(hover:hover)_and_(pointer:fine)]:hidden"
