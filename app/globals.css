@@ -3,6 +3,8 @@
 
 @config '../tailwind.config.ts';
 
+@custom-variant returning (&:where([data-advent-returning] *));
+
 html {
   /* iOS/Android paint a gray box over tapped elements, which fights our own :active feedback */
   -webkit-tap-highlight-color: transparent;

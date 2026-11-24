@@ -17,7 +17,7 @@ import { ORDERS, Order, findOrder, jarHref, jarsInOrder } from '@/data/advent-or
 
 const DEV_TOOLS = process.env.NETLIFY_CONTEXT !== 'production'
 
-const ORDER_KEY = 'advent:order'
+export const ORDER_KEY = 'advent:order'
 const STARTED_KEY = 'advent:started'
 
 const storedOrder = () => {

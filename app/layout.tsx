@@ -43,7 +43,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="overscroll-none">
+    <html lang="en" className="overscroll-none" suppressHydrationWarning>
       <head>
         <PlausibleProvider domain="pgh.coffee" trackOutboundLinks />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdToString(organizationJsonLd) }} />
