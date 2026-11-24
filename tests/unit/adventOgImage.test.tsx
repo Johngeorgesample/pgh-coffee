@@ -12,7 +12,7 @@ test('advent opengraph-image renders a PNG', async () => {
 }, 20_000)
 
 test('day image renders a PNG', async () => {
-  await expectPng(await dayImage('22', '?order=geo'))
+  await expectPng(await dayImage('22', '?order=roast'))
 }, 20_000)
 
 test('day image 404s for a jar outside the calendar', async () => {

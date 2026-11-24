@@ -12,10 +12,10 @@ export const ORDERS: Order[] = [
     sequence: range,
   },
   {
-    id: 'geo',
-    label: 'North to south',
-    blurb: 'Start with the roaster farthest north and work your way south across the region. Jar numbers jump around, so check which one to open.',
-    sequence: [22, 14, 17, 13, 8, 16, 1, 23, 2, 25, 21, 12, 3, 6, 15, 11, 24, 19, 20, 5, 9, 18, 4, 10, 7],
+    id: 'roast',
+    label: 'Light to dark',
+    blurb: 'Start with the lightest roast and finish with the darkest. Jar numbers jump around, so check which one to open.',
+    sequence: [19, 13, 9, 6, 2, 17, 25, 18, 1, 23, 11, 14, 4, 10, 24, 20, 22, 16, 5, 8, 21, 15, 3, 7, 12],
   },
   {
     id: 'founded',
