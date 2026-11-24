@@ -72,7 +72,7 @@ const FullHero = () => (
       <Image
         src={lid}
         alt="Pittsburgh Coffee Advent Calendar 2026 box lid, illustrated with city landmarks"
-        priority
+        fetchPriority="high"
         placeholder="blur"
         sizes="(min-width: 768px) 440px, 100vw"
         className="aspect-square size-full object-cover"
