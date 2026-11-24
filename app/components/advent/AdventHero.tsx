@@ -21,10 +21,16 @@ const Wallpaper = () => (
     {ROWS.map(({ sides, className }, row) => (
       <div key={className} className={`flex-1 ${className}`}>
         <div
-          className={`flex h-full w-max animate-marquee [animation-duration:150s] motion-reduce:animate-none ${row % 2 ? '[animation-direction:reverse]' : ''}`}
+          className={`flex h-full w-max md:motion-safe:animate-marquee [animation-duration:150s] motion-reduce:animate-none ${row % 2 ? '[animation-direction:reverse]' : ''}`}
         >
           {[...sides, ...sides].map((side, i) => (
-            <Image key={i} src={side} alt="" sizes="(min-width: 1024px) 1400px, 1000px" className="h-full w-auto shrink-0" />
+            <Image
+              key={i}
+              src={side}
+              alt=""
+              sizes="(min-width: 1024px) 1400px, 1000px"
+              className={`h-full w-auto shrink-0 ${i >= sides.length ? 'max-md:hidden' : ''}`}
+            />
           ))}
         </div>
       </div>
