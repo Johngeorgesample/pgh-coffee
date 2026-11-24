@@ -5,6 +5,7 @@ import { setFaro } from '@/lib/faro'
 
 export function FaroInit() {
   useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') return
     Promise.all([import('@grafana/faro-web-sdk'), import('@grafana/faro-web-tracing')]).then(
       ([{ getWebInstrumentations, initializeFaro }, { TracingInstrumentation }]) => {
         setFaro(initializeFaro({
