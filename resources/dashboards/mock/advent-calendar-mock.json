@@ -1,0 +1,1073 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "pgh-coffee-advent-calendar-mock",
+    "annotations": {
+      "grafana.app/folder": "pgh-coffee"
+    }
+  },
+  "spec": {
+    "title": "Advent calendar engagement (mock data)",
+    "tags": [
+      "pgh-coffee",
+      "advent"
+    ],
+    "timezone": "America/New_York",
+    "schemaVersion": 39,
+    "time": {
+      "from": "2026-11-28T00:00:00.000Z",
+      "to": "2027-01-01T00:00:00.000Z"
+    },
+    "templating": {
+      "list": []
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Engagement through the month",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 2,
+        "type": "stat",
+        "title": "Calendar visitors",
+        "description": "Distinct browser sessions that loaded any /advent page in the time range.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n412"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Jars opened",
+        "description": "First visits to a jar's page. Revisits aren't counted.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 6,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n1107"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 4,
+        "type": "stat",
+        "title": "Cups logged",
+        "description": "Tasting notes saved to an account.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 12,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n146"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 5,
+        "type": "stat",
+        "title": "Accounts from the save prompt",
+        "description": "Visitors who were asked to sign in to save a cup and came back signed in.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 18,
+          "y": 1,
+          "w": 6,
+          "h": 4
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n21"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "colorMode": "none",
+          "graphMode": "none",
+          "textMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "noValue": "0",
+            "decimals": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 6,
+        "type": "timeseries",
+        "title": "Calendar visitors per day",
+        "description": "Distinct sessions that loaded an /advent page each day. Your shape check: strong start, a mid-month dip, and how far it recovers by the 25th. Days are UTC, so a bar starts at 7pm Pittsburgh time.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "time,visitors\n2026-12-02T00:00:00Z,82\n2026-12-03T00:00:00Z,79\n2026-12-04T00:00:00Z,71\n2026-12-05T00:00:00Z,69\n2026-12-06T00:00:00Z,62\n2026-12-07T00:00:00Z,59\n2026-12-08T00:00:00Z,52\n2026-12-09T00:00:00Z,48\n2026-12-10T00:00:00Z,48\n2026-12-11T00:00:00Z,44\n2026-12-12T00:00:00Z,43\n2026-12-13T00:00:00Z,49\n2026-12-14T00:00:00Z,47\n2026-12-15T00:00:00Z,39\n2026-12-16T00:00:00Z,36\n2026-12-17T00:00:00Z,40\n2026-12-18T00:00:00Z,36\n2026-12-19T00:00:00Z,44\n2026-12-20T00:00:00Z,50\n2026-12-21T00:00:00Z,56\n2026-12-22T00:00:00Z,49\n2026-12-23T00:00:00Z,51\n2026-12-24T00:00:00Z,47\n2026-12-25T00:00:00Z,48\n2026-12-26T00:00:00Z,55\n2026-12-27T00:00:00Z,10\n2026-12-28T00:00:00Z,7\n2026-12-29T00:00:00Z,5\n2026-12-30T00:00:00Z,4\n2026-12-31T00:00:00Z,3\n2027-01-01T00:00:00Z,3"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "none"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": "timeseries",
+        "title": "Jars opened per day, by timing",
+        "description": "today = opened on its day, catchup = an earlier jar opened late, early = opened before its day. Lots of catch-up late in the month means people are coming back after a gap.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 13,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "time,today,catchup,early\n2026-12-02T00:00:00Z,48,10,7\n2026-12-03T00:00:00Z,46,9,6\n2026-12-04T00:00:00Z,41,9,2\n2026-12-05T00:00:00Z,40,8,1\n2026-12-06T00:00:00Z,36,7,1\n2026-12-07T00:00:00Z,34,7,2\n2026-12-08T00:00:00Z,30,17,2\n2026-12-09T00:00:00Z,28,6,2\n2026-12-10T00:00:00Z,28,6,1\n2026-12-11T00:00:00Z,26,5,2\n2026-12-12T00:00:00Z,25,5,1\n2026-12-13T00:00:00Z,28,6,1\n2026-12-14T00:00:00Z,27,6,2\n2026-12-15T00:00:00Z,23,12,2\n2026-12-16T00:00:00Z,21,4,2\n2026-12-17T00:00:00Z,23,5,2\n2026-12-18T00:00:00Z,21,4,1\n2026-12-19T00:00:00Z,26,5,2\n2026-12-20T00:00:00Z,29,6,2\n2026-12-21T00:00:00Z,32,21,2\n2026-12-22T00:00:00Z,28,28,2\n2026-12-23T00:00:00Z,30,19,1\n2026-12-24T00:00:00Z,27,17,5\n2026-12-25T00:00:00Z,28,18,6\n2026-12-26T00:00:00Z,32,20,5\n2026-12-27T00:00:00Z,0,4,0\n2026-12-28T00:00:00Z,0,2,0\n2026-12-29T00:00:00Z,0,2,0\n2026-12-30T00:00:00Z,0,1,0\n2026-12-31T00:00:00Z,0,1,0\n2027-01-01T00:00:00Z,0,1,0"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "normal"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "type": "timeseries",
+        "title": "Cups logged per day",
+        "description": "Tasting notes saved each day: the deepest form of engagement on the page.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 12,
+          "y": 13,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "time,cups\n2026-12-02T00:00:00Z,7\n2026-12-03T00:00:00Z,7\n2026-12-04T00:00:00Z,6\n2026-12-05T00:00:00Z,5\n2026-12-06T00:00:00Z,5\n2026-12-07T00:00:00Z,5\n2026-12-08T00:00:00Z,5\n2026-12-09T00:00:00Z,4\n2026-12-10T00:00:00Z,4\n2026-12-11T00:00:00Z,4\n2026-12-12T00:00:00Z,3\n2026-12-13T00:00:00Z,4\n2026-12-14T00:00:00Z,4\n2026-12-15T00:00:00Z,4\n2026-12-16T00:00:00Z,3\n2026-12-17T00:00:00Z,3\n2026-12-18T00:00:00Z,3\n2026-12-19T00:00:00Z,4\n2026-12-20T00:00:00Z,4\n2026-12-21T00:00:00Z,6\n2026-12-22T00:00:00Z,6\n2026-12-23T00:00:00Z,6\n2026-12-24T00:00:00Z,5\n2026-12-25T00:00:00Z,6\n2026-12-26T00:00:00Z,6\n2026-12-27T00:00:00Z,0\n2026-12-28T00:00:00Z,0\n2026-12-29T00:00:00Z,0\n2026-12-30T00:00:00Z,0\n2026-12-31T00:00:00Z,0\n2027-01-01T00:00:00Z,0"
+          }
+        ],
+        "interval": "1d",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "min": 0,
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": -1,
+              "fillOpacity": 80,
+              "lineWidth": 0,
+              "stacking": {
+                "mode": "none"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": "row",
+        "title": "Which brands drive engagement",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 21,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 10,
+        "type": "table",
+        "title": "Engagement by jar",
+        "description": "One row per jar, labelled with its roaster. Opens follow where a jar falls in the month as much as the brand, so compare brands on save rate and rating, which don't depend on how many people were around that day. Jars sit on different days in the North-to-south and Oldest-first orders, which also helps separate brand from date.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 22,
+          "w": 16,
+          "h": 27
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_jar,Value #A\n1,74\n2,70\n3,73\n4,51\n5,35\n6,40\n7,44\n8,37\n9,39\n10,46\n11,40\n12,45\n13,29\n14,46\n15,28\n16,35\n17,34\n18,40\n19,41\n20,33\n21,42\n22,53\n23,41\n24,37\n25,54"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "B",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_jar,Value #B\n1,7\n2,8\n3,14\n4,6\n5,5\n6,3\n7,4\n8,3\n9,3\n10,7\n11,7\n12,3\n13,4\n14,6\n15,4\n16,3\n17,6\n18,6\n19,5\n20,4\n21,8\n22,11\n23,6\n24,5\n25,8"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "C",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_jar,Value #C\n1,3.66\n2,4.4\n3,3.95\n4,3.92\n5,4.53\n6,3.85\n7,3.64\n8,3.6\n9,3.25\n10,4.18\n11,4.1\n12,3.89\n13,3.98\n14,3.93\n15,4.58\n16,3.59\n17,3.93\n18,3.97\n19,4.44\n20,4.41\n21,4.04\n22,4.56\n23,4.45\n24,3.67\n25,4.58"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "D",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_jar,Value #D\n1,16\n4,11\n5,8\n9,9\n10,10\n11,9\n12,10\n13,6\n15,6\n16,8\n17,7\n18,9\n21,9\n23,9"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true
+              },
+              "renameByName": {
+                "event_data_jar": "Jar",
+                "Value #A": "Opened",
+                "Value #B": "Cups logged",
+                "Value #C": "Avg rating",
+                "Value #D": "Video plays"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "mode": "binary",
+              "alias": "Save rate",
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Cups logged"
+                  }
+                },
+                "operator": "/",
+                "right": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Opened"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "sort": [
+                {
+                  "field": "Opened",
+                  "desc": true
+                }
+              ]
+            }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "noValue": "\u2013",
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Jar"
+              },
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "1": {
+                          "text": "01 \u00b7 Dynamic Coffee Roasters",
+                          "index": 1
+                        },
+                        "2": {
+                          "text": "02 \u00b7 Commonplace Coffee",
+                          "index": 2
+                        },
+                        "3": {
+                          "text": "03 \u00b7 Prestogeorge Coffee & Tea",
+                          "index": 3
+                        },
+                        "4": {
+                          "text": "04 \u00b7 Colombino Coffee",
+                          "index": 4
+                        },
+                        "5": {
+                          "text": "05 \u00b7 Hilltop Coffee",
+                          "index": 5
+                        },
+                        "6": {
+                          "text": "06 \u00b7 The Boredom Set",
+                          "index": 6
+                        },
+                        "7": {
+                          "text": "07 \u00b7 Macizo",
+                          "index": 7
+                        },
+                        "8": {
+                          "text": "08 \u00b7 Compass Point Coffee",
+                          "index": 8
+                        },
+                        "9": {
+                          "text": "09 \u00b7 Burning Oaks Coffee Company",
+                          "index": 9
+                        },
+                        "10": {
+                          "text": "10 \u00b7 Reginald's Coffee",
+                          "index": 10
+                        },
+                        "11": {
+                          "text": "11 \u00b7 De Fer Coffee & Tea",
+                          "index": 11
+                        },
+                        "12": {
+                          "text": "12 \u00b7 Allegheny Coffee & Tea Exchange",
+                          "index": 12
+                        },
+                        "13": {
+                          "text": "13 \u00b7 It's Still Coffee",
+                          "index": 13
+                        },
+                        "14": {
+                          "text": "14 \u00b7 The Coffee Tree Roasters",
+                          "index": 14
+                        },
+                        "15": {
+                          "text": "15 \u00b7 Redstart Roasters",
+                          "index": 15
+                        },
+                        "16": {
+                          "text": "16 \u00b7 Convive",
+                          "index": 16
+                        },
+                        "17": {
+                          "text": "17 \u00b7 Redhawk Coffee Roasters",
+                          "index": 17
+                        },
+                        "18": {
+                          "text": "18 \u00b7 Aspen Coffee Co.",
+                          "index": 18
+                        },
+                        "19": {
+                          "text": "19 \u00b7 19 Coffee",
+                          "index": 19
+                        },
+                        "20": {
+                          "text": "20 \u00b7 Standing Wave Coffee",
+                          "index": 20
+                        },
+                        "21": {
+                          "text": "21 \u00b7 La Prima Espresso",
+                          "index": 21
+                        },
+                        "22": {
+                          "text": "22 \u00b7 Rockin' Cat",
+                          "index": 22
+                        },
+                        "23": {
+                          "text": "23 \u00b7 Dynamic Coffee Roasters",
+                          "index": 23
+                        },
+                        "24": {
+                          "text": "24 \u00b7 De Fer Coffee & Tea",
+                          "index": 24
+                        },
+                        "25": {
+                          "text": "25 \u00b7 Ghost Coffee Collab",
+                          "index": 25
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "custom.width",
+                  "value": 240
+                },
+                {
+                  "id": "custom.align",
+                  "value": "left"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Opened"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "locale"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "gauge",
+                    "mode": "basic",
+                    "valueDisplayMode": "text"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Save rate"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percentunit"
+                },
+                {
+                  "id": "decimals",
+                  "value": 0
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "gauge",
+                    "mode": "basic",
+                    "valueDisplayMode": "text"
+                  }
+                },
+                {
+                  "id": "max",
+                  "value": 0.25
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Avg rating"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "none"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "showHeader": true,
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          }
+        }
+      },
+      {
+        "id": 11,
+        "type": "bargauge",
+        "title": "Roaster link clicks",
+        "description": "Clicks from the calendar through to a roaster's page on the map, from the roster sidebar or a jar's page.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 16,
+          "y": 22,
+          "w": 8,
+          "h": 27
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_roaster,Value\ndynamic-coffee-roasters,9\ncommonplace,7\nde-fer-coffee-and-tea,7\nprestogeorge,5\nthe-boredom-set,5\nreginalds-coffee,5\nthe-coffee-tree-roasters,5\nconvive,5\n19-coffee,5\nghost-coffee-collab,5\nburning-oaks-coffee-company,4\nits-still-coffee,4\nredhawk-coffee-roasters,4\nstanding-wave-coffee,4\nrockin-cat,4\ncolombino-coffee,3\nredstart-roasters,3\nla-prima-espresso,3\nmacizo,2\ncompass-point-coffee,2\nallegheny-coffee-and-tea-exchange,2\naspen-coffee-co,2"
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": true
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0,
+            "displayName": "${__data.fields.event_data_roaster}"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 12,
+        "type": "row",
+        "title": "Orders and sign-ups",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 49,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 13,
+        "type": "piechart",
+        "title": "Order chosen",
+        "description": "Which order visitors locked in. Useful for deciding whether next year needs more than one.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 0,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "event_data_order,Value\ncurated,76\ngeo,19\nfounded,12"
+          }
+        ],
+        "options": {
+          "pieType": "donut",
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": [
+              "value",
+              "percent"
+            ]
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": true
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "displayName": "${__data.fields.event_data_order}"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 14,
+        "type": "bargauge",
+        "title": "Save prompt funnel",
+        "description": "Signed-out visitors asked to save a cup, and how many came back signed in.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 8,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n58"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "B",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n21"
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "A"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Asked to save"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "B"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Signed in and saved"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 15,
+        "type": "bargauge",
+        "title": "Opening jars early",
+        "description": "Taps on jars that aren't open yet, and what people did at the spoiler warning.",
+        "datasource": {
+          "type": "grafana-testdata-datasource",
+          "uid": "beo2hdqv8m6tcf"
+        },
+        "gridPos": {
+          "x": 16,
+          "y": 50,
+          "w": 8,
+          "h": 8
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "A",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n143"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "B",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n24"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "C",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n39"
+          },
+          {
+            "datasource": {
+              "type": "grafana-testdata-datasource",
+              "uid": "beo2hdqv8m6tcf"
+            },
+            "refId": "D",
+            "scenarioId": "csv_content",
+            "csvContent": "Value\n31"
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "basic",
+          "showUnfilled": true,
+          "valueMode": "text",
+          "namePlacement": "left",
+          "sizing": "manual",
+          "maxVizHeight": 22,
+          "minVizHeight": 16,
+          "text": {
+            "titleSize": 13,
+            "valueSize": 18
+          },
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "locale",
+            "decimals": 0,
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "#FDE047"
+            },
+            "min": 0
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "A"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Tapped a sealed jar"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "B"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Opened anyway at the spoiler warning"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "C"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Backed off at the spoiler warning"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byFrameRefID",
+                "options": "D"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Backed out of choosing an order"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
