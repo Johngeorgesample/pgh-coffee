@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { PREVIEW_PARAM } from '@/app/utils/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
+import { ORDERS } from '@/data/advent-orders'
 
 const KEYS = ['advent:order', 'advent:started', 'advent:visited']
 
@@ -13,62 +15,60 @@ const reloadWith = (edit: (params: URLSearchParams) => void) => {
   window.location.assign(url)
 }
 
-const setDay = (day: string) => reloadWith(params => (day ? params.set('dev-day', day) : params.delete('dev-day')))
+const setDay = (day: string) => reloadWith(params => params.set(PREVIEW_PARAM, day))
 
-const forget = () => {
+const exitPreview = () => reloadWith(params => params.delete(PREVIEW_PARAM))
+
+const setOrder = (id: string) => {
   KEYS.forEach(key => localStorage.removeItem(key))
+  if (id) {
+    storageSet('advent:order', id)
+    storageSet('advent:started', '1')
+  }
   window.location.reload()
 }
 
-const BUTTON = 'rounded border border-gray-300 bg-white px-2 py-1 hover:bg-gray-100'
-
-const FLAG = 'advent:dev'
-
-declare global {
-  interface Window {
-    adventDev?: (on?: boolean) => void
+const readState = () => {
+  const params = new URLSearchParams(window.location.search)
+  return {
+    enabled: params.has(PREVIEW_PARAM),
+    day: params.get(PREVIEW_PARAM) ?? '',
+    order: storageGet('advent:order') ?? '',
   }
 }
 
-const readState = () => ({
-  day: new URLSearchParams(window.location.search).get('dev-day') ?? '',
-  stored: KEYS.map(key => storageGet(key) ?? '—'),
-})
-
-const useToggle = () => {
-  const [enabled, setEnabled] = useState(false)
-  useEffect(() => {
-    setEnabled(storageGet(FLAG) === '1')
-    window.adventDev = (on = true) => {
-      if (on) storageSet(FLAG, '1')
-      else localStorage.removeItem(FLAG)
-      setEnabled(on)
-    }
-    return () => {
-      delete window.adventDev
-    }
-  }, [])
-  return enabled
+const usePreviewState = () => {
+  const [state, setState] = useState<ReturnType<typeof readState> | null>(null)
+  useEffect(() => setState(readState()), [])
+  return state
 }
 
+const BUTTON = 'rounded-md border border-gray-300 bg-white px-3 py-1.5 font-medium hover:bg-gray-100'
+
 export default function DevPanel() {
-  const enabled = useToggle()
-  if (!enabled) return null
-  const state = readState()
+  const state = usePreviewState()
+  if (!state?.enabled) return null
   return (
-    <div className="fixed right-4 bottom-4 z-50 grid w-60 gap-2 rounded-lg border border-gray-300 bg-white/95 p-3 font-sans text-xs text-gray-700 shadow-lg backdrop-blur">
-      <p className="font-bold uppercase tracking-widest text-gray-500">Advent dev</p>
-      <label className="flex items-center justify-between gap-2">
-        Pretend it&rsquo;s
-        <select value={state.day} onChange={e => setDay(e.target.value)} className="rounded border border-gray-300 px-1 py-0.5">
-          <option value="">Real date</option>
-          {DAYS.map(day => <option key={day} value={day}>Dec {day}</option>)}
+    <div className="fixed right-4 bottom-4 left-4 z-50 grid gap-3 rounded-lg border border-gray-300 bg-white/95 p-4 font-sans text-sm text-gray-700 shadow-lg backdrop-blur sm:left-auto sm:w-72">
+      <div>
+        <p className="font-semibold text-gray-950">Preview mode</p>
+        <p className="mt-1 text-gray-500">See the calendar as it will look on any day in December.</p>
+      </div>
+      <label className="grid gap-1">
+        <span className="font-medium">Show the calendar on</span>
+        <select value={state.day} onChange={e => setDay(e.target.value)} className="rounded-md border border-gray-300 px-2 py-1.5">
+          <option value="">Today</option>
+          {DAYS.map(day => <option key={day} value={day}>December {day}</option>)}
         </select>
       </label>
-      <p>Picked: <b>{state.stored[0]}</b> · started day <b>{state.stored[1]}</b></p>
-      <div className="flex flex-wrap gap-1.5">
-        <button onClick={forget} className={BUTTON}>Forget pick</button>
-      </div>
+      <label className="grid gap-1">
+        <span className="font-medium">Order</span>
+        <select value={state.order} onChange={e => setOrder(e.target.value)} className="rounded-md border border-gray-300 px-2 py-1.5">
+          <option value="">Not picked yet</option>
+          {ORDERS.map(order => <option key={order.id} value={order.id}>{order.label}</option>)}
+        </select>
+      </label>
+      <button onClick={exitPreview} className={`${BUTTON} justify-self-start`}>Exit preview</button>
     </div>
   )
 }
