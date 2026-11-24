@@ -80,8 +80,16 @@
     "day": 6,
     "roasterSlug": "the-boredom-set",
     "roasterName": "The Boredom Set",
-    "coffee": "To be announced",
-    "notes": [],
+    "coffee": "Good Coffee Program",
+    "notes": [
+      "Almond torte",
+      "Papaya",
+      "Chocolate sauce"
+    ],
+    "origin": "Oaxaca, Mexico",
+    "producer": "Red de Guadalupe Miramar",
+    "varietal": "Typica, Bourbon, Caturra",
+    "process": "Washed",
     "founded": 2024,
     "agtron": 91.7
   },
