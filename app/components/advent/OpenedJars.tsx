@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { LockedLid } from '@/app/components/advent/SealedJars'
+import LockedLid from '@/app/components/advent/sealed-jars/LockedLid'
 import SectionHead from '@/app/components/advent/SectionHead'
 import { AdventDay } from '@/data/advent'
 
