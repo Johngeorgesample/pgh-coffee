@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { daysOpen, parseDayParam, splitMarked } from '@/app/utils/advent'
+import { adventTeaser, daysOpen, parseDayParam, splitMarked } from '@/app/utils/advent'
 import { ADVENT_LINEUP } from '@/data/advent'
 import { ORDERS } from '@/data/advent-orders'
 
@@ -26,6 +26,16 @@ describe('daysOpen', () => {
   it('keeps everything open once the calendar is over', () => {
     expect(daysOpen(new Date('2026-12-31T12:00:00Z'))).toBe(25)
     expect(daysOpen(new Date('2027-01-02T12:00:00Z'))).toBe(25)
+  })
+})
+
+describe('adventTeaser', () => {
+  it('counts down, follows the open day, then disappears after Christmas', () => {
+    expect(adventTeaser(new Date('2026-11-24T17:00:00Z'))).toBe('Opens in 7 days')
+    expect(adventTeaser(new Date('2026-11-30T17:00:00Z'))).toBe('Opens tomorrow')
+    expect(adventTeaser(new Date('2026-12-01T17:00:00Z'))).toBe('Day 1 is open')
+    expect(adventTeaser(new Date('2026-12-25T17:00:00Z'))).toBe('Day 25 is open')
+    expect(adventTeaser(new Date('2026-12-26T17:00:00Z'))).toBeNull()
   })
 })
 
