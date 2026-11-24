@@ -130,9 +130,9 @@ const AboutRoaster = ({ entry, roaster }: { entry: AdventDay; roaster: NonNullab
 const Sheet = ({ entry, order, step }: { entry: AdventDay; order: Order; step: number }) => (
   <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
     <DayHead order={order} />
-    <div className="overflow-hidden rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
+    <div className="rounded-2xl border-4 border-gray-950 bg-white shadow-[6px_6px_0_#030712]">
       <div className="relative border-b-4 border-gray-950">
-        <Image src={top} alt="" sizes="340px" className="h-24 w-full object-cover object-left" />
+        <Image src={top} alt="" sizes="340px" className="h-24 w-full rounded-t-xl object-cover object-left" />
         <span className="absolute bottom-0 left-5 flex translate-y-1/2 items-center gap-3">
           <span data-reveal className="block size-24 animate-stamp overflow-hidden rounded-full border-4 border-gray-950 shadow-[4px_4px_0_#030712] motion-reduce:animate-none">
             <Image src={`/advent/labels/${entry.day}.webp`} alt={`Jar ${entry.day}`} width={240} height={240} sizes="96px" className="size-full" />
