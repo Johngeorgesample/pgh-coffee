@@ -96,6 +96,7 @@ export default function AdventRoute() {
                 open={open}
                 locked={!order || open === 0}
                 onReveal={day => order && router.push(jarHref(order, day))}
+                onPrefetch={day => order && router.prefetch(jarHref(order, day))}
               />
             )}
           </div>

@@ -40,8 +40,6 @@ const alignFor = (el: HTMLElement) => {
   return center < 0.2 ? 'left' : center > 0.8 ? 'right' : 'center'
 }
 
-const prefersReducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-
 type TActionsProps = { accept: string; onCancel: () => void; onAccept: () => void }
 
 const Actions = ({ accept, onCancel, onAccept }: TActionsProps) => (
@@ -80,18 +78,22 @@ const Popover = ({ align, children }: { align: Align; children: ReactNode }) => 
   </div>
 )
 
-const useStage = (armed: boolean, onReveal: () => void, onClose: () => void) => {
+const useStage = (armed: boolean, onReveal: () => void, onClose: () => void, onPrefetch: () => void) => {
   const [stage, setStage] = useState<Stage>('ask')
+  const warn = () => {
+    setStage('warn')
+    onPrefetch()
+  }
   const unscrew = () => {
     setStage('leaving')
-    window.setTimeout(onReveal, prefersReducedMotion() ? 0 : UNSCREW_MS)
+    onReveal()
   }
   const cancel = () => {
     setStage('ask')
     onClose()
   }
   const current: Stage = stage === 'leaving' ? 'leaving' : armed ? stage : 'closed'
-  return { stage: current, warn: () => setStage('warn'), unscrew, cancel, reset: () => setStage('ask') }
+  return { stage: current, warn, unscrew, cancel, reset: () => setStage('ask') }
 }
 
 const LID = 'block aspect-square w-full overflow-hidden rounded-full border-2 border-gray-950 shadow-[3px_3px_0_#030712]'
@@ -123,7 +125,9 @@ const SleepingLid = ({ step, jar, onTap }: { step: number; jar: number; onTap: (
   )
 }
 
-const EmptySlot = () => <span className="block aspect-square w-full rounded-full border-2 border-dashed border-gray-950/30" />
+const EmptySlot = ({ className = '' }: { className?: string }) => (
+  <span className={`block aspect-square w-full rounded-full border-2 border-dashed border-gray-950/30 ${className}`} />
+)
 
 type TLidProps = {
   step: number
@@ -132,12 +136,13 @@ type TLidProps = {
   onToggle: () => void
   onClose: () => void
   onReveal: () => void
+  onPrefetch: () => void
   onWarned: (choice: 'accept' | 'cancel') => void
 }
 
-const Lid = ({ step, jar, armed, onToggle, onClose, onReveal, onWarned }: TLidProps) => {
+const Lid = ({ step, jar, armed, onToggle, onClose, onReveal, onPrefetch, onWarned }: TLidProps) => {
   const [align, setAlign] = useState<Align>('center')
-  const { stage, warn, unscrew, cancel, reset } = useStage(armed, onReveal, onClose)
+  const { stage, warn, unscrew, cancel, reset } = useStage(armed, onReveal, onClose, onPrefetch)
   const decide = (choice: 'accept' | 'cancel') => {
     onWarned(choice)
     if (choice === 'accept') unscrew()
@@ -145,6 +150,7 @@ const Lid = ({ step, jar, armed, onToggle, onClose, onReveal, onWarned }: TLidPr
   }
   return (
     <div className="relative">
+      {stage === 'leaving' && <EmptySlot className="absolute inset-0 animate-pulse motion-reduce:animate-none" />}
       <button
         onClick={e => {
           setAlign(alignFor(e.currentTarget.parentElement!))
@@ -158,6 +164,9 @@ const Lid = ({ step, jar, armed, onToggle, onClose, onReveal, onWarned }: TLidPr
       >
         <Label jar={jar} />
       </button>
+      <span aria-live="polite" className="sr-only">
+        {stage === 'leaving' ? `Opening Dec ${step}` : ''}
+      </span>
       {(stage === 'ask' || stage === 'warn') && (
         <Popover key={stage} align={align}>
           {stage === 'ask' ? <Ask step={step} onCancel={cancel} onNext={warn} /> : <Warn onCancel={() => decide('cancel')} onAccept={() => decide('accept')} />}
@@ -183,9 +192,9 @@ const useDismiss = (active: boolean, close: () => void) => {
   return ref
 }
 
-type TSealedJarsProps = { jars: Jar[]; open: number; locked: boolean; onReveal: (day: number) => void }
+type TSealedJarsProps = { jars: Jar[]; open: number; locked: boolean; onReveal: (day: number) => void; onPrefetch: (day: number) => void }
 
-export default function SealedJars({ jars, open: daysOpen, locked, onReveal }: TSealedJarsProps) {
+export default function SealedJars({ jars, open: daysOpen, locked, onReveal, onPrefetch }: TSealedJarsProps) {
   const [armed, setArmed] = useState<number | null>(null)
   const track = useAnalytics()
   const close = () => setArmed(null)
@@ -219,6 +228,7 @@ export default function SealedJars({ jars, open: daysOpen, locked, onReveal }: T
                 onToggle={() => toggle(jar.step)}
                 onClose={close}
                 onReveal={() => open(jar)}
+                onPrefetch={() => onPrefetch(jar.day)}
                 onWarned={choice => warned(jar.step, choice)}
               />
             )}
