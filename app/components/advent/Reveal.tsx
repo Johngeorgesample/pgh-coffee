@@ -24,14 +24,12 @@ export default function Reveal() {
     const added = new MutationObserver(() => observePending(seen))
     observePending(seen)
     added.observe(document.body, { childList: true, subtree: true })
+    document.documentElement.setAttribute('data-reveal-ready', '')
     return () => {
+      document.documentElement.removeAttribute('data-reveal-ready')
       added.disconnect()
       seen.disconnect()
     }
   }, [])
-  return (
-    <noscript>
-      <style>{'[data-reveal], [data-reveal] > * { animation-play-state: running !important }'}</style>
-    </noscript>
-  )
+  return null
 }
