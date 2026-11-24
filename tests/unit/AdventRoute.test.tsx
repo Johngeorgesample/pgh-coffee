@@ -79,12 +79,12 @@ describe('AdventRoute', () => {
     expect(screen.queryByRole('button', { name: /^Open Dec/ })).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: "Open today’s jar" }))
-    fireEvent.click(screen.getByRole('radio', { name: /North to south/ }))
-    fireEvent.click(screen.getByRole('button', { name: 'Start North to south' }))
+    fireEvent.click(screen.getByRole('radio', { name: /Light to dark/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Start Light to dark' }))
 
     expect(screen.getByText('Today · Day 03')).toBeInTheDocument()
-    expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Colombia Cauca' })).toHaveAttribute('href', '/advent/17?order=geo')
+    expect(screen.getByAltText('Jar 9')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Uganda Light Roast' })).toHaveAttribute('href', '/advent/9?order=roast')
   })
 
   it('keeps jars from before a late start sealed in Opened until their page is visited', () => {
@@ -106,10 +106,10 @@ describe('AdventRoute', () => {
   })
 
   it('restores the picked order and offers no way to switch', () => {
-    startOn('2026-12-03T12:00:00-05:00', 'geo')
+    startOn('2026-12-03T12:00:00-05:00', 'roast')
     render(<AdventRoute />)
 
-    expect(screen.getByAltText('Jar 17')).toBeInTheDocument()
+    expect(screen.getByAltText('Jar 9')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Oldest first' })).not.toBeInTheDocument()
   })
 
