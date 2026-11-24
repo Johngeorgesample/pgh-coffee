@@ -21,6 +21,16 @@ export const daysUntilOpening = (now: Date) => {
   return Math.round((Date.UTC(ADVENT_YEAR, 11, 1) - Date.UTC(year, month - 1, day)) / 86_400_000)
 }
 
+const LAST_DAY_OFFSET = -(ADVENT_DAYS - 1)
+
+export const adventTeaser = (now: Date) => {
+  const until = daysUntilOpening(now)
+  if (until < LAST_DAY_OFFSET) return null
+  if (until > 1) return `Opens in ${until} days`
+  if (until === 1) return 'Opens tomorrow'
+  return `Day ${daysOpen(now)} is open`
+}
+
 export const devDayDate = (search: string) => {
   const day = parseDayParam(new URLSearchParams(search).get('dev-day') ?? '')
   return day ? new Date(`${ADVENT_YEAR}-12-${String(day).padStart(2, '0')}T12:00:00-05:00`) : null
