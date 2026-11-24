@@ -15,7 +15,7 @@ export const ORDERS: Order[] = [
     id: 'roast',
     label: 'Light to dark',
     blurb: 'Start with the lightest roast and finish with the darkest. Jar numbers jump around, so check which one to open.',
-    sequence: [19, 13, 9, 6, 2, 17, 25, 18, 1, 23, 11, 14, 4, 10, 24, 20, 22, 16, 5, 8, 21, 15, 3, 7, 12],
+    sequence: [19, 13, 9, 6, 2, 7, 17, 25, 18, 1, 23, 11, 14, 12, 4, 10, 24, 20, 22, 16, 5, 8, 21, 15, 3],
   },
   {
     id: 'founded',
