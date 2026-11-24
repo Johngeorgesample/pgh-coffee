@@ -15,8 +15,6 @@ import { currentDate, daysOpen, daysUntilOpening } from '@/app/utils/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { ORDERS, Order, findOrder, jarHref, jarsInOrder } from '@/data/advent-orders'
 
-const DEV_TOOLS = process.env.NETLIFY_CONTEXT !== 'production'
-
 export const ORDER_KEY = 'advent:order'
 const STARTED_KEY = 'advent:started'
 
@@ -105,7 +103,7 @@ export default function AdventRoute() {
       <aside className="flex flex-col gap-4 lg:self-start">
         <WhosInTheBox />
       </aside>
-      {DEV_TOOLS && <DevPanel />}
+      <DevPanel />
     </section>
   )
 }

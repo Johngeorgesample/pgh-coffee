@@ -62,9 +62,9 @@ describe('AdventRoute', () => {
     expect(screen.getByText('13 days to go')).toBeInTheDocument()
   })
 
-  it('pretends it is the dev-day in December when that param is set', () => {
+  it('pretends it is the preview day in December when that param is set', () => {
     startOn('2026-11-18T12:00:00-05:00')
-    window.history.replaceState(null, '', '/advent?dev-day=3')
+    window.history.replaceState(null, '', '/advent?preview=3')
     render(<AdventRoute />)
 
     expect(screen.getByText('Today · Day 03')).toBeInTheDocument()
