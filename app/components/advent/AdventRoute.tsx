@@ -17,7 +17,7 @@ import { ORDERS, Order, findOrder, jarHref, jarsInOrder } from '@/data/advent-or
 
 const DEV_TOOLS = process.env.NETLIFY_CONTEXT !== 'production'
 
-const ORDER_KEY = 'advent:order'
+export const ORDER_KEY = 'advent:order'
 const STARTED_KEY = 'advent:started'
 
 const storedOrder = () => {
@@ -82,7 +82,7 @@ export default function AdventRoute() {
             {countdown !== null && <BeforeOpening days={countdown} />}
             {!order && open > 0 && <ChooseOrder step={open} onChoose={next => choose(next, open)} />}
             {today && (
-              <section className="mt-10 animate-rise motion-reduce:animate-none">
+              <section data-reveal className="mt-10 animate-rise motion-reduce:animate-none">
                 <SectionHead title="Today's coffee" />
                 <div className="mt-8">
                   <TodayCard entry={today.entry} step={today.step} href={today.href} />
@@ -96,6 +96,7 @@ export default function AdventRoute() {
                 open={open}
                 locked={!order || open === 0}
                 onReveal={day => order && router.push(jarHref(order, day))}
+                onPrefetch={day => order && router.prefetch(jarHref(order, day))}
               />
             )}
           </div>

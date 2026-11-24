@@ -12,4 +12,9 @@ describe('TodayCard', () => {
     render(<TodayCard entry={entry} step={2} href="/advent/2" />)
     expect(screen.queryByText('Varietal')).not.toBeInTheDocument()
   })
+
+  it('draws no spec rules when there are no details at all', () => {
+    const { container } = render(<TodayCard entry={entry} step={2} href="/advent/2" />)
+    expect(container.querySelector('dl')).toBeNull()
+  })
 })

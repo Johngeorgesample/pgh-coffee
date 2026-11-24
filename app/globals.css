@@ -3,6 +3,13 @@
 
 @config '../tailwind.config.ts';
 
+@custom-variant returning (&:where([data-advent-returning] *));
+
+[data-reveal-ready] [data-reveal]:not([data-revealed]),
+[data-reveal-ready] [data-reveal]:not([data-revealed]) > * {
+  animation-play-state: paused;
+}
+
 html {
   /* iOS/Android paint a gray box over tapped elements, which fights our own :active feedback */
   -webkit-tap-highlight-color: transparent;

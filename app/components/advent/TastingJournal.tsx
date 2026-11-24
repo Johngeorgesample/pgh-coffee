@@ -1,11 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Star } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
+import Field from './tasting-journal/Field'
+import LoggedStamp from './tasting-journal/LoggedStamp'
+import OwnNote from './tasting-journal/OwnNote'
+import Rating from './tasting-journal/Rating'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
@@ -28,17 +32,6 @@ const readEntry = (day: number) => {
 
 const press = 'transition-[transform,box-shadow,background-color] duration-150 ease-out active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
 
-const Label = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-900">{children}</h3>
-)
-
-const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div className="flex flex-col gap-3 border-t-2 border-gray-950 pt-5">
-    <Label>{label}</Label>
-    {children}
-  </div>
-)
-
 const Chip = ({ on, ...props }: { on: boolean } & React.ComponentProps<'button'>) => (
   <button
     type="button"
@@ -48,87 +41,6 @@ const Chip = ({ on, ...props }: { on: boolean } & React.ComponentProps<'button'>
     }`}
     {...props}
   />
-)
-
-const Rating = ({ value, onChange }: { value: number; onChange: (n: number) => void }) => {
-  const [tap, setTap] = useState({ star: 0, count: 0 })
-  const rate = (n: number) => {
-    setTap(prev => ({ star: n, count: prev.count + 1 }))
-    onChange(n)
-  }
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <Label>Your rating</Label>
-        <p className="mt-1 font-serif text-3xl tracking-tight text-gray-950">
-          {value || '—'}
-          <span className="text-lg text-gray-500"> / 5</span>
-        </p>
-      </div>
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map(n => (
-          <button
-            key={n}
-            type="button"
-            onClick={() => rate(n)}
-            aria-label={`${n} out of 5`}
-            aria-pressed={n === value}
-            className="p-1 transition-transform duration-150 ease-out active:scale-90"
-          >
-            <Star
-              key={n === tap.star ? tap.count : 0}
-              strokeWidth={2.5}
-              className={`size-7 text-gray-950 ${n <= value ? 'fill-yellow-300' : 'fill-white'} ${
-                n === tap.star ? 'animate-pop motion-reduce:animate-none' : ''
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
-  const [draft, setDraft] = useState<string | null>(null)
-  const commit = () => {
-    onAdd(draft?.trim() ?? '')
-    setDraft(null)
-  }
-  if (draft === null)
-    return (
-      <button
-        type="button"
-        onClick={() => setDraft('')}
-        className="min-h-11 rounded-lg border-2 border-dashed border-gray-950/40 px-3.5 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-950"
-      >
-        + Add your own note
-      </button>
-    )
-  return (
-    <input
-      ref={el => el?.focus()}
-      value={draft}
-      onChange={e => setDraft(e.target.value)}
-      onBlur={commit}
-      onKeyDown={e => e.key === 'Enter' && commit()}
-      aria-label="Add your own tasting note"
-      placeholder="Dried cherry…"
-      className="min-h-11 rounded-lg border-2 border-gray-950 px-3.5 text-base text-gray-950 sm:text-sm outline-none focus:border-gray-950 focus:bg-yellow-50 focus:ring-0"
-    />
-  )
-}
-
-const LoggedStamp = ({ step, justSaved }: { step: number; justSaved: boolean }) => (
-  <span className="absolute top-0 right-5 -translate-y-1/2">
-    <span
-      className={`block -rotate-6 rounded-lg border-4 border-gray-950 bg-yellow-300 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-950 shadow-[3px_3px_0_#030712] ${
-        justSaved ? 'animate-stamp motion-reduce:animate-none' : ''
-      }`}
-    >
-      Logged · Day {String(step).padStart(2, '0')}
-    </span>
-  </span>
 )
 
 const cupProps = (day: number, entry: Entry, via: string) => ({

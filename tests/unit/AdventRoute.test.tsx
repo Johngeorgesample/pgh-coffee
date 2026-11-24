@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import AdventRoute from '@/app/components/advent/AdventRoute'
 
 const push = vi.fn()
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
+const prefetch = vi.fn()
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push, prefetch }) }))
 vi.mock('@/public/advent/top.webp', () => ({ default: { src: '/advent/top.webp', width: 2819, height: 800 } }))
 vi.mock('@/public/advent/left.webp', () => ({ default: { src: '/advent/left.webp', width: 2882, height: 800 } }))
 
@@ -112,7 +113,7 @@ describe('AdventRoute', () => {
     expect(screen.queryByRole('button', { name: 'Oldest first' })).not.toBeInTheDocument()
   })
 
-  it("only goes to a sealed jar's day after the spoiler warning is accepted, leaving it sealed", async () => {
+  it("only goes to a sealed jar's day after the spoiler warning is accepted, leaving it sealed", () => {
     startOn('2026-12-03T12:00:00-05:00')
     render(<AdventRoute />)
 
@@ -123,8 +124,9 @@ describe('AdventRoute', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Open Dec 4 early' }))
     fireEvent.click(screen.getByRole('button', { name: 'Open it' }))
+    expect(prefetch).toHaveBeenCalledWith('/advent/4')
     fireEvent.click(screen.getByRole('button', { name: 'Open anyway' }))
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/advent/4'))
+    expect(push).toHaveBeenCalledWith('/advent/4')
     expect(screen.getAllByRole('link').find(a => a.getAttribute('href') === '/advent/4')).toBeUndefined()
   })
 })
