@@ -66,7 +66,7 @@ describe('TastingJournal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Sign up' }))
 
     await waitFor(() => expect(screen.getByText('Logged · Day 01')).toBeInTheDocument())
-    expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true })
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ rating: 4, logged: true })
     expect(plausible.mock.calls.filter(([event]) => event === 'AdventSaveAuthCompleted')).toHaveLength(1)
   })
 
@@ -80,7 +80,7 @@ describe('TastingJournal', () => {
     renderJournal()
 
     expect(screen.getByText('Logged · Day 01')).toBeInTheDocument()
-    expect(JSON.parse(localStorage.getItem('advent:journal:1')!)).toMatchObject({ rating: 4, logged: true, pending: false })
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ rating: 4, logged: true, pending: false })
   })
 
 })
