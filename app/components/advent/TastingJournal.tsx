@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
-import { ADVENT_YEAR } from '@/data/advent'
+import { adventCoffeeId } from '@/data/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
@@ -14,16 +14,32 @@ import Rating from './tasting-journal/Rating'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
-// ponytail: the journal lives in localStorage, so it follows the browser rather
-// than the account. Swap for a `user_tasting_notes` table + /api route once the
-// real lineup ships and people expect their cups on every device.
-const storageKey = (day: number) => `journal:advent-${ADVENT_YEAR}-${day}`
+const storageKey = (day: number) => `journal:${adventCoffeeId(day)}`
 
-export type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
+type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
 
 const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: false, pending: false }
 
-export const readEntry = (day: number) => {
+export type SavedCup = { coffee_id: string; rating: number; tasted: string[]; method: string | null; body: string | null }
+
+const fromSaved = (cup: SavedCup) => ({ rating: cup.rating, tasted: cup.tasted, method: cup.method ?? '', body: cup.body ?? '', logged: true, pending: false })
+
+const findSaved = (day: number) =>
+  fetch('/api/journal')
+    .then(res => (res.ok ? res.json() : []))
+    .then((cups: SavedCup[]) => cups.find(cup => cup.coffee_id === adventCoffeeId(day)))
+    .catch(() => undefined)
+
+const putCup = ({ rating, tasted, method, body }: Entry, day: number) =>
+  fetch(`/api/journal/${adventCoffeeId(day)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rating, tasted, method, body }),
+  })
+    .then(res => res.ok)
+    .catch(() => false)
+
+const readEntry = (day: number) => {
   try {
     return { ...EMPTY, ...JSON.parse(storageGet(storageKey(day)) ?? '{}') } as Entry
   } catch {
@@ -62,30 +78,37 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [justTicked, setJustTicked] = useState<string | null>(null)
   const [asking, setAsking] = useState(false)
   const track = useAnalytics()
+  const triedPending = useRef(false)
+
+  const write = (patch: Partial<Entry>) =>
+    setEntry(prev => {
+      const next = { ...prev, ...patch }
+      storageSet(storageKey(day), JSON.stringify(next))
+      return next
+    })
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
-  useEffect(() => setEntry(readEntry(day)), [day])
-
-  const write = (patch: Partial<Entry>) => {
-    const next = { ...entry, ...patch }
-    setEntry(next)
-    storageSet(storageKey(day), JSON.stringify(next))
-  }
+  useEffect(() => {
+    const local = readEntry(day)
+    setEntry(local)
+    if (user && !local.pending) findSaved(day).then(saved => saved && write(fromSaved(saved)))
+  }, [day, user?.id])
 
   const set = (patch: Partial<Entry>) => {
     setJustSaved(false)
     write({ ...patch, logged: false })
   }
 
-  const save = () => {
+  const save = async (via: string) => {
+    if (!(await putCup(entry, day))) return
+    track('AdventCupSaved', { props: cupProps(day, entry, via) })
     setJustSaved(true)
     write({ logged: true, pending: false })
   }
 
   const saveFromButton = () => {
-    if (!entry.logged) track('AdventCupSaved', { props: cupProps(day, entry, 'button') })
-    save()
+    if (!entry.logged) save('button')
   }
 
   const askToSave = () => {
@@ -96,12 +119,13 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
   const savePending = () => {
     track('AdventSaveAuthCompleted', { props: { jar: day } })
-    track('AdventCupSaved', { props: cupProps(day, entry, 'auth') })
-    save()
+    save('auth')
   }
 
   useEffect(() => {
-    if (user && entry.pending) savePending()
+    if (!user || !entry.pending || triedPending.current) return
+    triedPending.current = true
+    savePending()
   })
 
   const toggleTasted = (note: string) => {

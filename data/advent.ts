@@ -53,3 +53,7 @@ export const ANNOUNCED_ROASTERS: { name: string; slug?: string }[] = [
 ]
 
 export const findAdventDay = (day: number) => ADVENT_LINEUP.find(entry => entry.day === day)
+
+export const adventCoffeeId = (day: number) => `advent-${ADVENT_YEAR}-${day}`
+
+export const findAdventDayByCoffeeId = (coffeeId: string) => ADVENT_LINEUP.find(entry => adventCoffeeId(entry.day) === coffeeId)
