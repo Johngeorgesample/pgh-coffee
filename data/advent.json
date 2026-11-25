@@ -71,10 +71,12 @@
   {
     "day": 5,
     "roasterName": "Hilltop Coffee",
-    "coffee": "To be announced",
+    "coffee": "Indian Monsoon Malabar",
     "notes": [],
     "founded": 2020,
-    "agtron": 66.5
+    "agtron": 66.5,
+    "origin": "India",
+    "process": "Monsooned"
   },
   {
     "day": 6,
@@ -130,7 +132,7 @@
       "Black tea"
     ],
     "producer": "Smallholders via Kyagalanyi Coffee",
-    "origin": "Rwenzori Mountains, Uganda",
+    "origin": "Kasese District, Rwenzori Mountains, Uganda",
     "process": "Natural",
     "roast": "Light",
     "founded": 2024,
@@ -148,7 +150,7 @@
     ],
     "origin": "Colombia & Ethiopia",
     "roast": "Medium",
-    "blurb": "Reginald’s signature blend: a Colombia base with Yirgacheffe, roasted to a well-rounded medium that works for drip or espresso.",
+    "blurb": "Reginald’s signature blend: a Colombia base with washed Yirgacheffe, roasted to a well-rounded medium that works for drip or espresso.",
     "founded": 2019,
     "agtron": 73.9
   },
@@ -175,7 +177,7 @@
     "day": 12,
     "roasterSlug": "allegheny-coffee-and-tea-exchange",
     "roasterName": "Allegheny Coffee & Tea Exchange",
-    "coffee": "To be announced",
+    "coffee": "House Espresso Blend",
     "notes": [],
     "founded": 1968,
     "agtron": 80.3
@@ -244,7 +246,7 @@
     "origin": "Colombia",
     "producer": "Finca San Agustin",
     "varietal": "Pink Bourbon",
-    "process": "Washed",
+    "process": "Anaerobic washed",
     "roast": "Light",
     "founded": 2012,
     "agtron": 71.8
@@ -359,7 +361,7 @@
     "day": 23,
     "roasterSlug": "dynamic-coffee-roasters",
     "roasterName": "Dynamic Coffee Roasters",
-    "coffee": "To be announced",
+    "coffee": "Galo Pacamara",
     "notes": [],
     "founded": 2022,
     "agtron": 80.8
@@ -374,11 +376,12 @@
       "Strawberry jam",
       "Dark chocolate"
     ],
-    "origin": "Costa Rica & Guatemala",
+    "origin": "Costa Rica & Huehuetenango, Guatemala",
     "process": "Washed & natural",
     "blurb": "A blend of Las Lajas, light and berry-sweet, with Quetzal, a medium Guatemalan with toffee and dark chocolate.",
     "founded": 2017,
-    "agtron": 73.6
+    "agtron": 73.6,
+    "varietal": "Caturra, Catuai, Bourbon, Villa Sarchi, Villalobos, Sarchimor, Venecia, Costa Rica 95, Catimor, Maragogype & Pache"
   },
   {
     "day": 25,
