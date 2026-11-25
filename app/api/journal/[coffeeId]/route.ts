@@ -36,6 +36,16 @@ async function readCup(request: Request) {
   return cup && typeof cup === 'object' && isCup(cup) ? (cup as Record<string, unknown>) : null
 }
 
+async function saveCup(supabase: Awaited<ReturnType<typeof createClient>>, userID: string, coffeeId: string, cup: Record<string, unknown>) {
+  const { error } = await supabase.from('user_tasting_notes').upsert(toRow(userID, coffeeId, cup), { onConflict: 'user_id,coffee_id' })
+  if (error) {
+    logger.error('Error saving tasting note', { error: error.message })
+    return NextResponse.json({ error: 'Error saving tasting note' }, { status: 500 })
+  }
+  logger.info('Saved tasting note', { coffeeId, userID })
+  return NextResponse.json({ success: true })
+}
+
 async function handlePUT(request: Request, props: { params: Promise<{ coffeeId: string }> }) {
   const { coffeeId } = await props.params
   const supabase = await createClient()
@@ -46,13 +56,7 @@ async function handlePUT(request: Request, props: { params: Promise<{ coffeeId: 
   const cup = await readCup(request)
   if (!cup) return badRequest(`Expected rating 1–5, up to ${MAX_TASTED} tasted notes, and method/body strings`)
 
-  const { error } = await supabase.from('user_tasting_notes').upsert(toRow(user.id, coffeeId, cup), { onConflict: 'user_id,coffee_id' })
-  if (error) {
-    logger.error('Error saving tasting note', { error: error.message })
-    return NextResponse.json({ error: 'Error saving tasting note' }, { status: 500 })
-  }
-  logger.info('Saved tasting note', { coffeeId, userID: user.id })
-  return NextResponse.json({ success: true })
+  return saveCup(supabase, user.id, coffeeId, cup)
 }
 
 export const PUT = withMetrics('journal/[coffeeId]:PUT', handlePUT)
