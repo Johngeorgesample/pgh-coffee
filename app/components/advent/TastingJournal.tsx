@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
-import { ADVENT_YEAR } from '@/data/advent'
+import { adventCoffeeId, JOURNAL_LIMITS } from '@/data/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
@@ -14,16 +14,32 @@ import Rating from './tasting-journal/Rating'
 
 const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso', 'Drip']
 
-// ponytail: the journal lives in localStorage, so it follows the browser rather
-// than the account. Swap for a `user_tasting_notes` table + /api route once the
-// real lineup ships and people expect their cups on every device.
-const storageKey = (day: number) => `journal:advent-${ADVENT_YEAR}-${day}`
+const storageKey = (day: number) => `journal:${adventCoffeeId(day)}`
 
-export type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
+type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
 
 const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: false, pending: false }
 
-export const readEntry = (day: number) => {
+export type SavedCup = { coffee_id: string; rating: number; tasted: string[]; method: string | null; body: string | null }
+
+const fromSaved = (cup: SavedCup) => ({ rating: cup.rating, tasted: cup.tasted, method: cup.method ?? '', body: cup.body ?? '', logged: true, pending: false })
+
+const findSaved = (day: number) =>
+  fetch('/api/journal')
+    .then(res => (res.ok ? res.json() : []))
+    .then((cups: SavedCup[]) => cups.find(cup => cup.coffee_id === adventCoffeeId(day)))
+    .catch(() => undefined)
+
+const putCup = ({ rating, tasted, method, body }: Entry, day: number) =>
+  fetch(`/api/journal/${adventCoffeeId(day)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rating, tasted, method, body }),
+  })
+    .then(res => res.ok)
+    .catch(() => false)
+
+const readEntry = (day: number) => {
   try {
     return { ...EMPTY, ...JSON.parse(storageGet(storageKey(day)) ?? '{}') } as Entry
   } catch {
@@ -53,7 +69,9 @@ const cupProps = (day: number, entry: Entry, via: string) => ({
   wroteNotes: entry.body.trim() !== '',
 })
 
-const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
+const saveLabel = (entry: Entry) => (entry.rating ? 'Save tasting note' : 'Pick a rating to save')
+
+const saveClass = `disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
 
 export default function TastingJournal({ day, step, notes, returnTo }: { day: number; step: number; notes: string[]; returnTo: string }) {
   const { user } = useAuth()
@@ -61,31 +79,42 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [justSaved, setJustSaved] = useState(false)
   const [justTicked, setJustTicked] = useState<string | null>(null)
   const [asking, setAsking] = useState(false)
+  const [failed, setFailed] = useState(false)
   const track = useAnalytics()
+  const triedPending = useRef(false)
+
+  const write = (patch: Partial<Entry>) =>
+    setEntry(prev => {
+      const next = { ...prev, ...patch }
+      storageSet(storageKey(day), JSON.stringify(next))
+      return next
+    })
 
   // The draft is kept for signed-out visitors too, so the sign-up round trip
   // the CTA sends them on doesn't throw away the cup they just scored.
-  useEffect(() => setEntry(readEntry(day)), [day])
-
-  const write = (patch: Partial<Entry>) => {
-    const next = { ...entry, ...patch }
-    setEntry(next)
-    storageSet(storageKey(day), JSON.stringify(next))
-  }
+  useEffect(() => {
+    const local = readEntry(day)
+    setEntry(local)
+    if (user && !local.pending) findSaved(day).then(saved => saved && write(fromSaved(saved)))
+  }, [day, user?.id])
 
   const set = (patch: Partial<Entry>) => {
     setJustSaved(false)
+    setFailed(false)
     write({ ...patch, logged: false })
   }
 
-  const save = () => {
+  const save = async (via: string) => {
+    const ok = await putCup(entry, day)
+    setFailed(!ok)
+    if (!ok) return
+    track('AdventCupSaved', { props: cupProps(day, entry, via) })
     setJustSaved(true)
     write({ logged: true, pending: false })
   }
 
   const saveFromButton = () => {
-    if (!entry.logged) track('AdventCupSaved', { props: cupProps(day, entry, 'button') })
-    save()
+    if (!entry.logged) save('button')
   }
 
   const askToSave = () => {
@@ -96,12 +125,13 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
   const savePending = () => {
     track('AdventSaveAuthCompleted', { props: { jar: day } })
-    track('AdventCupSaved', { props: cupProps(day, entry, 'auth') })
-    save()
+    save('auth')
   }
 
   useEffect(() => {
-    if (user && entry.pending) savePending()
+    if (!user || !entry.pending || triedPending.current) return
+    triedPending.current = true
+    savePending()
   })
 
   const toggleTasted = (note: string) => {
@@ -110,7 +140,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   }
 
   const addOwnNote = (note: string) => {
-    if (!note || entry.tasted.includes(note)) return
+    if (!note || entry.tasted.includes(note) || entry.tasted.length >= JOURNAL_LIMITS.tasted) return
     setJustTicked(note)
     set({ tasted: [...entry.tasted, note] })
   }
@@ -148,6 +178,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
         <Field label="Personal notes">
           <textarea
             rows={3}
+            maxLength={JOURNAL_LIMITS.body}
             value={entry.body}
             onChange={e => set({ body: e.target.value })}
             aria-label="Personal notes"
@@ -159,14 +190,19 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
       <div className="border-t-4 border-gray-950 p-4">
         {user ? (
-          <button type="button" onClick={saveFromButton} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
+          <button type="button" onClick={saveFromButton} disabled={!entry.rating} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
             {entry.logged && <Check className={`size-4 ${justSaved ? 'animate-stamp motion-reduce:animate-none' : ''}`} strokeWidth={3} />}
-            {entry.logged ? 'Saved' : 'Save tasting note'}
+            {entry.logged ? 'Saved' : saveLabel(entry)}
           </button>
         ) : (
-          <button type="button" onClick={askToSave} className={`${saveClass} bg-yellow-300`}>
-            Save tasting note
+          <button type="button" onClick={askToSave} disabled={!entry.rating} className={`${saveClass} bg-yellow-300`}>
+            {saveLabel(entry)}
           </button>
+        )}
+        {failed && (
+          <p role="alert" className="mt-3 text-sm font-semibold text-red-700">
+            Couldn’t save your cup. Try again.
+          </p>
         )}
         <SaveCupDialog
           open={asking}

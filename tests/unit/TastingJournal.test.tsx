@@ -70,7 +70,7 @@ describe('TastingJournal', () => {
     expect(plausible.mock.calls.filter(([event]) => event === 'AdventSaveAuthCompleted')).toHaveLength(1)
   })
 
-  it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', () => {
+  it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', async () => {
     renderJournal()
     fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
     fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
@@ -79,8 +79,34 @@ describe('TastingJournal', () => {
     auth.user = { id: 'u1' }
     renderJournal()
 
-    expect(screen.getByText('Logged · Day 01')).toBeInTheDocument()
+    expect(await screen.findByText('Logged · Day 01')).toBeInTheDocument()
     expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ rating: 4, logged: true, pending: false })
   })
 
+  // The draft is the only copy until the server has it, so a failed save after
+  // sign-up must leave it pending for the next visit to retry.
+  it('keeps the cup pending when the server rejects the save', async () => {
+    renderJournal()
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+
+    cleanup()
+    auth.user = { id: 'u1' }
+    vi.mocked(fetch).mockResolvedValueOnce({ ok: false } as Response)
+    renderJournal()
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith('/api/journal/advent-2026-1', expect.objectContaining({ method: 'PUT' })))
+    expect(screen.queryByText('Logged · Day 01')).not.toBeInTheDocument()
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ logged: false, pending: true })
+  })
+
+  it('tells a signed-in user when their save fails', async () => {
+    auth.user = { id: 'u1' }
+    renderJournal()
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    vi.mocked(fetch).mockResolvedValueOnce({ ok: false } as Response)
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Couldn’t save your cup')
+  })
 })

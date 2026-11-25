@@ -3,12 +3,24 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { ADVENT_LINEUP } from '@/data/advent'
-import { readEntry } from '@/app/components/advent/TastingJournal'
+import { ADVENT_LINEUP, AdventDay, adventCoffeeId } from '@/data/advent'
+import type { SavedCup } from '@/app/components/advent/TastingJournal'
 
-const loadCups = () => ADVENT_LINEUP.map(day => ({ day, entry: readEntry(day.day) })).filter(c => c.entry.logged)
+type Cup = { day: AdventDay; entry: SavedCup }
 
-type Cup = ReturnType<typeof loadCups>[number]
+const joinLineup = (saved: SavedCup[]) => {
+  const byId = new Map(saved.map(cup => [cup.coffee_id, cup]))
+  return ADVENT_LINEUP.flatMap(day => {
+    const entry = byId.get(adventCoffeeId(day.day))
+    return entry ? [{ day, entry }] : []
+  })
+}
+
+const loadCups = async () => {
+  const res = await fetch('/api/journal')
+  if (!res.ok) throw new Error(`GET /api/journal ${res.status}`)
+  return joinLineup(await res.json())
+}
 
 const Stars = ({ n }: { n: number }) => (
   <span className="inline-flex" aria-label={`${n} out of 5`}>
@@ -52,6 +64,8 @@ const Logbook = ({ cups }: { cups: Cup[] }) => (
   </div>
 )
 
+const LoadError = () => <p className="text-gray-500">Couldn’t load your journal. Refresh to try again.</p>
+
 const Empty = () => (
   <p className="text-gray-500">
     Nothing logged yet. Open a jar on the <Link href="/advent" className="font-medium text-yellow-700 hover:text-yellow-800">advent calendar</Link> and save a cup.
@@ -60,7 +74,10 @@ const Empty = () => (
 
 export default function JournalPage() {
   const [cups, setCups] = useState<Cup[] | null>(null)
-  useEffect(() => setCups(loadCups()), [])
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    loadCups().then(setCups, () => setFailed(true))
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -68,6 +85,7 @@ export default function JournalPage() {
         <h1 className="text-2xl font-bold text-gray-900">Tasting journal</h1>
         {cups && cups.length > 0 && <p className="text-gray-500">{cups.length} cups logged from the advent calendar.</p>}
       </div>
+      {failed && <LoadError />}
       {cups && (cups.length ? <Logbook cups={cups} /> : <Empty />)}
     </div>
   )
