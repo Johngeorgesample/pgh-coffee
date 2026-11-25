@@ -2,12 +2,9 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { withMetrics } from '@/lib/withMetrics'
-import { findAdventDayByCoffeeId } from '@/data/advent'
+import { findAdventDayByCoffeeId, JOURNAL_LIMITS } from '@/data/advent'
 
-const MAX_TASTED = 20
-const MAX_NOTE = 50
-const MAX_METHOD = 100
-const MAX_BODY = 2000
+const { tasted: MAX_TASTED, note: MAX_NOTE, method: MAX_METHOD, body: MAX_BODY } = JOURNAL_LIMITS
 
 const isText = (value: unknown, max: number) => typeof value === 'string' && value.length <= max
 

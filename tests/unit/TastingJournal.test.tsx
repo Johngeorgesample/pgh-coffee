@@ -100,4 +100,13 @@ describe('TastingJournal', () => {
     expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ logged: false, pending: true })
   })
 
+  it('tells a signed-in user when their save fails', async () => {
+    auth.user = { id: 'u1' }
+    renderJournal()
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    vi.mocked(fetch).mockResolvedValueOnce({ ok: false } as Response)
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Couldn’t save your cup')
+  })
 })

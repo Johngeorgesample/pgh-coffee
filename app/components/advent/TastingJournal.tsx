@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
-import { adventCoffeeId } from '@/data/advent'
+import { adventCoffeeId, JOURNAL_LIMITS } from '@/data/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
@@ -69,7 +69,9 @@ const cupProps = (day: number, entry: Entry, via: string) => ({
   wroteNotes: entry.body.trim() !== '',
 })
 
-const saveClass = `inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
+const saveLabel = (entry: Entry) => (entry.rating ? 'Save tasting note' : 'Pick a rating to save')
+
+const saveClass = `disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border-2 border-gray-950 px-5 text-xs font-bold uppercase tracking-widest text-gray-950 shadow-[3px_3px_0_#030712] ${press}`
 
 export default function TastingJournal({ day, step, notes, returnTo }: { day: number; step: number; notes: string[]; returnTo: string }) {
   const { user } = useAuth()
@@ -77,6 +79,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [justSaved, setJustSaved] = useState(false)
   const [justTicked, setJustTicked] = useState<string | null>(null)
   const [asking, setAsking] = useState(false)
+  const [failed, setFailed] = useState(false)
   const track = useAnalytics()
   const triedPending = useRef(false)
 
@@ -97,11 +100,14 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
   const set = (patch: Partial<Entry>) => {
     setJustSaved(false)
+    setFailed(false)
     write({ ...patch, logged: false })
   }
 
   const save = async (via: string) => {
-    if (!(await putCup(entry, day))) return
+    const ok = await putCup(entry, day)
+    setFailed(!ok)
+    if (!ok) return
     track('AdventCupSaved', { props: cupProps(day, entry, via) })
     setJustSaved(true)
     write({ logged: true, pending: false })
@@ -134,7 +140,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   }
 
   const addOwnNote = (note: string) => {
-    if (!note || entry.tasted.includes(note)) return
+    if (!note || entry.tasted.includes(note) || entry.tasted.length >= JOURNAL_LIMITS.tasted) return
     setJustTicked(note)
     set({ tasted: [...entry.tasted, note] })
   }
@@ -172,6 +178,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
         <Field label="Personal notes">
           <textarea
             rows={3}
+            maxLength={JOURNAL_LIMITS.body}
             value={entry.body}
             onChange={e => set({ body: e.target.value })}
             aria-label="Personal notes"
@@ -183,14 +190,19 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
 
       <div className="border-t-4 border-gray-950 p-4">
         {user ? (
-          <button type="button" onClick={saveFromButton} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
+          <button type="button" onClick={saveFromButton} disabled={!entry.rating} className={`${saveClass} ${entry.logged ? 'bg-white' : 'bg-yellow-300'}`}>
             {entry.logged && <Check className={`size-4 ${justSaved ? 'animate-stamp motion-reduce:animate-none' : ''}`} strokeWidth={3} />}
-            {entry.logged ? 'Saved' : 'Save tasting note'}
+            {entry.logged ? 'Saved' : saveLabel(entry)}
           </button>
         ) : (
-          <button type="button" onClick={askToSave} className={`${saveClass} bg-yellow-300`}>
-            Save tasting note
+          <button type="button" onClick={askToSave} disabled={!entry.rating} className={`${saveClass} bg-yellow-300`}>
+            {saveLabel(entry)}
           </button>
+        )}
+        {failed && (
+          <p role="alert" className="mt-3 text-sm font-semibold text-red-700">
+            Couldn’t save your cup. Try again.
+          </p>
         )}
         <SaveCupDialog
           open={asking}

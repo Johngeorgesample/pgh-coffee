@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { JOURNAL_LIMITS } from '@/data/advent'
 
 const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
   const [draft, setDraft] = useState<string | null>(null)
@@ -22,6 +23,7 @@ const OwnNote = ({ onAdd }: { onAdd: (note: string) => void }) => {
     <input
       ref={el => el?.focus()}
       value={draft}
+      maxLength={JOURNAL_LIMITS.note}
       onChange={e => setDraft(e.target.value)}
       onBlur={commit}
       onKeyDown={e => e.key === 'Enter' && commit()}

@@ -56,4 +56,6 @@ export const findAdventDay = (day: number) => ADVENT_LINEUP.find(entry => entry.
 
 export const adventCoffeeId = (day: number) => `advent-${ADVENT_YEAR}-${day}`
 
+export const JOURNAL_LIMITS = { tasted: 20, note: 50, method: 100, body: 2000 }
+
 export const findAdventDayByCoffeeId = (coffeeId: string) => ADVENT_LINEUP.find(entry => adventCoffeeId(entry.day) === coffeeId)
