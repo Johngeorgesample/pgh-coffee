@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Check } from 'lucide-react'
 import { useAuth } from '@/app/components/AuthProvider'
+import { ADVENT_YEAR } from '@/data/advent'
 import { storageGet, storageSet } from '@/app/utils/storage'
 import { useAnalytics } from '@/hooks'
 import SaveCupDialog from './SaveCupDialog'
@@ -16,13 +17,13 @@ const BREW_METHODS = ['Pour-over / V60', 'AeroPress', 'French Press', 'Espresso'
 // ponytail: the journal lives in localStorage, so it follows the browser rather
 // than the account. Swap for a `user_tasting_notes` table + /api route once the
 // real lineup ships and people expect their cups on every device.
-const storageKey = (day: number) => `advent:journal:${day}`
+const storageKey = (day: number) => `journal:advent-${ADVENT_YEAR}-${day}`
 
-type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
+export type Entry = { rating: number; tasted: string[]; method: string; body: string; logged: boolean; pending: boolean }
 
 const EMPTY: Entry = { rating: 0, tasted: [], method: '', body: '', logged: false, pending: false }
 
-const readEntry = (day: number) => {
+export const readEntry = (day: number) => {
   try {
     return { ...EMPTY, ...JSON.parse(storageGet(storageKey(day)) ?? '{}') } as Entry
   } catch {
