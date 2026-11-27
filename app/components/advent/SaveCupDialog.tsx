@@ -18,6 +18,7 @@ type Props = {
   open: boolean
   onClose: () => void
   onSaved: () => void
+  onConfirmationSent?: () => void
   day: number
   returnTo: string
   draft?: CupDraft
@@ -35,7 +36,7 @@ const draftSummary = (draft: CupDraft) => {
   return parts.join(' · ')
 }
 
-export default function SaveCupDialog({ open, onClose, onSaved, day, returnTo, draft }: Props) {
+export default function SaveCupDialog({ open, onClose, onSaved, onConfirmationSent, day, returnTo, draft }: Props) {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
   const details = draft ? draftSummary(draft) : ''
 
@@ -105,6 +106,7 @@ export default function SaveCupDialog({ open, onClose, onSaved, day, returnTo, d
             submitLabels={{ signin: 'Sign in & save cup', signup: 'Create account & save' }}
             confirmDetail={`Your Day ${day} notes are safely kept here and will save automatically once you click the link.`}
             onModeChange={setAuthMode}
+            onConfirmationSent={onConfirmationSent}
           />
         </DialogPanel>
       </div>

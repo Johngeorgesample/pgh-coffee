@@ -11,11 +11,8 @@ vi.mock('next-plausible', () => ({ usePlausible: () => plausible }))
 
 vi.mock('@/app/components/AuthProvider', () => ({ useAuth: () => ({ user: auth.user }) }))
 
-vi.mock('@/lib/supabase/client', () => ({
-  createClient: () => ({
-    auth: { signUp: vi.fn().mockResolvedValue({ data: { user: { identities: [{}] }, session: {} }, error: null }) },
-  }),
-}))
+const signUp = vi.hoisted(() => vi.fn())
+vi.mock('@/lib/supabase/client', () => ({ createClient: () => ({ auth: { signUp } }) }))
 
 const renderJournal = () => render(<TastingJournal day={1} step={1} notes={['Red apple', 'Cocoa']} returnTo="/advent/1" />)
 
@@ -23,6 +20,7 @@ describe('TastingJournal', () => {
   beforeEach(() => {
     localStorage.clear()
     auth.user = null
+    signUp.mockResolvedValue({ data: { user: { identities: [{}] }, session: {} }, error: null })
     plausible.mockClear()
   })
 
@@ -88,6 +86,21 @@ describe('TastingJournal', () => {
 
     fireEvent.click(await screen.findByRole('button', { name: 'Close' }))
     expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ pending: false })
+  })
+
+  it('keeps the cup pending when the dialog is closed after a confirmation email went out', async () => {
+    signUp.mockResolvedValue({ data: { user: { identities: [{}] }, session: null }, error: null })
+    renderJournal()
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+    fireEvent.click(await screen.findByRole('button', { name: /Continue with email/i }))
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'a@b.co' } })
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'hunter22' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Create account & save' }))
+    await screen.findByText(/check your email/i)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ pending: true })
   })
 
   it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', async () => {

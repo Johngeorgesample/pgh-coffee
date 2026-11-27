@@ -17,6 +17,7 @@ interface AuthFormProps {
   submitLabels?: { signin: string; signup: string }
   confirmDetail?: string
   onModeChange?: (mode: 'signin' | 'signup') => void
+  onConfirmationSent?: () => void
 }
 
 const ADVENT_PRESS =
@@ -34,6 +35,7 @@ export default function AuthForm({
   submitLabels = { signin: 'Sign in', signup: 'Sign up' },
   confirmDetail,
   onModeChange,
+  onConfirmationSent,
 }: AuthFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -93,6 +95,7 @@ export default function AuthForm({
 
         if (data.user && !data.session) {
           setNotice('Please check your email to confirm your account before signing in.')
+          onConfirmationSent?.()
           return
         }
 
