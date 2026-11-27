@@ -5,9 +5,7 @@ export default function GetInTouch() {
     <section className="max-w-4xl mx-auto px-6 py-20 space-y-12" id="contact">
       <div className="text-center">
         <h2 className="text-4xl font-black tracking-tight mb-4">Get in Touch</h2>
-        <p className="text-slate-600 text-lg">
-          Whether you have feedback, suggestions, or just want to chat about coffee, don&apos;t hesitate to reach out.
-        </p>
+        <p className="text-slate-600 text-lg">Have a tip, a collaboration idea, or just want to talk shop about Pittsburgh cafés and espresso?</p>
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <a

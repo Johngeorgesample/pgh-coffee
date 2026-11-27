@@ -10,19 +10,9 @@ export default function Bio() {
         />
       </div>
       <div className="space-y-6">
-        <div className="inline-block bg-yellow-300 px-4 py-1 rounded-full text-black font-bold text-sm tracking-wider uppercase">
-          The Founder
-        </div>
-        <h2 className="text-4xl font-black tracking-tight">Meet John-George</h2>
+        <h2 className="text-4xl font-black tracking-tight">About me</h2>
         <p className="text-lg text-slate-600 leading-relaxed">
-          Hi, I&apos;m John-George, a coffee lover and software developer from Pittsburgh. For over a decade, I&apos;ve been captivated
-          by the city&apos;s coffee scene. What started as a personal quest to explore every shop soon became a mission to
-          connect the community and share my discoveries.
-        </p>
-        <p className="text-lg text-slate-600 leading-relaxed">
-          This project has helped thousands of users discover new spots and support Pittsburgh&apos;s small businesses.
-          Whether it&apos;s suggesting a favorite shop or providing feedback, your contributions make this project better
-          every day.
+Hi, I'm John-George, a software engineer, home barista, and longtime Pittsburgh coffee drinker. Over the past decade, I've spent countless mornings hopping between neighborhoods, tasting coffees, and tracking down newer shops that fly under the radar. What started as a spreadsheet of places to try turned into pgh.coffee: a living directory of 170+ independent shops across Allegheny county and a resource used by more than 12,000 coffee lovers.
         </p>
       </div>
     </section>

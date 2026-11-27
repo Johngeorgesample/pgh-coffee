@@ -6,34 +6,22 @@ export default function FrequentlyAskedQuestions() {
       <div className="grid gap-6">
         <div className="p-6 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors">
           <h4 className="font-bold text-lg mb-2">How can I contribute to the site?</h4>
-          <p className="text-slate-600">
-            You can submit new shops through the submission form. I love hearing community suggestions!
-          </p>
+          <p className="text-slate-600">Use the shop submission form to flag openings, updates, or overlooked cafés. Community tips are one of the fastest ways new spots make it onto the map.</p>
         </div>
 
         <div className="p-6 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors">
           <h4 className="font-bold text-lg mb-2">Why is my favorite shop missing?</h4>
-          <p className="text-slate-600">
-            New spots pop up every week! If your favorite is missing, tell me and I&apos;ll add it to the map ASAP.
-          </p>
+          <p className="text-slate-600">Pittsburgh's coffee scene moves fast, and new shops open regularly. If a favorite independent café is missing, send the name and neighborhood and I'll get it added as soon as possible.</p>
         </div>
 
         <div className="p-6 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors">
           <h4 className="font-bold text-lg mb-2">Does pgh.coffee have an app?</h4>
-          <p className="text-slate-600">
-            The site is a web-first experience. You can &quot;Add to Home Screen&quot; on your mobile device for a
-            seamless app-like feel.
-          </p>
+          <p className="text-slate-600">pgh.coffee is built as a fast, web-first experience. On iOS or Android, tap Share and choose Add to Home Screen to launch it like a native app.</p>
         </div>
 
         <div className="p-6 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors">
           <h4 className="font-bold text-lg mb-2">Why should I use pgh.coffee instead of Google Maps?</h4>
-          <p className="text-slate-600">
-            Google Maps shows you almost any business if you search &quot;coffee&quot;, chains, gas stations, places that closed
-            months ago. pgh.coffee is curated. Every shop is independently owned, and I track news about openings,
-            closings, specials, and events that Maps won&apos;t surface. It&apos;s built by someone who&apos;s actually visited these
-            places, not an algorithm.
-          </p>
+          <p className="text-slate-600">Search "coffee" on Google Maps and you'll wade through national chains, convenience stops, and stale listings. pgh.coffee focuses strictly on independent shops, tracks openings, closings, and events, and is maintained by someone who actually pays attention to the Pittsburgh scene rather than relying on automated scraping.</p>
         </div>
       </div>
     </section>
