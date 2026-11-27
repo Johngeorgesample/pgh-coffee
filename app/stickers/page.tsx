@@ -1,76 +1,80 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { Mail } from 'lucide-react'
 import { Footer } from '@/app/components/about'
-import { buildShopPath } from '@/app/utils/seo'
+import CopyEmailButton from './CopyEmailButton'
 
-const STICKER_SHOPS = [
-  { name: 'Dynamic Coffee: La Galeria', neighborhood: 'East Liberty', uuid: 'fa42ce7e-6cca-4f61-930f-f3a52bd6e015' },
-  { name: "Delanie's Coffee", neighborhood: 'Shadyside', uuid: '82252d12-3e03-4116-8d76-33b5849aea2b' },
-  { name: 'Commonplace Coffee', neighborhood: 'Shadyside', uuid: 'd2aafc02-2f93-4e08-8651-34cfe925f9a6' },
-]
+const CONTACT_EMAIL = 'johngeorgesample@gmail.com'
+
+const description = 'Free pgh.coffee stickers, mailed anywhere in the world.'
 
 export const metadata: Metadata = {
   title: 'Stickers | pgh.coffee',
-  description: 'Free pgh.coffee stickers. Grab one at a participating shop, or have one mailed to you.',
+  description,
+  alternates: { canonical: '/stickers' },
+  openGraph: {
+    siteName: 'pgh.coffee',
+    title: 'Stickers | pgh.coffee',
+    description,
+    url: '/stickers',
+    images: [{ url: '/stickers.jpg', alt: 'pgh.coffee stickers arranged around a latte' }],
+  },
 }
 
-const MAILTO = `mailto:johngeorgesample@gmail.com?subject=${encodeURIComponent('pgh.coffee sticker')}&body=${encodeURIComponent(
+const MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('pgh.coffee sticker')}&body=${encodeURIComponent(
   "Mailing address:\n\n\nHow many:\n\n\nAnything else you want to say about Pittsburgh coffee:\n"
 )}`
 
 export default function Stickers() {
   return (
-    <div>
-      <header className="max-w-7xl mx-auto px-6 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">Stickers.</h1>
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+      <div className="flex-1 flex items-center">
+        <header className="w-full max-w-7xl mx-auto px-6 py-14 sm:py-20">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            <div>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-950 leading-tight mb-6">
+                Stickers.
+              </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">
-              A small thank-you for anyone who cares about Pittsburgh coffee. Free. I&apos;ll mail one anywhere.
-            </p>
-          </div>
+              <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed max-w-xl">
+                A small thank-you for anyone who cares about Pittsburgh coffee. Free — I&apos;ll mail one anywhere in the world.
+              </p>
 
-          <div className="relative">
-            <img
-              alt="pgh.coffee sticker"
-              className="rounded-2xl shadow-2xl object-cover h-[500px] w-full"
-              src="/stickers.jpg"
-            />
-          </div>
-        </div>
-      </header>
-
-      <section className="max-w-2xl mx-auto px-6 pb-20 space-y-10">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Want one mailed to you?</h2>
-          <p className="text-lg text-slate-600 leading-relaxed">
-            <a className="font-bold text-slate-900 underline underline-offset-4 hover:text-yellow-600" href={MAILTO}>
-              Send me an address.
-            </a>{' '}
-            Anywhere in the world, no charge. I only use it to mail the sticker.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Out and about?</h2>
-          <p className="text-lg text-slate-600 leading-relaxed">
-            Order something and ask — stickers live by the register at:
-          </p>
-          <ul className="list-disc pl-5 space-y-2">
-            {STICKER_SHOPS.map(shop => (
-              <li key={shop.uuid} className="text-lg text-slate-600 leading-relaxed">
-                <Link
-                  className="font-bold text-slate-900 underline underline-offset-4 hover:text-yellow-600"
-                  href={buildShopPath(shop)}
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href={MAILTO}
+                  className="inline-flex items-center justify-center gap-2.5 bg-slate-950 text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-neutral-800 transition-colors shadow-sm"
                 >
-                  {shop.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+                  <Mail className="size-4" aria-hidden="true" />
+                  Email me your address
+                </a>
+
+                <CopyEmailButton email={CONTACT_EMAIL} />
+              </div>
+
+              <p className="mt-4 text-sm text-slate-500 leading-relaxed max-w-md">
+                No mail app? Copy <span className="font-mono text-slate-700">{CONTACT_EMAIL}</span> or DM{' '}
+                <a
+                  href="https://www.instagram.com/pgh.coffee/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-slate-700 underline underline-offset-4 hover:text-yellow-600"
+                >
+                  @pgh.coffee
+                </a>{' '}
+                on Instagram. I only use your address to mail the sticker.
+              </p>
+            </div>
+
+            <div className="relative">
+              <img
+                alt="pgh.coffee stickers arranged around a latte"
+                className="rounded-2xl shadow-2xl object-cover w-full aspect-[4/3] lg:h-[460px] lg:aspect-auto"
+                src="/stickers.jpg"
+              />
+            </div>
+          </div>
+        </header>
+      </div>
 
       <Footer />
     </div>
