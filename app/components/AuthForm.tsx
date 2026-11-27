@@ -20,6 +20,8 @@ interface AuthFormProps {
   onConfirmationSent?: () => void
 }
 
+const MIN_PASSWORD_LENGTH = 6
+
 const ADVENT_PRESS =
   'transition-[transform,box-shadow,background-color] duration-150 ease-out active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
 
@@ -294,14 +296,14 @@ export default function AuthForm({
                 >
                   Password
                 </label>
-                {mode === 'signup' && <span className="text-xs text-gray-500">Min. 6 characters</span>}
+                {mode === 'signup' && <span className="text-xs text-gray-500">Min. {MIN_PASSWORD_LENGTH} characters</span>}
               </div>
               <div className="relative">
                 <input
                   id={passwordId}
                   type={showPassword ? 'text' : 'password'}
                   autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                  minLength={mode === 'signup' ? 6 : undefined}
+                  minLength={mode === 'signup' ? MIN_PASSWORD_LENGTH : undefined}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
