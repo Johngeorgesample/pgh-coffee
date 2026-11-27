@@ -18,7 +18,7 @@ export default function JoinTheCommunity() {
           </div>
           <p className="text-slate-500 text-sm leading-relaxed">Spot a new café, roaster, or neighborhood staple that isn't listed yet? Send it over so other locals can find it.</p>
           <Link href="/submit-a-shop" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
-            Tell me
+            Submit a shop
           </Link>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -30,7 +30,7 @@ export default function JoinTheCommunity() {
           </div>
           <p className="text-slate-500 text-sm leading-relaxed">Have a feature idea, a broken detail, or a way the directory could work better on your phone or laptop? Let me know.</p>
           <a href="mailto:johngeorgesample@gmail.com" target="_blank" rel="noopener noreferrer" className="inline-block text-center w-full py-2 bg-yellow-300 text-black font-bold rounded-lg hover:opacity-90 transition-opacity">
-            Share ideas
+            Send feedback
           </a>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4">
