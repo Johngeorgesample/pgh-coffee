@@ -38,20 +38,16 @@ const draftSummary = (draft: CupDraft) => {
 
 export default function SaveCupDialog({ open, onClose, onSaved, onConfirmationSent, day, returnTo, draft }: Props) {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
+  const [wasOpen, setWasOpen] = useState(open)
   const details = draft ? draftSummary(draft) : ''
 
-  const handleClose = () => {
-    setAuthMode('signup')
-    onClose()
-  }
-
-  const handleSaved = () => {
-    setAuthMode('signup')
-    onSaved()
+  if (open !== wasOpen) {
+    setWasOpen(open)
+    if (open) setAuthMode('signup')
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} className="relative z-50">
+    <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop transition className="fixed inset-0 bg-gray-950/40 transition-opacity duration-200 ease-out data-closed:opacity-0" />
       <div className="fixed inset-0 flex items-end justify-center sm:items-center sm:p-4">
         <DialogPanel
@@ -65,7 +61,7 @@ export default function SaveCupDialog({ open, onClose, onSaved, onConfirmationSe
             <DialogTitle className="flex-1 font-serif text-xl leading-tight tracking-tight text-gray-950 sm:text-2xl">
               {authMode === 'signin' ? 'Welcome back.' : 'Save your cup.'}
             </DialogTitle>
-            <button type="button" onClick={handleClose} aria-label="Close" className="-m-2 rounded-lg p-2 text-gray-950 hover:bg-gray-100">
+            <button type="button" onClick={onClose} aria-label="Close" className="-m-2 rounded-lg p-2 text-gray-950 hover:bg-gray-100">
               <X className="size-5" strokeWidth={2.5} />
             </button>
           </div>
@@ -96,7 +92,7 @@ export default function SaveCupDialog({ open, onClose, onSaved, onConfirmationSe
           </p>
 
           <AuthForm
-            onSuccess={handleSaved}
+            onSuccess={onSaved}
             next={returnTo}
             initialMode="signup"
             idPrefix="save-cup"
