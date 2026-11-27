@@ -71,7 +71,8 @@ export default function SaveCupDialog({ open, onClose, onSaved, onConfirmationSe
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-950">Jar #{pad(day)} draft</span>
                 <span className="text-gray-400" aria-hidden="true">·</span>
-                <span className="inline-flex items-center gap-0.5" aria-label={`${draft.rating} out of 5 stars`}>
+                <span className="inline-flex items-center gap-0.5">
+                  <span className="sr-only">{draft.rating} out of 5 stars</span>
                   {[1, 2, 3, 4, 5].map(n => (
                     <Star
                       key={n}
