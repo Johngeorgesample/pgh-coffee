@@ -79,6 +79,7 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
   const [justSaved, setJustSaved] = useState(false)
   const [justTicked, setJustTicked] = useState<string | null>(null)
   const [asking, setAsking] = useState(false)
+  const confirmationSent = useRef(false)
   const [failed, setFailed] = useState(false)
   const track = useAnalytics()
   const triedPending = useRef(false)
@@ -206,10 +207,20 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
         )}
         <SaveCupDialog
           open={asking}
-          onClose={() => setAsking(false)}
+          onClose={() => {
+            if (!confirmationSent.current) write({ pending: false })
+            setAsking(false)
+          }}
           onSaved={() => setAsking(false)}
+          onConfirmationSent={() => (confirmationSent.current = true)}
           day={day}
           returnTo={returnTo}
+          draft={{
+            rating: entry.rating,
+            method: entry.method,
+            tastedCount: entry.tasted.length,
+            hasNotes: entry.body.trim() !== '',
+          }}
         />
       </div>
     </div>

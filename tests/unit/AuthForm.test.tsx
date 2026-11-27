@@ -40,7 +40,7 @@ describe('AuthForm', () => {
 
     it('displays password input field', () => {
       render(<AuthForm {...defaultProps} />)
-      expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument()
     })
 
     it('displays sign in button by default', () => {
@@ -51,7 +51,7 @@ describe('AuthForm', () => {
     it('uses custom id prefix when provided', () => {
       render(<AuthForm {...defaultProps} idPrefix="custom" />)
       expect(screen.getByLabelText(/email/i)).toHaveAttribute('id', 'custom-email')
-      expect(screen.getByLabelText(/password/i)).toHaveAttribute('id', 'custom-password')
+      expect(screen.getByLabelText(/^password$/i)).toHaveAttribute('id', 'custom-password')
     })
   })
 
@@ -78,7 +78,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'test@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'password123' },
       })
 
@@ -101,7 +101,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'test@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'password123' },
       })
 
@@ -123,7 +123,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'test@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'wrongpassword' },
       })
 
@@ -151,7 +151,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'newuser@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'newpassword123' },
       })
 
@@ -178,7 +178,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'existing@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'password123' },
       })
 
@@ -203,7 +203,7 @@ describe('AuthForm', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'newuser@example.com' },
       })
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'password123' },
       })
 
@@ -250,6 +250,61 @@ describe('AuthForm', () => {
       await waitFor(() => {
         expect(screen.getByText('OAuth error')).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('google-first compact mode & UX helpers', () => {
+    it('collapses email fields until Continue with email is clicked', () => {
+      render(
+        <AuthForm
+          {...defaultProps}
+          variant="advent"
+          collapseEmail
+          googleLabel="Continue with Google & save"
+          submitLabels={{ signin: 'Sign in & save cup', signup: 'Create account & save' }}
+          initialMode="signup"
+        />
+      )
+
+      expect(screen.getByRole('button', { name: 'Continue with Google & save' })).toBeInTheDocument()
+      expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument()
+
+      fireEvent.click(screen.getByRole('button', { name: /continue with email/i }))
+
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Continue with Google' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Create account & save' })).toBeInTheDocument()
+    })
+
+    it('toggles password visibility', () => {
+      render(<AuthForm {...defaultProps} />)
+      const passwordInput = screen.getByLabelText(/^password$/i)
+      expect(passwordInput).toHaveAttribute('type', 'password')
+
+      fireEvent.click(screen.getByRole('button', { name: 'Show password' }))
+      expect(passwordInput).toHaveAttribute('type', 'text')
+
+      fireEvent.click(screen.getByRole('button', { name: 'Hide password' }))
+      expect(passwordInput).toHaveAttribute('type', 'password')
+    })
+
+    it('renders confirmation message as a status notice and lets existing users switch to sign in in one click', async () => {
+      mockSignUp.mockResolvedValueOnce({
+        data: { user: { id: 'user-123', identities: [] }, session: null },
+        error: null,
+      })
+
+      render(<AuthForm {...defaultProps} initialMode="signup" />)
+
+      fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'existing@example.com' } })
+      fireEvent.change(screen.getByLabelText(/^password$/i), { target: { value: 'password123' } })
+      fireEvent.click(screen.getByRole('button', { name: /^sign up$/i }))
+
+      const switchBtn = await screen.findByRole('button', { name: /sign in instead/i })
+      fireEvent.click(switchBtn)
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^sign in$/i })).toBeInTheDocument()
     })
   })
 })
