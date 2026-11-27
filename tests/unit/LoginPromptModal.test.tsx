@@ -57,7 +57,7 @@ describe('LoginPromptModal', () => {
       render(<LoginPromptModal {...defaultProps} />)
       // AuthForm should use login- prefix for IDs
       expect(screen.getByLabelText(/email/i)).toHaveAttribute('id', 'login-email')
-      expect(screen.getByLabelText(/password/i)).toHaveAttribute('id', 'login-password')
+      expect(screen.getByLabelText(/^password$/i)).toHaveAttribute('id', 'login-password')
     })
   })
 

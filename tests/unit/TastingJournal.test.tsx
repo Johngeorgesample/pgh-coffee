@@ -59,15 +59,35 @@ describe('TastingJournal', () => {
     renderJournal()
 
     fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    fireEvent.click(screen.getByRole('button', { name: /Cocoa/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Espresso' }))
     fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
-    fireEvent.change(await screen.findByLabelText('Email'), { target: { value: 'a@b.co' } })
+
+    expect(await screen.findByText('Jar #01 draft')).toBeInTheDocument()
+    expect(screen.getByText('Espresso · 1 tasting note')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Continue with Google & save' })).toBeInTheDocument()
+    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /Continue with email/i }))
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'a@b.co' } })
     fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'hunter22' } })
     auth.user = { id: 'u1' }
-    fireEvent.click(screen.getByRole('button', { name: 'Sign up' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Create account & save' }))
 
     await waitFor(() => expect(screen.getByText('Logged · Day 01')).toBeInTheDocument())
     expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ rating: 4, logged: true })
     expect(plausible.mock.calls.filter(([event]) => event === 'AdventSaveAuthCompleted')).toHaveLength(1)
+  })
+
+  it('clears the pending flag when the save dialog is closed without signing in', async () => {
+    renderJournal()
+
+    fireEvent.click(screen.getByRole('button', { name: '4 out of 5' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save tasting note' }))
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ pending: true })
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Close' }))
+    expect(JSON.parse(localStorage.getItem('journal:advent-2026-1')!)).toMatchObject({ pending: false })
   })
 
   it('logs the cup when a visitor comes back signed in from a Google or email-confirmation redirect', async () => {

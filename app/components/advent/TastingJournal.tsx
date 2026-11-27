@@ -206,10 +206,19 @@ export default function TastingJournal({ day, step, notes, returnTo }: { day: nu
         )}
         <SaveCupDialog
           open={asking}
-          onClose={() => setAsking(false)}
+          onClose={() => {
+            write({ pending: false })
+            setAsking(false)
+          }}
           onSaved={() => setAsking(false)}
           day={day}
           returnTo={returnTo}
+          draft={{
+            rating: entry.rating,
+            method: entry.method,
+            tastedCount: entry.tasted.length,
+            hasNotes: entry.body.trim() !== '',
+          }}
         />
       </div>
     </div>
