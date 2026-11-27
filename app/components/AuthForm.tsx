@@ -81,6 +81,7 @@ export default function AuthForm({
         const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callbackUrl() } })
 
         if (error) {
+          setAlreadyExists(error.code === 'user_already_exists')
           setError(error.message)
           return
         }
