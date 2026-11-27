@@ -235,7 +235,17 @@ export default function AuthForm({
             Continue with email
           </button>
           <p className="mt-4 text-center text-xs text-gray-500">
-            Already have an account? Google or email will sign you right in.
+            Already have an account?{' '}
+            <button
+              type="button"
+              onClick={() => {
+                setEmailExpanded(true)
+                switchMode('signin')
+              }}
+              className="font-bold text-gray-950 underline underline-offset-2"
+            >
+              Sign in with email
+            </button>
           </p>
         </>
       ) : (
